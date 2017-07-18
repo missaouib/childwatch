@@ -1,0 +1,33 @@
+<div class="container-fluid">
+	<div #header class="row">
+		<h3>Header</h3>
+	</div>
+	<div #body class="row">
+		<div class="col-md-6">
+		    <div class="date-ctrl">			
+				<p class="text-center">
+					<i class="fa fa-chevron-left pull-left"></i>
+					<strong>Tuesday, 04 Jul 2017</strong>
+					<i class="fa fa-chevron-right pull-right"></i>
+				</p>			
+			</div>
+			<div class="list-group">
+				<a class="list-group-item active">
+					<i class="cw-icon icon-breakfast"></i> Breakfast #12 
+				</a>
+				<a class="list-group-item">
+					<i class="cw-icon icon-snack"></i> AM Snack 
+				</a>
+				<a class="list-group-item">
+					<i class="cw-icon icon-breakfast"></i> Lunch #17 
+				</a>				
+			</div>
+			<button class="btn btn-default"><i class="fa fa-plus"></i> Add Meal</button>
+		</div>
+		<div class="col-md-6">
+			<cw-meal-detail [mealId]="12" [Foods]="foods$"></cw-meal-detail>
+		</div>
+	</div>
+</div>
+
+

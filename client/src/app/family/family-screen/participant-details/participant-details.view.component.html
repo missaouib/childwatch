@@ -1,0 +1,54 @@
+<md-card>
+  <md-card-header>
+    <md-card-title>Bob Smith</md-card-title>
+    <md-card-subtitle>Active</md-card-subtitle>
+  </md-card-header>
+  <form onsubmit="event.preventDefault();">
+    <md-input-container>
+      <input mdInput placeholder="First Name" value="Bob">
+    </md-input-container>
+    <md-input-container>
+      <input mdInput placeholder="Middle Name" value="Q">
+    </md-input-container>
+    <md-input-container>
+      <input mdInput placeholder="Last Name" value="Smith">
+    </md-input-container>
+    <div>
+      <md-input-container>
+        <input mdInput [mdDatepicker]="picker" placeholder="Birthday" value="'04-21-14'">
+        <button mdSuffix [mdDatepickerToggle]="picker"></button>
+      </md-input-container>
+      <md-datepicker #picker></md-datepicker>
+      <md-input-container>
+        <input mdInput placeholder="Age" value="3" disabled>
+      </md-input-container>
+      <md-input-container>
+        <input mdInput placeholder="Primary Contact Number">
+      </md-input-container>
+    </div>
+    <div>
+      Families: 
+      <md-chip-list>
+        <md-chip>Smith <i class="material-icons clear">clear</i></md-chip>
+        <md-chip>Jones <i class="material-icons clear">clear</i></md-chip>
+        <md-select class="family-select" placeholder="Add Family">
+          <md-option>Chan</md-option>
+          <md-option>Gomez</md-option>
+        </md-select>
+      </md-chip-list>
+    </div>
+  </form>
+</md-card>
+<style>
+  md-input-container {
+    margin-right: 5px;
+  }
+
+  .family-select {
+    margin-left: 5px;
+  }
+
+  .clear {
+    font-size: 13px;
+  }
+</style>

@@ -1,0 +1,42 @@
+<div fxLayout="row" fxLayout.xs="column" fxLayoutAlign.xs="center center" fxLayoutGap="10px">
+  <md-card fxFlex="100">
+    <md-card-header>
+      <md-card-title>{{selectedFamily.displayName}} Family</md-card-title>
+      <md-card-subtitle>{{tableRows.length}} member(s)</md-card-subtitle>
+    </md-card-header>
+    <div>Members:</div>
+    <div>
+      <ngx-datatable class="material" [rows]="tableRows" [columnMode]="'force'" [headerHeight]="40" [selected]="selectedTableRows"
+         [rowHeight]="40" [selectionType]="'multiClick'" (select)="memberSelected($event)">
+        <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [checkboxable]="true">
+        </ngx-datatable-column>
+        <ngx-datatable-column name="First Name"></ngx-datatable-column>
+        <ngx-datatable-column name="Last Name"></ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </md-card>
+</div>
+<div class="new-row" fxLayoutWrap fxLayout.xs="column" fxLayoutAlign.xs="center center" fxLayoutGap="10px">
+  <md-card *ngFor="let member of selectedTableRows">
+    <md-card-header>
+      <div md-card-avatar class="example-header-image"></div>
+      <md-card-title>{{member.displayName}}</md-card-title>
+    </md-card-header>
+    <div>Connections:</div>
+    <md-list>
+      <md-list-item>Person 1</md-list-item>
+      <md-list-item>Person 2</md-list-item>
+      <md-list-item>Person 3</md-list-item>
+    </md-list>
+    <md-card-actions>
+      <button md-button>View on Participant Screen</button>
+      <button md-button>Close</button>
+    </md-card-actions>
+  </md-card>
+</div>
+
+<style>
+  .new-row, md-card {
+    margin-top: 5px;
+  }
+</style>

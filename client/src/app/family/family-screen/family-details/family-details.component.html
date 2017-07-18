@@ -1,0 +1,6 @@
+<cw-family-details-view
+  [familyMembers]="familyMembers | async"
+  [selectedFamily]="selectedFamily | async"
+  [previewMembers]="previewMembers | async"
+  (selectedMembers)="selectedMembers($event)"
+></cw-family-details-view>

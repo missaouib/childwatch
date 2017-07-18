@@ -1,0 +1,76 @@
+<div class="top-bar" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutAlign="center">
+  <!-- Labels switching between schedule, review, and live -->
+  <div style="height:70px" fxFlex.sm="50%" fxFlex.md="50%" fxFlex fxFlexOrder="0">
+    <div class="operation-label-container" *ngIf="operation === 'SCHEDULE'" fxLayout="row">
+      <div class="operation-label">Schedule</div>
+      <button (click)="updateTimeStatus('LIVE')" md-button fxAlignSelf="center">
+        <md-icon>arrow_backward</md-icon>Live
+      </button>
+    </div>
+    <div class="operation-label-container" *ngIf="operation === 'REVIEW'" fxLayout="row">
+      <div class="operation-label">Review</div>
+      <button (click)="updateTimeStatus('LIVE')" md-button>
+        <md-icon>arrow_forward</md-icon>Live
+      </button>
+    </div>
+    <div class="operation-label-container" *ngIf="operation === 'LIVE'">
+      <div class="operation-label">Live</div>
+    </div>
+  </div>
+
+  <!-- Date Picker and Slider -->
+  <div style="height: 70px;" fxFlex.sm="50%" fxFlex.md="50%" fxFlex fxFlexOrder="2">
+    <label>Date:
+      <md-input-container>
+        <input mdInput [mdDatepicker]="myDatepicker" [formControl]="dateControl" value="{{dateTime}}">
+        <button mdSuffix [mdDatepickerToggle]="myDatepicker"></button>
+      </md-input-container>
+      <md-datepicker #myDatepicker [startAt]="start"></md-datepicker>
+      <br>
+      <md-slider [formControl]="sliderControl"
+        [min]="-7"
+        [max]="7"
+        [step]="1"
+        [tickInterval]="1"
+        (input)="localDateChanged($event)">
+      </md-slider>
+    </label>
+  </div>
+
+  <!-- Time Slider -->
+  <div style="height: 70px;" fxFlex.sm="50%" fxFlex fxFlexOrder="3">
+    <label class="time-label">Time: {{dateTime | date:'shortTime'}}<br></label>
+    <md-slider [formControl]="timeControl" [min]="sliderMin" [max]="sliderMax" [step]="sliderStep" [tickInterval]="sliderTick"
+      (input)="localTimeChanged($event)">
+    </md-slider>
+  </div>
+  <div style="height: 70px;" fxFlex.sm="50%" fxFlex fxFlexOrder="4" fxFlexOrder.gt-xs="1" fxFlexOrder.gt-md="4">
+    <div class="dropdown" style="margin-top: 5%;" fxHide.gt-sm>
+      <md-select placeholder="View">
+        <md-option value="SITE_OVERVIEW">Site overview</md-option>
+        <md-option value="ROOM_ASSIGNMENTS">Room assignments</md-option>
+        <md-option value="TIMELINE">Timeline</md-option>
+      </md-select>
+    </div>
+
+    <!-- Mode Button Group -->
+    <div class="btn-group" fxHide fxShow.gt-sm>
+      <label>View:<br></label>
+      <md-button-toggle-group #group="mdButtonToggleGroup" [value]="viewMode" (change)="updateViewMode($event.value)">
+        <md-button-toggle value="SITE_OVERVIEW">
+          Site overview
+        </md-button-toggle>
+        <md-button-toggle value="ROOM_ASSIGNMENTS">
+          Room assignments
+        </md-button-toggle>
+        <md-button-toggle value="TIMELINE">
+          Timeline
+        </md-button-toggle>
+      </md-button-toggle-group>
+    </div>
+  </div>
+  <!-- Clock -->
+  <div class="current-time" style="height: 70px;" fxFlex.md="100%" fxFlex fxFlexOrder="5">
+    <span class="current-time"><md-icon>watch_later</md-icon> {{currentTime | date:'shortTime'}}</span>
+  </div>
+</div>

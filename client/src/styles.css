@@ -1,0 +1,63 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+body {
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+
+.scroll-y {
+  overflow-y: auto;
+}
+
+#people-list .mat-tab-label {
+  min-width: 100px;
+}
+.brand{
+    vertical-align: middle;
+    font-size: 26px;
+    font-weight: 900;
+}
+.view-type a {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    color: currentColor;
+    text-decoration: none;
+    text-align:right;
+}
+.schedule-title {
+    display: block;
+    margin-top: -6px!important;
+    font-size: 12px;
+}
+
+.user {
+    display: inline-block;
+    text-align: left;
+    margin-top: -5px;
+    padding: 0;
+}
+.user .logout a {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    color: currentColor;
+    text-decoration: none;
+    text-align:right;
+}
+.header-nav .user .name {
+    display: block;
+    margin-top: -6px!important;
+    font-size: 12px;
+}
+.mat-sidenav-content {
+  overflow: hidden!important;
+}
+.mat-button-toggle-label-content{
+  padding: 0 10px!important;
+}
+
+.mat-select-trigger {
+  width: 160px !important;
+}

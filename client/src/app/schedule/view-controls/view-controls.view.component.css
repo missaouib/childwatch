@@ -1,0 +1,41 @@
+.top-bar {
+  padding: 4px 20px;
+  border-bottom: 1px solid #a0a0a0;
+}
+
+.operation-label-container {
+  padding-top: 8px;
+}
+
+md-slider {
+  width: 100%;
+}
+
+.operation-label {
+  min-width: 120px;
+  white-space: nowrap;
+  font-size: 2em;
+  color: #ff4081;
+}
+
+.current-time{
+  float: right;
+  font-size: 1.5em;
+  margin-top: 1.2%;
+  color: #ff4081;
+}
+
+md-slider {
+  margin-top: -16px;
+}
+
+.time-label {
+  margin: 16px 0 21px;
+  display: inline-block;
+}
+
+@media only screen and (max-width: 1278px) {
+  .current-time{
+    float: none;
+  }
+}

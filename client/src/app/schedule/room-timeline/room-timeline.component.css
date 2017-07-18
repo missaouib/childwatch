@@ -1,0 +1,75 @@
+.time-vertical {
+  position: absolute;
+  top: 60px; width: 2px;
+  z-index: 10;
+  background: #a2a2a2;
+}
+
+.current-time-vertical {
+  background: #ff4081;
+  z-index: 20;
+}
+
+.time-marker {
+  position: absolute;
+  top: 40px;
+}
+
+.staff-container {
+  margin-top:30px;
+}
+
+.participant-container{
+  margin-top: 10px;
+}
+
+.slot-container {
+  width: 450px;
+}
+
+.slot-row {
+  display: flex;
+  height: 25px;
+  margin-bottom:2px;
+}
+
+.slot-row:nth-child(odd) {
+  background-color: #efefef;
+}
+
+.slot-row > div:first-child {
+  width: 120px;
+  line-height: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px dotted lightgray;
+}
+
+.bar {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.bar .seg.blue { background: #3853a4; height: 18px; }
+.bar .seg.purple { background: #8051b9; height: 18px; float: left; }
+.bar .seg.red { background: #ed1f24; height: 18px; float: left;}
+.bar .seg.gray { background: darkgray; height: 18px; float: left;}
+
+.present {
+  font-weight: bold;
+}
+
+.absent {
+  color: #a3a3a3;
+}
+
+label {
+  color: #222;
+  padding-left: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+}

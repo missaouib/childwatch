@@ -1,0 +1,42 @@
+.people-side-panel {
+  border-right: 1px solid #a0a0a0;
+  overflow-x: hidden;
+}
+.mat-button-toggle-label-content{
+  padding: 0 10px!important;
+}
+
+.header .mat-icon {
+  font-size: initial !important;
+  vertical-align: middle !important;
+  width: initial !important;
+  height: initial !important;
+}
+
+.mat-card-title {
+  margin: 0.9em 0 0 0.3em;
+}
+
+hr {
+  color: lightgrey;
+  margin: 5px;
+}
+
+.building {
+  padding: 5px;
+}
+
+md-card {
+  padding: 0;
+  margin: 5px;
+}
+
+.classroom-card {
+  margin-bottom: 10px;
+}
+
+.view-height {
+  height: calc(100vh - 175px);
+  overflow: auto;
+  overflow-x: hidden;
+}

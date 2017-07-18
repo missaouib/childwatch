@@ -1,0 +1,30 @@
+<md-tab-group [dynamicHeight]="false">
+  <md-tab label="Families">
+    <button md-button [class.active]="selectedEntity?.id === f.id" (click)="clickEntity(f)" *ngFor="let f of families">{{f.name}}</button>
+  </md-tab>
+  <md-tab label="Participants">
+    <button md-button [class.active]="selectedEntity?.id === p.id" (click)="clickEntity(p)" *ngFor="let p of participants">{{p.lastName}}, {{p.firstName}}</button>
+  </md-tab>
+  <md-tab label="Non-Participants">
+    <button md-button [class.active]="selectedEntity?.id === a.id" (click)="clickEntity(a)" *ngFor="let a of nonParticipants">{{a.lastName}}, {{a.firstName}}</button>
+  </md-tab>
+  <md-tab label="Other">
+    <button md-button [class.active]="selectedEntity?.id === o.id" (click)="clickEntity(o)" *ngFor="let o of other">{{o.displayName}}</button>
+  </md-tab>
+</md-tab-group>
+<style>
+  button {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+  .active {
+    background: lightGrey;
+  }
+
+  /* TODO: utilize flex when appropriate */
+  md-tab-group {
+    height: calc(100vh - 64px);
+  }
+</style>

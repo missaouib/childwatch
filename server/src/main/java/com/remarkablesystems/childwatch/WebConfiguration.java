@@ -1,0 +1,22 @@
+package com.remarkablesystems.childwatch;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+@Configuration
+public class WebConfiguration extends WebMvcConfigurerAdapter {
+    public static final String INDEX_VIEW_NAME = "forward:index.html";
+
+    // This makes Spring serve index.html in response to /, /schedule, etc. without redirecting the browser or making
+    // it change the URL in any way. IOW it's more like a transparent "proxy" than an invasive redirect.
+    @Override
+    public void addViewControllers(final ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName(INDEX_VIEW_NAME);
+        registry.addViewController("/schedule").setViewName(INDEX_VIEW_NAME);
+        registry.addViewController("/family").setViewName(INDEX_VIEW_NAME);
+        registry.addViewController("/meals").setViewName(INDEX_VIEW_NAME);
+        registry.addViewController("/billing").setViewName(INDEX_VIEW_NAME);
+        registry.addViewController("/login").setViewName(INDEX_VIEW_NAME);
+    }
+}

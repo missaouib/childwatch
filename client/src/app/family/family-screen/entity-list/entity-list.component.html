@@ -1,0 +1,8 @@
+<cw-entity-list-view
+  [families]="families | async"
+  [nonParticipants]="nonParticipants | async"
+  [participants]="participants | async"
+  [other]="other | async"
+  [selectedEntity]="selectedEntity | async"
+  (selectEntity)="selectEntity($event)"
+></cw-entity-list-view>

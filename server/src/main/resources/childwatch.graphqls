@@ -1,0 +1,118 @@
+scalar Date
+scalar DateTime
+
+type Query {
+  rooms: [Room]
+  staff: [Staff]
+  families: [Family]
+  participants: [Participant]
+  nonParticipants: [NonParticipant]
+  staffTimeline(date: Date!): [PersonTimeline]
+  participantTimeline(date: Date!): [PersonTimeline]
+  personSchedule(personId: String!, effectiveOn: Date!): PersonSchedule @doc(d: "Schedule effective on given date, possibly effective since a while ago")
+  myself: User
+}
+
+type Room {
+  id: String!
+  name: String!
+  staffCapacity: Int!
+  targetCapacity: Int!
+  maxCapacity: Int!
+}
+
+type Staff {
+  id: String!
+  firstName: String!
+  lastName: String!
+}
+
+type Family {
+  id: String!
+  name: String!
+  participants: [Participant]
+}
+
+type Participant {
+  id: String!
+  firstName: String!
+  lastName: String!
+  dateOfBirth: Date!
+  imgUrl: String
+  families: [Family]
+  nonParticipantRelationships: [NonParticipantRelationship]
+}
+
+type NonParticipant {
+  id: String!
+  firstName: String!
+  lastName: String!
+  participantRelationships: [NonParticipantRelationship]
+}
+
+type NonParticipantRelationship {
+  participant: Participant!
+  nonParticipant: NonParticipant!
+  dropoffAuthorization: Boolean!
+  pickupAuthorization: PickupAuthorization!
+  paymentResponsibility: Boolean!
+  parent: Boolean!
+  notes: String
+}
+
+enum PickupAuthorization {
+  AUTHORIZED
+  NOT_AUTHORIZED
+  ALERT
+}
+
+type PersonTimeline {
+  personId: String!
+  presence: [PresenceEntry]
+  roomAssignments: [RoomAssignmentEntry]
+}
+
+type PresenceEntry {
+  roomId: String!
+  start: DateTime!
+  end: DateTime
+}
+
+type RoomAssignmentEntry {
+  roomId: String!
+  start: DateTime!
+  end: DateTime!
+}
+
+type PersonSchedule {
+  personId: String!
+  effectiveDate: Date!
+  schedule: [[ScheduleEntry]]!
+}
+
+type ScheduleEntry {
+  start: Int! @doc(d: "Minutes from midnight")
+  end:   Int! @doc(d: "Minutes from midnight")
+}
+
+type User {
+ username: String!
+ authorities: [String]!
+}
+
+type Mutation {
+  updateStaffRoomAssignment(staffId: String!, date: Date!, roomAssignments: [RoomAssignmentInput]!): String
+  updateParticipantRoomAssignment(participantId: String!, date: Date!, roomAssignments: [RoomAssignmentInput]!): String
+  updateSchedule(personId: String!, effectiveDate: Date!, schedule: [[ScheduleEntryInput]]!): String
+}
+
+input RoomAssignmentInput {
+  roomId: String!
+  start: DateTime!
+  end: DateTime!
+}
+
+input ScheduleEntryInput {
+  start: Int! @doc(d: "Minutes from midnight")
+  end:   Int! @doc(d: "Minutes from midnight")
+}

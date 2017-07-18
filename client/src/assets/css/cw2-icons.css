@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'cw2';
+  src:  url('../fonts/cw2.eot?mm8w7e');
+  src:  url('../fonts/cw2.eot?mm8w7e#iefix') format('embedded-opentype'),
+    url('../fonts/cw2.ttf?mm8w7e') format('truetype'),
+    url('../fonts/cw2.woff?mm8w7e') format('woff'),
+    url('../fonts/cw2.svg?mm8w7e#cw2') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.cw-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'cw2' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: bold;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-breakfast:before {
+  content: "\e900";
+}
+.icon-family:before {
+  content: "\e901";
+}
+.icon-fruit-salad:before {
+  content: "\e902";
+}
+.icon-group-of-people:before {
+  content: "\e903";
+}
+.icon-kindergarten:before {
+  content: "\e904";
+}
+.icon-lunch:before {
+  content: "\e905";
+}
+.icon-meat:before {
+  content: "\e906";
+}
+.icon-milk:before {
+  content: "\e907";
+}
+.icon-money:before {
+  content: "\e908";
+}
+.icon-pear:before {
+  content: "\e909";
+}
+.icon-schedule:before {
+  content: "\e90a";
+}
+.icon-bread:before {
+  content: "\e90b";
+}
+.icon-snack:before {
+  content: "\e90c";
+}
+.icon-food:before {
+  content: "\e90d";
+}
+.icon-dinner:before {
+  content: "\e90e";
+}

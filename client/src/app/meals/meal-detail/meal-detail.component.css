@@ -1,0 +1,11 @@
+.circle {
+    border-radius: 50%;
+    background: green;
+    vertical-align: middle;
+    color: white;
+}
+
+.double {
+	zoom: 2.0;
+	vertical-align: middle;
+}
