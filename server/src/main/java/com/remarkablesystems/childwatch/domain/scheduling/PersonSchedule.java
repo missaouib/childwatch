@@ -11,7 +11,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 @Entity
-@Table(indexes = {@Index(columnList = "person_id,effective_date", unique = true)})
+@Table(name="person_schedule", indexes = {@Index(columnList = "person_id,effective_date", unique = true)})
 public class PersonSchedule {
     @NotNull
     @Id
@@ -21,7 +21,7 @@ public class PersonSchedule {
     private LocalDate effectiveDate;
     private ScheduleEntry[][] schedule;
 
-    private PersonSchedule() {
+    PersonSchedule() {
     }
 
     public PersonSchedule(String personId, LocalDate effectiveDate, List<List<ScheduleEntry>> entries) {

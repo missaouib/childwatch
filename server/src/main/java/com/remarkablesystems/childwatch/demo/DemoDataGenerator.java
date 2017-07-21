@@ -3,6 +3,10 @@ package com.remarkablesystems.childwatch.demo;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Multimap;
 import com.remarkablesystems.childwatch.db.DatabaseMigration;
+import com.remarkablesystems.childwatch.domain.meal.FoodItem;
+import com.remarkablesystems.childwatch.domain.meal.repository.FoodComponentRepository;
+import com.remarkablesystems.childwatch.domain.meal.repository.FoodItemRepository;
+import com.remarkablesystems.childwatch.domain.meal.FoodComponent;
 import com.remarkablesystems.childwatch.domain.people.*;
 import com.remarkablesystems.childwatch.domain.room.Room;
 import com.remarkablesystems.childwatch.domain.room.Rooms;
@@ -11,9 +15,12 @@ import com.remarkablesystems.childwatch.domain.scheduling.Scheduling;
 import com.remarkablesystems.childwatch.security.Authorities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,6 +28,11 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Priority;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -35,11 +47,13 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.security.crypto.bcrypt.BCrypt.gensalt;
 import static org.springframework.security.crypto.bcrypt.BCrypt.hashpw;
 
+import static java.util.Objects.isNull;
+
 @Component
 @Priority(Integer.MIN_VALUE)
 @Order(Integer.MIN_VALUE)
 @Profile("development")
-class DemoDataGenerator {
+class DemoDataGenerator implements ResourceLoaderAware {
     private final Room ROOM_BUTTERFLY = new Room("Butterfly", 3, 18, 20);
     private final Room ROOM_DRAGONFLY = new Room("Dragonfly", 3, 16, 22);
     private final Room ROOM_OWL = new Room("Owl", 2, 10, 13);
@@ -67,15 +81,28 @@ class DemoDataGenerator {
     private final Rooms rooms;
     private final People people;
     private final Scheduling scheduling;
+    private final FoodItemRepository foodItemRepository;
+    private final FoodComponentRepository foodComponentRepository;
+	private ResourceLoader resourceLoader;
+    
+    public void setResourceLoader(ResourceLoader resourceLoader ) {
+    	this.resourceLoader = resourceLoader;
+    }
+    
+    public Resource getResource(String location ) {
+    	return this.resourceLoader.getResource(location);
+    }
 
     @Autowired
     DemoDataGenerator(DatabaseMigration databaseMigration, UserDetailsManager userDetailsManager, Rooms rooms, People
-            people, Scheduling scheduling) {
+            people, Scheduling scheduling, FoodItemRepository foodItemRepository, FoodComponentRepository foodComponentRepository )  {
         this.databaseMigration = databaseMigration;
         this.userDetailsManager = userDetailsManager;
         this.rooms = rooms;
         this.people = people;
         this.scheduling = scheduling;
+        this.foodItemRepository = foodItemRepository;
+        this.foodComponentRepository = foodComponentRepository;
     }
 
     @EventListener({ApplicationReadyEvent.class})
@@ -91,6 +118,7 @@ class DemoDataGenerator {
     private void generateDomain() {
         generateRooms();
         generateStaff();
+        //generateFood();
 
         final int maxParticipants = Stream.of(DEMO_ROOMS).mapToInt(r -> r.getMaxCapacity()).sum();
         final int startParticipants = (int) Math.floor(maxParticipants * 0.3);
@@ -108,6 +136,66 @@ class DemoDataGenerator {
             generateStaffTimelines(date);
         }
     }
+    
+	private void generateFoodCategories() {
+    	FoodComponent[] afc = { new FoodComponent( "1", "Dairy and Egg Products"),
+    	new FoodComponent( "2","Spices and Herbs"),
+        new FoodComponent( "3","Baby Foods"),
+    	new FoodComponent( "4","Fats and Oils"),
+    	new FoodComponent( "5","Poultry Products"),
+    	new FoodComponent( "6","Soups, Sauces, and Gravies"),
+    	new FoodComponent( "7","Sausages and Luncheon Meats"),
+    	new FoodComponent( "8","Breakfast Cereals"),
+    	new FoodComponent( "9","Fruits and Fruit Juices"),
+    	new FoodComponent( "10","Pork Products"),
+    	new FoodComponent( "11","Vegetables and Vegetable Products"),
+    	new FoodComponent( "12","Nut and Seed Products"),
+    	new FoodComponent( "13","Beef Products"),
+    	new FoodComponent( "14","Beverages"),
+    	new FoodComponent( "15","Finfish and Shellfish Products"),
+    	new FoodComponent( "16","Legumes and Legume Products"),
+    	new FoodComponent( "17","Lamb, Veal, and Game Products"),
+    	new FoodComponent( "18","Baked Products"),
+    	new FoodComponent( "19","Sweets"),
+    	new FoodComponent( "20","Cereal Grains and Pasta"),
+    	new FoodComponent( "21","Fast Foods"),
+    	new FoodComponent( "22","Meals, Entrees, and Side Dishes"),
+    	new FoodComponent( "25","Snacks"),
+    	new FoodComponent( "35","American Indian/Alaska Native Foods"),
+    	new FoodComponent( "36","Restaurant Foods")};
+    	
+    	foodComponentRepository.save( Arrays.asList(afc) );
+   }
+    
+	private void generateFood() {
+		
+		generateFoodCategories();
+    	
+    	Resource resource = this.getResource("classpath:data/food.csv" );
+    	    	
+    	try {
+    		InputStream is = resource.getInputStream();
+    		BufferedReader br = new BufferedReader( new InputStreamReader(is) );
+    		
+    		String line;
+    		while( (line = br.readLine()) != null ) {
+    			String[] splitLine = line.split("\\|");
+
+    			FoodComponent fc = foodComponentRepository.findOne(splitLine[1]);
+    			if( !isNull(fc) ) {
+    				FoodItem food = new FoodItem( UUID.randomUUID().toString(), splitLine[2].trim(),splitLine[3].trim(),fc);
+    				fc.addFoodItem(food);
+    				foodItemRepository.save(food);
+    				System.out.println( food );
+    			}
+    		}
+    		br.close();
+    	}
+    	catch( IOException e ) {
+    		e.printStackTrace();
+    	}    	
+    }
+
 
     private void generateRooms() {
         for (Room room : DEMO_ROOMS) {
@@ -285,9 +373,6 @@ class DemoDataGenerator {
         }
     }
 
-    private static String randomId() {
-        return UUID.randomUUID().toString();
-    }
 
     private double normalBetween(double min, double max, double mean, double stdev) {
         while (true) {

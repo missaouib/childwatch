@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name="non_participant_relationship")
 public class NonParticipantRelationship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,14 +18,19 @@ public class NonParticipantRelationship {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "non_participant_id")
     private NonParticipant nonParticipant;
+    
+    @Column(name="dropoff_authorization")
     private boolean dropoffAuthorization;
     @Enumerated(EnumType.STRING)
+    @Column(name="pickup_authorization")
     private PickupAuthorization pickupAuthorization;
-    private boolean paymentResponsibility;
+    
+    @Column(name="payment_responsibility")
+    private boolean paymentResponsibility;    
     private boolean parent;
     private String notes;
 
-    private NonParticipantRelationship() {
+    NonParticipantRelationship() {
     }
 
     public NonParticipantRelationship(boolean dropoffAuthorization, PickupAuthorization pickupAuthorization, boolean

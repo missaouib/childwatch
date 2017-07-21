@@ -25,8 +25,13 @@
 			<button class="btn btn-default"><i class="fa fa-plus"></i> Add Meal</button>
 		</div>
 		<div class="col-md-6">
-			<cw-meal-detail [mealId]="12" [Foods]="foods$"></cw-meal-detail>
+			<cw-meal-detail [mealId]="12"></cw-meal-detail>
+		<ul>
+			<li *ngFor="let item of foodItems$ | async" >{{item.description}}</li>
+		</ul>
+
 		</div>
+		
 	</div>
 </div>
 

@@ -3,7 +3,7 @@
     <md-card-title>Bob Smith</md-card-title>
     <md-card-subtitle>Active</md-card-subtitle>
   </md-card-header>
-  <form onsubmit="event.preventDefault();">
+  <form (submit)="preventDefault();">
     <md-input-container>
       <input mdInput placeholder="First Name" value="Bob">
     </md-input-container>

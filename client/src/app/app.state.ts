@@ -6,8 +6,8 @@ import { storeLogger } from 'ngrx-store-logger';
 import { environment } from '../environments/environment';
 import { schedulingReducer, SchedulingState } from './schedule/scheduling.state';
 import { familyReducer, FamilyState } from './family/family.state';
-import { User } from './security/interfaces';
 import { mealReducer, MealState } from './meals/meal.state';
+import { User } from './security/interfaces';
 
 export interface AppState {
   // Used to track the state associated with the scheduling screen

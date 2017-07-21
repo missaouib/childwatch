@@ -1,5 +1,5 @@
-import { Food } from '../meal.interfaces';
-import { FoodService } from '../services/food.service';
+import { FoodItem } from '../meal.interfaces';
+import { MealStateService } from '../services/meal-state.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -10,12 +10,12 @@ import { Observable } from 'rxjs/Observable';
 })
 export class MealsScreenComponent implements OnInit {
 
-   foods$: Observable<Food[]>;
+   foodItems$: Observable<FoodItem[]>;
 
-  constructor(private foodSvc: FoodService ) { }
+  constructor(private state: MealStateService ) { }
 
   ngOnInit() {
-    this.foods$ = this.foodSvc.queryStaticData().map( (data: any) => data.foods );
+    this.foodItems$ = this.state.foodItems$; // this.foodSvc.foodItems$;
   }
 
 }

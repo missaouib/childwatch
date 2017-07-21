@@ -13,7 +13,7 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
 @Entity
-@Table(indexes = {@Index(columnList = "participant_id,date")})
+@Table(name="participant_room_assignment", indexes = {@Index(columnList = "participant_id,date")})
 public class ParticipantRoomAssignment implements PersonRoomAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,11 @@ public class ParticipantRoomAssignment implements PersonRoomAssignment {
 
     @ElementCollection
     @OrderBy("start")
+    @CollectionTable( name="participant_room_assignment_entries", joinColumns=@JoinColumn(name="participant_room_assignment_id") )
     @Fetch(FetchMode.JOIN)
     private List<RoomAssignmentEntry> entries = new ArrayList<>();
 
-    private ParticipantRoomAssignment() {
+    ParticipantRoomAssignment() {
     }
 
     public ParticipantRoomAssignment(Participant participant, LocalDate date, List<RoomAssignmentEntry> entries) {

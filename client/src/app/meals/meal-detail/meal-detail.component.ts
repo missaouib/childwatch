@@ -1,5 +1,6 @@
 
-import { Food } from '../meal.interfaces';
+import { FoodComponent } from '../meal.interfaces';
+import { MealStateService } from '../services/meal-state.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -15,9 +16,14 @@ import 'rxjs/add/observable/of';
 })
 export class MealDetailComponent implements OnInit {
   mealDetail: FormGroup;
+  foodComponents$: Observable<FoodComponent[]>;
+  foodComponent: FoodComponent = { description: 'Milk/Alt' };
 
   @Input() mealId: string;
-  @Input() Foods: Observable<Food[]>;
+
+ constructor(private state: MealStateService  ) {
+  this.foodComponents$ = state.foodComponents$;
+ }
 
   ngOnInit() {
     this.mealDetail = new FormGroup( {
@@ -25,6 +31,10 @@ export class MealDetailComponent implements OnInit {
       bread: new FormControl('Bread, whole wheat, 1 slice'),
       meat: new FormControl( 'Bacon, 1 slice' )
     });
+  }
+
+  addComponent( category: FoodComponent ) {
+    this.state.selectedFoodComponent$ = Observable.of(category);
   }
 
 }

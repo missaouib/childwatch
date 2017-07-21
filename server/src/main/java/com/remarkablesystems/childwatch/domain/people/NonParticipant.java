@@ -7,19 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
+@Table(name="non_participant")
 public class NonParticipant {
     @Id
     @Column(name = "non_participant_id")
     private String id;
     @NotNull
+    @Column(name="first_name")
     private String firstName;
     @NotNull
+    @Column(name="last_name")
     private String lastName;
     @OneToMany(mappedBy = "nonParticipant")
     @MapKeyJoinColumn(name = "participant_id")
     private Map<Participant, NonParticipantRelationship> participantRelationships = new HashMap<>();
 
-    private NonParticipant() {
+    NonParticipant() {
     }
 
     public NonParticipant(String firstName, String lastName) {

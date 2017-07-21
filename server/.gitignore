@@ -6,3 +6,4 @@ build/
 bin/
 dist/
 .gradle
+src/main/resources/application.properities

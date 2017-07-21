@@ -11,11 +11,13 @@ public class Staff implements Person {
     @Column(name = "staff_id")
     private String id;
     @NotNull
+    @Column(name="first_name")
     private String firstName;
     @NotNull
+    @Column(name="last_name")
     private String lastName;
 
-    private Staff() {
+    Staff() {
     }
 
     public Staff(String firstName, String lastName) {

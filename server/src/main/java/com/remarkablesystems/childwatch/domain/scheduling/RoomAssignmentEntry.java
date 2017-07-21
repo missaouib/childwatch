@@ -26,7 +26,7 @@ public class RoomAssignmentEntry implements Comparable<RoomAssignmentEntry> {
     @Column(name = "end_time", columnDefinition = "timestamptz")
     private OffsetDateTime end;
 
-    private RoomAssignmentEntry() {
+    RoomAssignmentEntry() {
     }
 
     public RoomAssignmentEntry(String roomId, OffsetDateTime start, OffsetDateTime end) {

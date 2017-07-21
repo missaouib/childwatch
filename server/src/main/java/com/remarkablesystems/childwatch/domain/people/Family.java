@@ -13,7 +13,7 @@ public class Family {
     @NotNull
     private String name;
 
-    private Family() {
+    Family() {
     }
 
     public Family(String name) {

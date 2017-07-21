@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
 @Entity
+@Table(name="staff_presence_log")
 public class StaffPresenceLog implements PersonPresenceLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +31,7 @@ public class StaffPresenceLog implements PersonPresenceLog {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private StaffPresenceLog() {
+    StaffPresenceLog() {
     }
 
     public StaffPresenceLog(Staff staff, OffsetDateTime eventTime, PresenceLogType type, Room room) {

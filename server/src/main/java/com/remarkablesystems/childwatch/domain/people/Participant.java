@@ -6,15 +6,20 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity
+@Table(name="participant")
 public class Participant implements Person {
     @Id
     @Column(name = "participant_id")
     private String id;
     @NotNull
+    @Column( name="first_name")
     private String firstName;
     @NotNull
+    @Column(name="last_name")
     private String lastName;
+    @Column(name="date_of_birth")
     private LocalDate dateOfBirth;
+    @Column(name="img_url")
     private String imgUrl;
     @ManyToMany
     @JoinTable(
@@ -26,7 +31,7 @@ public class Participant implements Person {
     @MapKeyJoinColumn(name = "non_participant_id")
     private Map<NonParticipant, NonParticipantRelationship> nonParticipantRelationships = new HashMap<>();
 
-    private Participant() {
+    Participant() {
     }
 
     public Participant(String firstName, String lastName, LocalDate dateOfBirth, String imgUrl) {

@@ -12,11 +12,14 @@ public class Room {
     private String id;
     @NotNull
     private String name;
+    @Column(name="staff_capacity")
     private int staffCapacity;
+    @Column(name="target_capacity")
     private int targetCapacity;
+    @Column(name="max_capacity")
     private int maxCapacity;
 
-    private Room() {
+    Room() {
     }
 
     public Room(String id) {

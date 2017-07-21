@@ -8,32 +8,22 @@
       	</ng-template>
 	
 		<form novalidate [formGroup]="mealDetail">
-				<div class="input-group input-group-unstyled" style="margin-top: 10px">
-					<i class="cw-icon icon-milk input-group-addon circle" style="font-size: 2em"></i>
-					<label for="milk">Milk/Alt</label>
-					<input #milk formControlName="milk"
-								 [typeahead]="Foods" 
-								 typeaheadOptionField="description"
-								 class="form-control">
-				</div>
+				<cw-food-item-select [foodComponent]="foodComponent"></cw-food-item-select>
 				<div class="input-group input-group-unstyled" style="margin-top: 10px">
 					<i class="cw-icon icon-bread input-group-addon circle" style="font-size: 2em"></i>
 					<label for="bread">Bread</label>
 					<input #bread formControlName="bread"
-								 [typeahead]="Foods" 
-								 typeaheadOptionField="description"
+								 
 								 class="form-control">
 				</div>
 				<div class="input-group input-group-unstyled" style="margin-top: 10px">
 					<i class="cw-icon icon-meat input-group-addon circle" style="font-size: 2em"></i>
 					<label for="meat">Meat/Alt</label>
 					<input #meat formControlName="meat"
-								 [typeahead]="Foods" 
-								 typeaheadOptionField="description"
+								 
 								 class="form-control">
 				</div>
-		</form>
-		
+		</form>	
 	</tab>
 	<tab>
 		<ng-template tabHeading>
@@ -51,10 +41,7 @@
 		<div class="btn-group" dropdown>
 			<button dropdownToggle type="button" class="btn btn-primary dropdown-toggle"><i class="fa fa-plus"></i> Add Component <span class="caret"></span></button>
 			<ul *dropdownMenu class="dropdown-menu" role="menu">
-				<li role="menuitem"><a class="dropdown-item">Milk</a></li>
-				<li role="menuitem"><a class="dropdown-item">Bread</a></li>
-				<li role="menuitem"><a class="dropdown-item">Meat</a></li>
-				<li role="menuitem"><a class="dropdown-item">Fruit</a></li>
+				<li *ngFor="let component of foodComponents$ | async" role="menuitem"><a class="dropdown-item" (click)="addComponent(component)">{{component.description}}</a></li>
 			</ul>
 		</div>
 

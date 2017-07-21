@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table(indexes = {@Index(columnList = "staff_id,date")})
+@Table(name="staff_room_assignment", indexes = {@Index(columnList = "staff_id,date")})
 public class StaffRoomAssignment implements PersonRoomAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +27,15 @@ public class StaffRoomAssignment implements PersonRoomAssignment {
     private LocalDate date;
 
     @ElementCollection
+    @CollectionTable(
+            name="staff_room_assignment_entries",
+            joinColumns=@JoinColumn(name="staff_room_assignment_id")
+      )
     @OrderBy("start")
     @Fetch(FetchMode.JOIN)
     private List<RoomAssignmentEntry> entries = new ArrayList<>();
 
-    private StaffRoomAssignment() {
+    StaffRoomAssignment() {
     }
 
     public StaffRoomAssignment(Staff staff, LocalDate date, List<RoomAssignmentEntry> entries) {

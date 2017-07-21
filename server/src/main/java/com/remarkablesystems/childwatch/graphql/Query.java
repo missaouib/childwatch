@@ -1,6 +1,10 @@
 package com.remarkablesystems.childwatch.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
+import com.remarkablesystems.childwatch.domain.meal.FoodItem;
+import com.remarkablesystems.childwatch.domain.meal.repository.FoodComponentRepository;
+import com.remarkablesystems.childwatch.domain.meal.repository.FoodItemRepository;
+import com.remarkablesystems.childwatch.domain.meal.FoodComponent;
 import com.remarkablesystems.childwatch.domain.people.*;
 import com.remarkablesystems.childwatch.domain.room.Room;
 import com.remarkablesystems.childwatch.domain.room.Rooms;
@@ -33,21 +37,28 @@ import static java.util.stream.Collectors.toMap;
 
 @Component
 public class Query implements GraphQLRootResolver {
-    private final Rooms rooms;
+	private final Rooms rooms;
     private final People people;
     private final Scheduling scheduling;
+    private final FoodComponentRepository foodCategoryRepository;
 
     @Autowired
-    public Query(Rooms rooms, People people, Scheduling scheduling) {
+    public Query(Rooms rooms, People people, Scheduling scheduling, FoodComponentRepository foodCategoryRepository) {
         this.rooms = rooms;
         this.people = people;
         this.scheduling = scheduling;
+        this.foodCategoryRepository = foodCategoryRepository;
     }
 
     public List<Room> rooms() {
         return rooms.findAll();
     }
 
+    
+    public Iterable<FoodComponent> foods(DataFetchingEnvironment env){
+   		return foodCategoryRepository.findAll();
+    }
+    
     public List<Staff> staff() {
         return people.findAllStaff();
     }

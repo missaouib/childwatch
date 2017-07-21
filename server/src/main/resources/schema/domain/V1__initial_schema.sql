@@ -106,7 +106,51 @@
         room_id varchar(255),
         start_time timestamptz
     );
+    
+    create table food_component(
+    	id varchar(255) not null,
+    	description varchar(1024),
+    	primary key (id)
+    );
+    
+    create table food_item(
+    	id varchar(255) not null,
+    	description varchar(1024) not null,
+    	short_description varchar(128),
+    	food_component_id varchar(255),
+    	primary key (id)
+    );
+    
+    create table meal(
+    	id varchar(255) not null,
+    	description varchar(128) not null,
+    	type varchar(30) not null,
+    	primary key (id)
+    );
+    
+    create table meal_food_item(
+    	id serial not null,
+    	meal_id varchar(255) not null,
+    	food_item_id varchar(255) not null,
+    	primary key (id)
+    );
+    
+    alter table food_item
+        add constraint FK_food_component__id
+        foreign key (food_component_id)
+        references food_component;
 
+    alter table meal_food_item
+        add constraint FK_food_item__id
+        foreign key (food_item_id)
+        references food_item;
+
+    alter table meal_food_item
+        add constraint FK_meal__id
+        foreign key (meal_id)
+        references meal;
+        
+        
     create index IDXtqkge09h0790muhxmrfyi083y on participant_room_assignment (participant_id, date);
 
     alter table person_schedule
