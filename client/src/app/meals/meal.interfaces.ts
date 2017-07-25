@@ -1,4 +1,5 @@
 export interface FoodItem {
+  id: string;
   description: string;
   shortDescription: string;
   foodComponent: FoodComponent;
@@ -14,13 +15,15 @@ export interface FoodComponentLinks{
   }
 
 export interface FoodComponent {
+  id: string,
   description: string;
   _links?: FoodComponentLinks,
-  foodItems?: FoodItem[]
+  foodItems: FoodItem[]
 };
 
 
 export interface Meal {
+  id: string;
   description: string;
   type: string;
   foods: FoodItem[];

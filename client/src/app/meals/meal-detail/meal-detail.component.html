@@ -1,5 +1,10 @@
 <div class="panel panel-default">
-	<div class="panel-heading"> <i class="cw-icon icon-breakfast" style="font-size: 2em"></i> Breakfast {{mealId}}</div>
+	<div class="panel-heading"> 
+		<i class="cw-icon" 
+		   [class.icon-breakfast]="meal.type === 'BREAKFAST'"
+		   [class.icon-snack]="meal.type === 'AM_SNACK' || meal.type === 'PM_SNACK'"
+		   [class.icon-lunch]="meal.type === 'LUNCH'"		
+		   [class.icon-dinner]="meal.type === 'DINNER'" style="font-size: 2em"></i> {{meal.description}}</div>
 </div>
 <tabset [justified]="true">
 	<tab active="true">
@@ -13,7 +18,6 @@
 					<i class="cw-icon icon-bread input-group-addon circle" style="font-size: 2em"></i>
 					<label for="bread">Bread</label>
 					<input #bread formControlName="bread"
-								 
 								 class="form-control">
 				</div>
 				<div class="input-group input-group-unstyled" style="margin-top: 10px">
@@ -41,7 +45,7 @@
 		<div class="btn-group" dropdown>
 			<button dropdownToggle type="button" class="btn btn-primary dropdown-toggle"><i class="fa fa-plus"></i> Add Component <span class="caret"></span></button>
 			<ul *dropdownMenu class="dropdown-menu" role="menu">
-				<li *ngFor="let component of foodComponents$ | async" role="menuitem"><a class="dropdown-item" (click)="addComponent(component)">{{component.description}}</a></li>
+				<li *ngFor="let component of foodComponents$ | async" role="menuitem"><a class="dropdown-item" (click)="addComponent(component)">{{component.id}}-{{component.description}}</a></li>
 			</ul>
 		</div>
 
@@ -54,3 +58,6 @@
 	<md-list-item *ngFor="let food of Foods | async; let i=index"><span *ngIf='i<20'><md-icon svgIcon='img:milk' class='circle'></md-icon>{{food['descriptor']}}</span></md-list-item>		
 </md-list>
  -->
+ 
+ <template #customItemTemplate let-model="item" let-index="index">
+ 	<span>{{index}}-{{model.description}}</span>

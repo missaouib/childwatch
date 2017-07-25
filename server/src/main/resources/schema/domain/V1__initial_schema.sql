@@ -135,6 +135,19 @@
     	primary key (id)
     );
     
+    CREATE TABLE meal_schedule(
+   		id                VARCHAR (36) NOT NULL,
+   		start_date        DATE NOT NULL,
+   		end_date          DATE,
+   		repeat_interval   INTERVAL (0),
+   		meal_id           varchar (255),
+   		PRIMARY KEY (id)
+	);
+
+ALTER TABLE meal_schedule
+   ADD CONSTRAINT FK_meal_schedule_1 
+   FOREIGN KEY (meal_id) REFERENCES meal (id);
+    
     alter table food_item
         add constraint FK_food_component__id
         foreign key (food_component_id)

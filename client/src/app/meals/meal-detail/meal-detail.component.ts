@@ -1,5 +1,5 @@
 
-import { FoodComponent } from '../meal.interfaces';
+import { FoodComponent, Meal } from '../meal.interfaces';
 import { MealStateService } from '../services/meal-state.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -17,9 +17,9 @@ import 'rxjs/add/observable/of';
 export class MealDetailComponent implements OnInit {
   mealDetail: FormGroup;
   foodComponents$: Observable<FoodComponent[]>;
-  foodComponent: FoodComponent = { description: 'Milk/Alt' };
+  foodComponent: FoodComponent = { id: '123456-A', description: 'Milk/Alt', foodItems: [] };
 
-  @Input() mealId: string;
+  @Input() meal: Meal;
 
  constructor(private state: MealStateService  ) {
   this.foodComponents$ = state.foodComponents$;

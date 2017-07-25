@@ -1,6 +1,6 @@
 import { AppState } from '../../app.state';
 import { FoodComponent } from '../meal.interfaces';
-import { foodItemsReceived, foodComponentsReceived } from '../meal.state';
+import { foodItemsReceived, foodComponentsReceived, mealsReceived } from '../meal.state';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Http } from '@angular/http';
@@ -15,6 +15,7 @@ export class MealQueryService {
 
   loadData() {
     this.queryFoodCategories().subscribe();
+    this.queryMeals().subscribe();
   }
 
   queryFoodItems( component: FoodComponent ) {
@@ -23,13 +24,24 @@ export class MealQueryService {
     params.set( 'projection', 'foodItemsWithCategory' );
     return this.http.get( component._links.foodItems.href, { search: params } )
       .map( res => res.json() )
-      .map( ({_embedded: {foodItem} })  => this.store.dispatch( foodItemsReceived( foodItem ) ) );
+      .map( ({_embedded: {foodItem} })  => this.store.dispatch( foodItemsReceived( { foodComponent: component, foodItems: foodItem } ) ) );
   }
 
   queryFoodCategories() {
-    return this.http.get( '/api/foodComponents' )
+    console.log( 'querying food components' );
+    const params = new URLSearchParams();
+    params.set( 'projection', 'foodComponentWithFoodItems' );
+    return this.http.get( '/api/foodComponent', {search: params} )
       .map( res => res.json() )
       .map( ({_embedded: {foodComponents} })  => this.store.dispatch( foodComponentsReceived( foodComponents ) ) );
+  };
+
+  queryMeals(){
+    const params = new URLSearchParams();
+    params.set( 'projection', 'mealWithId' );
+    return this.http.get( '/api/meal', {search: params} )
+      .map( res => res.json() )
+      .map( ({_embedded: {meals} })  => this.store.dispatch( mealsReceived( meals ) ) );
   };
 
 }
