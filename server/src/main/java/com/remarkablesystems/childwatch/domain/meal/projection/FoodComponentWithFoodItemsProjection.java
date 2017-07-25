@@ -9,7 +9,7 @@ import com.remarkablesystems.childwatch.domain.meal.FoodComponent;
 import com.remarkablesystems.childwatch.domain.meal.FoodItem;
 
 
-@Projection(name="foodItemWithFoodComponent", types= {FoodComponent.class, FoodItem.class} )
+@Projection(name="foodComponentWithFoodItems", types= {FoodComponent.class, FoodItem.class} )
 public interface FoodComponentWithFoodItemsProjection {
 
 	String getId();

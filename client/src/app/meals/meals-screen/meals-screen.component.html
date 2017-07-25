@@ -3,33 +3,24 @@
 		<h3>Header</h3>
 	</div>
 	<div #body class="row">
-		<div class="col-md-6">
-		    <div class="date-ctrl">			
-				<p class="text-center">
-					<i class="fa fa-chevron-left pull-left"></i>
-					<strong>Tuesday, 04 Jul 2017</strong>
-					<i class="fa fa-chevron-right pull-right"></i>
-				</p>			
-			</div>
+		<div class="col-md-4">
 			<div class="list-group">
-				<a class="list-group-item active">
-					<i class="cw-icon icon-breakfast"></i> Breakfast #12 
+				<a *ngFor="let meal of Meals" 
+					(click)="selectMeal(meal)"
+					class="list-group-item" 
+					[class.active]="meal == selectedMeal">
+					<i class="cw-icon" 
+					   [class.icon-breakfast]="meal.type === 'BREAKFAST'"
+					   [class.icon-snack]="meal.type === 'AM_SNACK' || meal.type === 'PM_SNACK'"
+					   [class.icon-lunch]="meal.type === 'LUNCH'"		
+					   [class.icon-dinner]="meal.type === 'DINNER'"			   
+					style="font-size: 2em"></i> {{meal.description}} 
 				</a>
-				<a class="list-group-item">
-					<i class="cw-icon icon-snack"></i> AM Snack 
-				</a>
-				<a class="list-group-item">
-					<i class="cw-icon icon-breakfast"></i> Lunch #17 
-				</a>				
 			</div>
 			<button class="btn btn-default"><i class="fa fa-plus"></i> Add Meal</button>
 		</div>
-		<div class="col-md-6">
-			<cw-meal-detail [mealId]="12"></cw-meal-detail>
-		<ul>
-			<li *ngFor="let item of foodItems$ | async" >{{item.description}}</li>
-		</ul>
-
+		<div class="col-md-8">
+			<cw-meal-detail [meal]="selectedMeal "></cw-meal-detail>
 		</div>
 		
 	</div>

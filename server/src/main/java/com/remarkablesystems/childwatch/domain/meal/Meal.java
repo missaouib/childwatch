@@ -26,6 +26,9 @@ public class Meal implements Serializable {
 
 	@Id @Getter @NonNull
 	private String id;
+	
+	@Getter @Setter @NonNull
+	private String description;
 
 	@Getter @Setter @NonNull @Enumerated(EnumType.STRING)
 	private MealType type;
@@ -47,6 +50,10 @@ public class Meal implements Serializable {
 	
 	public void addFoodItem( FoodItem foodItem ) {
 		foodItems.add(foodItem);
+	}
+	
+	public void removeFoodItem( FoodItem foodItem ) {
+		foodItems.remove(foodItem);
 	}
 
 }

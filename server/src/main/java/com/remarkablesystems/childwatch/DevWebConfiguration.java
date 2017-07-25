@@ -1,8 +1,8 @@
 package com.remarkablesystems.childwatch;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ProtocolResolver;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -18,14 +18,24 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
-@Profile("development")
 public class DevWebConfiguration extends WebMvcConfigurerAdapter {
     private ConfigurableApplicationContext applicationContext;
+    
+    @Value("${client.host}")
+    String clientHost;
+    
+    @PostConstruct
+    public void print() {
+      System.out.println( "Client will be at http://" + clientHost);
+    }
 
     public DevWebConfiguration(ConfigurableApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
+        
 
     // The protocol resolver etc. are only necessary
     // because the CLI returns 404 to HEAD requests. Otherwise this one line would suffice:
@@ -41,7 +51,7 @@ public class DevWebConfiguration extends WebMvcConfigurerAdapter {
             public Resource resolve(String location, ResourceLoader resourceLoader) {
                 if (location.startsWith("angular-cli:")) {
                     try {
-                        return new AngularCliResource(location.replace("angular-cli", "http"));
+                        return new AngularCliResource(location.replace("angular-cli", "http") );
                     } catch (MalformedURLException e) {
                         throw new RuntimeException(e);
                     }
@@ -49,7 +59,7 @@ public class DevWebConfiguration extends WebMvcConfigurerAdapter {
                 return null;
             }
         });
-        registry.addResourceHandler("/**").addResourceLocations("angular-cli://localhost:4200");
+        registry.addResourceHandler("/**").addResourceLocations("angular-cli://" + clientHost );
     }
 
     static class AngularCliResource extends UrlResource {
@@ -84,14 +94,14 @@ public class DevWebConfiguration extends WebMvcConfigurerAdapter {
                 return StreamUtils.drain(is);
             }
         }
-
+        
         @Override
         public InputStream getInputStream() throws IOException {
             try {
                 return super.getInputStream();
             } catch (IOException e) {
                 String message = String.format("<h1>Resource not found. Is angular-cli " +
-                        "running?</h1><a href=\"%s\">%s</a>", getURL(), getURL());
+                        "running?</h1><a href=\"%s\">%s</a>", getURL(), getURL() );
                 return new ByteArrayInputStream(message.getBytes());
             }
         }
