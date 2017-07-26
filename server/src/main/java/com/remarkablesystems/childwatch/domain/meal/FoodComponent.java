@@ -30,8 +30,7 @@ public class FoodComponent implements Serializable {
 
 	//bi-directional many-to-one association to Food
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="foodComponent")
-	@Getter
-	@NonNull
+	@Getter @NonNull
 	private Set<FoodItem> foodItems = new HashSet<FoodItem>();
 
 	public FoodComponent( String id, String description ) {
@@ -41,15 +40,12 @@ public class FoodComponent implements Serializable {
 	
 	public FoodItem addFoodItem(FoodItem foodItem) {
 		foodItems.add(foodItem);
-		foodItem.setFoodComponent(this);
 
 		return foodItem;
 	}
 
 	public FoodItem removeFoodItem(FoodItem foodItem) {
 		foodItems.remove(foodItem);
-		foodItem.setFoodComponent(null);
-
 		return foodItem;
 	}
 

@@ -118,6 +118,8 @@
     	description varchar(1024) not null,
     	short_description varchar(128),
     	food_component_id varchar(255),
+    	serving_uom varchar(36),
+    	purchase_uom varchar(36),
     	primary key (id)
     );
     
@@ -130,8 +132,11 @@
     
     create table meal_food_item(
     	id serial not null,
-    	meal_id varchar(255) not null,
-    	food_item_id varchar(255) not null,
+    	meal_id 		varchar(255) not null,
+    	food_item_id 	varchar(255) not null,
+    	age_group      varchar(20),
+   	 	amount         numeric (4, 2),
+   		uom_id        varchar(36),
     	primary key (id)
     );
     
@@ -143,6 +148,26 @@
    		meal_id           varchar (255),
    		PRIMARY KEY (id)
 	);
+	
+	CREATE TABLE unit_of_measure(
+   		id            varchar(36) NOT NULL,
+   		description   varchar(128) NOT NULL,
+   		primary key(id)
+	);
+	
+	CREATE TABLE age_group(
+		id	varchar(36) NOT NULL,
+		description varchar(128) NOT NULL,
+		primary key (id)
+	);
+	
+	alter table meal_food_item
+		add constraint FK_age_group_1
+		foreign key (age_group) REFERENCES age_group(id);
+	
+alter table meal_food_item
+	add constraint FK_unit_of_measure_1
+	foreign key (uom_id) REFERENCES unit_of_measure (id);
 
 ALTER TABLE meal_schedule
    ADD CONSTRAINT FK_meal_schedule_1 

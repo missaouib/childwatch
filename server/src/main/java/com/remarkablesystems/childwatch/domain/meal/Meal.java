@@ -10,7 +10,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,41 +18,35 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="meal")
 @NoArgsConstructor @AllArgsConstructor @ToString
 public class Meal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id @Getter @NonNull
+	@Id @NonNull @Getter
 	private String id;
-	
+
 	@Getter @Setter @NonNull
 	private String description;
 
-	@Getter @Setter @NonNull @Enumerated(EnumType.STRING)
+	@Getter @Setter @NonNull
 	private MealType type;
 
-	//uni-directional many-to-many association to Food
-	@ManyToMany(cascade={CascadeType.ALL})
-	@JoinTable(
-		name="meal_food_item", 
-		joinColumns={@JoinColumn(name="meal_id", referencedColumnName="id")}, 
-		inverseJoinColumns={@JoinColumn(name="food_item_id", referencedColumnName="id")}
-		)
-	@Getter @NonNull
-	private List<FoodItem> foodItems = new ArrayList<FoodItem>();
-	
-	public Meal( String id, MealType type ) {
-		this.id = id;
-		this.type = type;
+	//bi-directional many-to-one association to MealFoodItem
+	@OneToMany(mappedBy="meal")
+	@Getter @Setter
+	private List<MealFoodItem> mealFoodItems;
+
+
+	public MealFoodItem addMealFoodItem(MealFoodItem mealFoodItem) {
+		getMealFoodItems().add(mealFoodItem);
+
+		return mealFoodItem;
 	}
-	
-	public void addFoodItem( FoodItem foodItem ) {
-		foodItems.add(foodItem);
-	}
-	
-	public void removeFoodItem( FoodItem foodItem ) {
-		foodItems.remove(foodItem);
+
+	public MealFoodItem removeMealFoodItem(MealFoodItem mealFoodItem) {
+		getMealFoodItems().remove(mealFoodItem);
+
+		return mealFoodItem;
 	}
 
 }

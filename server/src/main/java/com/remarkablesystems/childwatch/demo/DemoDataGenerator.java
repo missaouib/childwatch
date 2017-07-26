@@ -183,7 +183,7 @@ class DemoDataGenerator implements ResourceLoaderAware {
 
     			FoodComponent fc = foodComponentRepository.findOne(splitLine[1]);
     			if( !isNull(fc) ) {
-    				FoodItem food = new FoodItem( UUID.randomUUID().toString(), splitLine[2].trim(),splitLine[3].trim(),fc);
+    				FoodItem food = new FoodItem( UUID.randomUUID().toString(), splitLine[2].trim(), fc );
     				fc.addFoodItem(food);
     				foodItemRepository.save(food);
     				System.out.println( food );

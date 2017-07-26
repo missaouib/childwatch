@@ -28,12 +28,27 @@ public class FoodItem implements Serializable {
 	@NonNull @Getter @Setter
 	private String description;
 
-	@Getter @Setter
 	@Column(name="short_description")
+	@Getter @Setter
 	private String shortDescription;
+	
+	@Column(name="purchase_uom")
+	@Getter @Setter
+	private String purchaseUom;
+
+	@Column(name="serving_uom")
+	@Getter @Setter
+	private String servingUom;
 
 	@ManyToOne
-	@JoinColumn(name="food_component_id")
-	@NonNull @Getter @Setter
+	@JoinColumn(name="food_component_id")	
+	@Getter @Setter
 	private FoodComponent foodComponent;
+	
+	
+	public FoodItem( String id, String description, FoodComponent foodComponent ) {
+		this.id = id;
+		this.description = description;
+		this.foodComponent = foodComponent;
+	}
 }
