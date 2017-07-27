@@ -9,5 +9,8 @@ COMMIT;
 
 INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, amount, uom_id)
      VALUES (1, '19f18510-42aa-439e-9c5d-35c3b4169f0b', '3939ef23-236b-4175-98c7-e4a8bc9e847b', NULL, 1.00, NULL);
+
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, amount, uom_id)
+     VALUES (2, '19f18510-42aa-439e-9c5d-35c3b4169f0b', '1822a47b-2254-444c-ba28-525f38f76b7b', NULL, 1.00, NULL);
      
 COMMIT;

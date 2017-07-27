@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { } from '@angular/router';
 
+import { TimeService } from '../../time.service';
+import { SchedulingService } from '../schedule.service';
 import { ViewControlsService } from './view-controls.service';
 import { ViewMode, OperationMode, DateType } from '../interfaces';
 import { isoDateTime } from '../../../common/date-utils';
@@ -11,7 +14,7 @@ import { isoDateTime } from '../../../common/date-utils';
   styleUrls: ['./view-controls.component.css']
 })
 export class ViewControlsComponent {
-  operation$ = this.viewControlService.timeStatus;
+  operation$ = this.scheduleService.timeStatus;
 
   // ISO formated times
   currentTime: Observable<string>;
@@ -20,35 +23,40 @@ export class ViewControlsComponent {
   operation: Observable<OperationMode>;
   viewMode: Observable<ViewMode>;
 
-  constructor(private viewControlService: ViewControlsService) {
+  constructor(
+    private scheduleService: SchedulingService,
+    private viewControlsService: ViewControlsService,
+    timeService: TimeService
+  ) {
 
-    this.currentTime = this.viewControlService.now
+    this.currentTime = timeService.currentTime
       .map(now => isoDateTime(now));
 
-    this.displayTime = this.viewControlService.whichTime
+    this.displayTime = this.scheduleService.whichTime
       .map(when => isoDateTime(when));
 
-    this.operation = this.viewControlService.timeStatus;
-    this.viewMode = this.viewControlService.mode;
+    this.operation = this.scheduleService.timeStatus;
+    this.viewMode = this.viewControlsService.mode;
+    // this.activatedRoute.
   }
 
   // Pass along message to service about mode switch
   updateViewMode(newMode: ViewMode) {
-    this.viewControlService.updateMode(newMode);
+    this.viewControlsService.updateMode(newMode);
   }
 
   // Pass along message to service about operation switch
   updateTimeStatus(newStatus: OperationMode) {
     if (newStatus === 'LIVE') {
-      this.viewControlService.updateLive(true);
+      this.viewControlsService.updateLive(true);
     } else {
-      this.viewControlService.updateLive(false);
+      this.viewControlsService.updateLive(false);
     }
   }
 
   // Pass along message to service about user changing time
   updateReviewTime(newTime: DateType) {
-    this.viewControlService.updateReviewDate(newTime);
+    this.viewControlsService.updateReviewDate(newTime);
   }
 
 }

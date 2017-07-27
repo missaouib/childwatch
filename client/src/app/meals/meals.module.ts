@@ -12,7 +12,7 @@ import { MealDetailComponent } from './meal-detail/meal-detail.component';
 import { MealStateService } from './services/meal-state.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpModule } from '@angular/http';
-import { FoodItemSelectComponent } from './food-item-select/food-item-select.component';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', component: MealsScreenComponent }
@@ -25,10 +25,10 @@ const routes: Routes = [
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
     TypeaheadModule.forRoot(),
-    ReactiveFormsModule,
+    ReactiveFormsModule, FormsModule,
     HttpModule
   ],
-  declarations: [MealsScreenComponent, MealDetailComponent, FoodItemSelectComponent],
+  declarations: [MealsScreenComponent, MealDetailComponent],
   providers: [ MealQueryService, MealStateService ]
 })
 export class MealsModule {

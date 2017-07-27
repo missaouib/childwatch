@@ -1,7 +1,7 @@
 // TODO: Rename this file
 import * as _ from 'lodash';
 
-import { Participant, DateType, Room, Staff, Schedule, Timeline } from './interfaces';
+import { Participant, DateType, Room, Staff, Assignment, Timeline } from './interfaces';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~ VIEW MODEL FOR POINT-IN-TIME GRID ~
@@ -76,7 +76,7 @@ function participantSlots(
 
   const slots = _(filteredParticipants)
     .map((p: Timeline) => {
-      const schedule: Schedule = findNearestSchedule(p, room.id, timestamp);
+      const schedule: Assignment = findNearestSchedule(p, room.id, timestamp);
       // TODO replace ternary with if/else (favor readability)
       const scheduled: ScheduledStatus = schedule
         ? (timestamp < schedule.start
@@ -133,7 +133,7 @@ function staffSlots(
     .value() as Timeline[];
 
   const slots: StaffSnapshotSlot[] = _.map(filteredStaff, (s: Timeline) => {
-    const schedule: Schedule = findNearestSchedule(s, room.id, timestamp);
+    const schedule: Assignment = findNearestSchedule(s, room.id, timestamp);
     const scheduled: ScheduledStatus = schedule
       ? (timestamp < schedule.start
         ? 'Arriving'
@@ -169,14 +169,14 @@ function isPresent(timeline: Timeline, roomId: string, timestamp: DateType, live
 
 function isScheduled(timeline: Timeline, roomId: string, timestamp: DateType, liveView: boolean): boolean {
   if (liveView) {
-    return !!_.find(timeline.schedule, p => p.roomId === roomId && timestamp < p.end);
+    return !!_.find(timeline.roomAssignments, p => p.roomId === roomId && timestamp < p.end);
   } else {
-    return !!_.find(timeline.schedule, p => p.roomId === roomId && timestamp < p.end && timestamp >= p.start);
+    return !!_.find(timeline.roomAssignments, p => p.roomId === roomId && timestamp < p.end && timestamp >= p.start);
   }
 }
 
-function findNearestSchedule(timeline: Timeline, roomId: string, timestamp: DateType): Schedule {
-  return _(timeline.schedule)
+function findNearestSchedule(timeline: Timeline, roomId: string, timestamp: DateType): Assignment {
+  return _(timeline.roomAssignments)
     .filter(s => s.roomId === roomId)
     .sortBy(s => Math.min(Math.abs(s.start - timestamp), Math.abs(s.end - timestamp)))
     .head();

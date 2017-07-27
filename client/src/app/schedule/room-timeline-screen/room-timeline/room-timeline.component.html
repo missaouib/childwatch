@@ -1,0 +1,77 @@
+<!-- time labels for first participant arrival and last participant leaving -->
+<!-- TODO hook this up to data -->
+<div class="time-marker"
+    [style.left.px]="(1000 * 60 * 60 * 7 / DAY_LENGTH * STRIPE_GRID_WIDTH - 15) + 130">
+  <span>7am</span>
+</div>
+<div class="time-marker"
+    [style.left.px]="(1000 * 60 * 60 * 18 / DAY_LENGTH * STRIPE_GRID_WIDTH - 15) + 130">
+  <span>6pm</span>
+</div>
+
+<!-- 
+  magic numbers below represent time calculations and adjustments for container size
+-->
+
+<!-- left vertical bar (start of day) -->
+<div class="time-vertical"
+    [style.height.px]="27 * (timeline.staffSlots.length + timeline.slots.length) + 45"
+    [style.left.px]="(1000 * 60 * 60 * 7 / DAY_LENGTH * STRIPE_GRID_WIDTH) + 130"></div>
+<!-- current time vertical bar -->
+<div class="time-vertical current-time-vertical" 
+    [style.left.px]="((dateTime - dayStart) / DAY_LENGTH * STRIPE_GRID_WIDTH) + 130"
+    [style.height.px]="27 * (timeline.staffSlots.length + timeline.slots.length) + 45"></div>
+<!-- Right vertical bar (end of day) -->
+<div class="time-vertical"
+    [style.left.px]="(1000 * 60 * 60 * 18 / DAY_LENGTH * STRIPE_GRID_WIDTH) + 130"
+    [style.height.px]="27 * (timeline.staffSlots.length + timeline.slots.length) + 45"></div>
+
+<div class="slot-container staff-container">
+  <label>Staff</label>
+  <div class="slot-row" *ngFor="let slot of timeline.staffSlots; trackBy:trackByFn">
+
+    <!-- 
+      first name and last initial of assigned staff member or the word "Unassigned"
+      determined by the presence of a person in the slot
+    -->
+    <div [class.present]="slot.presentNow" [class.absent]="!slot.presentNow">
+      {{slot.who ? slot.who.firstName + ' ' + slot.who.lastName.substr(0,1) : 'Unassigned'}}
+    </div>
+    
+    <div class="bar">
+      <div class="seg" style="position: absolute" *ngFor="let segment of slot.timeline; trackBy: trackByFn"
+          [class.purple]="segment.type === 'PNS'"
+          [class.blue]="segment.type === 'AS'"
+          [class.red]="segment.type === 'SNP'"
+          [class.gray]="segment.type === 'S'"
+          [style.left.px]="((segment.start - dayStart) / DAY_LENGTH * STRIPE_GRID_WIDTH) + 130"
+          [style.width.px]="((segment.end - segment.start) / DAY_LENGTH * STRIPE_GRID_WIDTH)"
+          ></div>
+    </div>
+  </div>
+</div>
+
+<div class="slot-container participant-container">
+  <label>Participants</label>
+  <div class="slot-row" *ngFor="let slot of timeline.slots; trackBy:trackByFn">
+    
+    <!--
+      name of assigned participant or the word "Unassigned"
+      determined by the presence of a person in the slot
+    -->
+    <div [class.present]="slot.presentNow" [class.absent]="!slot.presentNow">
+      {{slot.who ? slot.who.firstName + ' ' + slot.who.lastName.substr(0,1) : 'Unassigned'}}
+    </div>
+
+    <div class="bar">
+      <div class="seg" style="position: absolute" *ngFor="let segment of slot.timeline; trackBy: trackByFn"
+          [class.purple]="segment.type === 'PNS'"
+          [class.blue]="segment.type === 'AS'"
+          [class.red]="segment.type === 'SNP'"
+          [class.gray]="segment.type === 'S'"
+          [style.left.px]="((segment.start - dayStart) / DAY_LENGTH * STRIPE_GRID_WIDTH) + 130"
+          [style.width.px]="((segment.end - segment.start) / DAY_LENGTH * STRIPE_GRID_WIDTH)"
+          ></div>
+    </div>
+  </div>
+</div>

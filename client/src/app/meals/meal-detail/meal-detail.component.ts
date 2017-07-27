@@ -1,9 +1,8 @@
 
-import { FoodComponent, Meal } from '../meal.interfaces';
+import { Meal, FoodComponent, MealFoodItem } from '../meal.interfaces';
 import { MealStateService } from '../services/meal-state.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+// import { Observable } from 'rxjs/Observable';
 
 
 import 'rxjs/add/observable/of';
@@ -15,26 +14,23 @@ import 'rxjs/add/observable/of';
   styleUrls: ['./meal-detail.component.css']
 })
 export class MealDetailComponent implements OnInit {
-  mealDetail: FormGroup;
-  foodComponents$: Observable<FoodComponent[]>;
-  foodComponent: FoodComponent = { id: '123456-A', description: 'Milk/Alt', foodItems: [] };
+    foodComponents: FoodComponent[];
+    meal: Meal;
+    mealFoodItems: MealFoodItem[];
 
-  @Input() meal: Meal;
-
- constructor(private state: MealStateService  ) {
-  this.foodComponents$ = state.foodComponents$;
- }
+ constructor(private state: MealStateService  ) {}
 
   ngOnInit() {
-    this.mealDetail = new FormGroup( {
-      milk: new FormControl('Milk, 16oz (skim)'),
-      bread: new FormControl('Bread, whole wheat, 1 slice'),
-      meat: new FormControl( 'Bacon, 1 slice' )
-    });
-  }
-
-  addComponent( category: FoodComponent ) {
-    this.state.selectedFoodComponent$ = Observable.of(category);
+    this.state.foodComponents$.subscribe( fc => this.foodComponents = fc );
+    
+    this.state.selectedMeal$.subscribe( sm => {
+      console.log( 'Subscribed to selectedMeal' );
+      this.meal = sm;
+      this.mealFoodItems = (sm !== undefined) ? sm.mealFoodItems : [];
+      console.log( 'mealFoodItems has ' + (this.mealFoodItems ? this.mealFoodItems.length : 0 ) + ' items' );
+     });
+    console.log( 'ngInit');
+    console.log( this.foodComponents );
   }
 
 }

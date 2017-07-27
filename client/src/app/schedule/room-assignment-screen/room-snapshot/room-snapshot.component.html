@@ -1,0 +1,33 @@
+<div class="slot-holder">
+  <div fxLayout="row" fxLayoutWrap>
+    <div
+        *ngFor="let s of room.staffSlots; trackBy:trackSlots"
+        class="slot slot-staff">
+        <span>{{s.who?.firstName}} {{s.who?.lastName.substr(0, 1)}}</span>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutWrap>
+  <div
+      *ngFor="let s of room.slots; trackBy:trackSlots"
+      class="slot"
+      [class.target]="s.roomCapacity === 'Target'"
+      [class.above-target]="s.roomCapacity === 'AboveTarget'"
+      [class.arriving]="!s.present && s.scheduled === 'Arriving'">
+    <span>{{s.who?.firstName}} {{s.who?.lastName.substr(0, 1)}}</span>
+    <span *ngIf="operation === 'LIVE_VIEW' && !!s.who" class="status-detail">
+      <span *ngIf="!s.present && s.scheduled === 'Arriving'">
+        Arriving at {{s.scheduledStart | date:'shortTime'}}
+      </span>
+      <span *ngIf="!s.present && s.scheduled === 'Planned'">
+        Absent, leaving {{s.scheduledEnd | date:'shortTime'}}
+      </span>
+      <span *ngIf="s.present && s.scheduled !== 'NotScheduled'">
+        Leaving {{s.scheduledEnd | date:'shortTime' }}
+      </span>
+      <span *ngIf="s.present && s.scheduled === 'NotScheduled'">
+        No schedule
+      </span>
+    </span>
+  </div>
+  </div>
+</div>

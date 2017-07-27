@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.remarkablesystems.childwatch.domain.meal.FoodItem;
 
-@RepositoryRestResource(collectionResourceRel = "foodItem", path = "foodItem")
+@RepositoryRestResource(collectionResourceRel = "foodItems", path = "foodItem")
 public interface FoodItemRepository extends PagingAndSortingRepository<FoodItem, String> {
 	
 	Set<FoodItem> findByFoodComponentDescription( String description );

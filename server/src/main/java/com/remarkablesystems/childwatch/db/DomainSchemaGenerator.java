@@ -49,10 +49,12 @@ public class DomainSchemaGenerator {
         }
         metadata.addPackage("org.springframework.data.jpa.convert.threeten");
 
+        /*
         SchemaExport schemaExport = new SchemaExport((MetadataImplementor) metadata.buildMetadata());
         schemaExport.setDelimiter(";");
         schemaExport.setOutputFile(OUTPUT_FILE);
         schemaExport.setFormat(true);
         schemaExport.execute(true, false, false, true);
+        */
     }
 }

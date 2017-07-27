@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutWrap fxLayoutGap="10px" fxLayoutAlign="center">
+  <md-card *ngFor="let room of (rooms$ | async); trackBy: trackRoomsBy">
+    <md-card-header>
+      <md-card-title>{{room.name}}</md-card-title>
+    </md-card-header>
+    <hr>
+    <md-card-content>
+      <cw-room-overview [room]="room.snapshot" [operation]="operation$ | async">
+      </cw-room-overview>
+    </md-card-content>
+  </md-card>
+</div>

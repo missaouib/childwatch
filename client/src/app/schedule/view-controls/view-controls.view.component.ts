@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -18,7 +18,7 @@ const MINUTES_IN_DAY = 60 * 24;
   templateUrl: './view-controls.view.component.html',
   styleUrls: ['./view-controls.view.component.css']
 })
-export class ViewControlsViewComponent implements OnDestroy, OnInit {
+export class ViewControlsViewComponent implements OnDestroy {
 
   // The actual time of the client machine
   @Input() currentTime: DateType;
@@ -66,16 +66,15 @@ export class ViewControlsViewComponent implements OnDestroy, OnInit {
   dateTimeSub: Subscription;
   start: Date;
 
-  ngOnInit() {
-    this.start = jsDate(this.dateTime);
-    const timeAsMoment = moment(this.dateTime);
+  constructor() {
+    this.start = jsDate(Date.now());
+    const timeAsMoment = moment(Date.now());
 
     this.timeControl.setValue(
-      Math.floor((timeAsMoment.hour() * 60 + timeAsMoment.minute()) / SLIDER_INCREMENT_MINUTES) * SLIDER_INCREMENT_MINUTES,
-      { emitEvent: false }
+      Math.floor((timeAsMoment.hour() * 60 + timeAsMoment.minute()) / SLIDER_INCREMENT_MINUTES) * SLIDER_INCREMENT_MINUTES
     );
 
-    this.dateControl.setValue(isoDate(this.dateTime), { emitEvent: false });
+    this.dateControl.setValue(isoDate(this.start));
 
     // Manage just a touch of state here
     // Simplify API by combining date and time for consumer

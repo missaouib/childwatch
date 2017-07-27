@@ -1,4 +1,4 @@
-import { FoodItem, FoodComponent, Meal } from './meal.interfaces';
+import { FoodItem, FoodComponent, Meal, MealFoodItem } from './meal.interfaces';
 import { Action } from '@ngrx/store';
 
 export interface MealUIState {
@@ -29,7 +29,7 @@ export const FOOD_COMPONENTS_RECEIVED = 'FOOD_COMPONENTS_RECEIVED';
 export const FOOD_COMPONENT_SELECTED = 'FOOD_COMPONENT_SELECTED';
 export const MEALS_RECEIVED = 'MEALS_RECEIVED';
 export const MEAL_SELECTED = 'MEAL_SELECTED';
-
+export const MEAL_FOOD_ITEMS_RECEIVED = 'MEAL_FOOD_ITEMS_RECEIVED';
 
 
 export function mealReducer(state: MealState = INITIAL_MEALSTATE, action: Action): MealState {
@@ -47,6 +47,9 @@ export function mealReducer(state: MealState = INITIAL_MEALSTATE, action: Action
         return { ...state, meals: action.payload };
       case MEAL_SELECTED:
         return { ...state, ui: { ...state.ui, selectedMeal: action.payload } };
+      case MEAL_FOOD_ITEMS_RECEIVED:
+        console.log( action.payload );
+        return { ...state, ui: { ...state.ui, selectedMeal: { ...state.ui.selectedMeal, mealFoodItems: action.payload } } };
     }
     return state;
 }
@@ -74,7 +77,6 @@ export function foodComponentsReceived( state: FoodComponent[] ): Action {
   }
 
 export function foodComponentSelected( state: FoodComponent ): Action {
-    console.log( 'created action foodComponentSelected' );
     return {
       type: FOOD_COMPONENT_SELECTED,
       payload: state
@@ -87,3 +89,11 @@ export function mealSelected( state: Meal ): Action {
     payload: state
   };
 }
+
+export function mealFoodItemsReceived( state: MealFoodItem[] ): Action {
+  return {
+    type: MEAL_FOOD_ITEMS_RECEIVED,
+    payload: state
+  };
+}
+

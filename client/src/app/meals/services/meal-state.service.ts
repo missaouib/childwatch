@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { FoodItem, FoodComponent, Meal } from '../meal.interfaces';
 import { foodComponentSelected, mealSelected } from '../meal.state';
-import { FOOD_COMPONENT_SELECTED, MEALS_RECEIVED } from '../meal.state';
+import { FOOD_COMPONENT_SELECTED, MEALS_RECEIVED, MEAL_SELECTED } from '../meal.state';
 import { MealQueryService } from './meal-query.service';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
@@ -14,10 +14,16 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 @Injectable()
 export class MealStateService {
 
+    @Effect() _selectedMeal = this.actions$
+      .ofType( MEAL_SELECTED )
+      .map( toPayload )
+      .map( payload => this.querySvc.queryFoodItemsForMeal( payload ).subscribe() )
+      .subscribe();
+
     @Effect() _selectedFoodComponent = this.actions$
      .ofType( FOOD_COMPONENT_SELECTED )
     .map( toPayload )
-    .map( payload => Observable.of( this.querySvc.queryFoodItems( payload ) ) )
+    .map( payload => this.querySvc.queryFoodItems( payload ).subscribe() )
     .subscribe();
 
     @Effect() _loadedMeals = this.actions$

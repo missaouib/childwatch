@@ -1,3 +1,7 @@
+export interface Link {
+  href: string;
+}
+
 export interface FoodItem {
   id: string;
   description: string;
@@ -5,27 +9,43 @@ export interface FoodItem {
   foodComponent: FoodComponent;
 };
 
-export interface FoodComponentLinks{
-      self: {
-        href: string
-      },
-      foodItems: {
-        href: string
-      }
-  }
-
-export interface FoodComponent {
-  id: string,
-  description: string;
-  _links?: FoodComponentLinks,
-  foodItems: FoodItem[]
+export interface FoodComponentLinks {
+  self: Link;
+  foodItems: Link;
 };
 
-
-export interface Meal {
+export interface FoodComponent {
   id: string;
   description: string;
+  _links?: FoodComponentLinks;
+  foodItems: FoodItem[];
+};
+
+export interface MealFoodItemLinks {
+  self: Link;
+  foodItem: Link;
+  meal: Link;
+};
+
+export interface MealFoodItem {
+  id: string;
+  ageGroup: string;
+  amount: number;
+  foodItem: FoodItem;
+  _links?: MealFoodItemLinks;
+};
+
+export interface MealLinks {
+  self: Link;
+  meal: Link;
+  mealFoodItems: Link;
+};
+
+export interface Meal {
+  id?: string;
+  description: string;
   type: string;
-  foods: FoodItem[];
-}
+  _links?: MealLinks;
+  mealFoodItems: MealFoodItem[];
+};
 

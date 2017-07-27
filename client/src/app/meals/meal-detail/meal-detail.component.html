@@ -1,63 +1,64 @@
 <div class="panel panel-default">
-	<div class="panel-heading"> 
-		<i class="cw-icon" 
-		   [class.icon-breakfast]="meal.type === 'BREAKFAST'"
-		   [class.icon-snack]="meal.type === 'AM_SNACK' || meal.type === 'PM_SNACK'"
-		   [class.icon-lunch]="meal.type === 'LUNCH'"		
-		   [class.icon-dinner]="meal.type === 'DINNER'" style="font-size: 2em"></i> {{meal.description}}</div>
+	<div class="panel-heading">
+		<i class="cw-icon" [class.icon-breakfast]="meal.type === 'BREAKFAST'"
+			[class.icon-snack]="meal.type === 'AM_SNACK' || meal && meal.type === 'PM_SNACK'"
+			[class.icon-lunch]="meal.type === 'LUNCH'"
+			[class.icon-dinner]="meal.type === 'DINNER'" style="font-size: 2em"></i>
+		{{meal.description}}
+	</div>
 </div>
-<tabset [justified]="true">
-	<tab active="true">
-		<ng-template tabHeading>
-        	<i class="fa fa-check" style="color: green"></i> 0-3mo
-      	</ng-template>
-	
-		<form novalidate [formGroup]="mealDetail">
-				<cw-food-item-select [foodComponent]="foodComponent"></cw-food-item-select>
-				<div class="input-group input-group-unstyled" style="margin-top: 10px">
-					<i class="cw-icon icon-bread input-group-addon circle" style="font-size: 2em"></i>
-					<label for="bread">Bread</label>
-					<input #bread formControlName="bread"
-								 class="form-control">
-				</div>
-				<div class="input-group input-group-unstyled" style="margin-top: 10px">
-					<i class="cw-icon icon-meat input-group-addon circle" style="font-size: 2em"></i>
-					<label for="meat">Meat/Alt</label>
-					<input #meat formControlName="meat"
-								 
-								 class="form-control">
-				</div>
-		</form>	
-	</tab>
-	<tab>
-		<ng-template tabHeading>
-        	<i class="fa fa-close" style="color: red"></i> 3mo-4yrs
-      	</ng-template>	
-	</tab>
-	<tab>
-		<ng-template tabHeading>
-        	<i class="fa fa-close" style="color: red"></i> 4yrs+
-      	</ng-template>		
-	</tab>
-</tabset>
-		<hr />
-		
-		<div class="btn-group" dropdown>
-			<button dropdownToggle type="button" class="btn btn-primary dropdown-toggle"><i class="fa fa-plus"></i> Add Component <span class="caret"></span></button>
-			<ul *dropdownMenu class="dropdown-menu" role="menu">
-				<li *ngFor="let component of foodComponents$ | async" role="menuitem"><a class="dropdown-item" (click)="addComponent(component)">{{component.id}}-{{component.description}}</a></li>
-			</ul>
+
+
+<div class="btn-group" dropdown >
+  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+    Add Component <span class="caret"></span>
+  </button>
+  <ul *dropdownMenu class="dropdown-menu" role="menu">
+    <li *ngFor="let component of foodComponents" role="menuitem"><a class="dropdown-item" >{{component.description}}</a></li>
+  </ul>
+</div>
+
+<tabset [justified]="true"> 
+	<tab active="true"> 
+		<ng-template tabHeading> <i class="fa fa-check" style="color: green"></i> 0-3MO </ng-template>
+
+		<div *ngFor="let item of mealFoodItems" class="input-group input-group-unstyled" style="margin-top: 10px">
+			<i class="cw-icon input-group-addon circle" style="font-size: 2em"
+				[class.icon-pie]="item.foodItem.foodComponent.id === '18'"
+				[class.icon-food]="item.foodItem.foodComponent.id === '22'">
+			</i>
+			<span>{{item.foodItem.foodComponent.description}} ({{item.foodItem.foodComponent.id}})</span> 
 		</div>
+	
+	</tab> 
+	
+	<tab> 
+		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 3MO - 1YR </ng-template> 
+	</tab> 
+	
+	<tab> 
+		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 1 - 2YRS </ng-template> 
+	</tab> 
+	
+	<tab> 
+		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 3 - 5YRS </ng-template> 
+	</tab> 
+	
+	<tab> 
+		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 6 - 12YRS </ng-template> 
+	</tab> 
+	
+	<tab> 
+		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 12 - 18YRS </ng-template> 
+	</tab> 
+	
+	<tab> 
+		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> Adult </ng-template> 
+	</tab> 
+
+</tabset>
 
 
-<!-- <md-toolbar>	
-	<h4><md-icon class="double" svgIcon='img:breakfast'></md-icon> Breakfast {{mealId}}</h4>
-</md-toolbar>
 
-<md-list>
-	<md-list-item *ngFor="let food of Foods | async; let i=index"><span *ngIf='i<20'><md-icon svgIcon='img:milk' class='circle'></md-icon>{{food['descriptor']}}</span></md-list-item>		
-</md-list>
- -->
- 
- <template #customItemTemplate let-model="item" let-index="index">
- 	<span>{{index}}-{{model.description}}</span>
+
+

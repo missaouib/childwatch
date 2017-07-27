@@ -1,0 +1,21 @@
+<div fxLayout="row">
+  <div class="people-side-panel view-height" fxLayout="row" fxFlex="none">
+    <cw-people-list fxFlex="0 1 content" [staff]="staff$ | async" [participants]="participants$ | async">
+    </cw-people-list>
+    <ng-container [ngSwitch]="operation$ | async">
+      <cw-person-timeline fxFlex="0 0 content" *ngSwitchCase="'LIVE'"></cw-person-timeline>
+    </ng-container>
+  </div>
+  <div class="view-height" fxLayout="row" fxLayoutWrap fxLayoutGap="10px" fxLayoutAlign="center">
+    <md-card *ngFor="let room of (rooms$ | async); trackBy: trackRoomsBy">
+      <md-card-header>
+        <md-card-title>{{room.name}}</md-card-title>
+      </md-card-header>
+      <hr>
+      <md-card-content>
+        <cw-room-snapshot [room]="room.snapshot" [operation]="operation$ | async" fxFlex="0 0 300px">
+        </cw-room-snapshot>
+      </md-card-content>
+    </md-card>
+  </div>
+</div>

@@ -14,7 +14,6 @@ export class MealsScreenComponent implements OnInit {
   selectedMeal: Meal;
 
   constructor(private state: MealStateService) {
-    this.state.selectedMeal$.subscribe( m => this.selectedMeal = m );
     this.state.meals$.subscribe( ms => this.Meals = ms );
   }
 
