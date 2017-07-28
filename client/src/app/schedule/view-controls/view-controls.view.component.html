@@ -50,7 +50,6 @@
         <md-option value="SITE_OVERVIEW">Site overview</md-option>
         <md-option value="ROOM_ASSIGNMENTS">Room assignments</md-option>
         <md-option value="TIMELINE">Timeline</md-option>
-        <md-option value="CHANGE_SCHEDULES">Change schedules</md-option>
       </md-select>
     </div>
 
@@ -58,17 +57,14 @@
     <div class="btn-group" fxHide fxShow.gt-sm>
       <label>View:<br></label>
       <md-button-toggle-group #group="mdButtonToggleGroup" [value]="viewMode" (change)="updateViewMode($event.value)">
-        <md-button-toggle value="overview">
+        <md-button-toggle value="SITE_OVERVIEW">
           Site overview
         </md-button-toggle>
-        <md-button-toggle value="assignment">
+        <md-button-toggle value="ROOM_ASSIGNMENTS">
           Room assignments
         </md-button-toggle>
-        <md-button-toggle value="timeline">
+        <md-button-toggle value="TIMELINE">
           Timeline
-        </md-button-toggle>
-        <md-button-toggle value="recurring">
-          Change schedules
         </md-button-toggle>
       </md-button-toggle-group>
     </div>

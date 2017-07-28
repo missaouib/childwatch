@@ -3,7 +3,7 @@ import * as moment from 'moment';
 export type DateType = number;
 
 export type OperationMode = 'LIVE' | 'SCHEDULE' | 'REVIEW';
-export type ViewMode = 'overview' | 'assignment' | 'timeline' | 'recurring';
+export type ViewMode = 'SITE_OVERVIEW' | 'ROOM_ASSIGNMENTS' | 'TIMELINE';
 
 // ----------------
 
@@ -39,7 +39,7 @@ export interface Room {
 export interface Timeline {
   personId: string;
   presence: Presence[];
-  roomAssignments: Assignment[];
+  schedule: Schedule[];
 }
 
 export interface PersonTimeline {
@@ -60,21 +60,8 @@ export interface Presence extends PlacementSegment { }
 
 // More specific version of PlacementSegment intended for
 // use when indicating what is scheduled to happen
-export interface Assignment extends PlacementSegment {
+export interface Schedule extends PlacementSegment {
   end: DateType;
-}
-
-export interface ClientSchedule {
-  personId: string;
-  days: DaySchedule[];
-  effectiveDate: string;
-}
-
-export interface DaySchedule {
-  start1: string;
-  end1: string;
-  start2: string;
-  end2: string;
 }
 
 // ----------------
@@ -99,40 +86,6 @@ export const Events = {
   ParticipantArrived: 'ParticipantArrived',
   ParticipantDeparted: 'ParticipantDeparted'
 };
-
-export interface PersonSchedule {
-  who: Person;
-  type: PersonType;
-  date: DateType;
-  schedule: Assignment[];
-
-}
-
-export interface StaticSchedulingData {
-  staff: Staff[];
-  participants: Participant[];
-  rooms: Room[];
-}
-
-export interface TimelinesByPerson {
-  [personId: string]: Timeline;
-};
-
-export interface DailyTimelinesByPerson {
-  staffTimeline: TimelinesByPerson;
-  participantTimeline: TimelinesByPerson;
-}
-
-export interface ServerSchedule {
-  personId: string;
-  effectiveDate: string;
-  schedule: Pair[][];
-}
-
-export interface Pair {
-  start: number;
-  end: number;
-}
 
 // TODO plenty of modeling needed:
 // * Can a participant be scheduled for more than one room on a given day, like morning in one room

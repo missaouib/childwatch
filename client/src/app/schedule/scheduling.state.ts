@@ -1,10 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import {
-  DateType, Participant, Staff, Room,
-  PersonType, Assignment, ClientSchedule,
-  TimelinesByPerson, PersonSchedule, StaticSchedulingData, DailyTimelinesByPerson
-} from './interfaces';
+import { DateType, Participant, Staff, Room, Timeline, PersonType, Person, Schedule } from './interfaces';
 import { dateTimestamp } from '../../common/date-utils';
 import { ViewControl, viewControlReducer } from './view-controls/view-controls.state';
 
@@ -23,7 +19,6 @@ export interface SchedulingState {
   participantTimeline: { [date: number]: TimelinesByPerson };
   personSchedule?: PersonSchedule;
   viewControl: ViewControl;
-  editingSchedule?: ClientSchedule;
 }
 
 const INITIAL_STATE: SchedulingState = {
@@ -34,6 +29,28 @@ const INITIAL_STATE: SchedulingState = {
   participantTimeline: {},
   viewControl: undefined
 };
+
+export interface PersonSchedule {
+  who: Person;
+  type: PersonType;
+  date: DateType;
+  schedule: Schedule[];
+}
+
+export interface StaticSchedulingData {
+  staff: Staff[];
+  participants: Participant[];
+  rooms: Room[];
+}
+
+export interface TimelinesByPerson {
+  [personId: string]: Timeline;
+};
+
+export interface DailyTimelinesByPerson {
+  staffTimeline: TimelinesByPerson;
+  participantTimeline: TimelinesByPerson;
+}
 
 export const WATCH_STATIC_DATA = 'WATCH_STATIC_DATA';
 export function watchStaticData(): Action { return { type: WATCH_STATIC_DATA }; }
@@ -68,7 +85,7 @@ export function scheduleEditorDateChanged(value: DateType) {
 }
 
 export const SCHEDULE_EDITOR_SCHEDULE_LOADED = 'SCHEDULE_EDITOR_SCHEDULE_LOADED';
-export function assignmentEditorAssignmentLoaded(value: Assignment[]) {
+export function scheduleEditorScheduleLoaded(value: Schedule[]) {
   return {
     type: SCHEDULE_EDITOR_SCHEDULE_LOADED,
     payload: value
@@ -94,19 +111,8 @@ export function timelineDataReceived(
   };
 }
 
-export const PERSON_SCHEDULE_RECEIVED = 'PERSON_SCHEDULE_RECEIVED';
-export function personScheduleReceived(payload: ClientSchedule) {
-  return { type: PERSON_SCHEDULE_RECEIVED, payload };
-}
-
-export const UPDATE_PERSON_SCHEDULE = 'UPDATE_PERSON_SCHEDULE';
-export function updatePersonSchedule(payload: ClientSchedule) {
-  return { type: UPDATE_PERSON_SCHEDULE, payload };
-}
-
-// TODO: rename to room assignment
 export const UPDATE_SCHEDULE = 'UPDATE_SCHEDULE';
-export function updateSchedule(payload: Assignment[]) {
+export function updateSchedule(payload: Schedule[]) {
   return { type: UPDATE_SCHEDULE, payload };
 }
 
@@ -146,13 +152,7 @@ export function schedulingReducer(state: SchedulingState = INITIAL_STATE, action
           who: action.payload.who,
           date: date,
           schedule: undefined
-        },
-        editingSchedule: undefined
-      };
-    case PERSON_SCHEDULE_RECEIVED:
-      return {
-        ...state,
-        editingSchedule: action.payload
+        }
       };
     case SCHEDULE_EDITOR_DATE_CHANGED:
       return {

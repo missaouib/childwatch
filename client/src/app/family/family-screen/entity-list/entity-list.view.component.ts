@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 
-import { Entity, Family, Participant } from '../../family.interfaces';
+import { Entity, Family, Participant, NonParticipant } from '../../family.interfaces';
 
 @Component({
   selector: 'cw-entity-list-view',
@@ -9,7 +9,7 @@ import { Entity, Family, Participant } from '../../family.interfaces';
 export class EntityListViewComponent {
 
   @Input() families: Family[];
-  @Input() nonParticipants: Entity[];
+  @Input() nonParticipants: NonParticipant[];
   @Input() participants: Participant[];
   @Input() other: Entity[];
   @Input() selectedEntity: Entity;

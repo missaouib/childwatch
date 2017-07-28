@@ -14,9 +14,9 @@ export class FamilyDetailsComponent {
   familyMembers: Observable<Participant[]>;
   previewMembers: Observable<Participant[]>;
   constructor(private fis: FamilyInfoService) {
-    this.selectedFamily = fis.selectedEntity as Observable<Family>;
-    this.familyMembers = fis.selectedFamilyMembers as Observable<Participant[]>;
-    this.previewMembers = fis.previewMembers as Observable<Participant[]>;
+    this.selectedFamily = fis.selectedEntity;
+    this.familyMembers = fis.selectedFamilyMembers;
+    this.previewMembers = fis.previewMembers;
   }
   selectedMembers(members: Participant[]) {
     this.fis.viewingMembers(members);

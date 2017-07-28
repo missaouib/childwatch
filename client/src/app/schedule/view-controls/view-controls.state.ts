@@ -1,7 +1,6 @@
 import { Action } from '@ngrx/store';
 
 import { DateType, ViewMode, makeEvent } from '../interfaces';
-import { ROUTE_CHANGED } from '../../router.state';
 
 export interface ViewControl {
   live: boolean;
@@ -11,10 +10,10 @@ export interface ViewControl {
 
 const initialViewControl: ViewControl = {
   live: true,
-  mode: 'overview'
+  mode: 'SITE_OVERVIEW'
 };
 
-export const events = {
+const events = {
   liveChanged: 'liveChanged',
   reviewingDateTimeChanged: 'reviewingDateTimeChanged',
   modeChanged: 'modeChanged'
@@ -41,21 +40,7 @@ export function viewControlReducer(state: ViewControl = initialViewControl, acti
       return { ...state, reviewingDateTime: action.payload, live };
     case events.modeChanged:
       return { ...state, mode: action.payload };
-    case ROUTE_CHANGED:
-      return routeChanged(state, action.payload);
     default:
       return state;
   }
 };
-
-// Certain route change events need to sync data to the store
-// In this case changing the mode via the URL (as opposed to the controls) needs to set the mode in the state
-function routeChanged(state: ViewControl, payload: any[]): ViewControl {
-  let newState: ViewControl = state;
-  const targetMeta = payload.find(meta => !!meta.scheduleViewMode);
-  if (targetMeta) {
-    newState = { ...state, mode: targetMeta.scheduleViewMode };
-  }
-
-  return newState;
-}

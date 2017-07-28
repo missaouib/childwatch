@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { Participant, Staff } from '../interfaces';
-import { SchedulingService } from '../schedule.service';
+import { ScheduleManagementService } from '../services/schedule-editing.service';
 
 @Component({
   selector: 'cw-people-list',
@@ -13,7 +13,7 @@ export class PeopleListComponent {
   @Input() staff: Staff[];
 
   constructor(
-    private scheduleManagement: SchedulingService
+    private scheduleManagement: ScheduleManagementService
   ) { }
 
   clickStaff(s: Staff) {
