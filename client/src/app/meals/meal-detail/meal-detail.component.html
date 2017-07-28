@@ -1,33 +1,61 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<i class="cw-icon" [class.icon-breakfast]="meal.type === 'BREAKFAST'"
+	
+		<h3><i class="cw-icon" [class.icon-breakfast]="meal.type === 'BREAKFAST'"
 			[class.icon-snack]="meal.type === 'AM_SNACK' || meal && meal.type === 'PM_SNACK'"
 			[class.icon-lunch]="meal.type === 'LUNCH'"
 			[class.icon-dinner]="meal.type === 'DINNER'" style="font-size: 2em"></i>
 		{{meal.description}}
+		</h3>
 	</div>
 </div>
 
 
-<div class="btn-group" dropdown >
-  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
-    Add Component <span class="caret"></span>
-  </button>
-  <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li *ngFor="let component of foodComponents" role="menuitem"><a class="dropdown-item" >{{component.description}}</a></li>
-  </ul>
-</div>
 
 <tabset [justified]="true"> 
 	<tab active="true"> 
 		<ng-template tabHeading> <i class="fa fa-check" style="color: green"></i> 0-3MO </ng-template>
 
 		<div *ngFor="let item of mealFoodItems" class="input-group input-group-unstyled" style="margin-top: 10px">
-			<i class="cw-icon input-group-addon circle" style="font-size: 2em"
+			<!--  need vegetables, fast-food, snack, native-->
+			<i class="cw-icon input-group-addon" style="font-size: 2.5em"
+				[class.icon-milk]="item.foodItem.foodComponent.id === '1'"
+				[class.icon-spices]="item.foodItem.foodComponent.id === '2'"
+				[class.icon-baby-food]="item.foodItem.foodComponent.id === '3'"
+				[class.icon-olive-oil-jar]="item.foodItem.foodComponent.id === '4'"
+				[class.icon-chicken-leg-bite]="item.foodItem.foodComponent.id === '5'"
+				[class.icon-soup]="item.foodItem.foodComponent.id === '6'"
+				[class.icon-sausage]="item.foodItem.foodComponent.id === '7'"
+				[class.icon-cereals]="item.foodItem.foodComponent.id === '8'"
+				[class.icon-fruit-salad]="item.foodItem.foodComponent.id === '9'"
+				[class.icon-pig-face]="item.foodItem.foodComponent.id === '10'"
+				[class.icon-vegetables]="item.foodItem.foodComponent.id === '11'" 
+				[class.icon-peanuts]="item.foodItem.foodComponent.id === '12'"
+				[class.icon-beef-steak]="item.foodItem.foodComponent.id === '13'"
+				[class.icon-beverage]="item.foodItem.foodComponent.id === '14'"
+				[class.icon-fish]="item.foodItem.foodComponent.id === '15'"
+				[class.icon-beans]="item.foodItem.foodComponent.id === '16'"
+				[class.icon-lamb]="item.foodItem.foodComponent.id === '17'"
 				[class.icon-pie]="item.foodItem.foodComponent.id === '18'"
-				[class.icon-food]="item.foodItem.foodComponent.id === '22'">
+				[class.icon-sweets]="item.foodItem.foodComponent.id === '19'"
+				[class.icon-pasta]="item.foodItem.foodComponent.id === '20'"				
+				[class.icon-fast-food]="item.foodItem.foodComponent.id === '21'" 				
+				[class.icon-food]="item.foodItem.foodComponent.id === '22'"
+				[class.icon-snack]="item.foodItem.foodComponent.id === '25'"
+				[class.icon-native]="item.foodItem.foodComponent.id === '35'"
+				[class.icon-restaurant]="item.foodItem.foodComponent.id === '36'"
+				[class.circle-green]="item.foodItem.description"
+				[class.circle-grey]="item.foodItem.description===undefined"				
+				>
 			</i>
-			<span>{{item.foodItem.foodComponent.description}} ({{item.foodItem.foodComponent.id}})</span> 
+			<label>{{item.foodItem.foodComponent.description}}</label>
+			<input class="form-control" 
+				   [(ngModel)]="item.foodItem.description"
+				   [typeahead]="food(item.foodItem.foodComponent)"
+				   typeaheadOptionField="description"
+				   typeaheadOptionsLimit="10">
+			
+			<div class="pull-right"><i style="color: red" class="fa fa-close"></i></div>
 		</div>
 	
 	</tab> 
@@ -57,6 +85,21 @@
 	</tab> 
 
 </tabset>
+
+<hr/>
+
+<div class="btn-group" dropdown >
+  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+    Add Component <span class="caret"></span>
+  </button>
+  <ul *dropdownMenu class="dropdown-menu" role="menu">
+    <li *ngFor="let component of foodComponents" role="menuitem">
+    	<a class="dropdown-item" (click)="addFoodComponent(component)">
+    		{{component.id}} - {{component.description}}
+    	</a>
+    </li>
+  </ul>
+</div>
 
 
 

@@ -3,9 +3,9 @@ export interface Link {
 }
 
 export interface FoodItem {
-  id: string;
-  description: string;
-  shortDescription: string;
+  id?: string;
+  description?: string;
+  shortDescription?: string;
   foodComponent: FoodComponent;
 };
 
@@ -18,7 +18,7 @@ export interface FoodComponent {
   id: string;
   description: string;
   _links?: FoodComponentLinks;
-  foodItems: FoodItem[];
+  foodItems?: FoodItem[];
 };
 
 export interface MealFoodItemLinks {
@@ -28,10 +28,10 @@ export interface MealFoodItemLinks {
 };
 
 export interface MealFoodItem {
-  id: string;
-  ageGroup: string;
-  amount: number;
-  foodItem: FoodItem;
+  id?: string;
+  ageGroup?: string;
+  amount?: number;
+  foodItem?: FoodItem;
   _links?: MealFoodItemLinks;
 };
 

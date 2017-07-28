@@ -1,8 +1,19 @@
-.circle {
+.circle-green {
     border-radius: 50%;
     background: green;
     vertical-align: middle;
     color: white;
+    padding: 20px;
+    margin: 30px
+}
+
+.circle-grey {
+    border-radius: 50%;
+    background: grey;
+    vertical-align: middle;
+    color: white;
+    padding: 20px;
+    margin: 30px
 }
 
 .double {
