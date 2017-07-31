@@ -17,6 +17,7 @@ export class MealActions {
   static MEAL_FOOD_ITEMS_RECEIVED = 'MEAL_FOOD_ITEMS_RECEIVED';
   static ADD_FOOD_COMPONENT_TO_SELECTED_MEAL = 'ADD_FOOD_COMPONENT_TO_SELECTED_MEAL';
   static ADD_MENU_ITEM = 'ADD_MENU_ITEM';
+  static REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL = 'REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL';
 
   
   /*
@@ -25,11 +26,11 @@ export class MealActions {
   mealsReceived = ActionCreatorFactory.create<Meal[]>(MealActions.MEALS_RECEIVED);
   foodItemsReceived = ActionCreatorFactory.create<{foodComponent: FoodComponent, foodItems: FoodItem[]}>(MealActions.FOOD_ITEMS_RECEIVED);
   foodComponentsReceived = ActionCreatorFactory.create<FoodComponent[]>(MealActions.FOOD_COMPONENTS_RECEIVED);
-
   foodComponentSelected = ActionCreatorFactory.create<FoodComponent>(MealActions.FOOD_COMPONENT_SELECTED);
   mealSelected = ActionCreatorFactory.create<Meal>(MealActions.MEAL_SELECTED);
   mealFoodItemsReceived = ActionCreatorFactory.create<MealFoodItem[]>(MealActions.MEAL_FOOD_ITEMS_RECEIVED);
   addFoodComponentToSelectedMeal = ActionCreatorFactory.create<FoodComponent>(MealActions.ADD_FOOD_COMPONENT_TO_SELECTED_MEAL);
+  removeMealFoodItemFromSelectedMeal = ActionCreatorFactory.create<MealFoodItem>(MealActions.REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL );
 
   addMenuItem = ActionCreatorFactory.create<{type: string}>(MealActions.ADD_MENU_ITEM);
 
@@ -57,7 +58,7 @@ export class MealActions {
         const mealFoodItem: MealFoodItem = {
           id: undefined,
           ageGroup: undefined,
-          amount: 0,
+          amount: 1,
           foodItem: { id: undefined, description: undefined, shortDescription: undefined, foodComponent: action.payload }
         };
         const mealFoodItems =  state.ui.selectedMeal.mealFoodItems.concat( mealFoodItem );
@@ -70,6 +71,10 @@ export class MealActions {
         };
         const meals = state.meals.concat( meal );
         return { ...state, meals: meals };
+        
+      case MealActions.REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL:
+        const items = state.ui.selectedMeal.mealFoodItems.filter( item => item !== action.payload );
+        return { ...state, ui: { ...state.ui, selectedMeal: { ...state.ui.selectedMeal, mealFoodItems: items } } };
     }
     return state;
 }

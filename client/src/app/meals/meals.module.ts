@@ -9,7 +9,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 import { MealsScreenComponent } from './meals-screen/meals-screen.component';
 import { MealDetailComponent } from './meal-detail/meal-detail.component';
-import { MealActions } from './mealactions';
+import { MealActions } from './meal.actions';
 import { MealStateService } from './services/meal-state.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpModule } from '@angular/http';

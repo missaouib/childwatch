@@ -13,7 +13,8 @@ export const AppRoutes: Routes = [
           { path: 'family', loadChildren: './family/family.module#FamilyModule' },
           { path: 'schedule', loadChildren: './schedule/schedule.module#ScheduleModule' },
           { path: 'meals', loadChildren: './meals/meals.module#MealsModule' },
-          { path: 'billing', loadChildren: './billing/billing.module#BillingModule' }
+          { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
+          { path: 'admin', loadChildren: './admin/admin.module#AdminModule' }
         ]},
     { path: '', component: AuthLayoutComponent,
       children: [

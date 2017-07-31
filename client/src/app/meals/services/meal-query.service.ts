@@ -1,6 +1,6 @@
 import { AppState } from '../../app.state';
 import { FoodComponent, Meal } from '../meal.interfaces';
-import { MealActions } from '../mealactions';
+import { MealActions } from '../meal.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Http } from '@angular/http';

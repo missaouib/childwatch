@@ -48,40 +48,56 @@
 				[class.circle-grey]="item.foodItem.description===undefined"				
 				>
 			</i>
-			<label>{{item.foodItem.foodComponent.description}}</label>
-			<input class="form-control" 
-				   [(ngModel)]="item.foodItem.description"
-				   [typeahead]="food(item.foodItem.foodComponent)"
-				   typeaheadOptionField="description"
-				   typeaheadOptionsLimit="10">
-			
-			<div class="pull-right"><i style="color: red" class="fa fa-close"></i></div>
+			<div>
+				<span class="col-sm-7">
+				<label>{{item.foodItem.foodComponent.description}}</label>
+				<input class="form-control" 
+					   [(ngModel)]="item.foodItem.description"
+					   [typeahead]="food(item.foodItem.foodComponent)"
+					   typeaheadOptionField="description"
+					   typeaheadOptionsLimit="10">
+				</span>
+				<span class="col-sm-1">
+					<label>Quantity</label>
+					<input class="form-control" value="{{item.amount}}">
+				</span>
+				<span class="col-sm-3">
+					<label>Units</label>
+					<select class="form-control">
+						<option>each</option>
+						<option>oz</option>
+						<option>slice</option>
+						<option>lbs</option>
+					</select>
+				</span>
+				<div class="col-sm-1"><i style="color: red" class="fa fa-close" (click)="removeMealFoodItem(item)"></i></div>
+			</div>
 		</div>
 	
 	</tab> 
 	
 	<tab> 
-		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 3MO - 1YR </ng-template> 
+		<ng-template tabHeading> 3MO - 1YR </ng-template> 
 	</tab> 
 	
 	<tab> 
-		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 1 - 2YRS </ng-template> 
+		<ng-template tabHeading> 1 - 2YRS </ng-template> 
 	</tab> 
 	
 	<tab> 
-		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 3 - 5YRS </ng-template> 
+		<ng-template tabHeading> 3 - 5YRS </ng-template> 
 	</tab> 
 	
 	<tab> 
-		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 6 - 12YRS </ng-template> 
+		<ng-template tabHeading> 6 - 12YRS </ng-template> 
 	</tab> 
 	
 	<tab> 
-		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> 12 - 18YRS </ng-template> 
+		<ng-template tabHeading> 12 - 18YRS </ng-template> 
 	</tab> 
 	
 	<tab> 
-		<ng-template tabHeading> <i class="fa fa-close" style="color: red"></i> Adult </ng-template> 
+		<ng-template tabHeading> Adult </ng-template> 
 	</tab> 
 
 </tabset>
@@ -95,7 +111,34 @@
   <ul *dropdownMenu class="dropdown-menu" role="menu">
     <li *ngFor="let component of foodComponents" role="menuitem">
     	<a class="dropdown-item" (click)="addFoodComponent(component)">
-    		{{component.id}} - {{component.description}}
+    		<i class="cw-icon" style="font-size: 1em"
+				[class.icon-milk]="component.id === '1'"
+				[class.icon-spices]="component.id === '2'"
+				[class.icon-baby-food]="component.id === '3'"
+				[class.icon-olive-oil-jar]="component.id === '4'"
+				[class.icon-chicken-leg-bite]="component.id === '5'"
+				[class.icon-soup]="component.id === '6'"
+				[class.icon-sausage]="component.id === '7'"
+				[class.icon-cereals]="component.id === '8'"
+				[class.icon-fruit-salad]="component.id === '9'"
+				[class.icon-pig-face]="component.id === '10'"
+				[class.icon-vegetables]="component.id === '11'" 
+				[class.icon-peanuts]="component.id === '12'"
+				[class.icon-beef-steak]="component.id === '13'"
+				[class.icon-beverage]="component.id === '14'"
+				[class.icon-fish]="component.id === '15'"
+				[class.icon-beans]="component.id === '16'"
+				[class.icon-lamb]="component.id === '17'"
+				[class.icon-pie]="component.id === '18'"
+				[class.icon-sweets]="component.id === '19'"
+				[class.icon-pasta]="component.id === '20'"				
+				[class.icon-fast-food]="component.id === '21'" 				
+				[class.icon-food]="component.id === '22'"
+				[class.icon-snack]="component.id === '25'"
+				[class.icon-native]="component.id === '35'"
+				[class.icon-restaurant]="component.id === '36'"
+				>
+			</i>{{component.description}}
     	</a>
     </li>
   </ul>

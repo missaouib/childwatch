@@ -1,0 +1,22 @@
+<div class="alert alert-info">
+	<label for="filter" class="col-sm-1">Filter:</label>
+	<input #filter class="form-control" placeholder="Type Description or Component to filter"/>
+</div>
+<table class="table table-striped table-condensed">
+		<tr>
+			<th class="col-sm-1">Status</th>
+			<th class="col-sm-4">Description</th>
+			<th class="col-sm-4">Short Description</th>
+			<th class="col-sm-3">Component</th>
+		</tr>
+
+	<tr *ngFor="let item of foodItems">
+		<td><i class="fa fa-lock"></i>
+		<td>{{item.description}}</td>
+		<td>{{item.shortDescription}}</td>
+		<td>{{item.foodComponent.description}}</td>
+	</tr>
+
+</table>
+
+<pagination [totalItems]="pageInfo.totalElements" (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [maxSize]="10" [itemsPerPage]="pageInfo.size" [rotate]="false"></pagination>

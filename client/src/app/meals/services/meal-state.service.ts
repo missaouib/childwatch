@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { FoodItem, FoodComponent, Meal } from '../meal.interfaces';
-import { MealActions } from '../mealactions';
+import { MealActions } from '../meal.actions';
 import { MealQueryService } from './meal-query.service';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 

@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 
+
 // Metadata
+
+export interface ChildRouteInfo {
+  path: string;
+  title: string;
+}
+
 export interface RouteInfo {
     path: string;
     title: string;
     type: string;
     icontype: string;
+    children?: ChildRouteInfo[];
 }
 
 // Menu Items
@@ -13,7 +21,11 @@ export const ROUTES: RouteInfo[] = [
   { path: '/family', title: 'Family Info', type: 'link', icontype: 'cw-icon icon-family'},
   { path: '/schedule', title: 'Scheduling', type: 'link', icontype: 'cw-icon icon-schedule'},
   { path: '/meals', title: 'Meal Planning', type: 'link', icontype: 'cw-icon icon-dinner' },
-  { path: '/billing', title: 'Billing', type: 'link', icontype: 'cw-icon icon-money' }
+  { path: '/billing', title: 'Billing', type: 'link', icontype: 'cw-icon icon-money' },
+  { path: '/admin', title: 'Administration', type: 'sub', icontype: 'cw-icon icon-dinner',
+    children: [
+      { path: '/food-items', title: 'Food Items' }
+  ]}
 ];
 
 @Component({
@@ -24,6 +36,8 @@ export const ROUTES: RouteInfo[] = [
 
 export class SidebarComponent implements OnInit {
     public menuItems: any[];
+    isCollapsed = true;
+  
     isNotMobileMenu() {
         return true;
     }

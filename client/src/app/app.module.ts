@@ -28,6 +28,8 @@ import { NavbarModule} from './shared/navbar/navbar.module';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+
 
 export function apolloClientProvider() {
   return new ApolloClient({
@@ -67,7 +69,8 @@ export function apolloClientProvider() {
     NavbarModule,
     FooterModule,
     FixedPluginModule,
-    SidebarModule
+    SidebarModule,
+    CollapseModule.forRoot()
   ],
   providers: [TimeService],
   bootstrap: [AppComponent]
