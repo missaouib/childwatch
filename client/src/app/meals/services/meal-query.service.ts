@@ -1,22 +1,27 @@
 import { AppState } from '../../app.state';
 import { FoodComponent, Meal } from '../meal.interfaces';
-import { foodItemsReceived, foodComponentsReceived, mealsReceived, mealFoodItemsReceived } from '../meal.state';
+import { MealActions } from '../mealactions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 
 @Injectable()
 export class MealQueryService {
 
-  constructor( private store: Store<AppState>, private http: Http ) {
+  constructor( 
+    private store: Store<AppState>, 
+    private http: Http,
+    private mealActions: MealActions ) {
     this.loadData();
   }
 
   loadData() {
-    this.queryFoodCategories().subscribe();
-    this.queryMeals().subscribe();
+    Observable.merge( this.queryFoodCategories(), this.queryMeals() ).subscribe();
+    //this.queryFoodCategories().subscribe();
+    //this.queryMeals().subscribe();
   }
 
   queryFoodItemsForMeal( meal: Meal ) {
@@ -24,7 +29,7 @@ export class MealQueryService {
     const url = meal._links.mealFoodItems.href + '?projection=mealFoodItemFull';
     return this.http.get( url )
       .map( res => res.json() )
-      .map( ({_embedded: { mealFoodItems } } ) => this.store.dispatch( mealFoodItemsReceived( mealFoodItems ) ) );
+      .map( ({_embedded: { mealFoodItems } } ) => this.store.dispatch( this.mealActions.mealFoodItemsReceived( mealFoodItems ) ) );
   }
 
   queryFoodItems( component: FoodComponent ) {
@@ -35,14 +40,14 @@ export class MealQueryService {
     params.set( 'size', '1000' );
     return this.http.get( component._links.foodItems.href, { search: params } )
       .map( res => res.json() )
-      .map( ({_embedded: {foodItem} })  => this.store.dispatch( foodItemsReceived( { foodComponent: component, foodItems: foodItem } ) ) );
+      .map( ({_embedded: {foodItem} })  => this.store.dispatch( this.mealActions.foodItemsReceived( { foodComponent: component, foodItems: foodItem } ) ) );
   }
 
   queryFoodCategories() {
     console.log( 'querying food components' );
     return this.http.get( '/api/foodComponent?projection=foodComponentFull&page=0&size=100' )
       .map( res => res.json() )
-      .map( ({_embedded: {foodComponents} })  => this.store.dispatch( foodComponentsReceived( foodComponents ) ) );
+      .map( ({_embedded: {foodComponents} })  => this.store.dispatch( this.mealActions.foodComponentsReceived( foodComponents ) ) );
   };
 
   queryMeals() {
@@ -51,7 +56,7 @@ export class MealQueryService {
     params.set( 'projection', 'mealFull' );
     return this.http.get( '/api/meal', {search: params} )
       .map( res => res.json() )
-      .map( ({_embedded: {meals} })  => this.store.dispatch( mealsReceived( meals ) ) );
+      .map( ({_embedded: {meals} })  => this.store.dispatch( this.mealActions.mealsReceived( meals ) ) );
   };
 
 }

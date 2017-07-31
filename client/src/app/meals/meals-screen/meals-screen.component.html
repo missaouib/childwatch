@@ -8,16 +8,29 @@
 				<a *ngFor="let meal of Meals" 
 					(click)="selectMeal(meal)"
 					class="list-group-item" 
-					[class.active]="meal == selectedMeal">
+					[class.active]="meal === selectedMeal">
+					
 					<i class="cw-icon" 
 					   [class.icon-breakfast]="meal.type === 'BREAKFAST'"
 					   [class.icon-snack]="meal.type === 'AM_SNACK' || meal.type === 'PM_SNACK'"
 					   [class.icon-lunch]="meal.type === 'LUNCH'"		
 					   [class.icon-dinner]="meal.type === 'DINNER'"			   
-					style="font-size: 2em"></i> {{meal.description}} 
+					style="font-size: 2em"></i> 
+					{{meal.description}}
 				</a>
 			</div>
-			<button class="btn btn-default"><i class="fa fa-plus"></i> Add Meal</button>
+			<div class="btn-group" dropdown>
+				<button dropdownToggle type="button" class="btn btn-default dropdown-toggle">
+					<i class="fa fa-plus"></i> Add Meal <span class="caret"></span>
+				</button>
+				<ul *dropdownMenu class="dropdown-menu" role="menu">
+					<li role="menuitem"><a class="dropdown-item" (click)="addMenuItem({type:'BREAKFAST'})">Breakfast</a></li>
+					<li role="menuitem"><a class="dropdown-item" (click)="addMenuItem({type:'AM_SNACK'})">AM Snack</a></li>
+					<li role="menuitem"><a class="dropdown-item" (click)="addMenuItem({type:'LUNCH'})">Lunch</a></li>
+					<li role="menuitem"><a class="dropdown-item" (click)="addMenuItem({type:'PM_SNACK'})">PM Snack</a></li>
+					<li role="menuitem"><a class="dropdown-item" (click)="addMenuItem({type:'DINNER'})">Dinner</a></li>
+				</ul>
+			</div>
 		</div>
 		<div class="col-md-8">
 			<cw-meal-detail></cw-meal-detail>

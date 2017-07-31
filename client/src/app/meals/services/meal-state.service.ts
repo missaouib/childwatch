@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { FoodItem, FoodComponent, Meal } from '../meal.interfaces';
-import { foodComponentSelected, mealSelected } from '../meal.state';
-import { FOOD_COMPONENT_SELECTED, MEALS_RECEIVED, MEAL_SELECTED } from '../meal.state';
+import { MealActions } from '../mealactions';
 import { MealQueryService } from './meal-query.service';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
@@ -15,24 +14,28 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 export class MealStateService {
 
     @Effect() _selectedMeal = this.actions$
-      .ofType( MEAL_SELECTED )
+      .ofType( MealActions.MEAL_SELECTED )
       .map( toPayload )
       .map( payload => this.querySvc.queryFoodItemsForMeal( payload ).subscribe() )
       .subscribe();
 
     @Effect() _selectedFoodComponent = this.actions$
-     .ofType( FOOD_COMPONENT_SELECTED )
+     .ofType( MealActions.FOOD_COMPONENT_SELECTED )
     .map( toPayload )
     .map( payload => this.querySvc.queryFoodItems( payload ).subscribe() )
     .subscribe();
 
     @Effect() _loadedMeals = this.actions$
-      .ofType( MEALS_RECEIVED )
+      .ofType( MealActions.MEALS_RECEIVED )
       .map( toPayload )
-      .map( payload => this.store.dispatch(mealSelected( payload[0] ) ) )
+      .map( payload => this.store.dispatch(this.mealActions.mealSelected( payload[0] ) ) )
       .subscribe();
 
-  constructor(private store: Store<AppState>, private actions$: Actions, private querySvc: MealQueryService ) {}
+  constructor(
+    private store: Store<AppState>,
+    private actions$: Actions,
+    private querySvc: MealQueryService,
+    private mealActions: MealActions ) {}
 
   get foodItems$(): Observable<FoodItem[]> {
       return this.store.select( s => ( s.meal.ui.selectedFoodComponent !== undefined ) ? s.meal.ui.selectedFoodComponent.foodItems : [] );
@@ -47,7 +50,7 @@ export class MealStateService {
   }
 
   set selectedMeal$( meal$: Observable<Meal> ){
-    meal$.subscribe( m => this.store.dispatch( mealSelected(m) ) );
+    meal$.subscribe( m => this.store.dispatch( this.mealActions.mealSelected(m) ) );
   }
 
   get meals$(): Observable<Meal[]>{
@@ -59,7 +62,11 @@ export class MealStateService {
   }
 
   set selectedFoodComponent$( component: Observable<FoodComponent> ){
-    component.subscribe( c => this.store.dispatch( foodComponentSelected( c ) ) );
+    component.subscribe( c => this.store.dispatch( this.mealActions.foodComponentSelected( c ) ) );
+  }
+
+  addMenuItem( menuItem: { type: string } ) {
+    this.store.dispatch( this.mealActions.addMenuItem( menuItem ) );
   }
 
 }

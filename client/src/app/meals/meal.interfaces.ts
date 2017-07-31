@@ -49,3 +49,25 @@ export interface Meal {
   mealFoodItems: MealFoodItem[];
 };
 
+export interface MealUIState {
+  selectedMeal: Meal;
+  selectedFoodComponent: FoodComponent;
+}
+
+export const INITIAL_MEALUISTATE: MealUIState = {
+  selectedMeal: undefined,
+  selectedFoodComponent: undefined
+};
+
+export interface MealState {
+  foodComponents: FoodComponent[];
+  meals: Meal[];
+  ui: MealUIState;
+};
+
+export const INITIAL_MEALSTATE: MealState = {
+  foodComponents: [],
+  meals: [],
+  ui: INITIAL_MEALUISTATE
+};
+

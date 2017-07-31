@@ -6,7 +6,8 @@ import { storeLogger } from 'ngrx-store-logger';
 import { environment } from '../environments/environment';
 import { schedulingReducer, SchedulingState } from './schedule/scheduling.state';
 import { familyReducer, FamilyState } from './family/family.state';
-import { mealReducer, MealState } from './meals/meal.state';
+import { MealState } from './meals/meal.interfaces';
+import { MealActions } from './meals/mealactions';
 import { User } from './security/interfaces';
 
 export interface AppState {
@@ -65,7 +66,7 @@ const productionReducer = compose(combineReducers)({
   family: familyReducer,
   currentTime,
   loggedInUser,
-  meal: mealReducer
+  meal: MealActions.mealReducer
 });
 const developmentReducer = compose(storeLogger({ filter: { blacklist: ['SET_CURRENT_TIME'] } }), storeFreeze)(productionReducer);
 

@@ -9,6 +9,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 import { MealsScreenComponent } from './meals-screen/meals-screen.component';
 import { MealDetailComponent } from './meal-detail/meal-detail.component';
+import { MealActions } from './mealactions';
 import { MealStateService } from './services/meal-state.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpModule } from '@angular/http';
@@ -29,7 +30,7 @@ const routes: Routes = [
     HttpModule
   ],
   declarations: [MealsScreenComponent, MealDetailComponent],
-  providers: [ MealQueryService, MealStateService ]
+  providers: [ MealQueryService, MealStateService, MealActions ]
 })
 export class MealsModule {
 }

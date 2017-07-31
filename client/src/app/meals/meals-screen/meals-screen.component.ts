@@ -17,10 +17,13 @@ export class MealsScreenComponent implements OnInit {
     this.state.meals$.subscribe( ms => this.Meals = ms );
   }
 
-  selectMeal( meal: Meal ){
+  selectMeal( meal: Meal ) {
     this.state.selectedMeal$ = Observable.of( meal );
   }
 
+  addMenuItem( menuItem: { type: string } ) {
+    this.state.addMenuItem( menuItem );
+  }
   ngOnInit() {}
 
 }
