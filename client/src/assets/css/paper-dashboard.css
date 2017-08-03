@@ -5857,7 +5857,7 @@ strong {
 }
 
 .main-panel {
-  background-color: #ffffff; <!--#f4f3ef;-->
+  background-color: #f4f3ef;
   overflow: auto;
   position: relative;
   z-index: 2;

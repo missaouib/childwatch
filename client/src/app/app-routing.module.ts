@@ -14,7 +14,8 @@ export const AppRoutes: Routes = [
           { path: 'schedule', loadChildren: './schedule/schedule.module#ScheduleModule' },
           { path: 'meals', loadChildren: './meals/meals.module#MealsModule' },
           { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
-          { path: 'admin', loadChildren: './admin/admin.module#AdminModule' }
+          { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
+          { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' }
         ]},
     { path: '', component: AuthLayoutComponent,
       children: [

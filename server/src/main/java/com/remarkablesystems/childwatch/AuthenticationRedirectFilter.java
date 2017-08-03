@@ -26,7 +26,7 @@ public class AuthenticationRedirectFilter implements Filter {
                 AnonymousAuthenticationToken;
         String path = httpRequest.getRequestURI();
         if (!anonymous && asList("/", "/login").contains(path)) {
-            httpResponse.sendRedirect("/meals");
+            httpResponse.sendRedirect("/dashboard");
         }
         chain.doFilter(request, response);
     }
