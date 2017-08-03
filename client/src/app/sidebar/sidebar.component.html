@@ -38,15 +38,15 @@
                 <!--If it have a submenu-->
                 <a (click)="isCollapsed = !isCollapsed" *ngIf="menuitem.type === 'sub'">
                     <i class="{{menuitem.icontype}}"></i>
-                    <p>{{menuitem.title}}<b class="caret"></b></p>
+                    <p>{{menuitem.title}} <b class="fa" [class.fa-caret-down]="isCollapsed" [class.fa-caret-up]="!isCollapsed"></b></p>
                 </a>
 
                 <!--Display the submenu items-->
-                <div id="{{menuitem.title}}" *ngIf="menuitem.type === 'sub'">
+                <div class="collapse" id="{{menuitem.title}}" *ngIf="menuitem.type === 'sub'" [collapse]="isCollapsed" >
                     <ul>
                         <li routerLinkActive="active" *ngFor="let childitem of menuitem.children">
-                            <a [routerLink]="[menuitem.path]">
-                                <span class="sidebar-normal">{{childitem.title}}</span>
+                            <a [routerLink]="[menuitem.path,childitem.path]">
+                                <span>{{childitem.title}}</span>
                             </a>
                         </li>
                     </ul>

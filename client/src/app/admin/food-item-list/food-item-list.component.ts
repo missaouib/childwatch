@@ -17,6 +17,8 @@ export class FoodItemListComponent implements OnInit {
     totalPages: 0,
     number: 0
   };
+  
+ lastSortOrder = 'description,desc';
 
   constructor(private state: AdminStateService ) { }
 
@@ -29,5 +31,19 @@ export class FoodItemListComponent implements OnInit {
     console.log( 'Page changed to ' + event.page );
     this.state.loadFoodItems( event.page - 1 );
   }
+  
+  sort( sortOrder: string ) {
+    if ( this.lastSortOrder.startsWith(sortOrder) && this.lastSortOrder.endsWith(',asc') ){
+      this.lastSortOrder = sortOrder +',desc';
+      
+    }
+    else{
+      this.lastSortOrder = sortOrder +',asc';
+    }
+    
+    this.state.loadFoodItems( this.pageInfo.number, this.lastSortOrder );
+    
+  }
+
 
 }

@@ -5,6 +5,7 @@ import { MealStateService } from '../services/meal-state.service';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MealActions } from '../meal.actions';
+import { TypeaheadMatch } from 'ngx-bootstrap';
 
 // import { Observable } from 'rxjs/Observable';
 
@@ -25,9 +26,9 @@ export class MealDetailComponent implements OnInit {
  constructor(private state: MealStateService, private store: Store<AppState>, private actions: MealActions ) {}
 
   ngOnInit() {
-    this.state.foodComponents$.subscribe( fc => this.foodComponents = fc );
+    this.state.foodComponents$.subscribe( (fc: FoodComponent[]) => this.foodComponents = fc );
 
-    this.state.selectedMeal$.subscribe( sm => {
+    this.state.selectedMeal$.subscribe( (sm: Meal) => {
       this.meal = sm;
       this.mealFoodItems = (sm !== undefined) ? sm.mealFoodItems : [];
      });
@@ -36,7 +37,7 @@ export class MealDetailComponent implements OnInit {
   addFoodComponent( component: FoodComponent ) {
     this.store.dispatch( this.actions.addFoodComponentToSelectedMeal( component ) );
   }
-  
+
   removeMealFoodItem( item: MealFoodItem ){
     this.store.dispatch( this.actions.removeMealFoodItemFromSelectedMeal(item) );
   }
@@ -44,6 +45,11 @@ export class MealDetailComponent implements OnInit {
   food( component: FoodComponent ): FoodItem[] {
     const comp = this.foodComponents.find( (fc) => fc.id === component.id );
     return comp ? comp.foodItems : [];
+  }
+
+  selectedItem(e: TypeaheadMatch, item: FoodItem) {
+    console.log( e.value );
+    console.log( 'selected for ' + item.id );
   }
 
 }

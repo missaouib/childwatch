@@ -9,6 +9,9 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class AdminStateService {
 
+
+  lastSortOrder = 'none';
+  
   constructor(
     private store: Store<AppState>,
     private querySvc: AdminQueryService
@@ -24,7 +27,13 @@ export class AdminStateService {
     return this.store.select( s => s.admin.foodItems.page ); 
   }
   
-  loadFoodItems( page: number ){
-    this.querySvc.queryFoodItems( page ).subscribe();
+  loadFoodItems( page: number, sortOrder: string = 'description,asc' ) {
+    if( this.lastSortOrder !== sortOrder ){
+      page = 0;
+    }
+    this.lastSortOrder = sortOrder;
+      
+    this.querySvc.queryFoodItems( page, sortOrder ).subscribe();
   }
+  
 }

@@ -8,13 +8,13 @@
 				<a *ngFor="let meal of Meals" 
 					(click)="selectMeal(meal)"
 					class="list-group-item" 
-					[class.active]="meal === selectedMeal">
+					[class.active]="selectedMeal && meal.id === selectedMeal.id">
 					
 					<i class="cw-icon" 
 					   [class.icon-breakfast]="meal.type === 'BREAKFAST'"
-					   [class.icon-snack]="meal.type === 'AM_SNACK' || meal.type === 'PM_SNACK'"
+					   [class.icon-snack]="meal.type === 'AM_SNACK' || meal.type === 'PM_SNACK' || meal.type == null"
 					   [class.icon-lunch]="meal.type === 'LUNCH'"		
-					   [class.icon-dinner]="meal.type === 'DINNER'"			   
+					   [class.icon-dinner]="meal.type === 'DINNER'"
 					style="font-size: 2em"></i> 
 					{{meal.description}}
 				</a>

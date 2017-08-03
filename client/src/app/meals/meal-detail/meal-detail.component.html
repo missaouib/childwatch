@@ -54,6 +54,7 @@
 				<input class="form-control" 
 					   [(ngModel)]="item.foodItem.description"
 					   [typeahead]="food(item.foodItem.foodComponent)"
+					   (typeaheadOnSelect)="selectedItem($event,item.foodItem)"
 					   typeaheadOptionField="description"
 					   typeaheadOptionsLimit="10">
 				</span>
@@ -76,27 +77,27 @@
 	
 	</tab> 
 	
-	<tab> 
+	<tab [disabled]="true"> 
 		<ng-template tabHeading> 3MO - 1YR </ng-template> 
 	</tab> 
 	
-	<tab> 
+	<tab [disabled]="true"> 
 		<ng-template tabHeading> 1 - 2YRS </ng-template> 
 	</tab> 
 	
-	<tab> 
+	<tab [disabled]="true"> 
 		<ng-template tabHeading> 3 - 5YRS </ng-template> 
 	</tab> 
 	
-	<tab> 
+	<tab [disabled]="true"> 
 		<ng-template tabHeading> 6 - 12YRS </ng-template> 
 	</tab> 
 	
-	<tab> 
+	<tab [disabled]="true"> 
 		<ng-template tabHeading> 12 - 18YRS </ng-template> 
 	</tab> 
 	
-	<tab> 
+	<tab [disabled]="true"> 
 		<ng-template tabHeading> Adult </ng-template> 
 	</tab> 
 

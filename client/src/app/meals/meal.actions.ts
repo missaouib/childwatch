@@ -18,7 +18,7 @@ export class MealActions {
   static ADD_FOOD_COMPONENT_TO_SELECTED_MEAL = 'ADD_FOOD_COMPONENT_TO_SELECTED_MEAL';
   static ADD_MENU_ITEM = 'ADD_MENU_ITEM';
   static REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL = 'REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL';
-
+  
   
   /*
    * Actions
@@ -33,7 +33,6 @@ export class MealActions {
   removeMealFoodItemFromSelectedMeal = ActionCreatorFactory.create<MealFoodItem>(MealActions.REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL );
 
   addMenuItem = ActionCreatorFactory.create<{type: string}>(MealActions.ADD_MENU_ITEM);
-
 
   static mealReducer(state: MealState = INITIAL_MEALSTATE, action: Action): MealState {
     switch (action.type) {

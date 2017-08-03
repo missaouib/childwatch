@@ -34,11 +34,8 @@ export class MealQueryService {
 
   queryFoodItems( component: FoodComponent ) {
     console.log( 'querying food items for ' + component.description );
-    const params = new URLSearchParams();
-    params.set( 'projection', 'foodComponentFull' );
-    params.set( 'page', '0' );
-    params.set( 'size', '1000' );
-    return this.http.get( component._links.foodItems.href, { search: params } )
+    const url = component._links.foodItems.href + '?projection=foodComponentFull&page=0&size=1000';
+    return this.http.get( url )
       .map( res => res.json() )
       .map( ({_embedded: {foodItem} })  => this.store.dispatch( this.mealActions.foodItemsReceived( { foodComponent: component, foodItems: foodItem } ) ) );
   }
@@ -52,9 +49,7 @@ export class MealQueryService {
 
   queryMeals() {
     console.log( 'querying meals' );
-    const params = new URLSearchParams();
-    params.set( 'projection', 'mealFull' );
-    return this.http.get( '/api/meal', {search: params} )
+    return this.http.get( '/api/meal?projection=mealFull' )
       .map( res => res.json() )
       .map( ({_embedded: {meals} })  => this.store.dispatch( this.mealActions.mealsReceived( meals ) ) );
   };

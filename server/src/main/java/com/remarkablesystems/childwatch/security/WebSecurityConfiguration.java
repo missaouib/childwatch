@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -38,7 +39,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .requestCache().requestCache(requestCache).and()
             .csrf().disable()
             .formLogin().loginPage("/login").permitAll().and()
-            .logout().permitAll();
+            .logout().permitAll().invalidateHttpSession(true);
+        
+        http
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .invalidSessionUrl("/");
+        
         // @formatter:on
     }
 

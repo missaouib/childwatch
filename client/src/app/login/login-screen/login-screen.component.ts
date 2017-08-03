@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'cw-login-screen',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginScreenComponent implements OnInit {
 
-  constructor() { }
+    errors = false;
+  
+  constructor( private activeRoute: ActivatedRoute ) { }
+
 
   ngOnInit() {
+      this.activeRoute.queryParams.subscribe( ( params: Params ) =>  this.errors = params['error'] !== undefined );
   }
 
 }

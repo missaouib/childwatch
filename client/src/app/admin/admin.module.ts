@@ -9,7 +9,9 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 
 const routes: Routes = [
-  { path: '', component: FoodItemListComponent }
+  { path: '', component: FoodItemListComponent },
+  { path: 'food-items', component: FoodItemListComponent }
+ 
 ];
 
 @NgModule({

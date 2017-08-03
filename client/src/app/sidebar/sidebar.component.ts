@@ -24,7 +24,7 @@ export const ROUTES: RouteInfo[] = [
   { path: '/billing', title: 'Billing', type: 'link', icontype: 'cw-icon icon-money' },
   { path: '/admin', title: 'Administration', type: 'sub', icontype: 'cw-icon icon-dinner',
     children: [
-      { path: '/food-items', title: 'Food Items' }
+      { path: 'food-items', title: 'Food Items' }
   ]}
 ];
 
@@ -36,7 +36,7 @@ export const ROUTES: RouteInfo[] = [
 
 export class SidebarComponent implements OnInit {
     public menuItems: any[];
-    isCollapsed = true;
+    isCollapsed = false;
   
     isNotMobileMenu() {
         return true;

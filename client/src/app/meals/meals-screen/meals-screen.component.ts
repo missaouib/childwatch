@@ -15,6 +15,7 @@ export class MealsScreenComponent implements OnInit {
 
   constructor(private state: MealStateService) {
     this.state.meals$.subscribe( ms => this.Meals = ms );
+    this.state.selectedMeal$.subscribe( sm => this.selectedMeal = sm );
   }
 
   selectMeal( meal: Meal ) {
@@ -24,6 +25,7 @@ export class MealsScreenComponent implements OnInit {
   addMenuItem( menuItem: { type: string } ) {
     this.state.addMenuItem( menuItem );
   }
+  
   ngOnInit() {}
 
 }

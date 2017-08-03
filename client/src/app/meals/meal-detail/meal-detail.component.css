@@ -1,22 +1,30 @@
+/* .circle-green { */
+/*     border-radius: 50%; */
+/*     background: green; */
+/*     vertical-align: middle; */
+/*     color: white; */
+/* 	font-size: 1.2em; */
+/* 	margin:0 auto;     */
+/* } */
+
 .circle-green {
     border-radius: 50%;
-    background: green;
+    border-color: green;
+    border-width: 2px;
+    border-style: solid;
     vertical-align: middle;
-    color: white;
-    padding: 20px;
-    margin: 30px
+    color: green;
+	font-size: 1.2em;
+	margin:0 auto;    
 }
 
 .circle-grey {
     border-radius: 50%;
-    background: grey;
+    border-color: grey;
+    border-width: 2px;
+    border-style: solid;
     vertical-align: middle;
-    color: white;
-    padding: 20px;
-    margin: 30px
-}
-
-.double {
-	zoom: 2.0;
-	vertical-align: middle;
+    color: grey;
+	font-size: 1.2em;
+	margin:0 auto;    
 }

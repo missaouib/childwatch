@@ -107,11 +107,9 @@ class DemoDataGenerator implements ResourceLoaderAware {
 
     @EventListener({ApplicationReadyEvent.class})
     public void generate() {
-        if (databaseMigration.domainMigrationExecuted()) {
+    	if( false ) {
+        //if (databaseMigration.domainMigrationExecuted()) {
             generateDomain();
-        }
-        if (databaseMigration.usersMigrationExecuted()) {
-            generateUsers();
         }
     }
 
@@ -135,65 +133,6 @@ class DemoDataGenerator implements ResourceLoaderAware {
             generateParticipantTimelines(date);
             generateStaffTimelines(date);
         }
-    }
-    
-	private void generateFoodCategories() {
-    	FoodComponent[] afc = { new FoodComponent( "1", "Dairy and Egg Products"),
-    	new FoodComponent( "2","Spices and Herbs"),
-        new FoodComponent( "3","Baby Foods"),
-    	new FoodComponent( "4","Fats and Oils"),
-    	new FoodComponent( "5","Poultry Products"),
-    	new FoodComponent( "6","Soups, Sauces, and Gravies"),
-    	new FoodComponent( "7","Sausages and Luncheon Meats"),
-    	new FoodComponent( "8","Breakfast Cereals"),
-    	new FoodComponent( "9","Fruits and Fruit Juices"),
-    	new FoodComponent( "10","Pork Products"),
-    	new FoodComponent( "11","Vegetables and Vegetable Products"),
-    	new FoodComponent( "12","Nut and Seed Products"),
-    	new FoodComponent( "13","Beef Products"),
-    	new FoodComponent( "14","Beverages"),
-    	new FoodComponent( "15","Finfish and Shellfish Products"),
-    	new FoodComponent( "16","Legumes and Legume Products"),
-    	new FoodComponent( "17","Lamb, Veal, and Game Products"),
-    	new FoodComponent( "18","Baked Products"),
-    	new FoodComponent( "19","Sweets"),
-    	new FoodComponent( "20","Cereal Grains and Pasta"),
-    	new FoodComponent( "21","Fast Foods"),
-    	new FoodComponent( "22","Meals, Entrees, and Side Dishes"),
-    	new FoodComponent( "25","Snacks"),
-    	new FoodComponent( "35","American Indian/Alaska Native Foods"),
-    	new FoodComponent( "36","Restaurant Foods")};
-    	
-    	foodComponentRepository.save( Arrays.asList(afc) );
-   }
-    
-	private void generateFood() {
-		
-		generateFoodCategories();
-    	
-    	Resource resource = this.getResource("classpath:data/food.csv" );
-    	    	
-    	try {
-    		InputStream is = resource.getInputStream();
-    		BufferedReader br = new BufferedReader( new InputStreamReader(is) );
-    		
-    		String line;
-    		while( (line = br.readLine()) != null ) {
-    			String[] splitLine = line.split("\\|");
-
-    			FoodComponent fc = foodComponentRepository.findOne(splitLine[1]);
-    			if( !isNull(fc) ) {
-    				FoodItem food = new FoodItem( UUID.randomUUID().toString(), splitLine[2].trim(), fc );
-    				fc.addFoodItem(food);
-    				foodItemRepository.save(food);
-    				System.out.println( food );
-    			}
-    		}
-    		br.close();
-    	}
-    	catch( IOException e ) {
-    		e.printStackTrace();
-    	}    	
     }
 
 
@@ -388,16 +327,6 @@ class DemoDataGenerator implements ResourceLoaderAware {
         return Math.round(seconds / secondsInQuarter) * secondsInQuarter;
     }
 
-    private void generateUsers() {
-        createUser("admin", "secret", Authorities.ADMIN, Authorities.SCHEDULE_MANAGE, Authorities.SCHEDULE_VIEW);
-        createUser("jimmy", "jimmy", Authorities.SCHEDULE_MANAGE, Authorities.SCHEDULE_VIEW);
-        createUser("jackie", "jackie", Authorities.SCHEDULE_VIEW);
-    }
-
-    private void createUser(String username, String password, String... authorities) {
-        List<GrantedAuthority> gas = Stream.of(authorities).map(SimpleGrantedAuthority::new).collect(toList());
-        userDetailsManager.createUser(new User(username, hashpw(password, gensalt()), gas));
-    }
 
     private static class SimulationParticipant {
         String id;

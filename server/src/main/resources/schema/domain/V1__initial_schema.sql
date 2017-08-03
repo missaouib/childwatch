@@ -109,8 +109,7 @@
     
     create table food_component(
     	id varchar(255) not null,
-    	description varchar(1024),
-    	primary key (id)
+    	description varchar(1024)
     );
     
     create table food_item(
@@ -119,15 +118,13 @@
     	short_description varchar(128),
     	food_component_id varchar(255),
     	serving_uom varchar(36),
-    	purchase_uom varchar(36),
-    	primary key (id)
+    	purchase_uom varchar(36)
     );
     
     create table meal(
     	id varchar(255) not null,
     	description varchar(128) not null,
-    	type varchar(30) not null,
-    	primary key (id)
+    	type varchar(30) not null
     );
     
     create table meal_food_item(
@@ -136,8 +133,7 @@
     	food_item_id 	varchar(255) not null,
     	age_group      varchar(20),
    	 	amount         numeric (4, 2),
-   		uom_id        varchar(36),
-    	primary key (id)
+   		uom_id        varchar(36)
     );
     
     CREATE TABLE meal_schedule(
@@ -145,48 +141,20 @@
    		start_date        DATE NOT NULL,
    		end_date          DATE,
    		repeat_interval   INTERVAL (0),
-   		meal_id           varchar (255),
-   		PRIMARY KEY (id)
+   		meal_id           varchar (255)
 	);
 	
 	CREATE TABLE unit_of_measure(
    		id            varchar(36) NOT NULL,
-   		description   varchar(128) NOT NULL,
-   		primary key(id)
+   		description   varchar(128) NOT NULL
 	);
 	
 	CREATE TABLE age_group(
 		id	varchar(36) NOT NULL,
-		description varchar(128) NOT NULL,
-		primary key (id)
+		description varchar(128) NOT NULL
 	);
 	
-	alter table meal_food_item
-		add constraint FK_age_group_1
-		foreign key (age_group) REFERENCES age_group(id);
-	
-alter table meal_food_item
-	add constraint FK_unit_of_measure_1
-	foreign key (uom_id) REFERENCES unit_of_measure (id);
 
-ALTER TABLE meal_schedule
-   ADD CONSTRAINT FK_meal_schedule_1 
-   FOREIGN KEY (meal_id) REFERENCES meal (id);
-    
-    alter table food_item
-        add constraint FK_food_component__id
-        foreign key (food_component_id)
-        references food_component;
-
-    alter table meal_food_item
-        add constraint FK_food_item__id
-        foreign key (food_item_id)
-        references food_item;
-
-    alter table meal_food_item
-        add constraint FK_meal__id
-        foreign key (meal_id)
-        references meal;
         
         
     create index IDXtqkge09h0790muhxmrfyi083y on participant_room_assignment (participant_id, date);
