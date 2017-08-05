@@ -21,5 +21,10 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/admin/food-items").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/dashboard").setViewName(INDEX_VIEW_NAME);        
+        registry.addViewController("/room").setViewName(INDEX_VIEW_NAME);      
+        registry.addViewController("/meals/menu").setViewName(INDEX_VIEW_NAME);      
+        registry.addViewController("/meals/meal").setViewName(INDEX_VIEW_NAME);      
+        
+
     }
 }

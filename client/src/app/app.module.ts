@@ -29,6 +29,7 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
 
 
 export function apolloClientProvider() {
@@ -48,7 +49,8 @@ export function apolloClientProvider() {
     AdminLayoutComponent,
     AuthLayoutComponent,
     UserInfoComponent,
-    UserInfoViewComponent
+    UserInfoViewComponent,
+    RoomDetailsComponent
   ],
   imports: [
     BrowserModule,

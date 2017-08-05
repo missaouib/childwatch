@@ -31,6 +31,7 @@ export interface MealFoodItem {
   id?: string;
   ageGroup?: string;
   amount?: number;
+  units?: string,
   foodItem?: FoodItem;
   _links?: MealFoodItemLinks;
 };

@@ -14,9 +14,13 @@ import { MealStateService } from './services/meal-state.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
+import { MenuScreenComponent } from './menu-screen/menu-screen.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { MealCardComponent } from './meal-card/meal-card.component';
 
 const routes: Routes = [
-  { path: '', component: MealsScreenComponent }
+  { path: 'meal', component: MealsScreenComponent },
+  { path: 'menu', component: MenuScreenComponent }
 ];
 
 @NgModule({
@@ -26,10 +30,11 @@ const routes: Routes = [
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
     TypeaheadModule.forRoot(),
+    AccordionModule.forRoot(),
     ReactiveFormsModule, FormsModule,
     HttpModule
   ],
-  declarations: [MealsScreenComponent, MealDetailComponent],
+  declarations: [MealsScreenComponent, MealDetailComponent, MenuScreenComponent, MealCardComponent],
   providers: [ MealQueryService, MealStateService, MealActions ]
 })
 export class MealsModule {

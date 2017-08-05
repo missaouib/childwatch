@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
+import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
 
 
 
@@ -15,7 +16,8 @@ export const AppRoutes: Routes = [
           { path: 'meals', loadChildren: './meals/meals.module#MealsModule' },
           { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
           { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
-          { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' }
+          { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
+          { path: 'room', component: RoomDetailsComponent }
         ]},
     { path: '', component: AuthLayoutComponent,
       children: [
