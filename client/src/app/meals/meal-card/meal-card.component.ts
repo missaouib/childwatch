@@ -1,15 +1,28 @@
 import { Meal } from '../meal.interfaces';
-import { Component, OnInit, Input } from '@angular/core';
+import { MealStateService } from '../services/meal-state.service';
+import { trigger, transition, style, animate} from '@angular/animations';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'cw-meal-card',
   templateUrl: './meal-card.component.html',
-  styleUrls: ['./meal-card.component.css']
+  styleUrls: ['./meal-card.component.css'],
+  animations: [
+    trigger(
+      'changeAnimation', [
+        transition('0 => 1', [
+          style({transform: 'translateX(-100%)', opacity: 0}),
+          animate('500ms', style({transform: 'translateX(0%)', opacity: 1}))
+        ])
+      ]
+    )
+    
+  ]
 })
 export class MealCardComponent implements OnInit {
 
   @Input() scheduleDate: Date;
-  
+  @Output() showHideDetails = new EventEmitter();
   detailsShowing: boolean = false;
   
   breakfast: Meal = { description: 'Breakfast #1',
@@ -88,13 +101,20 @@ export class MealCardComponent implements OnInit {
       ]
     };
 
-  constructor() { }
+  constructor( private state: MealStateService ) {  }
 
   ngOnInit() {
+      this.state.menus$.subscribe( m => {
+      const breakfastMenu = m? m.find( (menu) => menu.startDate === this.scheduleDate && menu.meal.type === 'BREAKFAST' ) : undefined;
+      const amSnackMenu = m? m.find( (menu) => menu.startDate === this.scheduleDate && menu.meal.type === 'AM_SNACK' ) : undefined;
+      this.breakfast = breakfastMenu ? breakfastMenu.meal : undefined;
+      this.amSnack = amSnackMenu ? amSnackMenu.meal : undefined;
+    });
   }
   
   toggleDetailsShowing() {
     this.detailsShowing = !this.detailsShowing;
+    this.showHideDetails.emit( this.detailsShowing );
   }
 
 }

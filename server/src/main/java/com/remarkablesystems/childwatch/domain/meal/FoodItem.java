@@ -23,16 +23,12 @@ public class FoodItem implements Serializable {
 	@Column(name="short_description")
 	private String shortDescription;
 	
-	@Column(name="purchase_uom")
+	@Column(name="purchase_unit")
 	private String purchaseUom;
 
-	@Column(name="serving_uom")
+	@Column(name="serving_unit")
 	private String servingUom;
 	
-	//@Column(name="modifiable_by")
-	//@Getter @Setter
-	//private String modifiableBy;
-
 	@ManyToOne
 	@JoinColumn(name="food_component_id")	
 	private FoodComponent foodComponent;

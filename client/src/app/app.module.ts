@@ -14,6 +14,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { appReducer } from './app.state';
+import { ChildDetailComponent } from './child/child-detail/child-detail.component';
 import { TimeService } from './time.service';
 import { SecurityModule } from './security/security.module';
 
@@ -50,7 +51,8 @@ export function apolloClientProvider() {
     AuthLayoutComponent,
     UserInfoComponent,
     UserInfoViewComponent,
-    RoomDetailsComponent
+    RoomDetailsComponent,
+    ChildDetailComponent,
   ],
   imports: [
     BrowserModule,

@@ -6,12 +6,12 @@
                     <div class="card-content">
  						<div class="row">
 	                    	<div class="col-xs-7">
-    	                		<div class="numbers pull-left">Butterfly<p class="text-left">North Valley</p></div>
+    	                		<div class="numbers pull-left">{{room.name}}<p class="text-left">{{room.site}}</p></div>
     	                	</div>
-                    		<div class="col-xs-5">
+                    		<div *ngIf="room.issue" class="col-xs-5">
                                 <div class="pull-right">
                                     <span class="label label-danger">
-                                        Understaffed
+                                        {{room.issue}}
                                     </span>
                                 </div>
                             </div>
@@ -25,72 +25,56 @@
                             <div class="col-xs-11">
                                 <div class="numbers">
                                     <p>Children</p>
-                                    12
+                                    {{children.length || 0 }}
                                 </div>
                                 <div class="numbers">
                                     <p>Staff</p>
-                                    1
+                                    {{staffs.length || 0 }}
                                 </div>
                                 
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                             	<h3>Children</h3>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tbody>
-                                            <tr>
+                                            <tr *ngFor="let child of children">
                                                 <td>
-		                                            <img height="32" width="32" src="/assets/baby1.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+		                                            <img height="32" width="32" [src]="'/assets/'+child.image" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                                                 </td>
                                                 <td class="text-right">
-                                                    Green, Kim
+                                                    <a href="/child-detail">{{child.name}}</a>
                                                 </td>
                                                 <td class="text-right">
-                                                    Till 5:00 pm
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img height="32" width="32" src="/assets/baby5.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                                </td>
-                                                <td class="text-right">
-                                                    Red, Joe
-                                                </td>
-                                                <td class="text-right">
-                                                    Till 12:45 pm
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img height="32" width="32" src="/assets/baby6.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                                </td>
-                                                <td class="text-right">
-                                                    Orange, Tommy
-                                                </td>
-                                                <td class="text-right">
-                                                    Till 12:45 pm
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                   <img height="32" width="32" src="/assets/baby7.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                                </td>
-                                                <td class="text-right">
-                                                    Yellow, Jill
-                                                </td>
-                                                <td class="text-right text-muted">
-                                                    Till 5:00 pm
+                                                    {{child.note}}
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-md-offset-1">
+                            <div class="col-md-4 col-md-offset-2">
                                 <h3>Staff</h3>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr *ngFor="let staff of staffs">
+                                                <td>
+		                                            <img height="32" width="32" [src]="'/assets/'+staff.image" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                </td>
+                                                <td class="text-right">
+                                                    {{staff.name}}
+                                                </td>
+                                                <td class="text-right">
+                                                    {{staff.note}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,15 +1,4 @@
-td.rotate {
-  height:40px;
-  white-space: nowrap;
-  position:relative;
-  vertical-align: middle
-}
-
-td.rotate > div {
-  transform: rotate(-90deg);
-  position:absolute;
-  left:0;
-  right:0;
-  top: 10px;
-  margin:auto;
+.fixed_width {
+  min-height: 32px;
+  min-width: 32px;
 }

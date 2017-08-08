@@ -50,12 +50,26 @@ export interface Meal {
   mealFoodItems: MealFoodItem[];
 };
 
+export interface Menu {
+  id?: string;
+  meal: Meal;
+  startDate: Date;
+  endDate: Date;
+  recurrence: string;
+}
+
 export interface MealUIState {
+  selectedMenus: Menu[];
+  menuStart: Date;
+  menuEnd: Date;
   selectedMeal: Meal;
   selectedFoodComponent: FoodComponent;
 }
 
 export const INITIAL_MEALUISTATE: MealUIState = {
+  selectedMenus: undefined,
+  menuStart: undefined,
+  menuEnd: undefined,
   selectedMeal: undefined,
   selectedFoodComponent: undefined
 };

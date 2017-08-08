@@ -3,110 +3,65 @@
 	
 		<div class="row">
 		
-			<!-- Left
-
-			<div class="col-md-2">
-				<div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"><strong>Menu Items</strong></h4>
-                    </div>
-                    <div class="card-content">
-                    <div class="table-responsive table-simple">
-                                    <table class="table">
-                                        <tbody>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #1</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #2</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #3</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #4</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #5</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #6</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/breakfast.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Breakfast #7</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/ante-meridiem.svg"  height="32" width="32" /></td>
-                                                <td class="text-right">Snack #1</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/ante-meridiem.svg"  height="32" width="32" /></td>
-                                                <td class="text-right">Snack #2</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/ante-meridiem.svg"  height="32" width="32" /></td>
-                                                <td class="text-right">Snack #3</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/ante-meridiem.svg"  height="32" width="32" /></td>
-                                                <td class="text-right">Snack #4</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/ante-meridiem.svg"  height="32" width="32" /></td>
-                                                <td class="text-right">Snack #5</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #1</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #2</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #3</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #4</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #5</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #6</td>
-                                            </tr>
-                                            <tr>
-                                                <td ><img src="/assets/img/meal/lunch.svg" height="32" width="32" /></td>
-                                                <td class="text-right">Lunch #7</td>
-                                            </tr>
-                                        </tbody>
-                                   	</table>                                   	
-                                </div>
-                    </div>
-                </div>			
+			<!-- Left -->
+			<div class="col-sm-2">
+				<div class="card ">
+					<div class="card-header">
+					    <h4 class="card-title">Meals</h4>
+					</div>
+					<div class="card-content">
+				       <div class="table-responsive">
+				              <table class="table">
+								<tbody>
+									<tr *ngFor="let meal of Meals">
+										<td><img class="fixed_width" 
+											[src]="'/assets/img/meal/' + (( meal.type === 'BREAKFAST')? 'breakfast.svg': ( meal.type === 'AM_SNACK')? 'ante-meridiem.svg' : ( meal.type === 'LUNCH')? 'lunch.svg' : ( meal.type === 'PM_SNACK')? 'post-meridiem.svg' : 'nachos.svg')" /></td>
+										<td>{{meal.description}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
-			-->
+			
 			
 			<!-- Right -->
-			<div>
-					<div class="text-center"><h3><i class="fa fa-chevron-left pull-left"></i>31 JULY - 04 AUG<i class="fa fa-chevron-right pull-right"></i></h3></div>
-					<cw-meal-card [scheduleDate]="'2017 JUL 31'" class="col-lg-offset-1 col-sm-offset-0 col-sm-6 col-lg-2" ></cw-meal-card>
-					<cw-meal-card [scheduleDate]="'2017 AUG 01'" class="col-sm-6 col-lg-2" ></cw-meal-card>
-					<cw-meal-card [scheduleDate]="'2017 AUG 02'" class="col-sm-6 col-lg-2" ></cw-meal-card>
-					<cw-meal-card [scheduleDate]="'2017 AUG 03'" class="col-sm-6 col-lg-2" ></cw-meal-card>
-					<cw-meal-card [scheduleDate]="'2017 AUG 04'" class="col-sm-6 col-lg-2" ></cw-meal-card>			
+			<div class="col-sm-10">
+					<div class="text-center">
+						<h3>
+							<i class="fa fa-chevron-left pull-left" (click)="adjustTime(-1)"></i>
+							{{ weekStart | date: 'dd MMM'}} - {{ weekEnd | date: 'dd MMM' }} 
+							<i class="fa fa-chevron-right pull-right" (click)="adjustTime(1)"></i>
+						</h3>
+					</div>
+					
+					<cw-meal-card [hidden]="!show && id != 0" 
+								  [class.col-sm-6] = "id != 0"
+								  [class.col-lg-2] = "id != 0"
+								  class="col-lg-offset-1 col-sm-offset-0" 
+								  [scheduleDate]="'2017 JUL 31'"  
+								  (showHideDetails)="changed( 0, $event )"></cw-meal-card>
+					<cw-meal-card [hidden]="!show && id != 1" 
+								  (showHideDetails)="changed( 1, $event )" 
+								  [scheduleDate]="'2017 AUG 01'" 
+								  [class.col-sm-6] = "id != 1"
+								  [class.col-lg-2] = "id != 1" ></cw-meal-card>
+					<cw-meal-card [hidden]="!show && id != 2" 
+								  (showHideDetails)="changed( 2, $event )" 
+								  [scheduleDate]="'2017 AUG 02'" 
+								  [class.col-sm-6] = "id != 2"
+								  [class.col-lg-2] = "id != 2" ></cw-meal-card>
+					<cw-meal-card [hidden]="!show && id != 3" 
+								  (showHideDetails)="changed( 3, $event )" 
+								  [scheduleDate]="'2017 AUG 03'" 
+								  [class.col-sm-6] = "id != 3"
+								  [class.col-lg-2] = "id != 3" ></cw-meal-card>
+					<cw-meal-card [hidden]="!show && id != 4" 
+								  (showHideDetails)="changed( 4, $event )" 
+								  [scheduleDate]="'2017 AUG 04'" 
+								  [class.col-sm-6] = "id != 4"
+								  [class.col-lg-2] = "id != 4" ></cw-meal-card>			
 			</div>
 			
 		</div>
