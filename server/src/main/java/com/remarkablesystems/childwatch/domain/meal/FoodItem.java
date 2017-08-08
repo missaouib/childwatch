@@ -13,7 +13,8 @@ import javax.persistence.Table;
 @Entity 
 @Table(name="food_item")
 public class FoodItem implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 3576833611221593267L;
 
 	@Id
 	private String id;
@@ -23,16 +24,15 @@ public class FoodItem implements Serializable {
 	@Column(name="short_description")
 	private String shortDescription;
 	
-	@Column(name="purchase_uom")
+	@Column(name="purchase_unit")
 	private String purchaseUom;
 
-	@Column(name="serving_uom")
+	@Column(name="serving_unit")
 	private String servingUom;
 	
-	//@Column(name="modifiable_by")
-	//@Getter @Setter
-	//private String modifiableBy;
-
+	@Column(name="notes")
+	private String notes;
+	
 	@ManyToOne
 	@JoinColumn(name="food_component_id")	
 	private FoodComponent foodComponent;
@@ -87,5 +87,13 @@ public class FoodItem implements Serializable {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 }

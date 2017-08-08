@@ -1,63 +1,84 @@
-<div class="alert alert-info">
-	<label for="filter" class="col-sm-1">Filter:</label> 
-	<input #filter class="form-control" placeholder="Type Description or Component to filter" />
-</div>
+<div class="card ">
+	<div class="card-header">
+	    <h4 class="card-title">Food Items</h4>
+	    <p class="category">Items</p>
+	</div>
+	<div class="card-content">
+		<div class="row">
+	       <div class="table-responsive" [class.col-sm-9]="rowSelected" [class.col-sm-12]="!rowSelected">
+				<table class="table">
+					<tr>
+						<th class="col-sm-1">Status</th>
+						<th class="col-sm-4 button" (click)="sort('description')">Description 
+							<i *ngIf="lastSortOrder.startsWith('description')" 
+								class="fa" 
+								[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
+								[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>
+						<th class="col-sm-4 button" (click)="sort('shortDescription')">Short Description 
+							<i *ngIf="lastSortOrder.startsWith('shortDescription')" 
+								class="fa" 
+								[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
+								[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>
+						<th class="col-sm-3 button" (click)="sort('foodComponent_id')">Component 
+							<i *ngIf="lastSortOrder.startsWith('foodComponent_id')" 
+								class="fa" 
+								[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
+								[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>		
+					</tr>
+				
+					<tr *ngFor="let item of foodItems">
+						<td><i class="fa fa-lock"></i>
+						<td class="text-left"><a (click)="rowSelected = (rowSelected === item)? undefined : item">{{item.description}}</a></td>
+						<td class="text-left">{{item.shortDescription}}</td>
+						<td class="text-left">{{item.foodComponent.description}}</td>
+					</tr>
+				
+				</table>
+			</div>
+			
+			<div *ngIf="rowSelected" class="col-sm-3" [@changeAnimation]="rowSelected">
+				<form>
+					<label>Description</label>
+					<input class="form-control" value="{{rowSelected.description}}" />
+				
+					<label>Short Description</label>
+					<input class="form-control" value="{{rowSelected.shortDescription}}" />
+				
+					<label>Component</label>
+					<input class="form-control" value="{{rowSelected.foodComponent.description}}" />
+					
+					<label>Purchase Unit</label>
+					<input class="form-control" value="{{rowSelected.purchaseUom}}" />
 
-<div class="row">
-<div class="col-sm-9">
-<table class="table table-striped table-condensed">
-	<tr>
-		<th class="col-sm-1">Status</th>
-		<th class="col-sm-4 button" (click)="sort('description')">Description 
-			<i *ngIf="lastSortOrder.startsWith('description')" 
-				class="fa" 
-				[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
-				[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>
-		<th class="col-sm-4 button" (click)="sort('shortDescription')">Short Description 
-			<i *ngIf="lastSortOrder.startsWith('shortDescription')" 
-				class="fa" 
-				[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
-				[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>
-		<th class="col-sm-3 button" (click)="sort('foodComponent_id')">Component 
-			<i *ngIf="lastSortOrder.startsWith('foodComponent_id')" 
-				class="fa" 
-				[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
-				[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>		
-	</tr>
-
-	<tr *ngFor="let item of foodItems">
-		<td><i class="fa fa-lock"></i>
-		<td>{{item.description}}</td>
-		<td>{{item.shortDescription}}</td>
-		<td>{{item.foodComponent.description}}</td>
-	</tr>
-
-</table>
-</div>
-
-<div class="col-sm-3">
-	<form>
-		<label>Description</label>
-		<input class="form-control"/>
+					<label>Serving Unit</label>
+					<input class="form-control" value="{{rowSelected.servingUom}}" />
+					
+				</form>
+				<button class="btn btn-default"><i class="fa fa-trash"></i> Delete</button>	
+			</div>
+			
+		</div>
+	</div>
+    <div class="card-footer">
+        <hr />
+        <div class="footer-title">
+			<pagination [totalItems]="pageInfo.totalElements"
+						(pageChanged)="pageChanged($event)" 
+						[boundaryLinks]="true"
+						[maxSize]="10" 
+						[itemsPerPage]="pageInfo.size" 
+						[rotate]="false"></pagination>
+		</div>        
+    </div>   
 	
-		<label>Short Description</label>
-		<input class="form-control"/>
-	
-		<label>Component</label>
-		<input class="form-control"/>
-		
-	</form>
-	<button class="btn btn-default"><i class="fa fa-trash"></i> Delete</button>	
 </div>
+
+<!--
+
 
 </div>
 <div class="row">
-<pagination [totalItems]="pageInfo.totalElements"
-			(pageChanged)="pageChanged($event)" 
-			[boundaryLinks]="true"
-			[maxSize]="10" 
-			[itemsPerPage]="pageInfo.size" 
-			[rotate]="false" class="col-sm-10 col-sm-offset-2"></pagination>
 </div>
 
+-->
 

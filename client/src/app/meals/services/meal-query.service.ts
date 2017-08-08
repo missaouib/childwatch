@@ -3,7 +3,7 @@ import { FoodComponent, Meal } from '../meal.interfaces';
 import { MealActions } from '../meal.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Http } from '@angular/http';
+import { Http, URLSearchParams  } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -15,13 +15,7 @@ export class MealQueryService {
     private store: Store<AppState>, 
     private http: Http,
     private mealActions: MealActions ) {
-    this.loadData();
-  }
-
-  loadData() {
     Observable.merge( this.queryFoodCategories(), this.queryMeals() ).subscribe();
-    //this.queryFoodCategories().subscribe();
-    //this.queryMeals().subscribe();
   }
 
   queryFoodItemsForMeal( meal: Meal ) {
@@ -37,7 +31,8 @@ export class MealQueryService {
     const url = component._links.foodItems.href + '?projection=foodComponentFull&page=0&size=1000';
     return this.http.get( url )
       .map( res => res.json() )
-      .map( ({_embedded: {foodItem} })  => this.store.dispatch( this.mealActions.foodItemsReceived( { foodComponent: component, foodItems: foodItem } ) ) );
+      .map( ({_embedded: {foodItem} })  => 
+        this.store.dispatch( this.mealActions.foodItemsReceived( { foodComponent: component, foodItems: foodItem } ) ) );
   }
 
   queryFoodCategories() {
@@ -48,8 +43,10 @@ export class MealQueryService {
   };
 
   queryMeals() {
-    console.log( 'querying meals' );
-    return this.http.get( '/api/meal?projection=mealFull' )
+    const params = new URLSearchParams();
+    params.set( 'projection', 'mealFull' );
+    
+    return this.http.get( '/api/meal', {search: params} )
       .map( res => res.json() )
       .map( ({_embedded: {meals} })  => this.store.dispatch( this.mealActions.mealsReceived( meals ) ) );
   };

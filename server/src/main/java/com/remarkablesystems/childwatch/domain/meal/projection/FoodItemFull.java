@@ -10,4 +10,9 @@ public interface FoodItemFull{
 	String getDescription();
 	String getShortDescription();
 	FoodComponentWithId getFoodComponent();
+
+	String getPurchaseUom();
+	String getServingUom();
+
+	
 }

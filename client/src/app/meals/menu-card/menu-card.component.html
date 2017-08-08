@@ -1,0 +1,117 @@
+<div class="card " [@changeAnimation]="detailsShowing">
+	<div class="card-header">
+	    <h4 class="card-title"><i class="fa fa-calendar"></i> {{scheduleDate | date: 'EEEE' }}</h4>
+	    <p class="category">{{scheduleDate | date: 'dd MMM y' }}</p>
+	</div>
+	<div class="card-content">
+       <div class="table-responsive">
+              <table class="table">
+              	<thead>
+              		<tr *ngIf="false"><th class="col-sm-2"></th><th  class="col-sm-10"></th>
+				</thead>
+                <tbody>
+                    <tr>
+                        <td class="text-left col-sm-11">
+                        	<div *ngIf="breakfast !== undefined">
+	                        	<span (click)="showBreakfast = !showBreakfast">
+	                        		<strong><i class="fa" [class.fa-chevron-up]="showBreakfast" [class.fa-chevron-down]="!showBreakfast" ></i> {{ breakfast.description }}</strong>
+	                        	</span> 
+	                        	<div *ngIf="showBreakfast">
+		                        	<div *ngFor="let food of breakfast.mealFoodItems" style="font-size: 0.8em"
+		                        		tooltip="{{food.foodItem.description}}" placement="right">
+		                        		{{ (food.foodItem.description.length>20)? (food.foodItem.description | slice:0:20)+'..':(food.foodItem.description) }}
+		                        	</div>
+	                        	</div>
+    	                   	</div>
+    	                   	<div *ngIf="!breakfast">
+    	                   		<strong><em>No Breakfast</em></strong>
+    	                   	</div> 
+                        </td>
+                        <td class="text-right  col-sm-1">
+                        	<img class="fixed_width" src="/assets/img/meal/breakfast.svg" />
+                       	</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="text-left col-sm-11">
+                        	<div *ngIf="amSnack">
+	                        	<span (click)="showAmSnack = !showAmSnack">
+	                        		<strong><i class="fa" [class.fa-chevron-up]="showAmSnack" [class.fa-chevron-down]="!showAmSnack" ></i> {{ amSnack.description }}</strong>
+	                        	</span> 
+	                        	<div *ngIf="showAmSnack">
+		                        	<div *ngFor="let food of amSnack.mealFoodItems" style="font-size: 0.8em"
+		                        		tooltip="{{food.foodItem.description}}" placement="right">
+		                        		{{ (food.foodItem.description.length>20)? (food.foodItem.description | slice:0:20)+'..':(food.foodItem.description) }}
+		                        	</div>
+	                        	</div>
+    	                   	</div>
+    	                   	<div *ngIf="!amSnack">
+    	                   		<strong><em>No AM Snack</em></strong>
+    	                   	</div> 
+                       	</td>
+                        <td class="text-right  col-sm-1">
+                        	<img class="fixed_width" src="/assets/img/meal/ante-meridiem.svg" />
+                        </td>
+                    </tr>                    
+                    
+                    <tr>
+                        <td class="text-left col-sm-11">
+                        	<div *ngIf="lunch">
+	                        	<span (click)="showLunch = !showLunch">
+	                        		<strong><i class="fa" [class.fa-chevron-up]="showLunch" [class.fa-chevron-down]="!showLunch" ></i> {{ lunch.description }}</strong>
+	                        	</span> 
+	                        	<div *ngIf="showLunch">
+		                        	<div *ngFor="let food of amSnack.mealFoodItems" style="font-size: 0.8em"
+		                        		tooltip="{{food.foodItem.description}}" placement="right">
+		                        		{{ (food.foodItem.description.length>20)? (food.foodItem.description | slice:0:20)+'..':(food.foodItem.description) }}
+		                        	</div>
+	                        	</div>
+    	                   	</div>
+    	                   	<div *ngIf="!lunch">
+    	                   		<strong><em>No Lunch</em></strong>
+    	                   	</div> 
+                       	</td>
+                        <td class="text-right  col-sm-1">
+                        	<img class="fixed_width" src="/assets/img/meal/lunch.svg" />
+                        </td>
+                    </tr>                    
+
+                    <tr>
+                        <td class="text-left col-sm-11">
+                        	<div *ngIf="pmSnack">
+	                        	<span (click)="showPmSnack = !showPmSnack">
+	                        		<strong><i class="fa" [class.fa-chevron-up]="showPmSnack" [class.fa-chevron-down]="!showPmSnack" ></i> {{ pmSnack.description }}</strong>
+	                        	</span> 
+	                        	<div *ngIf="showPmSnack">
+		                        	<div *ngFor="let food of amSnack.mealFoodItems" style="font-size: 0.8em"
+		                        		tooltip="{{food.foodItem.description}}" placement="right">
+		                        		{{ (food.foodItem.description.length>20)? (food.foodItem.description | slice:0:20)+'..':(food.foodItem.description) }}
+		                        	</div>
+	                        	</div>
+    	                   	</div>
+    	                   	<div *ngIf="!pmSnack">
+    	                   		<strong><em>No PM Snack</em></strong>
+    	                   	</div> 
+                       	</td>
+                        <td class="text-right  col-sm-1">
+                        	<img class="fixed_width" src="/assets/img/meal/post-meridiem.svg" />
+                        </td>
+                    </tr>                    
+
+                </tbody>
+          	</table>                                   	
+          </div>                                
+     </div>
+     <div class="card-footer">
+          <hr />
+          <a class="footer-title text-info" [routerLink]="[ '../menu' ]" ><i class="fa fa-pencil"></i> EDIT</a>
+          <!--
+          <div class="pull-right">
+              <button class="btn btn-default btn-fill btn-icon btn-sm">
+                  <i class="ti-info"></i>
+              </button>
+          </div>
+          -->
+      </div>                                                        
+</div>
+

@@ -1,3 +1,5 @@
+
+import { ChildDetailComponent } from './child/child-detail/child-detail.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -17,7 +19,8 @@ export const AppRoutes: Routes = [
           { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
           { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
           { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-          { path: 'room', component: RoomDetailsComponent }
+          { path: 'room', component: RoomDetailsComponent },
+          { path: 'child-detail', component: ChildDetailComponent }
         ]},
     { path: '', component: AuthLayoutComponent,
       children: [

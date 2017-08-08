@@ -23,7 +23,9 @@ public class MealFoodItem implements Serializable {
 	private AgeGroup ageGroup;
 
 	
-	private BigDecimal amount;
+	private BigDecimal quantity;
+	
+	private String unit;
 
 
 	@ManyToOne
@@ -44,12 +46,12 @@ public class MealFoodItem implements Serializable {
 		this.ageGroup = ageGroup;
 	}
 
-	public BigDecimal getAmount() {
-		return amount;
+	public BigDecimal getQuantity() {
+		return quantity;
 	}
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
+	public void setQuantity(BigDecimal quantity) {
+		this.quantity = quantity;
 	}
 
 	public FoodItem getFoodItem() {
@@ -70,6 +72,14 @@ public class MealFoodItem implements Serializable {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 	
 	

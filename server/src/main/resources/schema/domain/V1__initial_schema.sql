@@ -107,129 +107,170 @@
         start_time timestamptz
     );
     
+-- Meal items
+    
     create table food_component(
-    	id varchar(255) not null,
-    	description varchar(1024)
+    	id varchar(36) NOT NULL,
+    	description varchar(128),
+    	parent_component varchar(36)
     );
     
     create table food_item(
-    	id varchar(255) not null,
-    	description varchar(1024) not null,
+    	id varchar(36) NOT NULL,
+    	description varchar(256) NOT NULL,
     	short_description varchar(128),
-    	food_component_id varchar(255),
-    	serving_uom varchar(36),
-    	purchase_uom varchar(36)
+    	food_component_id varchar(36) NOT NULL,
+    	serving_unit varchar(36) DEFAULT 'each',
+    	purchase_unit varchar(36) DEFAULT 'each',
+    	notes varchar(4096)
     );
     
     create table meal(
-    	id varchar(255) not null,
+    	id varchar(36) not null,
     	description varchar(128) not null,
-    	type varchar(30) not null
+    	meal_type varchar(36) not null CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER', 'LATE_SNACK', 'OTHER' ) )
     );
     
     create table meal_food_item(
-    	id serial not null,
-    	meal_id 		varchar(255) not null,
-    	food_item_id 	varchar(255) not null,
-    	age_group      varchar(20),
-   	 	amount         numeric (4, 2),
-   		uom_id        varchar(36)
+    	id serial 		not null,
+    	meal_id 		varchar(36) not null,
+    	food_item_id 	varchar(36) not null,
+    	age_group    	varchar(36) CHECK ( age_group IN ( 'AGE_0_5MO', 'AGE_6MO_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT') ),
+   	 	quantity        numeric (4, 2) DEFAULT 1,
+   		unit        	varchar(36) DEFAULT 'each'
     );
     
-    CREATE TABLE meal_schedule(
-   		id                VARCHAR (36) NOT NULL,
+	create table menu(
+		id varchar( 36 ) NOT NULL,
+		meal_id varchar(36),
    		start_date        DATE NOT NULL,
-   		end_date          DATE,
-   		repeat_interval   INTERVAL (0),
-   		meal_id           varchar (255)
+   		end_date          DATE DEFAULT DATE '12/31/3000',
+   		recurrence        varchar (36) NOT NULL CHECK ( recurrence IN ( 'none', 'daily', 'weekly', 'monthly' ) ) DEFAULT 'none'
 	);
 	
 	CREATE TABLE unit_of_measure(
-   		id            varchar(36) NOT NULL,
-   		description   varchar(128) NOT NULL
+   		unit          varchar(36) NOT NULL,
+   		unit_type	  varchar(36)
 	);
 	
-	CREATE TABLE age_group(
-		id	varchar(36) NOT NULL,
-		description varchar(128) NOT NULL
+	-- to = (( from + from_offset ) * muliplicand / denominator ) + to_offset	
+	CREATE TABLE unit_conversion(
+		from_unit  varchar(36) NOT NULL,
+		to_unit	  varchar(36) NOT NULL,
+		from_offset	  numeric (4,2) NOT NULL DEFAULT 0,
+		multiplicand  numeric (4,2) NOT NULL DEFAULT 1,
+		denominator   numeric (4,2) NOT NULL DEFAULT 1,
+		to_offset	  numeric (4,2) NOT NULL DEFAULT 0
 	);
-	
 
+
+	-- recurrence handling functions		
+CREATE OR REPLACE FUNCTION domain.generate_recurrences (
+ 	IN recurs      varchar(36),
+    IN start_date   date,
+    IN end_date     date)
+   RETURNS SETOF date AS $$
+
+DECLARE
+   next_date   DATE := start_date;
+   duration    INTERVAL;
+   day         INTERVAL;
+   checkit     TEXT;
+BEGIN
+   IF recurs = 'none'
+   THEN
+        -- Only one date ever.
+        RETURN NEXT next_date;
+   ELSIF recurs = 'weekly'
+   THEN
+      duration := '7 days'::interval;
+
+      WHILE next_date <= end_date
+      LOOP
+            RETURN NEXT next_date;
+         next_date := next_date + duration;
+      END LOOP;
+   ELSIF recurs = 'daily'
+   THEN
+      duration := '1 day'::interval;
+
+      WHILE next_date <= end_date
+      LOOP
+            RETURN NEXT next_date;
+         next_date := next_date + duration;
+      END LOOP;
+   ELSIF recurs = 'monthly'
+   THEN
+      duration := '27 days'::interval;
+      day := '1 day'::interval;
+      checkit := to_char (start_date, 'DD');
+
+      WHILE next_date <= end_date
+      LOOP
+            RETURN NEXT next_date;
+         next_date := next_date + duration;
+
+         WHILE to_char (next_date, 'DD') <> checkit
+         LOOP
+            next_date := next_date + day;
+         END LOOP;
+      END LOOP;
+   ELSE
+        -- Someone needs to update this function, methinks.
+        RAISE EXCEPTION 'Recurrence % not supported by generate_recurrences()', recurs;
+   END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION domain.recurring_events_for(
+   range_start TIMESTAMP,
+   range_end   TIMESTAMP
+)
+   RETURNS SETOF domain.menu AS $$
+   
+DECLARE
+   event domain.menu;
+   start_at TIMESTAMPTZ;
+   start_time TEXT;
+   ends_at    TIMESTAMPTZ;
+   next_date  DATE;
+   recurs_at  TIMESTAMPTZ;
+BEGIN
+   FOR event IN 
+       SELECT *
+         FROM domain.menu
+        WHERE recurrence <> 'none'
+           OR  ( recurrence = 'none' AND domain.menu.start_date BETWEEN range_start AND range_end )
+
+    LOOP
+       IF event.recurrence = 'none' THEN
+         RETURN NEXT event;
+         CONTINUE;
+       END IF;
+
+       start_at := event.start_date::timestamptz;
+       start_time := start_at::time::text;
+       ends_at    := event.end_date::timestamptz;
+
+       FOR next_date IN
+           SELECT *
+             FROM generate_recurrences(
+                      event.recurrence,
+                      start_at::date,
+                      range_end::date
+             )
+       LOOP
+           recurs_at := (next_date || ' ' || start_time)::timestamp;
+           EXIT WHEN recurs_at > range_end;
+           CONTINUE WHEN recurs_at < range_start AND ends_at < range_start;
+           event.start_date := recurs_at;
+           event.end_date   := ends_at;
+           RETURN NEXT event;
+       END LOOP;
+   END LOOP;
+   RETURN;
+END;
+$$ LANGUAGE plpgsql;
         
-        
-    create index IDXtqkge09h0790muhxmrfyi083y on participant_room_assignment (participant_id, date);
 
-    alter table person_schedule
-        add constraint UKhxj3u8mq9v6usqlc2hnmrbkot unique (person_id, effective_date);
-
-    create index IDX1n2flhy2k6d294fmtx5907xay on staff_room_assignment (staff_id, date);
-
-    alter table non_participant_relationship
-        add constraint FKb3mnxwgs4b77gjf21isc4acne
-        foreign key (non_participant_id)
-        references non_participant;
-
-    alter table non_participant_relationship
-        add constraint FK40sflxodqda2fbxe5fem6i1u3
-        foreign key (participant_id)
-        references participant;
-
-    alter table participant_family
-        add constraint FKbcnth48xqh26argctxiah8h23
-        foreign key (family_id)
-        references family;
-
-    alter table participant_family
-        add constraint FKkc3adyw8v353isk7v51wxv9gx
-        foreign key (participant_id)
-        references participant;
-
-    alter table participant_presence_log
-        add constraint FKkgh8vst5juo35gv8qjwnvaw0y
-        foreign key (participant_id)
-        references participant;
-
-    alter table participant_presence_log
-        add constraint FKr7u948vjy12t6wspscwengooy
-        foreign key (room_id)
-        references room;
-
-    alter table participant_room_assignment
-        add constraint FK78ih5d9fmmewmpu3p250cx6g7
-        foreign key (participant_id)
-        references participant;
-
-    alter table participant_room_assignment_entries
-        add constraint FKkeha6mnxn3wj23kclc15kk2fk
-        foreign key (room_id)
-        references room;
-
-    alter table participant_room_assignment_entries
-        add constraint FKssg0s5qbyxploeadeo31wfl84
-        foreign key (participant_room_assignment_id)
-        references participant_room_assignment;
-
-    alter table staff_presence_log
-        add constraint FK4hgu7wwfn57thd3nho4vrt3x8
-        foreign key (room_id)
-        references room;
-
-    alter table staff_presence_log
-        add constraint FKlbfd2qy17qkx0slhfp4x0c991
-        foreign key (staff_id)
-        references staff;
-
-    alter table staff_room_assignment
-        add constraint FKc390uo4pjlnfwpbuu44uipmlv
-        foreign key (staff_id)
-        references staff;
-
-    alter table staff_room_assignment_entries
-        add constraint FKs585mew1y643beq98j48sc990
-        foreign key (room_id)
-        references room;
-
-    alter table staff_room_assignment_entries
-        add constraint FKinlpvmulnnoxlebj3nak90nef
-        foreign key (staff_room_assignment_id)
-        references staff_room_assignment;

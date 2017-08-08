@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit{
                 var children_from_url = titlee.split("/")[2];
                 for(var current = 0; current < parent.children.length; current++){
                     if(parent.children[current].path === children_from_url ){
-                        return parent.children[current].title;
+                        return parent.title + ' > ' + parent.children[current].title;
                     }
                 }
             }

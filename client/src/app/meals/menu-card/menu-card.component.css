@@ -1,4 +1,6 @@
 .fixed_width {
   min-height: 32px;
+  height: 32px;
   min-width: 32px;
+  width: 32px;
 }

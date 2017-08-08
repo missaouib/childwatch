@@ -1,12 +1,23 @@
 import { FoodItem } from '../../meals/meal.interfaces';
 import { Page } from '../admin.interfaces';
 import { AdminStateService } from '../services/admin-state.service';
+import { transition, trigger, style, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'cw-food-item-list',
   templateUrl: './food-item-list.component.html',
-  styleUrls: ['./food-item-list.component.css']
+  styleUrls: ['./food-item-list.component.css'],
+  animations: [
+    trigger(
+      'changeAnimation', [
+        transition(':enter', [
+          style({transform: 'translateX(100%)', opacity: 1}),
+          animate('750ms ease-in')          
+        ])
+      ]
+    )
+  ]
 })
 export class FoodItemListComponent implements OnInit {
 
@@ -14,11 +25,13 @@ export class FoodItemListComponent implements OnInit {
   pageInfo: Page = {
     size: 20,
     totalElements: 0,
-    totalPages: 0,
-    number: 0
+    totalPages: 1,
+    number: 1
   };
   
  lastSortOrder = 'description,desc';
+  
+ rowSelected: any = undefined;
 
   constructor(private state: AdminStateService ) { }
 
@@ -29,6 +42,7 @@ export class FoodItemListComponent implements OnInit {
 
   pageChanged( event: any ){
     console.log( 'Page changed to ' + event.page );
+    this.rowSelected = undefined;
     this.state.loadFoodItems( event.page - 1 );
   }
   

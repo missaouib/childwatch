@@ -1,4 +1,4 @@
-import {FoodItem, FoodComponent, Meal, MealFoodItem, MealState, INITIAL_MEALSTATE} from './meal.interfaces';
+import {FoodItem, FoodComponent, Meal, MealFoodItem, MealState, INITIAL_MEALSTATE, Menu} from './meal.interfaces';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 import {Injectable} from '@angular/core';
 import { Action } from '@ngrx/store';
@@ -18,12 +18,15 @@ export class MealActions {
   static ADD_FOOD_COMPONENT_TO_SELECTED_MEAL = 'ADD_FOOD_COMPONENT_TO_SELECTED_MEAL';
   static ADD_MENU_ITEM = 'ADD_MENU_ITEM';
   static REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL = 'REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL';
+  static MENUS_RECEIVED = 'MENUS_RECEIVED';
+  static MENU_TIME_ADJUSTED = 'MENU_TIME_ADJUSTED';
   
   
   /*
    * Actions
    */
   mealsReceived = ActionCreatorFactory.create<Meal[]>(MealActions.MEALS_RECEIVED);
+  menusReceived = ActionCreatorFactory.create<{start: Date, end: Date, menus: Menu[]}>(MealActions.MENUS_RECEIVED);
   foodItemsReceived = ActionCreatorFactory.create<{foodComponent: FoodComponent, foodItems: FoodItem[]}>(MealActions.FOOD_ITEMS_RECEIVED);
   foodComponentsReceived = ActionCreatorFactory.create<FoodComponent[]>(MealActions.FOOD_COMPONENTS_RECEIVED);
   foodComponentSelected = ActionCreatorFactory.create<FoodComponent>(MealActions.FOOD_COMPONENT_SELECTED);
@@ -31,6 +34,7 @@ export class MealActions {
   mealFoodItemsReceived = ActionCreatorFactory.create<MealFoodItem[]>(MealActions.MEAL_FOOD_ITEMS_RECEIVED);
   addFoodComponentToSelectedMeal = ActionCreatorFactory.create<FoodComponent>(MealActions.ADD_FOOD_COMPONENT_TO_SELECTED_MEAL);
   removeMealFoodItemFromSelectedMeal = ActionCreatorFactory.create<MealFoodItem>(MealActions.REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL );
+  menuTimeAdjusted = ActionCreatorFactory.create<{start: Date, end: Date}>(MealActions.MENU_TIME_ADJUSTED);
 
   addMenuItem = ActionCreatorFactory.create<{type: string}>(MealActions.ADD_MENU_ITEM);
 
@@ -57,8 +61,8 @@ export class MealActions {
         const mealFoodItem: MealFoodItem = {
           id: undefined,
           ageGroup: undefined,
-          amount: 1,
-          foodItem: { id: undefined, description: undefined, shortDescription: undefined, foodComponent: action.payload }
+          quantity: 1,
+          foodItem: { id: undefined, description: undefined, shortDescription: undefined, foodComponent: action.payload, notes: undefined, purchaseUom: undefined, servingUom: undefined }
         };
         const mealFoodItems =  state.ui.selectedMeal.mealFoodItems.concat( mealFoodItem );
         return { ...state, ui: { ...state.ui, selectedMeal: { ...state.ui.selectedMeal, mealFoodItems: mealFoodItems } } };
@@ -70,10 +74,15 @@ export class MealActions {
         };
         const meals = state.meals.concat( meal );
         return { ...state, meals: meals };
-        
       case MealActions.REMOVE_MEAL_FOOD_ITEM_FROM_SELECTED_MEAL:
         const items = state.ui.selectedMeal.mealFoodItems.filter( item => item !== action.payload );
         return { ...state, ui: { ...state.ui, selectedMeal: { ...state.ui.selectedMeal, mealFoodItems: items } } };
+      case MealActions.MENUS_RECEIVED:
+        return { ...state,
+                 ui: { ...state.ui, selectedMenus: action.payload.menus } };
+     case MealActions.MENU_TIME_ADJUSTED:
+        return { ...state,
+                 ui: { ...state.ui, startMenu: action.payload.start, endMenu: action.payload.end } };
     }
     return state;
 }

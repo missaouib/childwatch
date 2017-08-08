@@ -29,17 +29,19 @@
 		</div>
 		
         <div class="row">
-            <div class="col-lg-3 col-sm-6">
+            <div *ngFor="let room of Rooms" class="col-lg-3 col-sm-6">
                 <div class="card">
                     <div class="card-content">
                     	<div class="row">
 	                    	<div class="col-xs-7">
-    	                		<div class="numbers pull-left">Butterfly<p class="text-left">North Valley</p></div>
+    	                		<div class="numbers pull-left">{{room.name}}<p class="text-left">{{room.site}}</p></div>
     	                	</div>
-                    		<div class="col-xs-5">
+                    		<div *ngIf="room.isUnderstaffed || room.isOverstaffed" class="col-xs-5">
                                 <div class="pull-right">
-                                    <span class="label label-danger">
-                                        Understaffed
+                                    <span class="label label-danger"
+                                          [class.label-danger]="room.isUnderstaffed"
+                                          [class.label-warning]="room.isOverstaffed">
+                                        {{(room.isUnderstaffed)? 'Understaffed' : 'Overstaffed'}}
                                     </span>
                                 </div>
                             </div>
@@ -47,17 +49,17 @@
                     	<div class="row">
                             <div class="col-xs-5">
                                 <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/butterfly.svg" />
+                                    <img class="fixed_width pull-left" [src]="'/assets/img/room/' + room.img" />
                                 </div>
                             </div>
                             <div class="col-xs-7">
                                 <div class="numbers">
                                     <p>Children</p>
-                                    12
+                                    {{room.childrenCount}}
                                 </div>
                                 <div class="numbers">
                                     <p>Staff</p>
-                                    1
+                                    {{room.staffCount}}
                                 </div>
                                 
                             </div>
@@ -65,264 +67,7 @@
                     </div>
                     <div class="card-footer">
                         <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm" (click)="goToRoomDetails()">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-content">
-                    	<div class="row">
-		                    	<div class="col-xs-7">
-	
-                    		<div class="numbers pull-left">Dragonfly<p class="text-left">North Valley</p></div>
-                    		</div>
-                    	</div>
-                    	<div class="row">
-                            <div class="col-xs-5">
-                                <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/dragonfly.svg" />
-                                </div>
-                            </div>
-                            <div class="col-xs-7">
-                                <div class="numbers">
-                                    <p>Children</p>
-                                    10
-                                </div>
-                                <div class="numbers">
-                                    <p>Staff</p>
-                                    2
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-content">
-                    	<div class="row">
-                    		                    	<div class="col-xs-7">
-                    	
-                    		<div class="numbers pull-left">Owl<p class="text-left">East</p></div>
-                    		</div>
-                    	</div>
-                    	<div class="row">
-                            <div class="col-xs-5">
-                                <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/owl.svg" />
-                                </div>
-                            </div>
-                            <div class="col-xs-7">
-                                <div class="numbers">
-                                    <p>Children</p>
-                                    11
-                                </div>
-                                <div class="numbers">
-                                    <p>Staff</p>
-                                    2
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-content">
-                    	<div class="row">
-                    		                    	<div class="col-xs-7">
-                    	
-                    		<div class="numbers pull-left">Hummingbird<p class="text-left">East</p></div>
-                    		</div>
-                    	</div>
-                    	<div class="row">
-                            <div class="col-xs-5">
-                                <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/hummingbird.svg" />
-                                </div>
-                            </div>
-                            <div class="col-xs-7">
-                                <div class="numbers">
-                                    <p>Children</p>
-                                    14
-                                </div>
-                                <div class="numbers">
-                                    <p>Staff</p>
-                                    3
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-     	</div> <!-- end: ROW -->
-     	
-     	
-     	        <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-content">
-                    	<div class="row">
-                    		                    	<div class="col-xs-7">
-                    	
-                    		<div class="numbers pull-left">Squirrel<p class="text-left">East</p></div>
-                    		</div>
-                    	</div>
-                    	<div class="row">
-                            <div class="col-xs-5">
-                                <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/squirrel.svg" />
-                                </div>
-                            </div>
-                            <div class="col-xs-7">
-                                <div class="numbers">
-                                    <p>Children</p>
-                                    7
-                                </div>
-                                <div class="numbers">
-                                    <p>Staff</p>
-                                    1
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-content">
-                    	<div class="row">
-                    		                    	<div class="col-xs-7">
-                    	
-                    		<div class="numbers pull-left">Ladybug<p class="text-left">Downtown</p></div>
-                    		</div>
-                    	</div>
-                    	<div class="row">
-                            <div class="col-xs-5">
-                                <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/ladybug.svg" />
-                                </div>
-                            </div>
-                            <div class="col-xs-7">
-                                <div class="numbers">
-                                    <p>Children</p>
-                                    12
-                                </div>
-                                <div class="numbers">
-                                    <p>Staff</p>
-                                    2
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-content">
-                    	<div class="row">
-                    		                    	<div class="col-xs-7">
-                    	
-                    		<div class="numbers pull-left">Bumblebee<p class="text-left">Downtown</p></div>
-                    		</div>
-                    		<div class="col-xs-5">
-                                <div class="pull-right">
-                                    <span class="label label-warning">
-                                        Overstaffed
-                                    </span>
-                                </div>
-                            </div>
-                    		
-                    	</div>
-                    	<div class="row">
-                            <div class="col-xs-5">
-                                <div class="icon-big icon-warning text-center">
-                                    <img src="/assets/img/room/bee.svg" />
-                                </div>
-                            </div>
-                            <div class="col-xs-7">
-                                <div class="numbers">
-                                    <p>Children</p>
-                                    7
-                                </div>
-                                <div class="numbers">
-                                    <p>Staff</p>
-                                    3
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <hr />
-                        <div class="footer-title">View details</div>
-                        <div class="pull-right">
-                            <button class="btn btn-default btn-fill btn-icon btn-sm">
-                                <i class="ti-info"></i>
-                            </button>
-                        </div>
+                        <a class="footer-title text-info" (click)="goToRoomDetails(room)" >VIEW DETAILS</a>
                     </div>
                 </div>
             </div>

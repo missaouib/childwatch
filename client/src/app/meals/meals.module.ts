@@ -16,11 +16,16 @@ import {HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { MenuScreenComponent } from './menu-screen/menu-screen.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { MealCardComponent } from './meal-card/meal-card.component';
+import { MenuCardComponent } from './menu-card/menu-card.component';
+import { MenuService } from './services/menu.service';
+import { DragulaModule } from 'ng2-dragula';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { MenuDetailComponent } from './menu-detail/menu-detail.component';
 
 const routes: Routes = [
   { path: 'meal', component: MealsScreenComponent },
-  { path: 'menu', component: MenuScreenComponent }
+  { path: 'menu-overview', component: MenuScreenComponent },
+  { path: 'menu', component: MenuDetailComponent }
 ];
 
 @NgModule({
@@ -31,11 +36,12 @@ const routes: Routes = [
     BsDropdownModule.forRoot(),
     TypeaheadModule.forRoot(),
     AccordionModule.forRoot(),
+    TooltipModule.forRoot(),
     ReactiveFormsModule, FormsModule,
-    HttpModule
+    HttpModule, DragulaModule
   ],
-  declarations: [MealsScreenComponent, MealDetailComponent, MenuScreenComponent, MealCardComponent],
-  providers: [ MealQueryService, MealStateService, MealActions ]
+  declarations: [MealsScreenComponent, MealDetailComponent, MenuScreenComponent, MenuCardComponent, MenuDetailComponent],
+  providers: [ MealQueryService, MealStateService, MealActions, MenuService ]
 })
 export class MealsModule {
 }

@@ -23,6 +23,7 @@ public class Meal implements Serializable {
 	private String description;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name="meal_type")
 	private MealType type;
 
 	//bi-directional many-to-one association to MealFoodItem

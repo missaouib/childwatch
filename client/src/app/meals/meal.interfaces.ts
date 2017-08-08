@@ -7,6 +7,9 @@ export interface FoodItem {
   description?: string;
   shortDescription?: string;
   foodComponent: FoodComponent;
+  purchaseUom: string;
+  servingUom: string;
+  notes: string;
 };
 
 export interface FoodComponentLinks {
@@ -30,8 +33,8 @@ export interface MealFoodItemLinks {
 export interface MealFoodItem {
   id?: string;
   ageGroup?: string;
-  amount?: number;
-  units?: string,
+  quantity?: number;
+  units?: string;
   foodItem?: FoodItem;
   _links?: MealFoodItemLinks;
 };
@@ -50,12 +53,26 @@ export interface Meal {
   mealFoodItems: MealFoodItem[];
 };
 
+export interface Menu {
+  id?: string;
+  meal: Meal;
+  startDate: Date;
+  endDate: Date;
+  recurrence: string;
+}
+
 export interface MealUIState {
+  selectedMenus: Menu[];
+  menuStart: Date;
+  menuEnd: Date;
   selectedMeal: Meal;
   selectedFoodComponent: FoodComponent;
 }
 
 export const INITIAL_MEALUISTATE: MealUIState = {
+  selectedMenus: undefined,
+  menuStart: undefined,
+  menuEnd: undefined,
   selectedMeal: undefined,
   selectedFoodComponent: undefined
 };
