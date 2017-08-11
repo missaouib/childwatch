@@ -2,13 +2,11 @@ import { Meal, Menu } from '../meal.interfaces';
 import { MealStateService } from '../services/meal-state.service';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { DragulaService} from 'ng2-dragula/ng2-dragula';
 
 @Component({
   selector: 'cw-menu-screen',
   templateUrl: './menu-screen.component.html',
   styleUrls: ['./menu-screen.component.css'],
-  viewProviders: [DragulaService ]
 })
 export class MenuScreenComponent implements OnInit {
     Meals: Meal[];
@@ -20,13 +18,8 @@ export class MenuScreenComponent implements OnInit {
     days: Date[] = undefined;
 
   constructor(
-    private state: MealStateService,
-    private dragulaSvc: DragulaService
+    private state: MealStateService
   ) {
-    this.dragulaSvc.setOptions( 'first-bag', {
-      revertOnSpill: true,
-      copy: true
-    });
     this.state.meals$.subscribe( ms => this.Meals = ms );
     this.state.menus$.subscribe( m => this.Menus = m );
    }

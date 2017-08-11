@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Http, URLSearchParams  } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import * as moment from 'moment';
 import 'rxjs/add/operator/map';
 
 
@@ -50,5 +51,14 @@ export class MealQueryService {
       .map( res => res.json() )
       .map( ({_embedded: {meals} })  => this.store.dispatch( this.mealActions.mealsReceived( meals ) ) );
   };
+  
+  queryMenu(start: Date, end: Date) {
+    return this.http.get( '/api/menu/search/between?project=menuFull&start=' +
+                          moment( start ).format( 'MM/DD/YYYY' ) +
+                          '&end=' + moment(end).format( 'MM/DD/YYYY' ) )
+      .map( res => res.json() )
+      .map( ({_embedded: {menus} }) => this.store.dispatch( this.mealActions.menusReceived( { start: start, end: end, menus: menus } ) ) );
+  }
+  
 
 }
