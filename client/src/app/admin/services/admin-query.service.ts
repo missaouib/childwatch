@@ -1,4 +1,5 @@
 import { AppState } from '../../app.state';
+import { FoodItem } from '../../meals/meal.interfaces';
 import { AdminActions } from '../admin.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -25,5 +26,26 @@ export class AdminQueryService {
       .map( res => res.json() )
       .map( ({_embedded: { foodItems }, page: pageInfo } ) => 
           this.store.dispatch( this.adminActions.foodItemsReceived( { items: foodItems, page: pageInfo }  ) ) );
+  }
+  
+  queryFoodComponents() {
+      const params = new URLSearchParams();
+      params.append( 'projection', 'foodComponentWithId' );
+      params.append( 'size', '100' );
+      
+      return this.http.get( '/api/foodComponent', {search:params} )
+      .map( res => res.json() )
+      .map( ( {_embedded: { foodComponents } } ) => 
+        this.store.dispatch( this.adminActions.foodComponentsReceived( foodComponents ) ) );
+  }
+  
+  updateFoodItem( foodItem: FoodItem ){
+    
+    console.log( foodItem );
+    
+    return this.http.put( '/api/foodItem/' + foodItem.id, foodItem )
+      .subscribe(
+        () => this.store.dispatch( this.adminActions.foodItemUpdated( foodItem ) ),
+        (err) => console.log( err ));
   }
 }

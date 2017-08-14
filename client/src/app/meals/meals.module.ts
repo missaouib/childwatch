@@ -25,7 +25,7 @@ import { MenuDetailComponent } from './menu-detail/menu-detail.component';
 const routes: Routes = [
   { path: 'meal', component: MealsScreenComponent },
   { path: 'menu-overview', component: MenuScreenComponent },
-  { path: 'menu', component: MenuDetailComponent }
+  { path: 'menu/:id', component: MenuDetailComponent }
 ];
 
 @NgModule({

@@ -5,7 +5,7 @@
 	</div>
 	<div class="card-content">
 		<div class="row">
-	       <div class="table-responsive" [class.col-sm-9]="rowSelected" [class.col-sm-12]="!rowSelected">
+	       <div class="table-responsive" [class.col-sm-9]="showDetail" [class.col-sm-12]="!showDetail">
 				<table class="table">
 					<tr>
 						<th class="col-sm-1">Status</th>
@@ -28,7 +28,7 @@
 				
 					<tr *ngFor="let item of foodItems">
 						<td><i class="fa fa-lock"></i>
-						<td class="text-left"><a (click)="rowSelected = (rowSelected === item)? undefined : item">{{item.description}}</a></td>
+						<td class="text-left"><a (click)="onFoodItemSelected(item)">{{item.description}}</a></td>
 						<td class="text-left">{{item.shortDescription}}</td>
 						<td class="text-left">{{item.foodComponent.description}}</td>
 					</tr>
@@ -36,25 +36,113 @@
 				</table>
 			</div>
 			
-			<div *ngIf="rowSelected" class="col-sm-3" [@changeAnimation]="rowSelected">
-				<form>
-					<label>Description</label>
-					<input class="form-control" value="{{rowSelected.description}}" />
+		
+			<div *ngIf="showDetail" class="col-sm-3" [@changeAnimation]="showDetail">
 				
-					<label>Short Description</label>
-					<input class="form-control" value="{{rowSelected.shortDescription}}" />
-				
-					<label>Component</label>
-					<input class="form-control" value="{{rowSelected.foodComponent.description}}" />
-					
-					<label>Purchase Unit</label>
-					<input class="form-control" value="{{rowSelected.purchaseUom}}" />
+				<i class="cw-icon pull-left" style="font-size: 2.5em"
+					[class.icon-milk]="foodItem.value.foodComponent.id === '1'"
+					[class.icon-spices]="foodItem.value.foodComponent.id === '2'"
+					[class.icon-baby-food]="foodItem.value.foodComponent.id === '3'"
+					[class.icon-olive-oil-jar]="foodItem.value.foodComponent.id === '4'"
+					[class.icon-chicken-leg-bite]="foodItem.value.foodComponent.id === '5'"
+					[class.icon-soup]="foodItem.value.foodComponent.id === '6'"
+					[class.icon-sausage]="foodItem.value.foodComponent.id === '7'"
+					[class.icon-cereals]="foodItem.value.foodComponent.id === '8'"
+					[class.icon-fruit-salad]="foodItem.value.foodComponent.id === '9'"
+					[class.icon-pig-face]="foodItem.value.foodComponent.id === '10'"
+					[class.icon-vegetables]="foodItem.value.foodComponent.id === '11'" 
+					[class.icon-peanuts]="foodItem.value.foodComponent.id === '12'"
+					[class.icon-beef-steak]="foodItem.value.foodComponent.id === '13'"
+					[class.icon-beverage]="foodItem.value.foodComponent.id === '14'"
+					[class.icon-fish]="foodItem.value.foodComponent.id === '15'"
+					[class.icon-beans]="foodItem.value.foodComponent.id === '16'"
+					[class.icon-lamb]="foodItem.value.foodComponent.id === '17'"
+					[class.icon-pie]="foodItem.value.foodComponent.id === '18'"
+					[class.icon-sweets]="foodItem.value.foodComponent.id === '19'"
+					[class.icon-pasta]="foodItem.value.foodComponent.id === '20'"				
+					[class.icon-fast-food]="foodItem.value.foodComponent.id === '21'" 				
+					[class.icon-food]="foodItem.value.foodComponent.id === '22'"
+					[class.icon-snack]="foodItem.value.foodComponent.id === '25'"
+					[class.icon-native]="foodItem.value.foodComponent.id === '35'"
+					[class.icon-restaurant]="foodItem.value.foodComponent.id === '36'"
+					[class.circle-green]="foodItem.value.description">
+			</i>
+				<br />
+				<br />
+				<form novalidate [formGroup]="foodItem" (ngSubmit)="onSubmit()">
+					<div class="form-group">
+						<label for=description>Description</label>
+						<input #description class="form-control" formControlName="description" />
+					</div>
 
-					<label>Serving Unit</label>
-					<input class="form-control" value="{{rowSelected.servingUom}}" />
+					<div class="form-group">				
+						<label for=shortDescription >Short Description</label>
+						<input #shortDescription class="form-control" formControlName="shortDescription" />
+					</div>
+				
+					<div class="form-group">					
+						<label for=component>Component</label>
+						<select #component class="form-control" formControlName="foodComponent">
+							<option *ngFor="let component of foodComponents" [ngValue]="component">{{component.description}}</option>
+						</select>
+					</div>
+					
+					<div class="form-group">										
+						<label for=purchaseUnit >Purchase Unit</label>
+						<input #purchaseUnit class="form-control" formControlName="purchaseUom" />
+					</div>
+					
+					<div class="form-group">					
+						<label>Serving Unit</label>
+						<input class="form-control" formControlName="servingUom" />
+					</div>
 					
 				</form>
-				<button class="btn btn-default"><i class="fa fa-trash"></i> Delete</button>	
+				<br />
+				<hr />
+				<a class="footer-title"><i class="fa fa-trash"></i> Delete</a>
+				
+				<!-- 
+				<div class="pull-right btn-group" dropdown container="body">
+				  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+				    Add Component {{foodComponents.length}}<span class="caret"></span>
+				  </button>
+				  <ul *dropdownMenu class="dropdown-menu" role="menu" >
+				    <li *ngFor="let component of foodComponents" role="menuitem">
+				    	<a class="dropdown-item" (click)="addFoodComponent(component)">
+				    		<i class="cw-icon" style="font-size: 1em"
+								[class.icon-milk]="component.id === '1'"
+								[class.icon-spices]="component.id === '2'"
+								[class.icon-baby-food]="component.id === '3'"
+								[class.icon-olive-oil-jar]="component.id === '4'"
+								[class.icon-chicken-leg-bite]="component.id === '5'"
+								[class.icon-soup]="component.id === '6'"
+								[class.icon-sausage]="component.id === '7'"
+								[class.icon-cereals]="component.id === '8'"
+								[class.icon-fruit-salad]="component.id === '9'"
+								[class.icon-pig-face]="component.id === '10'"
+								[class.icon-vegetables]="component.id === '11'" 
+								[class.icon-peanuts]="component.id === '12'"
+								[class.icon-beef-steak]="component.id === '13'"
+								[class.icon-beverage]="component.id === '14'"
+								[class.icon-fish]="component.id === '15'"
+								[class.icon-beans]="component.id === '16'"
+								[class.icon-lamb]="component.id === '17'"
+								[class.icon-pie]="component.id === '18'"
+								[class.icon-sweets]="component.id === '19'"
+								[class.icon-pasta]="component.id === '20'"				
+								[class.icon-fast-food]="component.id === '21'" 				
+								[class.icon-food]="component.id === '22'"
+								[class.icon-snack]="component.id === '25'"
+								[class.icon-native]="component.id === '35'"
+								[class.icon-restaurant]="component.id === '36'"
+								>
+							</i>{{component.description}}
+				    	</a>
+				    </li>
+				  </ul>
+				</div>	
+				-->
 			</div>
 			
 		</div>

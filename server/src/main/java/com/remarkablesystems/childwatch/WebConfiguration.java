@@ -11,7 +11,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     // This makes Spring serve index.html in response to /, /schedule, etc. without redirecting the browser or making
     // it change the URL in any way. IOW it's more like a transparent "proxy" than an invasive redirect.
     @Override
-    public void addViewControllers(final ViewControllerRegistry registry) {
+    public void addViewControllers(final ViewControllerRegistry registry) {    	
         registry.addViewController("/").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/schedule").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/family").setViewName(INDEX_VIEW_NAME);
@@ -23,7 +23,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         registry.addViewController("/dashboard").setViewName(INDEX_VIEW_NAME);        
         registry.addViewController("/room").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/meals/menu-overview").setViewName(INDEX_VIEW_NAME);      
-        registry.addViewController("/meals/menu/*").setViewName(INDEX_VIEW_NAME);      
+        registry.addViewController("/meals/menu/{spring:\\\\w+}").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/meals/meal").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/child-detail").setViewName(INDEX_VIEW_NAME);      
     }

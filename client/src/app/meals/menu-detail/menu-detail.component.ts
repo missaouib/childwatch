@@ -1,7 +1,8 @@
-import { Menu } from '../meal.interfaces';
-//import { MealStateService } from '../services/meal-state.service';
+import { Meal } from '../meal.interfaces';
+import { MealStateService } from '../services/meal-state.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'cw-menu-detail',
@@ -10,17 +11,35 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MenuDetailComponent implements OnInit {
 
-  menu: Menu = undefined;
-  id: string = undefined;
+  targetDate: Date = undefined;
+  meals: {
+    BREAKFAST: Meal,
+    AM_SNACK: Meal,
+    LUNCH: Meal,
+    PM_SNACK: Meal,
+    DINNER: Meal,
+    [key: string ]: Meal    
+  } = { BREAKFAST: undefined, AM_SNACK: undefined, LUNCH: undefined, PM_SNACK: undefined, DINNER: undefined };  id: string = undefined;
+  
+  show: {
+    BREAKFAST: boolean,
+    AM_SNACK: boolean,
+    LUNCH: boolean,
+    PM_SNACK: boolean,
+    DINNER: boolean
+  } = { BREAKFAST: false, AM_SNACK: false, LUNCH: false, PM_SNACK: false, DINNER: false };
   
   constructor( 
-    // private state: MealStateService, 
+    private state: MealStateService, 
     private route: ActivatedRoute ) {  }
 
   ngOnInit() {
-    this.route.params.subscribe( () => {
-        this.id = 'hello';
-        //this.state.menus$.subscribe( menus => this.menu = menus ? menus.find( (menu) => menu.id === id ) : undefined );
+    this.route.params.subscribe( (params) => {
+        const id = params['id'];
+        this.targetDate = moment(id).toDate();
+        this.state.menus$.subscribe( 
+          m => m.filter( (menu) => moment(menu.startDate).isSame( this.targetDate, 'day' ) )
+                .forEach( (menu) => this.meals[menu.meal.type] = menu.meal ));
     });
   }
 

@@ -70,7 +70,7 @@ export interface MealUIState {
 }
 
 export const INITIAL_MEALUISTATE: MealUIState = {
-  selectedMenus: undefined,
+  selectedMenus: [],
   menuStart: undefined,
   menuEnd: undefined,
   selectedMeal: undefined,

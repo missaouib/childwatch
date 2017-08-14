@@ -1,0 +1,16 @@
+.card.customClass,
+.card.customClass .card-header,
+.panel.customClass {
+  background-color: #5bc0de;
+  color: #fff;
+}
+.panel.customClass .panel-body {
+  background-color: #337aa7;
+}
+
+.fixed_width {
+  min-height: 32px;
+  height: 32px;
+  min-width: 32px;
+  width: 32px;
+}

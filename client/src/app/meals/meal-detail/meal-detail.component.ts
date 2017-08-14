@@ -2,7 +2,7 @@
 import { AppState } from '../../app.state';
 import { Meal, FoodComponent, MealFoodItem, FoodItem } from '../meal.interfaces';
 import { MealStateService } from '../services/meal-state.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MealActions } from '../meal.actions';
 import { TypeaheadMatch } from 'ngx-bootstrap';
@@ -20,18 +20,12 @@ import 'rxjs/add/observable/of';
 })
 export class MealDetailComponent implements OnInit {
     foodComponents: FoodComponent[];
-    meal: Meal;
-    mealFoodItems: MealFoodItem[];
+    @Input() meal: Meal;
 
  constructor(private state: MealStateService, private store: Store<AppState>, private actions: MealActions ) {}
 
   ngOnInit() {
     this.state.foodComponents$.subscribe( (fc: FoodComponent[]) => this.foodComponents = fc );
-
-    this.state.selectedMeal$.subscribe( (sm: Meal) => {
-      this.meal = sm;
-      this.mealFoodItems = (sm !== undefined) ? sm.mealFoodItems : [];
-     });
   }
 
   addFoodComponent( component: FoodComponent ) {

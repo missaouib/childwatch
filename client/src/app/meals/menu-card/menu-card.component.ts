@@ -25,32 +25,31 @@ export class MenuCardComponent implements OnInit {
   @Output() showHideDetails = new EventEmitter();
   detailsShowing = false;
   
-  showBreakfast: false;
-  showAmSnack: false;
-  showLunch: false;
-  showPmSnack: false;
-
-  breakfast: Meal = undefined;
-  amSnack: Meal = undefined;
-  lunch: Meal = undefined;
-  pmSnack: Meal = undefined;
+  show: {
+    BREAKFAST: boolean,
+    AM_SNACK: boolean,
+    LUNCH: boolean,
+    PM_SNACK: boolean,
+    DINNER: boolean
+  } = { BREAKFAST: false, AM_SNACK: false, LUNCH: false, PM_SNACK: false, DINNER: false };
+  
+  
+  meals: {
+    BREAKFAST: Meal,
+    AM_SNACK: Meal,
+    LUNCH: Meal,
+    PM_SNACK: Meal,
+    DINNER: Meal,
+    [key: string ]: Meal    
+  } = { BREAKFAST: undefined, AM_SNACK: undefined, LUNCH: undefined, PM_SNACK: undefined, DINNER: undefined };
 
   constructor( private state: MealStateService ) {  }
 
   ngOnInit() {
-      this.state.menus$.subscribe( m => {
-
-      const today = m ? m.filter( (menu) => moment(menu.startDate).isSame( this.scheduleDate, 'day' ) ) : [];
-      const breakfastMenu = today.find( (menu) => menu.meal.type === 'BREAKFAST' );
-      const amSnackMenu = today.find( (menu) => menu.meal.type === 'AM_SNACK' );
-      const lunchMenu = today.find( (menu) => menu.meal.type === 'LUNCH' );
-      const pmSnackMenu = today.find( (menu) => menu.meal.type === 'PM_SNACK' );
-
-      this.breakfast = breakfastMenu ? breakfastMenu.meal : undefined;
-      this.amSnack = amSnackMenu ? amSnackMenu.meal : undefined;
-      this.lunch = lunchMenu ? lunchMenu.meal : undefined;
-      this.pmSnack = pmSnackMenu ? pmSnackMenu.meal : undefined;
-    });
+      this.state.menus$.subscribe( 
+        m => m.filter( (menu) => moment(menu.startDate).isSame( this.scheduleDate, 'day' ) )
+              .forEach( (menu) => this.meals[menu.meal.type] = menu.meal )
+    );
   }
 
   toggleDetailsShowing() {
