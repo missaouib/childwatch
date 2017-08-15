@@ -22,6 +22,7 @@ export interface FoodComponent {
   description: string;
   _links?: FoodComponentLinks;
   foodItems?: FoodItem[];
+  parentComponent: FoodComponent;
 };
 
 export interface MealFoodItemLinks {

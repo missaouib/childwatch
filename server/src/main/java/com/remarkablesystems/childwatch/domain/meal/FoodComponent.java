@@ -5,8 +5,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,6 +24,10 @@ public class FoodComponent implements Serializable {
 	private String id;
 
 	private String description;
+	
+	@ManyToOne
+	@JoinColumn(name="parent_component")
+	private FoodComponent parentComponent;
 
 	//bi-directional many-to-one association to Food
 	@OneToMany(mappedBy="foodComponent")
@@ -63,6 +70,14 @@ public class FoodComponent implements Serializable {
 
 	public String getId() {
 		return id;
+	}
+
+	public FoodComponent getParentComponent() {
+		return parentComponent;
+	}
+
+	public void setParentComponent(FoodComponent parentComponent) {
+		this.parentComponent = parentComponent;
 	}
 
 }

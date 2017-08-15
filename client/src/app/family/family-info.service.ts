@@ -1,19 +1,20 @@
-import { Apollo } from 'apollo-angular';
+//import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { Effect } from '@ngrx/effects';
+//import { Effect } from '@ngrx/effects';
 import * as _ from 'lodash';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
 
-import { entitySelected, membersSelected, dataArrived } from './family.state';
+import { entitySelected, membersSelected, /*dataArrived*/ } from './family.state';
 import {
   Entity, EntityType, Family, Participant,
   FamilyRelationship, NonParticipant, NonParticipantRelationship
 } from './family.interfaces';
 import { AppState } from '../app.state';
-import { dateTimestamp } from '../../common/date-utils';
+// import { dateTimestamp } from '../../common/date-utils';
 
+/*
 const query = gql`
   query familydata {
     families {
@@ -48,17 +49,19 @@ const query = gql`
     }
   }
 `;
+ */
 
 // TODO: test families/family/id path, then switch to using top-level query on just
 // relationships?
 
 @Injectable()
 export class FamilyInfoService {
+  /*
   @Effect()
   _loadData = this.loadData()
     .map(({ families, participants, familyRelationships, nonParticipants, nonParticipantRelationships }) =>
       dataArrived(<any>{ families, participants, nonParticipants, familyRelationships, nonParticipantRelationships }));
-
+  */
   families: Observable<Family[]>;
   participants: Observable<Participant[]>;
   nonParticipants: Observable<NonParticipant[]>;
@@ -72,7 +75,7 @@ export class FamilyInfoService {
 
   constructor(
     private store: Store<AppState>,
-    private apollo: Apollo
+    //private apollo: Apollo
   ) {
 
     this.families = this.store.select(s => s.family.families);
@@ -107,7 +110,7 @@ export class FamilyInfoService {
       (participants, membersSelected) => participants.filter(p => membersSelected.indexOf(p.id) >= 0));
   }
 
-  private loadData(): Observable<{
+/*  private loadData(): Observable<{
     families: Family[],
     participants: Participant[],
     familyRelationships: FamilyRelationship[],
@@ -161,7 +164,7 @@ export class FamilyInfoService {
           nonParticipantRelationships: _nonParticipantRelationships
         };
       });
-  }
+  }*/
 
   selectEntity(entity: Entity) {
     this.store.dispatch(entitySelected(entity));

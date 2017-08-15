@@ -10,6 +10,8 @@ public interface FoodComponentWithId {
 	String getId();
 
 	String getDescription();
+	
+	FoodComponentWithId getParentComponent();
 
 }
 

@@ -32,7 +32,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
 
-
+/*
 export function apolloClientProvider() {
   return new ApolloClient({
     networkInterface: createNetworkInterface({
@@ -43,6 +43,7 @@ export function apolloClientProvider() {
     })
   });
 }
+ */
 
 @NgModule({
   declarations: [
@@ -60,7 +61,7 @@ export function apolloClientProvider() {
     HttpModule,
     SecurityModule,
     AppRoutingModule,
-    ApolloModule.forRoot(apolloClientProvider),
+//    ApolloModule.forRoot(apolloClientProvider),
     StoreModule.provideStore(appReducer),
     EffectsModule.run(TimeService),
     BrowserAnimationsModule,

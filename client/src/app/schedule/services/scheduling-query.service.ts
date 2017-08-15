@@ -2,7 +2,7 @@ import { WatchQueryOptions } from 'apollo-client';
 import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import gql from 'graphql-tag';
+//import gql from 'graphql-tag';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -26,6 +26,7 @@ const TIMELINE_DATA_POLLING_INTERVAL_MS = 200 * 1000;
 const RETRY_DELAY_MS = 10 * 1000;
 
 // TODO: Move these to a plain TS file?
+/*
 const schedulingStatic = gql`
   query schedulingStatic {
     rooms {
@@ -80,7 +81,7 @@ const timeline = gql`
     }
   }
 `;
-
+*/
 // TODO: Move these to a plain TS file?
 export function timelineQuery(date: number | moment.Moment | Date) {
   return {
@@ -121,7 +122,7 @@ export class SchedulingQueryService {
 
   // TODO: see comment on watchQueries$
   initialize() {
-    this.store.dispatch(watchStaticData());
+    //this.store.dispatch(watchStaticData());
   }
 
   loadTimelines(date: DateType) {

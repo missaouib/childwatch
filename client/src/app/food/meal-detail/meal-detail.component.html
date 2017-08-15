@@ -1,12 +1,12 @@
-<div>
-	<div *ngFor="let item of meal.mealFoodItems" class="input-group input-group-unstyled" style="margin-top: 10px">
+<div *ngFor="let item of ageGroupFoodItems()">
+	<div class="input-group input-group-unstyled" style="margin-top: 10px">
 		<!--  need vegetables, fast-food, snack, native-->
 		<i class="cw-icon input-group-addon icon-milk" style="font-size: 2.5em"
 			[class.circle-green]="item.foodItem.description">
 		</i>
 		<div>
 			<span class="col-sm-7">
-			<label>{{item.foodItem.foodComponent.description}} ({{item.foodItem.foodComponent.id}})</label>
+			<label>{{item.foodItem.foodComponent.description}}</label>
 			<input class="form-control" 
 				   [(ngModel)]="item.foodItem.description"
 				   [typeahead]="food(item.foodItem.foodComponent)"
@@ -30,7 +30,29 @@
 			<div class="col-sm-1"><i style="color: red" class="fa fa-close" (click)="removeMealFoodItem(item)"></i></div>
 		</div>
 	</div>
-</div>			
+</div>	
+
+<div class="btn-group" dropdown [autoClose]="false" container="body">
+  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+   Add <span class="caret"></span>
+  </button>
+  <ul *dropdownMenu class="dropdown-menu" role="menu">
+    <li *ngFor="let top of topLevelComponents()" role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">{{top.description}}</a></li>
+ 
+ 	<!--
+    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="body">
+      <a dropdownToggle class="dropdown-item dropdown-toggle"
+         (click)="false">Hover me for nested dropdown <span class="caret"></span></a>
+      <ul *dropdownMenu class="dropdown-menu" role="menu">
+        <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action</a></li>
+        <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action1</a></li>
+        <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action2</a></li>
+      </ul>
+    </li>
+    -->
+    
+  </ul>
+</div>		
 
 <!--
 		<hr />

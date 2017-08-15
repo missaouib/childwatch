@@ -4,15 +4,9 @@
 	    <p class="category">{{targetDate | date: 'dd MMM y' }}</p>
 	</div>
 	<div class="card-content">
-		<tabset>
-  			<tab *ngFor="let ageGroup of ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]" [ngSwitch]="ageGroup"> 
-  				<ng-template tabHeading *ngSwitchCase="'AGE_0_5MO'">0 - 5MO</ng-template>
-  				<ng-template tabHeading *ngSwitchCase="'AGE_6_11MO'">6 - 11MO</ng-template>
-  				<ng-template tabHeading *ngSwitchCase="'AGE_1_2YR'">1 - 2YR</ng-template>
-  				<ng-template tabHeading *ngSwitchCase="'AGE_3_5YR'">3 - 5YR</ng-template>
-  				<ng-template tabHeading *ngSwitchCase="'AGE_6_12YR'">6 - 12YR</ng-template>
-  				<ng-template tabHeading *ngSwitchCase="'AGE_13_18YR'">13 - 18YR</ng-template>
-  				<ng-template tabHeading *ngSwitchCase="'AGE_ADULT'">ADULT</ng-template>
+		<tabset [justified]="true">
+  			<tab *ngFor="let ageGroup of ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]" (select)="tabs[ageGroup].active = true" (deselect)="tabs[ageGroup].active=false" > 
+  				<ng-template tabHeading>{{tabs[ageGroup].title}}</ng-template>
 		    	<accordion>
 		  			<accordion-group *ngFor="let type of ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER']" [panelClass]="'customClass'" [isDisabled]="!meals[type]" [isOpen]="true" >
 		    			<div *ngIf="meals[type]" accordion-heading>
@@ -26,7 +20,7 @@
 	    	                   		<strong *ngSwitchCase="'DINNER'"><em>No Dinner</em></strong>
 	    	            </div>
 		    			<div *ngIf="meals[type]">	
-			    			<cw-meal-detail [meal]="meals[type]"></cw-meal-detail>	
+			    			<cw-meal-detail [meal]="meals[type]" [ageGroup]="ageGroup"></cw-meal-detail>	
 			           </div>
 		  			</accordion-group>
 				</accordion>

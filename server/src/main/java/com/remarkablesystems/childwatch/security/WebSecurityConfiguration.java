@@ -42,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/login", "/**/*.js", "/**/*.css", "/**/img/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .requestCache().requestCache(requestCache).and()
+                //.requestCache().requestCache(requestCache).and()
             .csrf().disable()
             .formLogin().loginPage("/login").permitAll().and()
             .logout().permitAll().invalidateHttpSession(true);
@@ -79,7 +79,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         config.addAllowedMethod("POST");
         config.addAllowedMethod("PUT");
         config.addAllowedMethod("DELETE");
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
     

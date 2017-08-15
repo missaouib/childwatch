@@ -16,5 +16,7 @@ public interface FoodComponentFull {
 	String getDescription();
 
 	Set<FoodItemFull> getFoodItems();
+	
+	FoodComponentWithId getParentComponent();
 
 }

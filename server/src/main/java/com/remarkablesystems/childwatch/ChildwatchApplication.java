@@ -39,6 +39,7 @@ public class ChildwatchApplication {
                 .makeExecutableSchema();
     }
 
+    /*
     @Bean
     ServletRegistrationBean graphQLServletRegistrationBean() {
         return new ServletRegistrationBean(new SimpleGraphQLServlet(graphQLSchema()), GRAPHQL_SERVLET_MAPPING);
@@ -52,4 +53,5 @@ public class ChildwatchApplication {
             }
         };
     }
+    */
 }
