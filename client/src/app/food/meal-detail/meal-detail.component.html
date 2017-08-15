@@ -1,0 +1,42 @@
+<div>
+	<div *ngFor="let item of meal.mealFoodItems" class="input-group input-group-unstyled" style="margin-top: 10px">
+		<!--  need vegetables, fast-food, snack, native-->
+		<i class="cw-icon input-group-addon icon-milk" style="font-size: 2.5em"
+			[class.circle-green]="item.foodItem.description">
+		</i>
+		<div>
+			<span class="col-sm-7">
+			<label>{{item.foodItem.foodComponent.description}} ({{item.foodItem.foodComponent.id}})</label>
+			<input class="form-control" 
+				   [(ngModel)]="item.foodItem.description"
+				   [typeahead]="food(item.foodItem.foodComponent)"
+				   (typeaheadOnSelect)="selectedItem($event,item.foodItem)"
+				   typeaheadOptionField="description"
+				   typeaheadOptionsLimit="10">
+			</span>
+			<span class="col-sm-1">
+				<label>Quantity</label>
+				<input class="form-control" value="{{item.quantity}}">
+			</span>
+			<span class="col-sm-3">
+				<label>Units</label>
+				<select class="form-control">
+					<option>each</option>
+					<option>oz</option>
+					<option>slice</option>
+					<option>lbs</option>
+				</select>
+			</span>
+			<div class="col-sm-1"><i style="color: red" class="fa fa-close" (click)="removeMealFoodItem(item)"></i></div>
+		</div>
+	</div>
+</div>			
+
+<!--
+		<hr />
+		
+	-->
+
+
+
+

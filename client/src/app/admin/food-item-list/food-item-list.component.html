@@ -9,28 +9,16 @@
 				<table class="table">
 					<tr>
 						<th class="col-sm-1">Status</th>
-						<th class="col-sm-4 button" (click)="sort('description')">Description 
-							<i *ngIf="lastSortOrder.startsWith('description')" 
-								class="fa" 
-								[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
-								[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>
-						<th class="col-sm-4 button" (click)="sort('shortDescription')">Short Description 
-							<i *ngIf="lastSortOrder.startsWith('shortDescription')" 
-								class="fa" 
-								[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
-								[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>
-						<th class="col-sm-3 button" (click)="sort('foodComponent_id')">Component 
-							<i *ngIf="lastSortOrder.startsWith('foodComponent_id')" 
-								class="fa" 
-								[class.fa-caret-up]="lastSortOrder.endsWith('asc')" 
-								[class.fa-caret-down]="lastSortOrder.endsWith('desc')"></i></th>		
+						<th class="col-sm-4 button" (click)="sort('description')">Description</th>
+						<th class="col-sm-4 button" (click)="sort('shortDescription')">Short Description</th>
+						<th class="col-sm-3 button" (click)="sort('foodComponent_id')">Component</th>		
 					</tr>
 				
 					<tr *ngFor="let item of foodItems">
 						<td><i class="fa fa-lock"></i>
 						<td class="text-left"><a (click)="onFoodItemSelected(item)">{{item.description}}</a></td>
 						<td class="text-left">{{item.shortDescription}}</td>
-						<td class="text-left">{{item.foodComponent.description}}</td>
+						<td class="text-left">{{item.foodComponent?.description}}</td>
 					</tr>
 				
 				</table>
@@ -147,6 +135,7 @@
 			
 		</div>
 	</div>
+	<!--
     <div class="card-footer">
         <hr />
         <div class="footer-title">
@@ -158,7 +147,7 @@
 						[rotate]="false"></pagination>
 		</div>        
     </div>   
-	
+	-->
 </div>
 
 <!--

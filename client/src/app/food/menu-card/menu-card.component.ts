@@ -1,5 +1,5 @@
-import { Meal } from '../meal.interfaces';
-import { MealStateService } from '../services/meal-state.service';
+import { Meal } from '../food.interfaces';
+import { FoodStateService } from '../services/food-state.service';
 import { trigger, transition, style, animate} from '@angular/animations';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as moment from 'moment';
@@ -43,7 +43,7 @@ export class MenuCardComponent implements OnInit {
     [key: string ]: Meal    
   } = { BREAKFAST: undefined, AM_SNACK: undefined, LUNCH: undefined, PM_SNACK: undefined, DINNER: undefined };
 
-  constructor( private state: MealStateService ) {  }
+  constructor( private state: FoodStateService ) {  }
 
   ngOnInit() {
       this.state.menus$.subscribe( 

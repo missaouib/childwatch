@@ -1,7 +1,9 @@
-import { AdminActions } from './admin.actions';
+import { FoodActions } from '../food/food.actions';
+import { FoodComponentService } from '../food/services/food-component.service';
+import { FoodItemService } from '../food/services/food-item.service';
+import { FoodStateService } from '../food/services/food-state.service';
+import { MenuService } from '../food/services/menu.service';
 import { FoodItemListComponent } from './food-item-list/food-item-list.component';
-import { AdminQueryService } from './services/admin-query.service';
-import { AdminStateService } from './services/admin-state.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
@@ -22,7 +24,18 @@ const routes: Routes = [
     PaginationModule.forRoot()
   ],
   declarations: [FoodItemListComponent],
-  providers: [ AdminQueryService, AdminStateService, AdminActions ]
+  providers: [ FoodComponentService, FoodItemService, FoodStateService, MenuService, FoodActions ]
 })
 
-export class AdminModule {}
+export class AdminModule {
+  
+    constructor( 
+    private foodItemSvc: FoodItemService,
+    private foodComponentSvc: FoodComponentService  ) {
+    
+    this.foodItemSvc.query( FoodItemService.FULL ).subscribe();
+    this.foodComponentSvc.query( FoodComponentService.FULL ).subscribe();
+  }
+  
+  
+}

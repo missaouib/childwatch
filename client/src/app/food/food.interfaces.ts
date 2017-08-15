@@ -61,31 +61,36 @@ export interface Menu {
   recurrence: string;
 }
 
-export interface MealUIState {
-  selectedMenus: Menu[];
+export interface MenuUIState {
   menuStart: Date;
   menuEnd: Date;
-  selectedMeal: Meal;
-  selectedFoodComponent: FoodComponent;
+  menus: Menu[];
 }
 
-export const INITIAL_MEALUISTATE: MealUIState = {
-  selectedMenus: [],
+export const INITIAL_MENUUISTATE: MenuUIState = {
   menuStart: undefined,
   menuEnd: undefined,
-  selectedMeal: undefined,
-  selectedFoodComponent: undefined
+  menus: []
 };
 
-export interface MealState {
+export interface Page {
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  number: number;
+};
+
+export interface FoodState {
+  foodItems: FoodItem[];
   foodComponents: FoodComponent[];
   meals: Meal[];
-  ui: MealUIState;
+  menuUI: MenuUIState;
 };
 
-export const INITIAL_MEALSTATE: MealState = {
+export const INITIAL_FOODSTATE: FoodState = {
+  foodItems: [],
   foodComponents: [],
   meals: [],
-  ui: INITIAL_MEALUISTATE
+  menuUI: INITIAL_MENUUISTATE
 };
 

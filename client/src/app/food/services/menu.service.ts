@@ -1,6 +1,5 @@
 import { AppState } from '../../app.state';
-import { MealActions } from '../meal.actions';
-import { Menu } from '../meal.interfaces';
+import { FoodActions } from '../food.actions';
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
 import { Store } from '@ngrx/store';
@@ -15,7 +14,7 @@ export class MenuService {
   constructor(
     private store: Store<AppState>,
     private http: Http,
-    private mealActions: MealActions
+    private actions: FoodActions
   ) { }
 
   /**
@@ -29,16 +28,7 @@ export class MenuService {
 
     return this.http.get( '/api/menu/search/between', {search: params} )
       .map( res => res.json() )
-      .map( ({_embedded: {menus} }) => this.store.dispatch( this.mealActions.menusReceived( { start: start, end: end, menus: menus } ) ) );
+      .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.menusReceived( { start: start, end: end, menus: menus } ) ) );
   }
-
-  /**
-   * Update the menu item
-   */
-  update( menu: Menu ) {
-    return ( menu.id === undefined ) ?
-      this.http.post( '/api/menu/' + menu.id, menu ) :
-      this.http.patch( '/api/menu/' + menu.id, menu );
-  }
-
+  
 }

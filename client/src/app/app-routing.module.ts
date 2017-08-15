@@ -15,7 +15,7 @@ export const AppRoutes: Routes = [
     children: [
           { path: 'family', loadChildren: './family/family.module#FamilyModule' },
           { path: 'schedule', loadChildren: './schedule/schedule.module#ScheduleModule' },
-          { path: 'meals', loadChildren: './meals/meals.module#MealsModule' },
+          { path: 'meals', loadChildren: './food/food.module#FoodModule' },
           { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
           { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
           { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },

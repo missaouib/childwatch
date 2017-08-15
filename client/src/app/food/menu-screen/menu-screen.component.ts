@@ -1,5 +1,5 @@
-import { Meal, Menu } from '../meal.interfaces';
-import { MealStateService } from '../services/meal-state.service';
+import { Meal, Menu } from '../food.interfaces';
+import { FoodStateService } from '../services/food-state.service';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -18,7 +18,7 @@ export class MenuScreenComponent implements OnInit {
     days: Date[] = undefined;
 
   constructor(
-    private state: MealStateService
+    private state: FoodStateService
   ) {
     this.state.meals$.subscribe( ms => this.Meals = ms );
     this.state.menus$.subscribe( m => this.Menus = m );

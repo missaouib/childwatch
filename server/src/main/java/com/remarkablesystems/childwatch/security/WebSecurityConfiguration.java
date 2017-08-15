@@ -34,7 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setRequestMatcher(new RegexRequestMatcher("/(schedule|family|meals|billing).*", "GET"));
 
-        //.requestCache().requestCache(requestCache).and()
+        //
 
         // @formatter:off
         http
@@ -42,6 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/login", "/**/*.js", "/**/*.css", "/**/img/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .requestCache().requestCache(requestCache).and()
             .csrf().disable()
             .formLogin().loginPage("/login").permitAll().and()
             .logout().permitAll().invalidateHttpSession(true);

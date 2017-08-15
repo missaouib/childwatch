@@ -1,5 +1,5 @@
-import { Meal } from '../meal.interfaces';
-import { MealStateService } from '../services/meal-state.service';
+import { Meal } from '../food.interfaces';
+import { FoodStateService } from '../services/food-state.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
@@ -30,7 +30,7 @@ export class MenuDetailComponent implements OnInit {
   } = { BREAKFAST: false, AM_SNACK: false, LUNCH: false, PM_SNACK: false, DINNER: false };
   
   constructor( 
-    private state: MealStateService, 
+    private state: FoodStateService, 
     private route: ActivatedRoute ) {  }
 
   ngOnInit() {

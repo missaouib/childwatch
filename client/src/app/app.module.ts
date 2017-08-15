@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, XSRFStrategy, CookieXSRFStrategy } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdSidenavModule, MdToolbarModule, MdListModule, MaterialModule, MdNativeDateModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -76,7 +76,7 @@ export function apolloClientProvider() {
     SidebarModule,
     CollapseModule.forRoot()
   ],
-  providers: [TimeService, { provide: XSRFStrategy, useValue: new CookieXSRFStrategy('myCookieName', 'My-Header-Name')}],
+  providers: [TimeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

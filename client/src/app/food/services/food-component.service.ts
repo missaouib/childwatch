@@ -1,0 +1,47 @@
+import { AppState } from '../../app.state';
+import { FoodActions } from '../food.actions';
+import { FoodComponent } from '../food.interfaces';
+import { Injectable } from '@angular/core';
+import { Http, URLSearchParams } from '@angular/http';
+import { Store } from '@ngrx/store';
+
+@Injectable()
+export class FoodComponentService {
+
+  static FULL = 'foodComponentFull';
+  static WITH_ID = 'foodComponentWithId';
+  
+  private URL = '/api/foodComponent';
+  
+  
+  
+  constructor(
+    private store: Store<AppState>,
+    private http: Http,
+    private actions: FoodActions
+  ) { }
+    
+  
+    
+    query( projection = FoodComponentService.FULL ) {
+      
+      const params = new URLSearchParams();
+      params.append( 'projection', projection );
+      
+      return this.http.get( this.URL, {search: params} )
+        .map( res => res.json() )
+        .map( ({_embedded: {foodComponents} })  => this.store.dispatch( this.actions.foodComponentsReceived( foodComponents ) ) );
+    };
+  
+    queryFoodItemsFor( component: FoodComponent ) {
+      const params = new URLSearchParams();
+      params.append( 'projection', FoodComponentService.FULL );
+      
+      return this.http.get( component._links.foodItems.href, {search: params} )
+        .map( res => res.json() )
+        .map( ({_embedded: {foodItems} })  => 
+          this.store.dispatch( this.actions.foodItemsReceived( foodItems ) ) );
+  }
+    
+
+}

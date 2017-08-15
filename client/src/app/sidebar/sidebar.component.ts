@@ -23,7 +23,6 @@ export const ROUTES: RouteInfo[] = [
   { path: '/schedule', title: 'Scheduling', type: 'link', icontype: 'cw-icon icon-schedule'},
   { path: '/meals', title: 'Meals', type: 'sub', icontype: 'cw-icon icon-dinner',
     children: [
-      { path: 'meal', title: 'Meal Planning' },
       { path: 'menu-overview',  title: 'Menu Planning' }
     ]}, 
   { path: '/billing', title: 'Billing', type: 'link', icontype: 'cw-icon icon-money' },

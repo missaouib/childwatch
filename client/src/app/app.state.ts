@@ -4,12 +4,10 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { storeLogger } from 'ngrx-store-logger';
 
 import { environment } from '../environments/environment';
-import { AdminActions } from './admin/admin.actions';
-import { AdminState } from './admin/admin.interfaces';
 import { schedulingReducer, SchedulingState } from './schedule/scheduling.state';
 import { familyReducer, FamilyState } from './family/family.state';
-import { MealState } from './meals/meal.interfaces';
-import { MealActions } from './meals/meal.actions';
+import { FoodState, INITIAL_FOODSTATE } from './food/food.interfaces';
+import { FoodActions } from './food/food.actions';
 import { User } from './security/interfaces';
 
 export interface AppState {
@@ -22,8 +20,7 @@ export interface AppState {
   // rather than synchronously polling for it, we can consume it as an observable in the stroe
   currentTime: number;
   loggedInUser?: User;
-  meal: MealState;
-  admin: AdminState;
+  food: FoodState;
 }
 
 // Allow subreducers to initialize their own state
@@ -31,8 +28,7 @@ export const INITIAL_APP_STATE: AppState = {
   scheduling: undefined,
   family: undefined,
   currentTime: Date.now(),
-  meal: undefined,
-  admin: undefined
+  food: INITIAL_FOODSTATE
 };
 
 export const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
@@ -70,8 +66,7 @@ const productionReducer = compose(combineReducers)({
   family: familyReducer,
   currentTime,
   loggedInUser,
-  meal: MealActions.mealReducer,
-  admin: AdminActions.adminReducer
+  food: FoodActions.mealReducer
 });
 const developmentReducer = compose(storeLogger({ filter: { blacklist: ['SET_CURRENT_TIME'] } }), storeFreeze)(productionReducer);
 
