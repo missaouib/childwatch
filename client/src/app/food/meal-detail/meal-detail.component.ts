@@ -1,5 +1,5 @@
 
-import { Meal, FoodItem, FoodComponent, MealFoodItem } from '../food.interfaces';
+import { FoodItem, FoodComponent, MealFoodItem, Meal } from '../food.interfaces';
 import { FoodStateService } from '../services/food-state.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { TypeaheadMatch } from 'ngx-bootstrap';
@@ -17,29 +17,27 @@ import 'rxjs/add/observable/of';
 })
 export class MealDetailComponent implements OnInit {
     foodItems: FoodItem[];
-    foodComponents: FoodComponent[];
+    foodComponents: any[] = [];    
     @Input() meal: Meal;
     @Input() ageGroup: string;
 
  constructor(private state: FoodStateService ) {}
 
   ngOnInit() {
-    this.state.foodComponents$.subscribe( (fc: FoodComponent[]) => this.foodComponents = fc );
+    this.state.foodComponents$.subscribe( (fc: FoodComponent[]) => {
+      this.foodComponents = fc.filter( (c: FoodComponent) => c.parentComponent === null )
+          .map( (f: FoodComponent) => { return { ...f, children: [] }; } );
+      fc.filter( (c) => c.parentComponent !== null )
+        .forEach( (c) => this.foodComponents.find( (p) => p.id === c.parentComponent.id ).children.push( c ) );
+      
+    });
     this.state.foodItems$.subscribe( (fi: FoodItem[]) => this.foodItems = fi );
   }
   
   ageGroupFoodItems() {
     return this.meal.mealFoodItems.filter( (item: MealFoodItem) => item.ageGroup === this.ageGroup );
   }
-
-  topLevelComponents(): FoodComponent[] {
-    return this.foodComponents.filter( (fc) => fc.parentComponent === null );
-  }
   
-  childrenFor( component: FoodComponent ) {
-    return this.foodComponents.filter( (fc) => fc.parentComponent != null && fc.parentComponent.id === component.id );
-  }
-
   food( component: FoodComponent ): FoodItem[] {
     return this.foodItems.filter( (fi) => fi.foodComponent.id === component.id );
   }
@@ -47,6 +45,10 @@ export class MealDetailComponent implements OnInit {
   selectedItem(e: TypeaheadMatch, item: FoodItem) {
     console.log( e.value );
     console.log( 'selected for ' + item.id );
+  }
+  
+  addFoodItem( component: FoodComponent ){
+    console.log( component );
   }
 
 }

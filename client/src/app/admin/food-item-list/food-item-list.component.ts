@@ -3,6 +3,7 @@ import { FoodStateService } from '../../food/services/food-state.service';
 import { transition, trigger, style, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'cw-food-item-list',
@@ -22,15 +23,18 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class FoodItemListComponent implements OnInit {
 
   foodItem: FormGroup;
-  
+    
   foodItems: FoodItem[];
-  foodComponents: FoodComponent[];
+  foodComponentsFlat: FoodComponent[];
+  foodComponents: any[];
   pageInfo: Page = {
     size: 20,
     totalElements: 0,
     totalPages: 1,
     number: 1
   };
+  
+  filter: any = undefined;
   
  lastSortOrder = 'description,desc';
   
@@ -61,12 +65,32 @@ export class FoodItemListComponent implements OnInit {
       }
     });
     
-    this.state.foodItems$.subscribe( items => this.foodItems = items );
-    this.state.foodComponents$.subscribe( items => this.foodComponents = items );
+    this.state.foodItems$.subscribe( (items: FoodItem[]) => {
+      this.pageInfo.totalElements = items.length;
+      this.pageInfo.totalPages = Math.ceil(this.pageInfo.totalElements / this.pageInfo.size );      
+      this.foodItems = items; 
+      console.log( this.pageInfo );
+    });
+    this.state.foodComponents$.subscribe( (fc: FoodComponent[]) => {
+      this.foodComponentsFlat = fc;
+      this.foodComponents = fc.filter( (c: FoodComponent) => c.parentComponent === null )
+          .map( (f: FoodComponent) => { return { ...f, children: [] }; } );
+      fc.filter( (c) => c.parentComponent !== null )
+        .forEach( (c) => this.foodComponents.find( (p) => p.id === c.parentComponent.id ).children.push( c ) );
+      
+    });
+    
+    Observable.of( this.filter ).subscribe( (filter) => console.log( 'filter = ' + filter ));
+    
+  }
+  
+  pagedFoodItems(){
+    return this.foodItems.slice( this.pageInfo.number - 1 * this.pageInfo.size, this.pageInfo.size );
   }
 
   pageChanged( event: any ) {
     console.log( 'Page changed to ' + event.page );
+    this.pageInfo.number = event.page;
     //this.state.loadFoodItems( event.page - 1 );
     this.showDetail = false;
   }
@@ -79,7 +103,11 @@ export class FoodItemListComponent implements OnInit {
   
   onFoodItemSelected(foodItem: FoodItem) {
     // need to pick the value from the list being used in the dropdown
-    const foodComponent = this.foodComponents.find( (fc) => fc.id === foodItem.foodComponent.id );
+    
+    console.log( 'fifc = ' + foodItem.foodComponent.id );
+    
+    const foodComponent = this.foodComponentsFlat.find( (fc) => fc.id === foodItem.foodComponent.id );
+    
     this.foodItem.setValue( { ...foodItem, foodComponent: foodComponent } );
     
     this.showDetail = true;

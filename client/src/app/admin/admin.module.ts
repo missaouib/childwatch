@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+
 
 
 const routes: Routes = [
@@ -21,7 +23,8 @@ const routes: Routes = [
   imports: [
     CommonModule, ReactiveFormsModule,
     RouterModule.forChild(routes),
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   declarations: [FoodItemListComponent],
   providers: [ FoodComponentService, FoodItemService, FoodStateService, MenuService, FoodActions ]

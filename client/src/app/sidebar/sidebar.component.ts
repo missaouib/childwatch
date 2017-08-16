@@ -19,8 +19,6 @@ export interface RouteInfo {
 // Menu Items
 export const ROUTES: RouteInfo[] = [
   { path: '/dashboard', title: 'Dashboard', type: 'link', icontype: 'ti-dashboard'},
-  { path: '/family', title: 'Family Info', type: 'link', icontype: 'cw-icon icon-family'},
-  { path: '/schedule', title: 'Scheduling', type: 'link', icontype: 'cw-icon icon-schedule'},
   { path: '/meals', title: 'Meals', type: 'sub', icontype: 'cw-icon icon-dinner',
     children: [
       { path: 'menu-overview',  title: 'Menu Planning' }

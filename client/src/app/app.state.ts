@@ -4,18 +4,11 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { storeLogger } from 'ngrx-store-logger';
 
 import { environment } from '../environments/environment';
-import { schedulingReducer, SchedulingState } from './schedule/scheduling.state';
-import { familyReducer, FamilyState } from './family/family.state';
 import { FoodState, INITIAL_FOODSTATE } from './food/food.interfaces';
 import { FoodActions } from './food/food.actions';
 import { User } from './security/interfaces';
 
 export interface AppState {
-  // Used to track the state associated with the scheduling screen
-  // Not related to event/messaging scheduling
-  scheduling: SchedulingState;
-  // Used on the family data screen
-  family: FamilyState;
   // Current time is combined into many displays across the application
   // rather than synchronously polling for it, we can consume it as an observable in the stroe
   currentTime: number;
@@ -25,8 +18,6 @@ export interface AppState {
 
 // Allow subreducers to initialize their own state
 export const INITIAL_APP_STATE: AppState = {
-  scheduling: undefined,
-  family: undefined,
   currentTime: Date.now(),
   food: INITIAL_FOODSTATE
 };
@@ -62,8 +53,6 @@ function loggedInUser(state: User = undefined, action: Action): User {
   providing.
 */
 const productionReducer = compose(combineReducers)({
-  scheduling: schedulingReducer,
-  family: familyReducer,
   currentTime,
   loggedInUser,
   food: FoodActions.mealReducer

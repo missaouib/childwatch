@@ -1,6 +1,8 @@
 package com.remarkablesystems.childwatch;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -22,9 +24,14 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/food-items").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/dashboard").setViewName(INDEX_VIEW_NAME);        
         registry.addViewController("/room").setViewName(INDEX_VIEW_NAME);      
-        registry.addViewController("/meals/menu-overview").setViewName(INDEX_VIEW_NAME);      
-        registry.addViewController("/meals/menu/*").setViewName(INDEX_VIEW_NAME);      
-        registry.addViewController("/meals/meal").setViewName(INDEX_VIEW_NAME);      
+        registry.addViewController("/meals/**/{spring:\\\\w+}").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/child-detail").setViewName(INDEX_VIEW_NAME);      
     }
+    
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    configurer.favorPathExtension(false).
+            favorParameter(true).
+            defaultContentType(MediaType.TEXT_HTML);
+      }
 }

@@ -5,8 +5,6 @@ import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdSidenavModule, MdToolbarModule, MdListModule, MaterialModule, MdNativeDateModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ApolloModule } from 'apollo-angular';
-import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
@@ -19,8 +17,6 @@ import { TimeService } from './time.service';
 import { SecurityModule } from './security/security.module';
 
 import './rxjs-imports.ts';
-import { UserInfoComponent } from './user-info/user-info.component';
-import { UserInfoViewComponent } from './user-info/user-info-view.component';
 
 import { SidebarModule } from './sidebar/sidebar.module';
 import { FixedPluginModule } from './shared/fixedplugin/fixedplugin.module';
@@ -32,26 +28,12 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
 
-/*
-export function apolloClientProvider() {
-  return new ApolloClient({
-    networkInterface: createNetworkInterface({
-      uri: '/graphql',
-      opts: {
-        credentials: 'same-origin'
-      }
-    })
-  });
-}
- */
 
 @NgModule({
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    UserInfoComponent,
-    UserInfoViewComponent,
     RoomDetailsComponent,
     ChildDetailComponent,
   ],
@@ -61,7 +43,6 @@ export function apolloClientProvider() {
     HttpModule,
     SecurityModule,
     AppRoutingModule,
-//    ApolloModule.forRoot(apolloClientProvider),
     StoreModule.provideStore(appReducer),
     EffectsModule.run(TimeService),
     BrowserAnimationsModule,

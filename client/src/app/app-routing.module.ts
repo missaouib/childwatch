@@ -13,8 +13,6 @@ export const AppRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full', },
   { path: '', component: AdminLayoutComponent,
     children: [
-          { path: 'family', loadChildren: './family/family.module#FamilyModule' },
-          { path: 'schedule', loadChildren: './schedule/schedule.module#ScheduleModule' },
           { path: 'meals', loadChildren: './food/food.module#FoodModule' },
           { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
           { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },

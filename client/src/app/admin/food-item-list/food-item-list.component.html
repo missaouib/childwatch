@@ -1,31 +1,53 @@
-<div class="card ">
+<div class="loading" *ngIf="pageInfo.totalElements == 0">
+	<div class="loading-inner text-center">
+		<h2> Loading...</h2>
+		<i class="fa fa-pulse fa-spinner fa-3x fa-fw"></i>
+	</div>
+</div>
+
+<div class="card" *ngIf="pageInfo.totalElements > 0">
 	<div class="card-header">
 	    <h4 class="card-title">Food Items</h4>
 	    <p class="category">Items</p>
 	</div>
 	<div class="card-content">
 		<div class="row">
-	       <div class="table-responsive" [class.col-sm-9]="showDetail" [class.col-sm-12]="!showDetail">
+	       <div class="table-responsive" [class.col-sm-9]="showDetail" [class.col-sm-10]="!showDetail">
 				<table class="table">
 					<tr>
 						<th class="col-sm-1">Status</th>
-						<th class="col-sm-4 button" (click)="sort('description')">Description</th>
-						<th class="col-sm-4 button" (click)="sort('shortDescription')">Short Description</th>
-						<th class="col-sm-3 button" (click)="sort('foodComponent_id')">Component</th>		
+						<th class="col-sm-3 button" (click)="sort('description')">Description</th>
+						<th class="col-sm-3 button" (click)="sort('shortDescription')">Short Description</th>
+						<th class="col-sm-3 button" (click)="sort('foodComponent_id')">Component</th>
+						<th class="col-sm-2">
+							<div class="btn-group" dropdown [autoClose]="true" container="body">
+							  <a dropdownToggle type="button" class="dropdown-toggle pull-left"><i class="fa fa-filter"></i> {{filter? filter.description : 'Filter'}}</a>
+							  <a *ngIf="filter" (click)="filter = undefined">&nbsp;<i class="text-danger fa fa-close"></i></a>
+							  <ul *dropdownMenu class="dropdown-menu" role="menu">							 
+							    <li *ngFor="let top of foodComponents" role="menuitem" dropdown triggers="mouseover" placement="left" container="body">
+							      <a dropdownToggle class="dropdown-item dropdown-toggle" (click)="false">{{top.description}}<span class="caret"></span></a>
+							      <ul *dropdownMenu class="dropdown-menu" role="menu">
+							        <li role="menuitem" *ngFor="let comp of top.children"><a class="dropdown-item" (click)="filter = comp">{{comp.description}}</a></li>
+							      </ul>
+							    </li>
+							    
+							  </ul>
+							</div>						
+						</th>		
 					</tr>
 				
-					<tr *ngFor="let item of foodItems">
+					<tr *ngFor="let item of foodItems.slice( ((pageInfo.number - 1) * 20), ((pageInfo.number - 1) * 20)+20 )">
 						<td><i class="fa fa-lock"></i>
 						<td class="text-left"><a (click)="onFoodItemSelected(item)">{{item.description}}</a></td>
 						<td class="text-left">{{item.shortDescription}}</td>
-						<td class="text-left">{{item.foodComponent?.description}}</td>
+						<td class="text-left" col-span="2">{{item.foodComponent?.description}}</td>
 					</tr>
 				
 				</table>
 			</div>
 			
 		
-			<div *ngIf="showDetail" class="col-sm-3" [@changeAnimation]="showDetail">
+			<div *ngIf="showDetail" class="col-sm-3"  [@changeAnimation]="showDetail">
 				
 				<i class="cw-icon pull-left" style="font-size: 2.5em"
 					[class.icon-milk]="foodItem.value.foodComponent.id === '1'"
@@ -88,54 +110,12 @@
 				</form>
 				<br />
 				<hr />
-				<a class="footer-title"><i class="fa fa-trash"></i> Delete</a>
-				
-				<!-- 
-				<div class="pull-right btn-group" dropdown container="body">
-				  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
-				    Add Component {{foodComponents.length}}<span class="caret"></span>
-				  </button>
-				  <ul *dropdownMenu class="dropdown-menu" role="menu" >
-				    <li *ngFor="let component of foodComponents" role="menuitem">
-				    	<a class="dropdown-item" (click)="addFoodComponent(component)">
-				    		<i class="cw-icon" style="font-size: 1em"
-								[class.icon-milk]="component.id === '1'"
-								[class.icon-spices]="component.id === '2'"
-								[class.icon-baby-food]="component.id === '3'"
-								[class.icon-olive-oil-jar]="component.id === '4'"
-								[class.icon-chicken-leg-bite]="component.id === '5'"
-								[class.icon-soup]="component.id === '6'"
-								[class.icon-sausage]="component.id === '7'"
-								[class.icon-cereals]="component.id === '8'"
-								[class.icon-fruit-salad]="component.id === '9'"
-								[class.icon-pig-face]="component.id === '10'"
-								[class.icon-vegetables]="component.id === '11'" 
-								[class.icon-peanuts]="component.id === '12'"
-								[class.icon-beef-steak]="component.id === '13'"
-								[class.icon-beverage]="component.id === '14'"
-								[class.icon-fish]="component.id === '15'"
-								[class.icon-beans]="component.id === '16'"
-								[class.icon-lamb]="component.id === '17'"
-								[class.icon-pie]="component.id === '18'"
-								[class.icon-sweets]="component.id === '19'"
-								[class.icon-pasta]="component.id === '20'"				
-								[class.icon-fast-food]="component.id === '21'" 				
-								[class.icon-food]="component.id === '22'"
-								[class.icon-snack]="component.id === '25'"
-								[class.icon-native]="component.id === '35'"
-								[class.icon-restaurant]="component.id === '36'"
-								>
-							</i>{{component.description}}
-				    	</a>
-				    </li>
-				  </ul>
-				</div>	
-				-->
+				<a class="footer-title"><i class="fa fa-trash"></i> Delete</a>				
 			</div>
 			
 		</div>
 	</div>
-	<!--
+
     <div class="card-footer">
         <hr />
         <div class="footer-title">
@@ -147,15 +127,6 @@
 						[rotate]="false"></pagination>
 		</div>        
     </div>   
-	-->
 </div>
 
-<!--
-
-
-</div>
-<div class="row">
-</div>
-
--->
 

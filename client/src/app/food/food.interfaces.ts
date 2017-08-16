@@ -1,3 +1,11 @@
+export interface Meal {
+  id?: string;
+  description: string;
+  'type': string;
+  _links?: MealLinks;
+  mealFoodItems: MealFoodItem[];
+};
+
 export interface Link {
   href: string;
 }
@@ -46,13 +54,6 @@ export interface MealLinks {
   mealFoodItems: Link;
 };
 
-export interface Meal {
-  id?: string;
-  description: string;
-  type: string;
-  _links?: MealLinks;
-  mealFoodItems: MealFoodItem[];
-};
 
 export interface Menu {
   id?: string;

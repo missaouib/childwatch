@@ -1,9 +1,0 @@
-<md-tab-group style="height: 100%" id="people-list">
-  <md-tab label="Participants">
-    <button md-button (click)="clickParticipant(participant)" *ngFor="let participant of participants">{{participant.lastName}}, {{participant.firstName}}</button>
-
-  </md-tab>
-  <md-tab label="Staff">
-    <button md-button (click)="clickStaff(s)" *ngFor="let s of staff">{{s.lastName}}, {{s.firstName}}</button>
-  </md-tab>
-</md-tab-group>

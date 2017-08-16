@@ -50,6 +50,6 @@ export class FoodModule {
     private foodComponentSvc: FoodComponentService  ) {
     
     this.foodItemSvc.query( FoodItemService.FULL ).subscribe();
-    this.foodComponentSvc.query( FoodComponentService.FULL ).subscribe();
+    this.foodComponentSvc.query( FoodComponentService.WITH_ID ).subscribe();
   }
 }

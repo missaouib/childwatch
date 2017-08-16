@@ -27,32 +27,12 @@
 					<option>lbs</option>
 				</select>
 			</span>
-			<div class="col-sm-1"><i style="color: red" class="fa fa-close" (click)="removeMealFoodItem(item)"></i></div>
+			<div class="col-sm-1"><a><i class="text-primary fa fa-pencil"> Edit</i></a> <a><i class="text-danger fa fa-close" (click)="removeMealFoodItem(item)"> Delete</i></a></div>
 		</div>
 	</div>
 </div>	
 
-<div class="btn-group" dropdown [autoClose]="false" container="body">
-  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
-   Add <span class="caret"></span>
-  </button>
-  <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li *ngFor="let top of topLevelComponents()" role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">{{top.description}}</a></li>
- 
- 	<!--
-    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="body">
-      <a dropdownToggle class="dropdown-item dropdown-toggle"
-         (click)="false">Hover me for nested dropdown <span class="caret"></span></a>
-      <ul *dropdownMenu class="dropdown-menu" role="menu">
-        <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action</a></li>
-        <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action1</a></li>
-        <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action2</a></li>
-      </ul>
-    </li>
-    -->
-    
-  </ul>
-</div>		
+		
 
 <!--
 		<hr />
