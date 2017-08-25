@@ -47,8 +47,14 @@ export class MealDetailComponent implements OnInit {
     console.log( 'selected for ' + item.id );
   }
   
-  addFoodItem( component: FoodComponent ){
-    console.log( component );
+  addFoodItem( component: FoodComponent ) {
+    console.log( component );    
+    this.state.addMealFoodItem( this.meal, this.ageGroup, component );
   }
 
+  removeFoodItem( foodItem: FoodItem ) {
+    const idx = this.meal.mealFoodItems
+                    .findIndex( (item: MealFoodItem) => item.foodItem.id === foodItem.id && item.ageGroup === this.ageGroup );
+    this.meal.mealFoodItems.splice( idx, 1 );
+  }
 }

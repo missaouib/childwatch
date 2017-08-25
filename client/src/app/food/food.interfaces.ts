@@ -1,3 +1,5 @@
+import { CalendarEvent } from 'angular-calendar';
+
 export interface Meal {
   id?: string;
   description: string;
@@ -67,12 +69,14 @@ export interface MenuUIState {
   menuStart: Date;
   menuEnd: Date;
   menus: Menu[];
+  events: Array<CalendarEvent<Meal>>;
 }
 
 export const INITIAL_MENUUISTATE: MenuUIState = {
   menuStart: undefined,
   menuEnd: undefined,
-  menus: []
+  menus: [],
+  events: []
 };
 
 export interface Page {
@@ -94,5 +98,10 @@ export const INITIAL_FOODSTATE: FoodState = {
   foodComponents: [],
   meals: [],
   menuUI: INITIAL_MENUUISTATE
+};
+
+export interface IData {
+    label: string,
+    value: number
 };
 

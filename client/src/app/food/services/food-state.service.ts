@@ -2,11 +2,11 @@ import { AppState } from '../../app.state';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { FoodItem, FoodComponent, Meal, Menu } from '../food.interfaces';
+import { FoodItem, FoodComponent, Meal, Menu, MealFoodItem } from '../food.interfaces';
 import { FoodActions } from '../food.actions';
 import { MenuService } from './menu.service';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-
+import { CalendarEvent } from 'angular-calendar';
 
 
 
@@ -40,9 +40,35 @@ export class FoodStateService {
   get meals$(): Observable<Meal[]>{
     return this.store.select( s => s.food.meals );
   }
-
+  
+  get mealEvents$(): Observable<Array<CalendarEvent<Meal>>>{
+    return this.store.select( s => s.food.menuUI.events );
+  }
 
   adjustMenuTime( start: Date, end: Date ) {
     this.store.dispatch( this.actions.menuTimeAdjusted( { start: start, end: end } ) );
+  }
+  
+  addMealFoodItem( meal: Meal, ageGroup: string, foodComponent: FoodComponent ) {
+    
+    const mealFoodItem: MealFoodItem = {
+        ageGroup: ageGroup,
+        quantity: 1,
+        units: 'each',
+        foodItem: {
+          description: '',
+          shortDescription: '',
+          foodComponent: foodComponent,
+          purchaseUom: 'each',
+          servingUom: 'each',
+          notes: 'added'
+        } 
+      };
+    
+    this.store.dispatch( this.actions.mealFoodItemAdded( { meal: meal, mealFoodItem: mealFoodItem } ) );
+  }
+  
+  scheduleMeal( meal: Meal, start: Date ) {
+    this.store.dispatch( this.actions.mealScheduled( { meal: meal, date: start } ) );
   }
 }

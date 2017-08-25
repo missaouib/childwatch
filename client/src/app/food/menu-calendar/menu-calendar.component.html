@@ -1,0 +1,63 @@
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+  <div class="cal-cell-top">
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+  </div>
+  <div *ngFor="let event of day.events">
+  	<small style="margin: 5px" [ngSwitch]="event.meta.type">
+  		<img *ngSwitchCase="'BREAKFAST'" class="small_image" src="/assets/img/meal/breakfast.svg" />
+        <img *ngSwitchCase="'AM_SNACK'" class="small_image" src="/assets/img/meal/ante-meridiem.svg" />
+        <img *ngSwitchCase="'LUNCH'" class="small_image" src="/assets/img/meal/lunch.svg" />
+        <img *ngSwitchCase="'PM_SNACK'" class="small_image" src="/assets/img/meal/post-meridiem.svg" />
+        <img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" />
+  		{{event.meta.description}}</small>
+  </div>
+</ng-template>
+
+
+<div class="row">
+
+  <div class="col-md-3">
+    <div class="card">
+    	<div class="card-header">
+	    	<h4 class="card-title">Meals 
+	    		<span class="btn-group pull-right" dropdown [autoClose]="true" container="body">
+			  	<a dropdownToggle type="button" class="dropdown-toggle"><i class="fa fa-filter"></i> {{filter? filter : 'Filter'}}</a>
+			  	<a *ngIf="filter" (click)="filterList(undefined)">&nbsp;<i class="text-danger fa fa-close"></i></a>
+			  	<ul *dropdownMenu class="dropdown-menu" role="menu">							 
+			    	<li *ngFor="let type of ['Breakfast', 'AM Snack', 'Lunch', 'PM Snack', 'Dinner']" role="menuitem">
+						<a class="dropdown-item" (click)="filterList(type)">{{type}}</a>
+					</li>
+			  	</ul>
+			  	</span>
+			</h4>
+		</div>
+      <div class="card-content">
+        <ul>
+          <li *ngFor="let event of filteredList" mwlDraggable [dropData]="{event: event}" style="position:relative; z-index: 10">
+            <a  [style.color]="event.color.primary" [ngSwitch]="event.meta.type">
+  				<img *ngSwitchCase="'BREAKFAST'" class="small_image" src="/assets/img/meal/breakfast.svg" />
+        		<img *ngSwitchCase="'AM_SNACK'" class="small_image" src="/assets/img/meal/ante-meridiem.svg" />
+        		<img *ngSwitchCase="'LUNCH'" class="small_image" src="/assets/img/meal/lunch.svg" />
+        		<img *ngSwitchCase="'PM_SNACK'" class="small_image" src="/assets/img/meal/post-meridiem.svg" />
+        		<img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" /> {{ event.meta.description }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+	<div class="col-md-9">
+		<h3 class="text-center">{{ viewDate | date:'MMMM' }}</h3>
+		<br />
+		<mwl-calendar-month-view
+		    [viewDate]="viewDate"
+		    [events]="events"
+		    [activeDayIsOpen]="false"
+		    [refresh]="refresh"
+		    (eventTimesChanged)="eventDropped($event)"
+		    (eventClicked)="eventClicked($event)"
+		    (dayClicked)="viewDate = $event.day.date"
+			[cellTemplate]="customCellTemplate">
+		</mwl-calendar-month-view>
+	</div>
+</div>

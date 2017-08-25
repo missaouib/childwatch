@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router } from '@angular/router';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 
 @Component({
@@ -7,8 +8,12 @@ import {Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+  
+  
 export class DashboardComponent implements OnInit {
 
+  roomFilterForm: FormGroup;   
+  
    Rooms: any[] = [ 
   {
       name: 'Butterfly',
@@ -76,11 +81,24 @@ export class DashboardComponent implements OnInit {
     
   ];
   
-  constructor( private router: Router ) { }
+  RoomList: any[] = this.Rooms;
+  
+  constructor( 
+    private router: Router,
+    private fb: FormBuilder  
+  ) { }
 
  
   
   ngOnInit() {
+    this.roomFilterForm = this.fb.group( {
+      roomFilter: ['All']
+    });
+    
+    this.roomFilterForm.valueChanges.subscribe( () => { 
+      this.RoomList = ( this.roomFilterForm.value.roomFilter === 'All' ) ? 
+        this.Rooms : this.Rooms.filter( (room) => room.site === this.roomFilterForm.value.roomFilter );
+    });
   }
   
   goToRoomDetails() {

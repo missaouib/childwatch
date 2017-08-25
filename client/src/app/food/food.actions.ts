@@ -1,7 +1,8 @@
-import {FoodItem, FoodComponent, Meal, FoodState, Menu, INITIAL_FOODSTATE} from './food.interfaces';
+import {FoodItem, FoodComponent, Meal, FoodState, Menu, INITIAL_FOODSTATE, MealFoodItem} from './food.interfaces';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 import {Injectable} from '@angular/core';
 import { Action } from '@ngrx/store';
+//import { CalendarEvent } from 'angular-calendar';
 
 @Injectable()
 export class FoodActions {
@@ -17,13 +18,15 @@ export class FoodActions {
   static MENU_TIME_ADJUSTED = 'MENU_TIME_ADJUSTED';
   static FOOD_ITEM_UPDATED = 'FOOD_ITEM_UPDATED';
   static FOOD_ITEM_DELETED = 'FOOD_ITEM_DELETED';
+  static MEAL_FOOD_ITEM_ADDED = 'MEAL_FOOD_ITEM_ADDED';
+  static MEAL_SCHEDULED = 'MEAL_SCHEDULED';
   
   
   
   /*
    * Actions
    */
-  mealsReceived = ActionCreatorFactory.create<Meal[]>(FoodActions.MEALS_RECEIVED);
+  mealsReceived = ActionCreatorFactory.create<Meal[]>(FoodActions.MEALS_RECEIVED, FoodActions.setMealsReceived);
   menusReceived = ActionCreatorFactory.create<{start: Date, end: Date, menus: Menu[]}>(FoodActions.MENUS_RECEIVED);
   foodItemsReceived = ActionCreatorFactory.create<FoodItem[]>(FoodActions.FOOD_ITEMS_RECEIVED);
   foodComponentsReceived = ActionCreatorFactory.create< FoodComponent[] > (FoodActions.FOOD_COMPONENTS_RECEIVED );  
@@ -31,31 +34,86 @@ export class FoodActions {
   foodItemDeleted = ActionCreatorFactory.create<FoodItem>( FoodActions.FOOD_ITEM_DELETED );      
   menuTimeAdjusted = ActionCreatorFactory.create<{start: Date, end: Date}>(FoodActions.MENU_TIME_ADJUSTED);
 
+  mealFoodItemAdded = ActionCreatorFactory.create<{meal: Meal, mealFoodItem: MealFoodItem}>(FoodActions.MEAL_FOOD_ITEM_ADDED);
+  
+  mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED, FoodActions.setMealScheduled );
  
   static mealReducer(state: FoodState = INITIAL_FOODSTATE, action: Action): FoodState {
     switch (action.type) {
       case FoodActions.FOOD_ITEMS_RECEIVED:
-        return { ...state, foodItems: action.payload };
+        return FoodActions.setFoodItemsReceived(state,action);        
       case FoodActions.FOOD_COMPONENTS_RECEIVED:
-        return { ...state, foodComponents: action.payload };
+        return FoodActions.setFoodComponentsReceived(state,action);        
       case FoodActions.MEALS_RECEIVED:
-        return { ...state, meals: action.payload };
+        return FoodActions.setMealsReceived(state,action);
       case FoodActions.MENUS_RECEIVED:
-        return { ...state,
-                 menuUI: { ...state.menuUI, menus: action.payload.menus } };
+        return FoodActions.setMenusReceived(state,action);
      case FoodActions.MENU_TIME_ADJUSTED:
-        return { ...state,
-                 menuUI: { ...state.menuUI, startMenu: action.payload.start, endMenu: action.payload.end } };
+        return FoodActions.setMenuTimeAdjusted(state,action);
      case FoodActions.FOOD_ITEM_UPDATED:
-        const foodItem = action.payload;
-        const idxFoodItem = state.foodItems.findIndex( (fi) => fi.id === foodItem.id );
-        const foodItems = state.foodItems.filter( (fi) => fi.id !== foodItem.id );
-        foodItems.splice( idxFoodItem, 0, foodItem );                
-        return { ...state, foodItems: foodItems };
-        
+        return FoodActions.setFoodItemUpdated( state, action );
+     case FoodActions.MEAL_FOOD_ITEM_ADDED:
+        return FoodActions.setMealFoodItemAdded( state, action );
+     case FoodActions.MEAL_SCHEDULED:
+        return FoodActions.setMealScheduled( state, action );        
     }
     return state;
   } 
+  
+  static setFoodItemsReceived( state: FoodState, action: Action ) {
+    return { ...state, foodItems: action.payload };    
+  }
+  
+  static setFoodComponentsReceived( state: FoodState, action: Action ) {
+    return { ...state, foodComponents: action.payload };  
+  }
+  
+  static setMealsReceived( state: FoodState, action: Action ) {
+    return { ...state, meals: action.payload };  
+  }
+  
+  static setMenusReceived( state: FoodState, action: Action ) {
+   return { ...state,
+                 menuUI: { ...state.menuUI, menus: action.payload.menus } }; 
+  }
+  
+  static setMenuTimeAdjusted( state: FoodState, action: Action ) {
+    return { ...state, menuUI: { ...state.menuUI, startMenu: action.payload.start, endMenu: action.payload.end } };  
+  }
+  
+  static setFoodItemUpdated( state: FoodState, action: Action ) {
+    const foodItem = action.payload;
+    const idxFoodItem = state.foodItems.findIndex( (fi: FoodItem ) => fi.id === foodItem.id );
+    const foodItems = state.foodItems.filter( (fi: FoodItem) => fi.id !== foodItem.id );
+    foodItems.splice( idxFoodItem, 0, foodItem );                
+    return { ...state, foodItems: foodItems };
+  }
+  
+  static setMealFoodItemAdded( state: FoodState, action: Action ) {
+    const menuIdx = state.menuUI.menus.findIndex( (menu: Menu) => menu.meal && menu.meal.id === action.payload.meal.id );        
+    const newMenu = { ...state.menuUI.menus[menuIdx] };
+    newMenu.meal.mealFoodItems.push( action.payload.mealFoodItem );        
+    const menus = { ...state.menuUI.menus };
+    menus.splice( menuIdx, 0, newMenu );
+     return { ...state, menuUI: { ...state.menuUI,  menus:  menus } };
+  }
+  
+  static setMealScheduled( state: FoodState, action: Action ) {
+    const { meal, date } = action.payload;
+    const event = {
+      title: meal.description,
+      start: date,
+      meta: meal,
+      color: { primary: 'red', secondary: 'pink' }
+    };
+    
+    const events = state.menuUI.events.slice();
+    
+    console.log( events );
+    
+    events.push( event );
+    return { ...state, menuUI: { ...state.menuUI, events: events } };
+  }
 
 
 }

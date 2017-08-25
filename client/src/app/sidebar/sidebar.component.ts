@@ -21,7 +21,9 @@ export const ROUTES: RouteInfo[] = [
   { path: '/dashboard', title: 'Dashboard', type: 'link', icontype: 'ti-dashboard'},
   { path: '/meals', title: 'Meals', type: 'sub', icontype: 'cw-icon icon-dinner',
     children: [
-      { path: 'menu-overview',  title: 'Menu Planning' }
+      { path: 'menu-overview',  title: 'Menu Planning' },
+      { path: 'menu-calendar',  title: 'Menu Calendar' },
+      { path: 'meal-builder', title: 'Meal Builder' }
     ]}, 
   { path: '/billing', title: 'Billing', type: 'link', icontype: 'cw-icon icon-money' },
   { path: '/admin', title: 'Administration', type: 'sub', icontype: 'cw-icon icon-dinner',

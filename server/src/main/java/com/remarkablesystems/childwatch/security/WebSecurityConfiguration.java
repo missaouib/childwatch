@@ -49,7 +49,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         
         http
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
         .invalidSessionUrl("/");
         
         // @formatter:on

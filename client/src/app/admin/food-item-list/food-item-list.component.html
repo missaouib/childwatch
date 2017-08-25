@@ -22,12 +22,12 @@
 						<th class="col-sm-2">
 							<div class="btn-group" dropdown [autoClose]="true" container="body">
 							  <a dropdownToggle type="button" class="dropdown-toggle pull-left"><i class="fa fa-filter"></i> {{filter? filter.description : 'Filter'}}</a>
-							  <a *ngIf="filter" (click)="filter = undefined">&nbsp;<i class="text-danger fa fa-close"></i></a>
+							  <a *ngIf="filter" (click)="filterList(undefined)">&nbsp;<i class="text-danger fa fa-close"></i></a>
 							  <ul *dropdownMenu class="dropdown-menu" role="menu">							 
 							    <li *ngFor="let top of foodComponents" role="menuitem" dropdown triggers="mouseover" placement="left" container="body">
 							      <a dropdownToggle class="dropdown-item dropdown-toggle" (click)="false">{{top.description}}<span class="caret"></span></a>
 							      <ul *dropdownMenu class="dropdown-menu" role="menu">
-							        <li role="menuitem" *ngFor="let comp of top.children"><a class="dropdown-item" (click)="filter = comp">{{comp.description}}</a></li>
+							        <li role="menuitem" *ngFor="let comp of top.children"><a class="dropdown-item" (click)="filterList(comp)">{{comp.description}}</a></li>
 							      </ul>
 							    </li>
 							    
@@ -36,7 +36,7 @@
 						</th>		
 					</tr>
 				
-					<tr *ngFor="let item of foodItems.slice( ((pageInfo.number - 1) * 20), ((pageInfo.number - 1) * 20)+20 )">
+					<tr *ngFor="let item of foodItemList.slice( ((pageInfo.number - 1) * 20), ((pageInfo.number - 1) * 20)+20 )">
 						<td><i class="fa fa-lock"></i>
 						<td class="text-left"><a (click)="onFoodItemSelected(item)">{{item.description}}</a></td>
 						<td class="text-left">{{item.shortDescription}}</td>

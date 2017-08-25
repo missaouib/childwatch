@@ -3,7 +3,6 @@ import { FoodStateService } from '../../food/services/food-state.service';
 import { transition, trigger, style, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'cw-food-item-list',
@@ -27,6 +26,11 @@ export class FoodItemListComponent implements OnInit {
   foodItems: FoodItem[];
   foodComponentsFlat: FoodComponent[];
   foodComponents: any[];
+  
+  foodItemList: FoodItem[];
+  
+  
+  
   pageInfo: Page = {
     size: 20,
     totalElements: 0,
@@ -61,7 +65,7 @@ export class FoodItemListComponent implements OnInit {
     this.foodItem.valueChanges.debounceTime(500).subscribe( () => { 
       if ( this.foodItem.valid ) {
         console.log( 'SAVING FoodItem ' + this.foodItem.value.id );
-        //this.state.updateFoodItem( this.foodItem.value );
+        // this.state.updateFoodItem( this.foodItem.value );
       }
     });
     
@@ -69,7 +73,7 @@ export class FoodItemListComponent implements OnInit {
       this.pageInfo.totalElements = items.length;
       this.pageInfo.totalPages = Math.ceil(this.pageInfo.totalElements / this.pageInfo.size );      
       this.foodItems = items; 
-      console.log( this.pageInfo );
+      this.foodItemList = items;
     });
     this.state.foodComponents$.subscribe( (fc: FoodComponent[]) => {
       this.foodComponentsFlat = fc;
@@ -78,44 +82,34 @@ export class FoodItemListComponent implements OnInit {
       fc.filter( (c) => c.parentComponent !== null )
         .forEach( (c) => this.foodComponents.find( (p) => p.id === c.parentComponent.id ).children.push( c ) );
       
-    });
-    
-    Observable.of( this.filter ).subscribe( (filter) => console.log( 'filter = ' + filter ));
-    
+    });    
   }
   
-  pagedFoodItems(){
+  pagedFoodItems() {
     return this.foodItems.slice( this.pageInfo.number - 1 * this.pageInfo.size, this.pageInfo.size );
+  }
+  
+  filterList( filter: any ) {
+    this.filter = filter;
+    
+    this.foodItemList = (this.filter === undefined) ? 
+      this.foodItems : this.foodItems.filter( (foodItem) => foodItem.foodComponent.id === this.filter.id );
+    this.pageInfo.totalElements = this.foodItemList.length;
+    this.pageInfo.totalPages = Math.ceil(this.pageInfo.totalElements / this.pageInfo.size );
+    this.pageInfo.number = 1;
+    this.showDetail = false;
   }
 
   pageChanged( event: any ) {
-    console.log( 'Page changed to ' + event.page );
     this.pageInfo.number = event.page;
-    //this.state.loadFoodItems( event.page - 1 );
     this.showDetail = false;
   }
-  
-  sort( sortOrder: string ) {
-    this.lastSortOrder = sortOrder + 
-      ( this.lastSortOrder.startsWith(sortOrder) && this.lastSortOrder.endsWith(',asc') ) ? ',desc' : ',asc';
-    //this.state.loadFoodItems( this.pageInfo.number, this.lastSortOrder );    
-  }
-  
+    
   onFoodItemSelected(foodItem: FoodItem) {
-    // need to pick the value from the list being used in the dropdown
-    
-    console.log( 'fifc = ' + foodItem.foodComponent.id );
-    
-    const foodComponent = this.foodComponentsFlat.find( (fc) => fc.id === foodItem.foodComponent.id );
-    
-    this.foodItem.setValue( { ...foodItem, foodComponent: foodComponent } );
-    
+    // need to pick the value from the list being used in the dropdown    
+    const foodComponent = this.foodComponentsFlat.find( (fc) => fc.id === foodItem.foodComponent.id );    
+    this.foodItem.setValue( { ...foodItem, foodComponent: foodComponent } );   
     this.showDetail = true;
   }
-  
-  onSubmit() {
-    console.log( this.foodItem.value, this.foodItem.valid );
-  }
-
 
 }

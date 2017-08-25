@@ -1,3 +1,7 @@
+<div *ngIf="ageGroupFoodItems().length < 1" class="alert alert-danger">
+	<i class="fa fa-exclamation-circle"></i> Milk or Milk Alternate must be served at each meal.
+</div>
+
 <div *ngFor="let item of ageGroupFoodItems()">
 	<div class="input-group input-group-unstyled" style="margin-top: 10px">
 		<!--  need vegetables, fast-food, snack, native-->
@@ -18,7 +22,7 @@
 				<label>Quantity</label>
 				<input class="form-control" value="{{item.quantity}}">
 			</span>
-			<span class="col-sm-3">
+			<span class="col-sm-1">
 				<label>Units</label>
 				<select class="form-control">
 					<option>each</option>
@@ -27,7 +31,21 @@
 					<option>lbs</option>
 				</select>
 			</span>
-			<div class="col-sm-1"><a><i class="text-primary fa fa-pencil"> Edit</i></a> <a><i class="text-danger fa fa-close" (click)="removeMealFoodItem(item)"> Delete</i></a></div>
+			<div class="col-sm-1">
+				<a (click)="removeFoodItem(item)"><i class="text-danger fa fa-close"></i> Delete</a>
+				<br />
+				<div class="btn-group" dropdown [autoClose]="true" container="body">
+				  <a dropdownToggle class="dropdown-toggle pull-left"><i class="text-primary fa fa-plus"></i> Add</a>
+				  <ul *dropdownMenu class="dropdown-menu" role="menu">							 
+				    <li *ngFor="let top of foodComponents" role="menuitem" dropdown triggers="mouseover" placement="right" container="body">
+				      <a dropdownToggle class="dropdown-item dropdown-toggle" (click)="false">{{top.description}}<span class="caret"></span></a>
+				      <ul *dropdownMenu class="dropdown-menu" role="menu">
+				        <li role="menuitem" *ngFor="let comp of top.children"><a class="dropdown-item" (click)="filterList(comp)">{{comp.description}}</a></li>
+				      </ul>
+				    </li>				    
+				  </ul>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>	

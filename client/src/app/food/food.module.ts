@@ -22,16 +22,26 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MenuDetailComponent } from './menu-detail/menu-detail.component';
 import { FoodComponentService } from './services/food-component.service';
 import { FoodItemService } from './services/food-item.service';
+import { MenuCalendarComponent } from './menu-calendar/menu-calendar.component';
+
+import {CalendarModule} from 'angular-calendar';
+import {DragAndDropModule} from 'angular-draggable-droppable';
+import { MenuCalendarHeaderComponent } from './menu-calendar/menu-calendar-header.component';
+import { MealBuilderComponent } from './meal-builder/meal-builder.component';
 
 const routes: Routes = [
   { path: 'menu-overview', component: MenuScreenComponent },
-  { path: 'menu/:id', component: MenuDetailComponent }
+  { path: 'menu/:id', component: MenuDetailComponent },
+  { path: 'menu-calendar', component: MenuCalendarComponent },
+  { path: 'meal-builder', component: MealBuilderComponent }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    CalendarModule.forRoot(),
+    DragAndDropModule,
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
     TypeaheadModule.forRoot(),
@@ -40,7 +50,15 @@ const routes: Routes = [
     ReactiveFormsModule, FormsModule,
     HttpModule, DragulaModule
   ],
-  declarations: [MealDetailComponent, MenuScreenComponent, MenuCardComponent, MenuDetailComponent],
+  declarations: [ 
+    MealDetailComponent, 
+    MenuScreenComponent, 
+    MenuCardComponent, 
+    MenuDetailComponent, 
+    MenuCalendarComponent, 
+    MenuCalendarHeaderComponent, 
+    MealBuilderComponent
+  ],
   providers: [ FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MenuService ]
 })
 export class FoodModule {

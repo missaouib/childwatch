@@ -61,6 +61,8 @@ export class MenuDetailComponent implements OnInit {
           (m: Menu[]) => m.filter( (menu: Menu) => moment(menu.startDate).isSame( this.targetDate, 'day' ) )
                 .forEach( (menu: Menu) => this.meals[menu.meal.type] = menu.meal ));
     });
+    
+    
   } 
 
 }

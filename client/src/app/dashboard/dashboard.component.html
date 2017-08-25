@@ -18,18 +18,20 @@
 		<div class="row">
     		<span class="col-sm-8"><h1 class="col-sm-8" >Room Overview</h1></span>
     		<span class="col-sm-4">
- 	   			<label>Site:</label>
-	    		<select class="col-sm-4 form-control">
-	    			<option>All</option>
-	    			<option>East</option>
-	    			<option>North Valley</option>
-	    			<option>Downtown</option>
-	    		</select>
+    			<form [formGroup]="roomFilterForm">
+ 	   				<label>Site:</label>
+	    			<select class="col-sm-4 form-control" formControlName="roomFilter">
+	    				<option selected=selected>All</option>
+	    				<option>East</option>
+	    				<option>North Valley</option>
+	    				<option>Downtown</option>
+	    			</select>
+	    		</form>
 	    	</span>
 		</div>
 		
         <div class="row">
-            <div *ngFor="let room of Rooms" class="col-lg-3 col-sm-6">
+            <div *ngFor="let room of RoomList" class="col-lg-3 col-sm-6">
                 <div class="card">
                     <div class="card-content">
                     	<div class="row">
