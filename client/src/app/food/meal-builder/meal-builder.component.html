@@ -1,7 +1,86 @@
-<div class="row">
-	<div class="col-sm-6" #containerPieChart>
-  		<img class="img-responsive" src="/assets/img/placesetting.svg" />
-  	</div>
+<tabset [justified]="true">
+	<tab *ngFor="let ageGroup of ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]" > 
+		<form [formGroup]="mealForm">
 	
-	<div class="col-sm-6">Data</div>
- </div>
+		<ng-template tabHeading>{{ageGroup}}</ng-template>
+
+		<div class="row">		
+					
+			<div class="col-sm-4">
+			 <img class="img-responsive" src="/assets/img/placesetting.svg" />
+			</div>
+			
+			<div class="col-sm-8">
+				 <div class="card">
+			    	<div class="card-header">
+				    	<div class="card-title">
+				    	<label for="name">Name</label>
+				    	<input #name class="form-control" placeholder="Meal Name" formControlName="name" />
+				    	<label for="type">Type</label>
+				    	<select #type class="form-control" formControlName="type">
+				    		<option>Breakfast</option>
+				    		<option>AM Snack</option>
+				    		<option>Lunch</option>
+				    		<option>PM Snack</option>
+				    		<option>Dinner</option>	    			
+				    	</select>
+				    	</div>
+				   	</div>
+				   	<div class="card-content">
+						<ul class="list-group" >
+							<li formArrayName="foodItems" *ngFor="let item of mealForm.get('foodItems').controls; let i = index" [style.border-left-color]="grey" style="border-left-width: 10px" class="list-group-item">
+								<div [formGroupName]="i" class="input-group input-group-unstyled" style="margin-top: 10px">
+									<i class="cw-icon input-group-addon icon-cereals circle-green" style="font-size: 2.5em"></i>
+									<span class="col-sm-7">
+										<label>{{item.get('type').value}}</label>
+										<input formControlName="foodItem" class="form-control" />
+									</span>
+									<span class="col-sm-2">
+										<label>Quantity</label>
+										<input formControlName="quantity" class="form-control" value="0">
+									</span>
+									<span class="col-sm-2">
+										<label>Units</label>
+										<select class="form-control" formControlName="uom">
+											<option>each</option>
+											<option>oz</option>
+											<option>slice</option>
+											<option>lbs</option>
+										</select>
+									</span>									
+																		
+									<i class="text-danger pull-right fa fa-close"></i>						
+								</div>
+							</li>		
+						</ul>
+					</div>
+					<div class="card-footer">
+			          <hr />
+			          
+			          <div class="btn-group" dropdown [autoClose]="true" container="body">
+							  <a dropdownToggle class="dropdown-toggle pull-left"><i class="text-primary fa fa-plus"></i> Add</a>
+							  <ul *dropdownMenu class="dropdown-menu" role="menu">							 
+							    <li *ngFor="let top of foodComponents" role="menuitem" dropdown triggers="mouseover" placement="right" container="body" [autoClose]="true">
+							      <a dropdownToggle class="dropdown-item dropdown-toggle" (click)="false">{{top.description}}<span class="caret"></span></a>
+							      <ul *dropdownMenu class="dropdown-menu" role="menu">
+							        <li role="menuitem" *ngFor="let comp of top.children"><a class="dropdown-item" (click)="addComponent(comp)">{{comp.description}}</a></li>
+							      </ul>
+							    </li>				    
+							  </ul>
+						</div>
+			      </div>
+			                                  		
+				</div>
+			</div>
+		</div>
+		</form>
+	</tab>
+</tabset>
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 

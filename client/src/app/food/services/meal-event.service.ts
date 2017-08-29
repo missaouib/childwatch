@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 @Injectable()
-export class MenuService {
+export class MealEventService {
 
   /**
    * @constructor
@@ -28,7 +28,17 @@ export class MenuService {
 
     return this.http.get( '/api/menu/search/between', {search: params} )
       .map( res => res.json() )
-      .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.menusReceived( { start: start, end: end, menus: menus } ) ) );
+      .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, menus: menus } ) ) );
   }
   
+  queryBefore( start: Date ){
+    const params = new URLSearchParams();
+    params.append( 'projection', 'menuFull' );
+    params.append( 'start', moment( start ).format( 'MM/DD/YYYY' ) );
+
+    return this.http.get( '/api/menu/search/before', {search: params} )
+      .map( res => res.json() )
+      .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: start, menus: menus } ) ) );    
+  }
+
 }

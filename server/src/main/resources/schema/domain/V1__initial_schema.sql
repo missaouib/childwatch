@@ -140,12 +140,12 @@
    		unit        	varchar(36) DEFAULT 'each'
     );
     
-	create table menu(
+	create table meal_event(
 		id varchar( 36 ) NOT NULL,
 		meal_id varchar(36),
    		start_date        DATE NOT NULL,
    		end_date          DATE DEFAULT DATE '12/31/3000',
-   		recurrence        varchar (36) NOT NULL CHECK ( recurrence IN ( 'none', 'daily', 'weekly', 'monthly' ) ) DEFAULT 'none'
+   		recurrence_id     varchar (36)
 	);
 	
 	CREATE TABLE unit_of_measure(
@@ -162,115 +162,5 @@
 		denominator   numeric (4,2) NOT NULL DEFAULT 1,
 		to_offset	  numeric (4,2) NOT NULL DEFAULT 0
 	);
-
-
-	-- recurrence handling functions		
-CREATE OR REPLACE FUNCTION domain.generate_recurrences (
- 	IN recurs      varchar(36),
-    IN start_date   date,
-    IN end_date     date)
-   RETURNS SETOF date AS $$
-
-DECLARE
-   next_date   DATE := start_date;
-   duration    INTERVAL;
-   day         INTERVAL;
-   checkit     TEXT;
-BEGIN
-   IF recurs = 'none'
-   THEN
-        -- Only one date ever.
-        RETURN NEXT next_date;
-   ELSIF recurs = 'weekly'
-   THEN
-      duration := '7 days'::interval;
-
-      WHILE next_date <= end_date
-      LOOP
-            RETURN NEXT next_date;
-         next_date := next_date + duration;
-      END LOOP;
-   ELSIF recurs = 'daily'
-   THEN
-      duration := '1 day'::interval;
-
-      WHILE next_date <= end_date
-      LOOP
-            RETURN NEXT next_date;
-         next_date := next_date + duration;
-      END LOOP;
-   ELSIF recurs = 'monthly'
-   THEN
-      duration := '27 days'::interval;
-      day := '1 day'::interval;
-      checkit := to_char (start_date, 'DD');
-
-      WHILE next_date <= end_date
-      LOOP
-            RETURN NEXT next_date;
-         next_date := next_date + duration;
-
-         WHILE to_char (next_date, 'DD') <> checkit
-         LOOP
-            next_date := next_date + day;
-         END LOOP;
-      END LOOP;
-   ELSE
-        -- Someone needs to update this function, methinks.
-        RAISE EXCEPTION 'Recurrence % not supported by generate_recurrences()', recurs;
-   END IF;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION domain.recurring_events_for(
-   range_start TIMESTAMP,
-   range_end   TIMESTAMP
-)
-   RETURNS SETOF domain.menu AS $$
-   
-DECLARE
-   event domain.menu;
-   start_at TIMESTAMPTZ;
-   start_time TEXT;
-   ends_at    TIMESTAMPTZ;
-   next_date  DATE;
-   recurs_at  TIMESTAMPTZ;
-BEGIN
-   FOR event IN 
-       SELECT *
-         FROM domain.menu
-        WHERE recurrence <> 'none'
-           OR  ( recurrence = 'none' AND domain.menu.start_date BETWEEN range_start AND range_end )
-
-    LOOP
-       IF event.recurrence = 'none' THEN
-         RETURN NEXT event;
-         CONTINUE;
-       END IF;
-
-       start_at := event.start_date::timestamptz;
-       start_time := start_at::time::text;
-       ends_at    := event.end_date::timestamptz;
-
-       FOR next_date IN
-           SELECT *
-             FROM generate_recurrences(
-                      event.recurrence,
-                      start_at::date,
-                      range_end::date
-             )
-       LOOP
-           recurs_at := (next_date || ' ' || start_time)::timestamp;
-           EXIT WHEN recurs_at > range_end;
-           CONTINUE WHEN recurs_at < range_start AND ends_at < range_start;
-           event.start_date := recurs_at;
-           event.end_date   := ends_at;
-           RETURN NEXT event;
-       END LOOP;
-   END LOOP;
-   RETURN;
-END;
-$$ LANGUAGE plpgsql;
         
 

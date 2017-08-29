@@ -3,32 +3,25 @@ import { Subject } from 'rxjs/Subject';
 import {
   CalendarEvent,
   CalendarEventTimesChangedEvent,
-  CalendarEventTitleFormatter,
 } from 'angular-calendar';
 
 import {Meal} from '../food.interfaces';
 import { FoodStateService } from '../services/food-state.service';
 import { MealService } from '../services/meal.service';
-import { CustomEventTitleFormatter } from './custom-event-title-formatter.provider';
+import * as moment from 'moment';
 
 @Component({
-  selector: 'cw-menu-calendar',
-  templateUrl: './menu-calendar.component.html',
-  styleUrls: ['./menu-calendar.component.css'],
-  providers: [
-    {
-      provide: CalendarEventTitleFormatter,
-      useClass: CustomEventTitleFormatter
-    }
-   ]
+  selector: 'cw-meal-calendar',
+  templateUrl: './meal-calendar.component.html',
+  styleUrls: ['./meal-calendar.component.css']
 })
-export class MenuCalendarComponent implements OnInit {
+export class MealCalendarComponent implements OnInit {
   
   viewDate: Date = new Date();
   view = 'month';
   activeDayIsOpen = false;
   
-  externalEvents:Array<CalendarEvent<Meal>> =  [];
+  externalEvents: Array<CalendarEvent<Meal>> =  [];
   
   filteredList: Array<CalendarEvent<Meal>> = [];
   
@@ -52,7 +45,9 @@ export class MenuCalendarComponent implements OnInit {
             draggable: true,
             meta: meal }; } ) );
   
-  
+    const today = new Date();
+   
+    this.state.adjustMenuTime( moment(today).startOf('month').toDate(), moment(today).endOf('month').toDate());
     this.state.mealEvents$.subscribe( (events) => this.events = events.slice().sort( this.compare ) );
     
   }

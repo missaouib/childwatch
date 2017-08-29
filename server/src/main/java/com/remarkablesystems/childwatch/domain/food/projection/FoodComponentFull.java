@@ -1,11 +1,11 @@
-package com.remarkablesystems.childwatch.domain.meal.projection;
+package com.remarkablesystems.childwatch.domain.food.projection;
 
 import java.util.Set;
 
 
 import org.springframework.data.rest.core.config.Projection;
 
-import com.remarkablesystems.childwatch.domain.meal.FoodComponent;
+import com.remarkablesystems.childwatch.domain.food.FoodComponent;
 
 
 @Projection(name="foodComponentFull", types= FoodComponent.class )

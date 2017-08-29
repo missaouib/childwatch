@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.domain.meal;
+package com.remarkablesystems.childwatch.domain.food;
 
 import java.util.Date;
 
@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="menu")
-public class Menu {
+@Table(name="meal_event")
+public class MealEvent {
 
 	@Id
 	private String id;
@@ -27,8 +27,8 @@ public class Menu {
 	@Column( name="end_date" )
 	Date endDate;
 	
-	@Column( name="recurrence" )
-	String recurrence;
+	@Column( name="recurrence_id" )
+	String recurrenceId;
 
 	public Meal getMeal() {
 		return meal;
@@ -54,12 +54,12 @@ public class Menu {
 		this.endDate = endDate;
 	}
 
-	public String getRecurrence() {
-		return recurrence;
+	public String getRecurrenceId() {
+		return recurrenceId;
 	}
 
-	public void setRecurrence(String recurrence) {
-		this.recurrence = recurrence;
+	public void setRecurrenceId(String recurrenceId) {
+		this.recurrenceId = recurrenceId;
 	}
 
 	public String getId() {

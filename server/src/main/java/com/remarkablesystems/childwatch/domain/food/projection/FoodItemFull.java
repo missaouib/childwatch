@@ -1,8 +1,8 @@
-package com.remarkablesystems.childwatch.domain.meal.projection;
+package com.remarkablesystems.childwatch.domain.food.projection;
 
 import org.springframework.data.rest.core.config.Projection;
 
-import com.remarkablesystems.childwatch.domain.meal.FoodItem;
+import com.remarkablesystems.childwatch.domain.food.FoodItem;
 
 @Projection(name="foodItemFull", types=FoodItem.class )
 public interface FoodItemFull{

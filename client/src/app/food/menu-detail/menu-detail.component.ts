@@ -1,4 +1,4 @@
-import { Meal, Menu } from '../food.interfaces';
+import { Meal, MealEvent } from '../food.interfaces';
 import { FoodStateService } from '../services/food-state.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -58,8 +58,8 @@ export class MenuDetailComponent implements OnInit {
         const id = params['id'];
         this.targetDate = moment(id).toDate();
         this.state.menus$.subscribe( 
-          (m: Menu[]) => m.filter( (menu: Menu) => moment(menu.startDate).isSame( this.targetDate, 'day' ) )
-                .forEach( (menu: Menu) => this.meals[menu.meal.type] = menu.meal ));
+          (m: MealEvent[]) => m.filter( (mealEvent: MealEvent) => moment(mealEvent.startDate).isSame( this.targetDate, 'day' ) )
+                .forEach( (mealEvent: MealEvent) => this.meals[mealEvent.meal.type] = mealEvent.meal ));
     });
     
     

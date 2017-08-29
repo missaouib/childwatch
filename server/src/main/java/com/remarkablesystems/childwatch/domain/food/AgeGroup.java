@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.domain.meal;
+package com.remarkablesystems.childwatch.domain.food;
 
 public enum AgeGroup {
 	AGE_0_5MO,

@@ -2,10 +2,8 @@ import { AppState } from '../../app.state';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { FoodItem, FoodComponent, Meal, Menu, MealFoodItem } from '../food.interfaces';
+import { FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem } from '../food.interfaces';
 import { FoodActions } from '../food.actions';
-import { MenuService } from './menu.service';
-import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { CalendarEvent } from 'angular-calendar';
 
 
@@ -13,16 +11,8 @@ import { CalendarEvent } from 'angular-calendar';
 @Injectable()
 export class FoodStateService {
 
-  @Effect() _adjustedMenuTime = this.actions$
-    .ofType( FoodActions.MENU_TIME_ADJUSTED )
-    .map( toPayload )
-    .map( payload => this.menuSvc.queryBetween( payload.start, payload.end ).subscribe() )
-    .subscribe();
-
   constructor(
     private store: Store<AppState>,
-    private actions$: Actions,
-    private menuSvc: MenuService,
     private actions: FoodActions ) {}
 
   get foodItems$(): Observable<FoodItem[]> {
@@ -33,8 +23,8 @@ export class FoodStateService {
     return this.store.select( s => s.food.foodComponents );
   }
 
-  get menus$(): Observable<Menu[]>{
-    return this.store.select( s => s.food.menuUI.menus );
+  get menus$(): Observable<MealEvent[]>{
+    return this.store.select( s => s.food.menuUI.mealEvents );
   }
 
   get meals$(): Observable<Meal[]>{

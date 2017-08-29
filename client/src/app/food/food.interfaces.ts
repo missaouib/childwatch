@@ -57,26 +57,33 @@ export interface MealLinks {
 };
 
 
-export interface Menu {
+export interface MealEvent {
   id?: string;
   meal: Meal;
   startDate: Date;
   endDate: Date;
-  recurrence: string;
+  recurrenceId: string;
 }
 
 export interface MenuUIState {
   menuStart: Date;
   menuEnd: Date;
-  menus: Menu[];
+  mealEvents: MealEvent[];
   events: Array<CalendarEvent<Meal>>;
+  currentMeal: Meal;
 }
 
 export const INITIAL_MENUUISTATE: MenuUIState = {
   menuStart: undefined,
   menuEnd: undefined,
-  menus: [],
-  events: []
+  mealEvents: [],
+  events: [],
+  currentMeal: {
+    id: undefined,
+    description: undefined,
+    type: undefined,
+    mealFoodItems: []
+  }
 };
 
 export interface Page {
@@ -101,7 +108,7 @@ export const INITIAL_FOODSTATE: FoodState = {
 };
 
 export interface IData {
-    label: string,
-    value: number
+    label: string;
+    value: number;
 };
 

@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.domain.meal;
+package com.remarkablesystems.childwatch.domain.food;
 
 public enum MealType {
 	BREAKFAST,

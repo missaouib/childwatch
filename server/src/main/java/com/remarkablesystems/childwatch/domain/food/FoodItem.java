@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.domain.meal;
+package com.remarkablesystems.childwatch.domain.food;
 
 import java.io.Serializable;
 

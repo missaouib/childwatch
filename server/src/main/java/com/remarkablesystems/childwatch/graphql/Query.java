@@ -1,10 +1,10 @@
 package com.remarkablesystems.childwatch.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
-import com.remarkablesystems.childwatch.domain.meal.FoodItem;
-import com.remarkablesystems.childwatch.domain.meal.repository.FoodComponentRepository;
-import com.remarkablesystems.childwatch.domain.meal.repository.FoodItemRepository;
-import com.remarkablesystems.childwatch.domain.meal.FoodComponent;
+import com.remarkablesystems.childwatch.domain.food.FoodComponent;
+import com.remarkablesystems.childwatch.domain.food.FoodItem;
+import com.remarkablesystems.childwatch.domain.food.repository.FoodComponentRepository;
+import com.remarkablesystems.childwatch.domain.food.repository.FoodItemRepository;
 import com.remarkablesystems.childwatch.domain.people.*;
 import com.remarkablesystems.childwatch.domain.room.Room;
 import com.remarkablesystems.childwatch.domain.room.Rooms;

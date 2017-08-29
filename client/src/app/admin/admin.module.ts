@@ -2,7 +2,7 @@ import { FoodActions } from '../food/food.actions';
 import { FoodComponentService } from '../food/services/food-component.service';
 import { FoodItemService } from '../food/services/food-item.service';
 import { FoodStateService } from '../food/services/food-state.service';
-import { MenuService } from '../food/services/menu.service';
+import { MealEventService } from '../food/services/meal-event.service';
 import { FoodItemListComponent } from './food-item-list/food-item-list.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,7 @@ const routes: Routes = [
     BsDropdownModule.forRoot()
   ],
   declarations: [FoodItemListComponent],
-  providers: [ FoodComponentService, FoodItemService, FoodStateService, MenuService, FoodActions ]
+  providers: [ FoodComponentService, FoodItemService, FoodStateService, MealEventService, FoodActions ]
 })
 
 export class AdminModule {

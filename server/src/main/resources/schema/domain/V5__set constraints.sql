@@ -6,7 +6,7 @@
     
     alter table domain.meal_food_item add primary key (id);
     
-    alter table domain.menu add PRIMARY KEY (id);
+    alter table domain.meal_event add PRIMARY KEY (id);
 	
 	alter table domain.unit_of_measure add primary key(unit);
 		
@@ -26,8 +26,8 @@
         foreign key (meal_id)
         references meal;
         
-    alter table domain.menu
-    add constraint FK_menu_id
+    alter table domain.meal_event
+    add constraint FK_meal_event_id
     foreign key (meal_id)
     references meal;        
         

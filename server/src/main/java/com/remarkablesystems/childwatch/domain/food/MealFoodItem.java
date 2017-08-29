@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.domain.meal;
+package com.remarkablesystems.childwatch.domain.food;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -21,7 +21,6 @@ public class MealFoodItem implements Serializable {
 
 	@Column(name="age_group") @Enumerated( EnumType.STRING )
 	private AgeGroup ageGroup;
-
 	
 	private BigDecimal quantity;
 	
