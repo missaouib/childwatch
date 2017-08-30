@@ -2,6 +2,8 @@
 
 @import '~angular-calendar/dist/css/angular-calendar.css';
 
+@import '~ng2-toastr/bundles/ng2-toastr.min.css';
+
 body {
   font-family: Roboto,"Helvetica Neue",sans-serif;
 }

@@ -61,4 +61,8 @@ export class FoodStateService {
   scheduleMeal( meal: Meal, start: Date ) {
     this.store.dispatch( this.actions.mealScheduled( { meal: meal, date: start } ) );
   }
+  
+  updateMeal( meal: Meal ) {
+    this.store.dispatch( this.actions.mealUpdated( meal ) );
+  }
 }

@@ -1,5 +1,6 @@
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
+import { Meal } from '../food.interfaces';
 import { FoodComponentService } from './food-component.service';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -36,6 +37,10 @@ export class MealService {
    */
 
 
+  update( meal: Meal ) {
+    console.log( 'Patch ' + meal.id );
+    return this.http.post( this.URL, meal );
+  }
 
 
   query() {

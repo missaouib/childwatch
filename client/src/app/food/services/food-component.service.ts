@@ -1,9 +1,11 @@
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
 import { FoodComponent } from '../food.interfaces';
-import { Injectable } from '@angular/core';
+import { Injectable, ViewContainerRef } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
 import { Store } from '@ngrx/store';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+
 
 @Injectable()
 export class FoodComponentService {
@@ -13,13 +15,17 @@ export class FoodComponentService {
   
   private URL = '/api/foodComponent';
   
-  
+  vcr: ViewContainerRef = null;
   
   constructor(
     private store: Store<AppState>,
     private http: Http,
-    private actions: FoodActions
-  ) { }
+    private actions: FoodActions,
+    private toastr: ToastsManager
+    
+  ) { 
+    
+  }
     
   
     
@@ -39,8 +45,13 @@ export class FoodComponentService {
       
       return this.http.get( component._links.foodItems.href, {search: params} )
         .map( res => res.json() )
-        .map( ({_embedded: {foodItems} })  => 
-          this.store.dispatch( this.actions.foodItemsReceived( foodItems ) ) );
+        .map( ({_embedded: {foodItems} })  => {
+          this.store.dispatch( this.actions.foodItemsReceived( foodItems ) );
+          if ( this.vcr ) {
+            this.toastr.setRootViewContainerRef( this.vcr ); 
+            this.toastr.info( 'Received ' + foodItems.length + ' items', 'Food Items Received') ;
+          }
+        });
   }
     
 

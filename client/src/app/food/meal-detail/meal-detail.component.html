@@ -34,7 +34,7 @@
 			<div class="col-sm-1">
 				<a (click)="removeFoodItem(item)"><i class="text-danger fa fa-close"></i> Delete</a>
 				<br />
-				<div class="btn-group" dropdown [autoClose]="true" container="body">
+				<div class="btn-group" dropdown container="body">
 				  <a dropdownToggle class="dropdown-toggle pull-left"><i class="text-primary fa fa-plus"></i> Add</a>
 				  <ul *dropdownMenu class="dropdown-menu" role="menu">							 
 				    <li *ngFor="let top of foodComponents" role="menuitem" dropdown triggers="mouseover" placement="right" container="body">

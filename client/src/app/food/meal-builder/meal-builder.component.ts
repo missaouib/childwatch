@@ -1,10 +1,11 @@
-import { FoodComponent, Meal } from '../food.interfaces';
+import { FoodComponent, Meal, FoodItem } from '../food.interfaces';
 import { FoodStateService } from '../services/food-state.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import * as d3 from 'd3-selection';
 import * as d3Scale from 'd3-scale';
 import * as d3Shape from 'd3-shape';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
   selector: 'cw-meal-builder',
@@ -33,6 +34,10 @@ title: string = 'D3.js with Angular 2!';
   mealForm: FormGroup;
   foodItems: FormArray;
   
+  food: FoodItem[] = [];
+  
+  activeTab = 'AGE_0_5MO';
+  
   meal: Meal = {
     id: undefined,
     description: undefined,
@@ -51,7 +56,9 @@ title: string = 'D3.js with Angular 2!';
 
   constructor(
     private state: FoodStateService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public toastr: ToastsManager, 
+    vcr: ViewContainerRef,
    ) {
     this.width = 1800 - this.margin.left - this.margin.right ;
     this.height = 1500 - this.margin.top - this.margin.bottom;
@@ -64,30 +71,84 @@ title: string = 'D3.js with Angular 2!';
         .forEach( (c) => this.foodComponents.find( (p) => p.id === c.parentComponent.id ).children.push( c ) );
       
     });
+    
+    this.state.foodItems$.subscribe( (fi: FoodItem[]) => this.food = fi );
+    
+    this.toastr.setRootViewContainerRef(vcr);
+    
   }
 
   ngOnInit() {
       this.initSvg();
       this.drawPie();
       this.mealForm = this.formBuilder.group({
-        name: 'Breakfast #124',
-        type: 'Breakfast',
-        foodItems: this.formBuilder.array([])
+        name: ['Breakfast #124', Validators.required ],
+        type: ['Breakfast', Validators.required ],
+        AGE_0_5MO:  this.formBuilder.array([]),
+        AGE_6_11MO: this.formBuilder.array([]),
+        AGE_1_2YR: this.formBuilder.array([]),
+        AGE_3_5YR: this.formBuilder.array([]),
+        AGE_6_12YR: this.formBuilder.array([]),
+        AGE_13_18YR: this.formBuilder.array([]),
+        AGE_ADULT: this.formBuilder.array([]) 
       });
+    
+    this.mealForm.valueChanges.debounceTime(3000).subscribe( () => { 
+      if ( this.mealForm.valid ) {
+        this.toastr.success( 'Saved the meal', 'Save' );
+        const meal = this.buildMeal();
+        this.state.updateMeal( meal );
+      }
+    });
+    
+  }
+  
+  activateTab( tabName: string ) {
+    this.activeTab = tabName;
+    this.foodItems = this.mealForm.get(this.activeTab) as FormArray;    
+  }
+  
+  foodForComponent( component: FoodComponent ): FoodItem[] {
+    return this.food.filter( (fi) => fi.foodComponent.id === component.id );
   }
   
   createComponent(component:FoodComponent): FormGroup {
-    return this.formBuilder.group( { 
-      foodItem: '',
-      type: component.description,
-      quantity: '1',
-      uom: 'each'
+    return this.formBuilder.group( {       
+      id: undefined,
+      description: [undefined, Validators.required ],
+      foodComponent: [component, Validators.required ],
+      quantity: ['1', Validators.required ],
+      units: ['each', Validators.required ]
     });
   }
   
   addComponent(c: FoodComponent): void {
-    this.foodItems = this.mealForm.get('foodItems') as FormArray;
+    console.log( 'adding component ' + c.id );
+    this.foodItems = this.mealForm.get(this.activeTab) as FormArray;
     this.foodItems.push( this.createComponent(c) );    
+  }
+  
+  copyTo(ageGroup:string, except?: string){
+    if( ageGroup === 'ALL' ) {
+      const ageGroups = 
+        ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]
+          .filter( (ag) => ag !== except );      
+      ageGroups.forEach( (ag) => this.copyTo( ag ) );      
+    }
+    else{
+      this.foodItems = this.mealForm.get(this.activeTab) as FormArray;
+      const copy = this.mealForm.get(ageGroup) as FormArray;
+      this.foodItems.controls.forEach( (fic) => { console.log( 'Pushing ' ); copy.push(fic) } );
+    }
+  }
+  
+  buildMeal(): Meal {
+    return {
+      id: 'NEW_MEAL',
+      description: 'NEW_MEAL',
+      type: 'BREAKFAST',
+      mealFoodItems: []      
+    }; 
   }
 
   private initSvg() {
@@ -107,6 +168,11 @@ title: string = 'D3.js with Angular 2!';
                  .append("g")
                  .attr("transform", "translate( 870,935 )" ); // + this.width / 2 + "," + this.height / 2 + ")");
     
+  }
+  
+  removeComponent( i: number ) {
+    this.foodItems = this.mealForm.get(this.activeTab) as FormArray;
+    this.foodItems.removeAt(i);
   }
   
   private onClick( d: any ) {

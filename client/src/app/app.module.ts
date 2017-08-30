@@ -24,6 +24,10 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
 
+import {ToastModule} from 'ng2-toastr/ng2-toastr';
+import { ToastOptions } from 'ng2-toastr';
+import { CustomOption } from './shared/toast-custom-options';
+
 
 @NgModule({
   declarations: [
@@ -45,8 +49,10 @@ import { RoomDetailsComponent } from './rooms/room-details/room-details.componen
     FooterModule,
     FixedPluginModule,
     SidebarModule,
-    CollapseModule.forRoot()
+    CollapseModule.forRoot(),
+    ToastModule.forRoot()
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [ { provide: ToastOptions, useClass: CustomOption} ]
 })
 export class AppModule { }

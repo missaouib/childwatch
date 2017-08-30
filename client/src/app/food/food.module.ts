@@ -27,6 +27,14 @@ import {CalendarModule} from 'angular-calendar';
 import {DragAndDropModule} from 'angular-draggable-droppable';
 import { MealBuilderComponent } from './meal-builder/meal-builder.component';
 
+import {EffectsModule} from '@ngrx/effects';
+
+import {FoodEffectsService} from './services/food-effects.service';
+
+
+
+
+
 const routes: Routes = [
   { path: 'menu/:id', component: MenuDetailComponent },
   { path: 'meal-calendar', component: MealCalendarComponent },
@@ -45,7 +53,8 @@ const routes: Routes = [
     AccordionModule.forRoot(),
     TooltipModule.forRoot(),
     ReactiveFormsModule, FormsModule,
-    HttpModule, DragulaModule
+    HttpModule, DragulaModule,
+    EffectsModule.run(FoodEffectsService)
   ],
   declarations: [ 
     MealDetailComponent, 
