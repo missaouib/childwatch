@@ -50,9 +50,10 @@
 										<i class="cw-icon input-group-addon icon-cereals circle-green" style="font-size: 2.5em"></i>
 										<span class="col-sm-7">
 											<label>{{item.get('foodComponent').value.description}}</label>
-											<input formControlName="foodItem" 
+											<input formControlName="description" 
 												   class="form-control" 
 												   [typeahead]="foodForComponent( item.get('foodComponent').value )"
+												   (typeaheadOnSelect)="item.patchValue( { 'foodItemId': $event.item.id } )"
 												   typeaheadOptionField="description"
 				   								   typeaheadOptionsLimit="10"/>
 										</span>
@@ -77,9 +78,9 @@
 						</div> <!-- end card-content -->
 						
 						<div class="card-footer">
-				        	<hr />
+				        	<hr *ngIf="mealForm.get(ageGroup).controls.length>0" />
 				          
-					        <div class="btn-group" dropdown>
+					        <div class="btn-group" dropdown *ngIf="mealForm.get('name').valid && mealForm.get('type').valid">
 								<a dropdownToggle class="dropdown-toggle"><i class="text-primary fa fa-plus"></i> Add</a>
 									<ul *dropdownMenu class="dropdown-menu" role="menu">							 
 										<li *ngFor="let top of foodComponents" role="menuitem" dropdown triggers="mouseover" placement="right" container="body" [autoClose]="true">
@@ -90,8 +91,10 @@
 									    </li>				    
 									</ul>
 							</div>
-							<div class="btn-group" dropdown [autoClose]="true" container="body" style="margin-left: 10px">
-								<a dropdownToggle class="dropdown-toggle"><i class="text-primary fa fa-copy" [class.disabled]="mealForm.get(ageGroup).controls.length == 0"></i> Copy To...</a>
+							
+							
+							<div *ngIf="mealForm.get(ageGroup).controls.length>0" class="btn-group" dropdown [autoClose]="true" container="body" style="margin-left: 10px">
+								<a dropdownToggle class="dropdown-toggle" [class.disabled]="mealForm.get(ageGroup).controls.length == 0"><i class="text-primary fa fa-copy" ></i> Copy To...{{mealForm.get(ageGroup).controls.length}}</a>
 								<ul *dropdownMenu class="dropdown-menu" role="menu">
 									<li *ngIf="ageGroup !== 'AGE_0_5MO'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_0_5MO')">0-5 MO</a></li>
 									<li *ngIf="ageGroup !== 'AGE_6_11MO'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_6_11MO')">6-11 MO</a></li>

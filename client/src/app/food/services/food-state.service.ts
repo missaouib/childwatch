@@ -51,7 +51,21 @@ export class FoodStateService {
     this.store.dispatch( this.actions.saveMeal( meal ) );
   }
   
-  updateMealFoodItem( $event: any, meal: Meal ) {
+  /**
+   * Update the meal food item for the given meal
+   */
+  updateMealFoodItem( $event: any, ageGroup: string, meal: Meal ) {
     console.log( $event, meal );
+    
+    const mealFoodItem = {      
+      id: 'NEW_ID',
+      ageGroup: ageGroup,       
+      quantity: Number.parseInt($event.quantity as string),
+      unit: $event.unit, 
+      mealId: meal.id, 
+      foodItemId: $event.foodItemId 
+     };
+    
+    this.store.dispatch( this.actions.saveMealFoodItem(mealFoodItem) );  
   }
 }

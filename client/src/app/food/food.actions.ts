@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { Action } from '@ngrx/store';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 
-import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE} from './food.interfaces';
+import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem} from './food.interfaces';
 import {Injectable} from '@angular/core';
 // import { CalendarEvent } from 'angular-calendar';
 
@@ -26,8 +26,11 @@ export class FoodActions {
   static FOOD_ITEM_DELETED = 'FOOD_ITEM_DELETED';
   static MEAL_SCHEDULED = 'MEAL_SCHEDULED';
   static MEAL_UPDATED = 'MEAL_UPDATED';
+  static MEALFOODITEM_UPDATED = 'MEALFOODITEM_UPDATED';
   
   static SAVE_MEAL = 'SAVE_MEAL'; 
+  
+  static SAVE_MEALFOODITEM = 'SAVE_MEALFOODITEM';
   
   /*
    * Actions
@@ -43,8 +46,12 @@ export class FoodActions {
   mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED, FoodActions.setMealScheduled );
   
   mealUpdated = ActionCreatorFactory.create<Meal>( FoodActions.MEAL_UPDATED );
+  mealFoodItemUpdated = ActionCreatorFactory.create<MealFoodItem>( FoodActions.MEALFOODITEM_UPDATED );
   
   saveMeal = ActionCreatorFactory.create<Meal>( FoodActions.SAVE_MEAL );
+  
+  saveMealFoodItem = ActionCreatorFactory
+      .create<{ id: string, ageGroup: string, quantity: number, unit: string, mealId: string, foodItemId: string }>( FoodActions.SAVE_MEALFOODITEM ); 
  
   /**
    * Main reducer for all Meal/Food related actions

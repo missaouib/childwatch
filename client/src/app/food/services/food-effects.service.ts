@@ -12,7 +12,7 @@ import {UUID} from 'angular2-uuid';
 @Injectable()
 export class FoodEffectsService {
 
-    @Effect() _adjustedMenuTime = this.actions$
+  @Effect() _adjustedMenuTime = this.actions$
     .ofType( FoodActions.MENU_TIME_ADJUSTED )
     .map( toPayload )
     .switchMap( payload => {
@@ -24,17 +24,29 @@ export class FoodEffectsService {
    * Side effect when a meal is updated; saves the meal to the database
    */
   @Effect() _mealUpdated = this.actions$
-  .ofType( FoodActions.SAVE_MEAL )
-  .map( toPayload )
-  .switchMap( (payload) => {    
-      const meal = {...payload };
-      console.log( 'meal id = ' + meal.id );
-      if ( !meal.id ) { meal.id = UUID.UUID(); }
-      this.mealSvc.update( meal ).subscribe();
-      return Observable.of({
-        type: FoodActions.MEAL_UPDATED,
-        payload: meal
-      }); 
+    .ofType( FoodActions.SAVE_MEAL )
+    .map( toPayload )
+    .switchMap( (payload) => {    
+        const meal = {...payload };
+        if ( !meal.id ) { meal.id = UUID.UUID(); }
+        this.mealSvc.update( meal ).subscribe();
+        return Observable.of({
+          type: FoodActions.MEAL_UPDATED,
+          payload: meal
+        }); 
+      });
+  
+  
+  @Effect() _mealFoodItemSaved = this.actions$
+    .ofType( FoodActions.SAVE_MEALFOODITEM )
+    .map( toPayload )
+    .switchMap( (payload) => { 
+      console.log( 'Saving mealFoodItem' );
+      console.log( payload );
+      return Observable.of( {         
+        type: FoodActions.MEALFOODITEM_UPDATED,
+        payload: undefined 
+        });
     });
   
   constructor( 

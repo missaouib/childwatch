@@ -6,6 +6,7 @@ import * as d3Scale from 'd3-scale';
 import * as d3Shape from 'd3-shape';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   selector: 'cw-meal-builder',
@@ -113,15 +114,20 @@ export class MealBuilderComponent implements OnInit {
     return this.food.filter( (fi) => fi.foodComponent.id === component.id );
   }
   
-  createComponent(component: FoodComponent): FormGroup {
+  createComponent(component: FoodComponent, foodItem?: FoodItem ): FormGroup {
     return this.formBuilder.group( { 
-      description: [ undefined, Validators.required ],      
-      foodComponent: [component, Validators.required ],
+      mealFoodItemId: UUID.UUID(), 
+      description: [ foodItem ? foodItem.description : undefined, Validators.required ],      
+      foodComponent: [ foodItem ? foodItem.foodComponent : component, Validators.required ],
       quantity: ['1', Validators.required ],
-      units: ['each', Validators.required ]
+      units: ['each', Validators.required ],
+      foodItemId: [ foodItem ? foodItem.id : undefined, Validators.required ]
     });
   }
   
+  /**
+   * Add a food component to the meal
+   */
   addComponent(c: FoodComponent): void {
     console.log( 'adding component ' + c.id );
     this.foodItems = this.mealForm.get(this.activeTab) as FormArray;
@@ -129,13 +135,13 @@ export class MealBuilderComponent implements OnInit {
      
     // when this value changes; update it in the state
     createdComponent.valueChanges.debounceTime(3000).subscribe( ($event) => {
-      this.state.updateMealFoodItem( $event, this.meal );
+      // we're only valid if we have a foodItemId
+      if ( $event.foodItemId ) { this.state.updateMealFoodItem( $event, this.activeTab, this.meal ); }
     });
     
     this.foodItems.push( createdComponent );  
     
     this.toastr.info( 'ageGroup: ' + this.activeTab + ', meal: ' + this.meal.id, 'Adding MealFoodItem' ); 
-    //this.state.addMealFoodItemToMeal( this.activeTab, this.meal );  
   }
   
   copyTo(ageGroup:string, except?: string){
