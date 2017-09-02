@@ -2,7 +2,7 @@ import { AppState } from '../../app.state';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem } from '../food.interfaces';
+import { FoodItem, FoodComponent, Meal, MealEvent } from '../food.interfaces';
 import { FoodActions } from '../food.actions';
 import { CalendarEvent } from 'angular-calendar';
 
@@ -39,23 +39,8 @@ export class FoodStateService {
     this.store.dispatch( this.actions.menuTimeAdjusted( { start: start, end: end } ) );
   }
   
-  addMealFoodItem( meal: Meal, ageGroup: string, foodComponent: FoodComponent ) {
-    
-    const mealFoodItem: MealFoodItem = {
-        ageGroup: ageGroup,
-        quantity: 1,
-        units: 'each',
-        foodItem: {
-          description: '',
-          shortDescription: '',
-          foodComponent: foodComponent,
-          purchaseUom: 'each',
-          servingUom: 'each',
-          notes: 'added'
-        } 
-      };
-    
-    this.store.dispatch( this.actions.mealFoodItemAdded( { meal: meal, mealFoodItem: mealFoodItem } ) );
+  get currentMeal$(): Observable<Meal>{
+    return this.store.select( s => s.food.menuUI.currentMeal );
   }
   
   scheduleMeal( meal: Meal, start: Date ) {
@@ -63,6 +48,6 @@ export class FoodStateService {
   }
   
   updateMeal( meal: Meal ) {
-    this.store.dispatch( this.actions.mealUpdated( meal ) );
+    this.store.dispatch( this.actions.saveMeal( meal ) );
   }
 }

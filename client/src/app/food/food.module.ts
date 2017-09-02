@@ -7,18 +7,15 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
-import { MealDetailComponent } from './meal-detail/meal-detail.component';
 import { FoodActions } from './food.actions';
 import { FoodStateService } from './services/food-state.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { MenuCardComponent } from './menu-card/menu-card.component';
 import { MealEventService } from './services/meal-event.service';
 import { DragulaModule } from 'ng2-dragula';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { MenuDetailComponent } from './menu-detail/menu-detail.component';
 import { FoodComponentService } from './services/food-component.service';
 import { FoodItemService } from './services/food-item.service';
 import { MealCalendarComponent } from './meal-calendar/meal-calendar.component';
@@ -36,7 +33,6 @@ import {FoodEffectsService} from './services/food-effects.service';
 
 
 const routes: Routes = [
-  { path: 'menu/:id', component: MenuDetailComponent },
   { path: 'meal-calendar', component: MealCalendarComponent },
   { path: 'meal-builder', component: MealBuilderComponent }
 ];
@@ -57,9 +53,6 @@ const routes: Routes = [
     EffectsModule.run(FoodEffectsService)
   ],
   declarations: [ 
-    MealDetailComponent, 
-    MenuCardComponent, 
-    MenuDetailComponent, 
     MealCalendarComponent, 
     MealBuilderComponent
   ],

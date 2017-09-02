@@ -12,6 +12,5 @@ import com.remarkablesystems.childwatch.domain.food.MealType;
 public interface MealFull {
 	String getId();
 	String getDescription();
-	List<MealFoodItemDetails> getMealFoodItems();
 	MealType getType();
 }

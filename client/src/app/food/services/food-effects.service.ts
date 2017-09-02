@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/of';
+import {UUID} from 'angular2-uuid';
 
 
 @Injectable()
@@ -17,21 +19,28 @@ export class FoodEffectsService {
         this.mealEventSvc.queryBetween( payload.start, payload.end ).subscribe();
         return Observable.of( {type: 'MEALS_QUERY' } );
   });
-
-  
   
   /**
    * Side effect when a meal is updated; saves the meal to the database
    */
   @Effect() _mealUpdated = this.actions$
-  .ofType( FoodActions.MEAL_UPDATED )
+  .ofType( FoodActions.SAVE_MEAL )
   .map( toPayload )
-  .switchMap( payload => this.mealSvc.update( payload ) );
+  .switchMap( (payload) => {    
+      const meal = {...payload };
+      console.log( 'meal id = ' + meal.id );
+      if ( !meal.id ) { meal.id = UUID.UUID(); }
+      this.mealSvc.update( meal ).subscribe();
+      return Observable.of({
+        type: FoodActions.MEAL_UPDATED,
+        payload: meal
+      }); 
+    });
   
   constructor( 
    private actions$: Actions,
    private mealEventSvc: MealEventService,
-   private mealSvc: MealService 
-  ) { }
+   private mealSvc: MealService
+  ) {} 
 
 }

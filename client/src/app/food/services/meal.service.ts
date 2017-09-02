@@ -38,7 +38,6 @@ export class MealService {
 
 
   update( meal: Meal ) {
-    console.log( 'Patch ' + meal.id );
     return this.http.post( this.URL, meal );
   }
 

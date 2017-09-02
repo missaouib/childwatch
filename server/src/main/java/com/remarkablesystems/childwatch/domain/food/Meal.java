@@ -3,8 +3,6 @@ package com.remarkablesystems.childwatch.domain.food;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -26,26 +24,9 @@ public class Meal implements Serializable {
 	@Column(name="meal_type")
 	private MealType type;
 
-	//bi-directional many-to-one association to MealFoodItem
-	@OneToMany(mappedBy="meal",fetch=FetchType.EAGER)
-	private List<MealFoodItem> mealFoodItems = new ArrayList<MealFoodItem>();
-
 
 	public Meal() {}
 	
-	public MealFoodItem addMealFoodItem(MealFoodItem mealFoodItem) {
-		this.mealFoodItems.add(mealFoodItem);
-		mealFoodItem.setMeal(this);
-
-		return mealFoodItem;
-	}
-
-	public MealFoodItem removeMealFoodItem(MealFoodItem mealFoodItem) {
-		this.mealFoodItems.remove(mealFoodItem);
-		mealFoodItem.setMeal(null);
-
-		return mealFoodItem;
-	}
 
 	public String getDescription() {
 		return description;
@@ -61,14 +42,6 @@ public class Meal implements Serializable {
 
 	public void setType(MealType type) {
 		this.type = type;
-	}
-
-	public List<MealFoodItem> getMealFoodItems() {
-		return mealFoodItems;
-	}
-
-	public void setMealFoodItems(List<MealFoodItem> mealFoodItems) {
-		this.mealFoodItems = mealFoodItems;
 	}
 
 	public String getId() {

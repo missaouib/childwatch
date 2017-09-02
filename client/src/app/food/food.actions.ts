@@ -2,9 +2,11 @@ import * as moment from 'moment';
 import { Action } from '@ngrx/store';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 
-import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem} from './food.interfaces';
+import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE} from './food.interfaces';
 import {Injectable} from '@angular/core';
 // import { CalendarEvent } from 'angular-calendar';
+
+
 
 @Injectable()
 export class FoodActions {
@@ -22,11 +24,10 @@ export class FoodActions {
   static MENU_TIME_ADJUSTED = 'MENU_TIME_ADJUSTED';
   static FOOD_ITEM_UPDATED = 'FOOD_ITEM_UPDATED';
   static FOOD_ITEM_DELETED = 'FOOD_ITEM_DELETED';
-  static MEAL_FOOD_ITEM_ADDED = 'MEAL_FOOD_ITEM_ADDED';
   static MEAL_SCHEDULED = 'MEAL_SCHEDULED';
   static MEAL_UPDATED = 'MEAL_UPDATED';
   
-  
+  static SAVE_MEAL = 'SAVE_MEAL'; 
   
   /*
    * Actions
@@ -38,12 +39,12 @@ export class FoodActions {
   foodItemUpdated = ActionCreatorFactory.create<FoodItem>( FoodActions.FOOD_ITEM_UPDATED );    
   foodItemDeleted = ActionCreatorFactory.create<FoodItem>( FoodActions.FOOD_ITEM_DELETED );      
   menuTimeAdjusted = ActionCreatorFactory.create<{start: Date, end: Date}>(FoodActions.MENU_TIME_ADJUSTED);
-
-  mealFoodItemAdded = ActionCreatorFactory.create<{meal: Meal, mealFoodItem: MealFoodItem}>(FoodActions.MEAL_FOOD_ITEM_ADDED);
   
   mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED, FoodActions.setMealScheduled );
   
   mealUpdated = ActionCreatorFactory.create<Meal>( FoodActions.MEAL_UPDATED );
+  
+  saveMeal = ActionCreatorFactory.create<Meal>( FoodActions.SAVE_MEAL );
  
   /**
    * Main reducer for all Meal/Food related actions
@@ -67,8 +68,6 @@ export class FoodActions {
         return FoodActions.setMenuTimeAdjusted(state, action);
      case FoodActions.FOOD_ITEM_UPDATED:
         return FoodActions.setFoodItemUpdated( state, action );
-     case FoodActions.MEAL_FOOD_ITEM_ADDED:
-        return FoodActions.setMealFoodItemAdded( state, action );
      case FoodActions.MEAL_SCHEDULED:
         return FoodActions.setMealScheduled( state, action );     
      case FoodActions.MEAL_UPDATED:
@@ -172,25 +171,6 @@ export class FoodActions {
              foodItems: foodItems };
   }
   
-  /**
-   * Set store data when a meal is scheduled; in response to the MEAL_FOODITEM_ADDED action
-   * 
-   * @param {FoodState} state current food state (immutable)
-   * @param {Action} action action that triggered the event
-   * 
-   * @return {FoodState} next state
-   */
-  static setMealFoodItemAdded( state: FoodState, action: Action ) {
-    const menuIdx = state.menuUI.mealEvents
-      .findIndex( (mealEvent) => mealEvent.meal && mealEvent.meal.id === action.payload.meal.id );        
-    const newMenu = { ...state.menuUI.mealEvents[menuIdx] };
-    newMenu.meal.mealFoodItems.push( action.payload.mealFoodItem );        
-    const menus = { ...state.menuUI.mealEvents };
-    menus.splice( menuIdx, 0, newMenu );
-    return { ...state, 
-             menuUI: { ...state.menuUI,  
-                       menus:  menus } };
-  }
   
   /**
    * Set store data when a meal is scheduled; in response to the MEAL_UPDATED action
@@ -201,12 +181,18 @@ export class FoodActions {
    * @return {FoodState} next state
    */
   static setMealUpdated( state: FoodState, action: Action ): FoodState {
-    const meal = action.payload;
+    const meal = action.payload;    
     
     const meals = state.meals.filter( (m) => m.id !== meal.id );
     meals.push( meal );
         
-    return { ...state, meals: meals }; 
+    return { ...state, 
+             meals: meals, 
+             menuUI: { 
+               ...state.menuUI, 
+               currentMeal: meal 
+             } 
+           }; 
   }
   
   /**

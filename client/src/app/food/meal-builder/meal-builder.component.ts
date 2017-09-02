@@ -15,9 +15,6 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 export class MealBuilderComponent implements OnInit {
   @ViewChild("containerPieChart") element: ElementRef;
   
-title: string = 'D3.js with Angular 2!';
-  subtitle: string = 'Pie Chart';
-
   private margin = {top: 20, right: 20, bottom: 30, left: 50};
   private width: number;
   private height: number;
@@ -41,8 +38,7 @@ title: string = 'D3.js with Angular 2!';
   meal: Meal = {
     id: undefined,
     description: undefined,
-    type: undefined,
-    mealFoodItems: []
+    type: undefined
   };
   
   private Colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];
@@ -74,6 +70,10 @@ title: string = 'D3.js with Angular 2!';
     
     this.state.foodItems$.subscribe( (fi: FoodItem[]) => this.food = fi );
     
+    this.state.currentMeal$.subscribe( (currentMeal: Meal) => {
+      console.log( 'currentMeal id = ' + currentMeal.id );
+      this.meal = currentMeal; });
+    
     this.toastr.setRootViewContainerRef(vcr);
     
   }
@@ -82,8 +82,9 @@ title: string = 'D3.js with Angular 2!';
       this.initSvg();
       this.drawPie();
       this.mealForm = this.formBuilder.group({
-        name: ['Breakfast #124', Validators.required ],
-        type: ['Breakfast', Validators.required ],
+        id: this.meal.id,
+        name: [ this.meal.description, Validators.required ],
+        type: [ this.meal.type, Validators.required ],
         AGE_0_5MO:  this.formBuilder.array([]),
         AGE_6_11MO: this.formBuilder.array([]),
         AGE_1_2YR: this.formBuilder.array([]),
@@ -92,7 +93,7 @@ title: string = 'D3.js with Angular 2!';
         AGE_13_18YR: this.formBuilder.array([]),
         AGE_ADULT: this.formBuilder.array([]) 
       });
-    
+        
     this.mealForm.valueChanges.debounceTime(3000).subscribe( () => { 
       if ( this.mealForm.valid ) {
         this.toastr.success( 'Saved the meal', 'Save' );
@@ -144,10 +145,14 @@ title: string = 'D3.js with Angular 2!';
   
   buildMeal(): Meal {
     return {
-      id: 'NEW_MEAL',
-      description: 'NEW_MEAL',
-      type: 'BREAKFAST',
-      mealFoodItems: []      
+      id: this.meal.id,
+      description: this.mealForm.get('name').value,
+      type: (this.mealForm.get('type').value as string).toUpperCase(),
+      mealFoodItems: [
+        {
+          
+        }
+      ]
     }; 
   }
 
@@ -167,7 +172,7 @@ title: string = 'D3.js with Angular 2!';
     this.svg = d3.select("svg")
                  .append("g")
                  .attr("transform", "translate( 870,935 )" ); // + this.width / 2 + "," + this.height / 2 + ")");
-    
+        
   }
   
   removeComponent( i: number ) {

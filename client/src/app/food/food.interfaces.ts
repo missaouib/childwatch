@@ -5,7 +5,7 @@ export interface Meal {
   description: string;
   'type': string;
   _links?: MealLinks;
-  mealFoodItems: MealFoodItem[];
+  mealFoodItems?: MealFoodItem[];
 };
 
 export interface Link {
@@ -81,8 +81,7 @@ export const INITIAL_MENUUISTATE: MenuUIState = {
   currentMeal: {
     id: undefined,
     description: undefined,
-    type: undefined,
-    mealFoodItems: []
+    type: undefined
   }
 };
 

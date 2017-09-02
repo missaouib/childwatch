@@ -17,7 +17,7 @@ public class MealFoodItem implements Serializable {
 	private static final long serialVersionUID = 7341397807008242827L;
 
 	@Id
-	private Integer id;
+	private String id;
 
 	@Column(name="age_group") @Enumerated( EnumType.STRING )
 	private AgeGroup ageGroup;
@@ -69,7 +69,7 @@ public class MealFoodItem implements Serializable {
 		this.meal = meal;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 

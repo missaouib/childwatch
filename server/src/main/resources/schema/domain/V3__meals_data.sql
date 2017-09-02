@@ -10,14 +10,14 @@ INSERT INTO domain.meal (id, description, meal_type) VALUES ('030004fc-d0be-40fb
 COMMIT;
 
 
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_6_11MO', 8, 'oz' );
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_1_2YR', 8, 'oz' );
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_3_5YR', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'ca4e2ab9-1824-42dd-acec-cb68ecb700a8', '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'a502d75c-7f3c-4a57-b6e7-d3c4735ecb31', '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_6_11MO', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '9b7def5e-aece-4efc-b7f9-3b9f69da7e3d', '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_1_2YR', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '00befc02-7f8e-4f44-9191-2ebf045b7f26', '19f18510-42aa-439e-9c5d-35c3b4169f0b', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_3_5YR', 8, 'oz' );
 
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'e59a5bc4-a6fc-4c76-a187-7079954c5489', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'b6d8eda4-7252-4ba7-ad81-a0ff0e7a2da3', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
-INSERT INTO domain.meal_food_item (meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'bc63d3ec-53ca-40e1-af4f-13340b0a071d', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'cc85cca9-b873-4f7e-ac40-76b53270b723', 'e59a5bc4-a6fc-4c76-a187-7079954c5489', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( '3281b6b3-78a6-4030-bf6a-4720149728ca', 'b6d8eda4-7252-4ba7-ad81-a0ff0e7a2da3', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
+INSERT INTO domain.meal_food_item (id, meal_id, food_item_id, age_group, quantity, unit ) VALUES ( 'c322d422-81aa-42b0-a0f1-2d907424e072', 'bc63d3ec-53ca-40e1-af4f-13340b0a071d', '655a9d7e-329e-496e-99b0-3576a82d443a', 'AGE_0_5MO', 8, 'oz' );
 	
 	
 INSERT INTO domain.meal_event(id, start_date, meal_id) VALUES ('b26a129c-aa6f-4fb9-b526-c490b8f64a03', TO_DATE ('08/14/2017', 'MM/DD/YYYY'), 'e59a5bc4-a6fc-4c76-a187-7079954c5489');

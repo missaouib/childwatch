@@ -39,18 +39,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // @formatter:off
         http
             .authorizeRequests()
-                .antMatchers("/", "/login", "/**/*.js", "/**/*.css", "/**/img/*").permitAll()
-                .anyRequest().authenticated()
+                //.antMatchers("/", "/login", "/**/*.js", "/**/*.css", "/**/img/*").permitAll()
+                .anyRequest().permitAll() //.authenticated()
                 .and()
                 .requestCache().requestCache(requestCache).and()
             .csrf().disable()
             .formLogin().loginPage("/login").permitAll().and()
             .logout().permitAll().invalidateHttpSession(true);
         
-        http
+        /*http
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
         .invalidSessionUrl("/");
+        */
         
         // @formatter:on
     }

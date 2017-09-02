@@ -11,7 +11,7 @@ import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 @Projection(name="mealFoodItemDetails", types= MealFoodItem.class )
 public interface MealFoodItemDetails {
 
-	Integer getId();
+	String getId();
 	AgeGroup getAgeGroup();
 	BigDecimal getQuantity();
 	FoodItemFull getFoodItem();
