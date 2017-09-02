@@ -50,4 +50,8 @@ export class FoodStateService {
   updateMeal( meal: Meal ) {
     this.store.dispatch( this.actions.saveMeal( meal ) );
   }
+  
+  updateMealFoodItem( $event: any, meal: Meal ) {
+    console.log( $event, meal );
+  }
 }

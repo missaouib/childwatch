@@ -95,11 +95,11 @@ export class MealBuilderComponent implements OnInit {
       });
         
     this.mealForm.valueChanges.debounceTime(3000).subscribe( () => { 
-      if ( this.mealForm.valid ) {
+      if ( this.mealForm.valid && (this.mealForm.get('name').dirty || this.mealForm.get('type').dirty) ) {
         this.toastr.success( 'Saved the meal', 'Save' );
         const meal = this.buildMeal();
         this.state.updateMeal( meal );
-      }
+      }          
     });
     
   }
@@ -113,10 +113,9 @@ export class MealBuilderComponent implements OnInit {
     return this.food.filter( (fi) => fi.foodComponent.id === component.id );
   }
   
-  createComponent(component:FoodComponent): FormGroup {
-    return this.formBuilder.group( {       
-      id: undefined,
-      description: [undefined, Validators.required ],
+  createComponent(component: FoodComponent): FormGroup {
+    return this.formBuilder.group( { 
+      description: [ undefined, Validators.required ],      
       foodComponent: [component, Validators.required ],
       quantity: ['1', Validators.required ],
       units: ['each', Validators.required ]
@@ -126,7 +125,17 @@ export class MealBuilderComponent implements OnInit {
   addComponent(c: FoodComponent): void {
     console.log( 'adding component ' + c.id );
     this.foodItems = this.mealForm.get(this.activeTab) as FormArray;
-    this.foodItems.push( this.createComponent(c) );    
+    const createdComponent = this.createComponent(c);
+     
+    // when this value changes; update it in the state
+    createdComponent.valueChanges.debounceTime(3000).subscribe( ($event) => {
+      this.state.updateMealFoodItem( $event, this.meal );
+    });
+    
+    this.foodItems.push( createdComponent );  
+    
+    this.toastr.info( 'ageGroup: ' + this.activeTab + ', meal: ' + this.meal.id, 'Adding MealFoodItem' ); 
+    //this.state.addMealFoodItemToMeal( this.activeTab, this.meal );  
   }
   
   copyTo(ageGroup:string, except?: string){

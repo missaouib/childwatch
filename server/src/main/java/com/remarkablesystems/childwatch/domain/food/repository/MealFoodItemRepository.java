@@ -10,7 +10,7 @@ import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 
 @RepositoryRestResource(collectionResourceRel = "mealFoodItems", path = "mealFoodItem")
-public interface MealFoodItemRepository extends CrudRepository<MealFoodItem, Integer>{
+public interface MealFoodItemRepository extends CrudRepository<MealFoodItem, String>{
 	List<MealFoodItem> findByMealId( @Param("mealId")String mealId );
 	List<MealFoodItem> findByMealIdAndAgeGroup( @Param("mealId")String mealId, @Param("ageGroup")AgeGroup ageGroup );
 }
