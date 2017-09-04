@@ -11,11 +11,11 @@
 	<div class="form-group">
 	   	<label for="type">Type</label>
 	   	<select #type class="form-control" formControlName="type">
-	   		<option>Breakfast</option>
-	   		<option>AM Snack</option>
-	   		<option>Lunch</option>
-	   		<option>PM Snack</option>
-	   		<option>Dinner</option>	    			
+	   		<option value="BREAKFAST">Breakfast</option>
+	   		<option value="AM_SNACK">AM Snack</option>
+	   		<option value="LUNCH">Lunch</option>
+	   		<option value="PM_SNACK">PM Snack</option>
+	   		<option value="DINNER">Dinner</option>	    			
 	   	</select>
 	</div>
 	
@@ -64,10 +64,10 @@
 										<span class="col-sm-2">
 											<label>Units</label>
 											<select class="form-control" formControlName="units">
-												<option>each</option>
-												<option>oz</option>
-												<option>slice</option>
-												<option>lbs</option>
+												<option value="each">each</option>
+												<option value="oz">oz</option>
+												<option value="slice">slice</option>
+												<option value="lbs">lbs</option>
 											</select>
 										</span>									
 																			
@@ -94,7 +94,7 @@
 							
 							
 							<div *ngIf="mealForm.get(ageGroup).controls.length>0" class="btn-group" dropdown [autoClose]="true" container="body" style="margin-left: 10px">
-								<a dropdownToggle class="dropdown-toggle" [class.disabled]="mealForm.get(ageGroup).controls.length == 0"><i class="text-primary fa fa-copy" ></i> Copy To...{{mealForm.get(ageGroup).controls.length}}</a>
+								<a dropdownToggle class="dropdown-toggle" [class.disabled]="mealForm.get(ageGroup).controls.length == 0"><i class="text-primary fa fa-copy" ></i> Copy To...</a>
 								<ul *dropdownMenu class="dropdown-menu" role="menu">
 									<li *ngIf="ageGroup !== 'AGE_0_5MO'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_0_5MO')">0-5 MO</a></li>
 									<li *ngIf="ageGroup !== 'AGE_6_11MO'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_6_11MO')">6-11 MO</a></li>

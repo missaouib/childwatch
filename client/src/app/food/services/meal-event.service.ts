@@ -1,5 +1,6 @@
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
+import { Meal } from '../food.interfaces';
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
 import { Store } from '@ngrx/store';
@@ -22,23 +23,17 @@ export class MealEventService {
    */
   queryBetween(start: Date, end: Date) {
     const params = new URLSearchParams();
-    params.append( 'projection', 'menuFull' );
+    params.append( 'projection', 'mealEventFull' );
     params.append( 'start', moment( start ).format( 'MM/DD/YYYY' ) );
     params.append( 'end', moment(end).format( 'MM/DD/YYYY' ) );
 
-    return this.http.get( '/api/menu/search/between', {search: params} )
+    return this.http.get( '/api/mealEvent/search/between', {search: params} )
       .map( res => res.json() )
       .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, menus: menus } ) ) );
   }
   
-  queryBefore( start: Date ){
-    const params = new URLSearchParams();
-    params.append( 'projection', 'menuFull' );
-    params.append( 'start', moment( start ).format( 'MM/DD/YYYY' ) );
-
-    return this.http.get( '/api/menu/search/before', {search: params} )
-      .map( res => res.json() )
-      .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: start, menus: menus } ) ) );    
+  updateMealEvent( meal: Meal, start: Date, end?: Date ) {
+    console.log( meal, start, end );
   }
-
+  
 }

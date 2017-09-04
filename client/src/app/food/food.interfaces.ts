@@ -71,6 +71,7 @@ export interface MenuUIState {
   mealEvents: MealEvent[];
   events: Array<CalendarEvent<Meal>>;
   currentMeal: Meal;
+  currentMealFoodItems: MealFoodItem[];
 }
 
 export const INITIAL_MENUUISTATE: MenuUIState = {
@@ -82,7 +83,8 @@ export const INITIAL_MENUUISTATE: MenuUIState = {
     id: undefined,
     description: undefined,
     type: undefined
-  }
+  },
+  currentMealFoodItems: []
 };
 
 export interface Page {

@@ -9,6 +9,7 @@ import {Meal} from '../food.interfaces';
 import { FoodStateService } from '../services/food-state.service';
 import { MealService } from '../services/meal.service';
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cw-meal-calendar',
@@ -33,13 +34,15 @@ export class MealCalendarComponent implements OnInit {
  
   constructor(
     private state: FoodStateService,
-    private mealSvc: MealService ) { 
+    private mealSvc: MealService,
+    private router: Router 
+  ) { 
     this.mealSvc.query().subscribe();
   }
 
   ngOnInit() {
     this.state.meals$
-      .subscribe( (meals) => this.filteredList = this.externalEvents = 
+      .subscribe( (meals: Meal[]) => this.filteredList = this.externalEvents = 
         meals.map( (meal) => { return  { title: meal.description,  start: new Date(), 
             color: {primary: '#000000', secondary: '#000000'},
             draggable: true,
@@ -72,6 +75,23 @@ export class MealCalendarComponent implements OnInit {
     const iA = MEALS.indexOf( a.meta.type );
     const iB = MEALS.indexOf( b.meta.type );
     return iA - iB;
+  }
+  
+  editMeal( meal: Meal ) {
+    console.log( 'Setting current meal to ' + meal.id );
+    this.state.updateMeal( meal );
+    this.router.navigate( ['./meals/meal-builder']);
+  }
+  
+  addMeal(){
+    this.state.updateMeal( undefined );
+    this.router.navigate( ['./meals/meal-builder']);   
+  }
+  
+  removeEvent( event: CalendarEvent<Meal> ){
+    console.log( 'Removing event ', event );
+    this.state.removeEvent( event );
+    //this.events = this.events.filter( (e) => e !== event );
   }
   
 }

@@ -10,7 +10,7 @@
         <img *ngSwitchCase="'PM_SNACK'" class="small_image" src="/assets/img/meal/post-meridiem.svg" />
         <img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" />
   		{{event.meta.description}} </small>
-  		<span class="pull-right"><i class="text-danger fa fa-close"></i></span>
+  		<a class="pull-right"><i class="text-danger fa fa-close" (click)="removeEvent(event)"></i></a>
   </div>
 </ng-template>
 
@@ -21,7 +21,7 @@
     <div class="card">
     	<div class="card-header">
 	    	<h4 class="card-title">Meals 
-	    		<span class="btn-group pull-right" dropdown [autoClose]="true" container="body">
+	    		<span class="btn-group pull-right small" dropdown [autoClose]="true" container="body">
 			  	<a dropdownToggle type="button" class="dropdown-toggle"><i class="fa fa-filter"></i> {{filter? filter : 'Filter'}}</a>
 			  	<a *ngIf="filter" (click)="filterList(undefined)">&nbsp;<i class="text-danger fa fa-close"></i></a>
 			  	<ul *dropdownMenu class="dropdown-menu" role="menu">							 
@@ -30,17 +30,19 @@
 					</li>
 			  	</ul>
 			  	</span>
+			  	<a style="margin-right: 5px" class="pull-right small" (click)="addMeal()"><i class="fa fa-plus"></i> New</a>
 			</h4>
 		</div>
       <div class="card-content">
         <ul class="list-group">
           <li *ngFor="let event of filteredList" mwlDraggable [dropData]="{event: event}" style="position:relative; z-index: 10" class="list-group-item">
-            <a  [style.color]="event.color.primary" [ngSwitch]="event.meta.type">
+            <span [style.color]="event.color.primary" [ngSwitch]="event.meta.type">
   				<img *ngSwitchCase="'BREAKFAST'" class="small_image" src="/assets/img/meal/breakfast.svg" />
         		<img *ngSwitchCase="'AM_SNACK'" class="small_image" src="/assets/img/meal/ante-meridiem.svg" />
         		<img *ngSwitchCase="'LUNCH'" class="small_image" src="/assets/img/meal/lunch.svg" />
         		<img *ngSwitchCase="'PM_SNACK'" class="small_image" src="/assets/img/meal/post-meridiem.svg" />
-        		<img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" /> {{ event.meta.description }}</a>
+        		<img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" /> {{ event.meta.description }}</span>
+        	<a (click)="editMeal(event.meta)" class="pull-right small text-primary"><i class="fa fa-pencil"></i> Edit</a>
           </li>
         </ul>
       </div>

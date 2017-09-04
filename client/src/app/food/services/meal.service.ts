@@ -1,6 +1,12 @@
+/*
+ * REMARKABLE SYSTEMS CONFIDENTIAL
+ * 
+ * Copyright (c) 2017 Remarkable Systems, Incorporated.  
+ * All Rights reserved
+ */
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
-import { Meal, FoodItem } from '../food.interfaces';
+import { Meal } from '../food.interfaces';
 import { FoodComponentService } from './food-component.service';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -11,12 +17,27 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/mergeMap';
 
 
+/**
+ * MealService
+ * 
+ * @service
+ */
 @Injectable()
 export class MealService {
   
   static FULL = 'mealFull';
   private URL = '/api/meal';
 
+  /**
+   * MealService constructor
+   * 
+   * @constructor
+   * 
+   * @param store
+   * @param http
+   * @param actions
+   * @param foodComponentSvc
+   */
   constructor( 
     private store: Store<AppState>, 
     private http: Http,
@@ -28,27 +49,28 @@ export class MealService {
   }
 
   /**
-   * Query for the mealFoodItems associated with the given meal
+   * Update the meal
+   * 
+   * @returns Observable<Response>
    */
-  /*
-  queryFoodItemsForMeal( meal: Meal ) {
-    console.log( 'querying food items for meal ' + meal.description );
-    const url = meal._links.mealFoodItems.href + '?projection=mealFoodItemFull';
-    return this.http.get( url )
-      .map( res => res.json() )
-      .map( ({_embedded: { mealFoodItems } } ) => this.store.dispatch( this.actions.mealFoodItemsReceived( mealFoodItems ) ) );
-  }
-   */
-
-
   update( meal: Meal ) {
     return this.http.post( this.URL, meal );
   }
   
   /**
-   * Add the meal food item to the given meal
+   * Add the meal food item to the given meal via REST call
+   * 
+   * @param id
+   * @param ageGroup
+   * @param quantity
+   * @param unit
+   * @param mealId
+   * @param foodItemId
+   * 
+   * @returns Observable<Response>
    */
-  addMealFoodItem( id: string, ageGroup: string, quantity: number, unit: string, meal: Meal, foodItem: FoodItem ) {
+  addMealFoodItem( id: string, ageGroup: string, 
+                   quantity: number, unit: string, mealId: string, foodItemId: string ): Observable<Response> {
     // create the meal food item    
     const URI = '/api/mealFoodItem';
     const mealFoodItem = {
@@ -56,9 +78,11 @@ export class MealService {
       ageGroup: ageGroup,
       quantity: quantity,
       unit: unit,
-      meal: (meal) ? '/api/meal/' + meal.id : undefined,
-      foodItem: (foodItem) ? '/api/foodItem/' + foodItem.id : undefined       
+      meal: (mealId) ? '/api/meal/' + mealId : undefined,
+      foodItem: (foodItemId) ? '/api/foodItem/' + foodItemId : undefined       
     };
+    
+    console.log( 'Posting mealFoodItem' );
     
     return this.http.post( URI, mealFoodItem ).map( (res) => { 
         const response = res.json();
@@ -66,10 +90,32 @@ export class MealService {
         return response;
       });          
   }
+  
+  deleteMealFoodItem( id: string ) {
+    const URI = '/api/mealFoodItem/' + id;
+    return this.http.delete( URI ).map( (res) => res.json() );
+  }
+  
+  /**
+   * Query for the mealFoodItems associated with the given meal id
+   * 
+   * @param id Meal id
+   * 
+   */
+  mealFoodItemsFor( id: string ) {
+    const params = new URLSearchParams();
+    params.set( 'mealId', id );
+    params.set( 'projection', 'mealFoodItemFull' );
+    return this.http.get( '/api/mealFoodItem/search/findByMealId', { search: params} )
+      .map( res => res.json() )
+      .map( ({_embedded: { mealFoodItems } }) => this.store.dispatch( this.actions.mealFoodItemsReceived( mealFoodItems ) ) );    
+  }
    
 
   /**
    * Query for all meals
+   * 
+   * @returns Observable<Response>
    */
   query() {
     const params = new URLSearchParams();
@@ -78,6 +124,6 @@ export class MealService {
     return this.http.get( this.URL, {search: params} )
       .map( res => res.json() )
       .map( ({_embedded: {meals} })  => this.store.dispatch( this.actions.mealsReceived( meals ) ) );
-  };
+  }
   
 }
