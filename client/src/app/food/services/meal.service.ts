@@ -63,21 +63,21 @@ export class MealService {
    * @param id
    * @param ageGroup
    * @param quantity
-   * @param unit
+   * @param units
    * @param mealId
    * @param foodItemId
    * 
    * @returns Observable<Response>
    */
   addMealFoodItem( id: string, ageGroup: string, 
-                   quantity: number, unit: string, mealId: string, foodItemId: string ): Observable<Response> {
+                   quantity: number, units: string, mealId: string, foodItemId: string ): Observable<Response> {
     // create the meal food item    
     const URI = '/api/mealFoodItem';
     const mealFoodItem = {
       id: id,
       ageGroup: ageGroup,
       quantity: quantity,
-      unit: unit,
+      units: units,
       meal: (mealId) ? '/api/meal/' + mealId : undefined,
       foodItem: (foodItemId) ? '/api/foodItem/' + foodItemId : undefined       
     };

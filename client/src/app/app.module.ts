@@ -35,7 +35,7 @@ import { CustomOption } from './shared/toast-custom-options';
     AdminLayoutComponent,
     AuthLayoutComponent,
     RoomDetailsComponent,
-    ChildDetailComponent,
+    ChildDetailComponent
   ],
   imports: [
     BrowserModule,

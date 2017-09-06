@@ -7,9 +7,6 @@
 import {FoodComponent, Meal, FoodItem} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
 import {Component, OnInit, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
-import * as d3 from 'd3-selection';
-import * as d3Scale from 'd3-scale';
-import * as d3Shape from 'd3-shape';
 import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 import {ToastsManager} from 'ng2-toastr/ng2-toastr';
 import {UUID} from 'angular2-uuid';
@@ -32,17 +29,6 @@ export class MealBuilderComponent implements OnInit {
 
   AGEGROUPS = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
 
-  private margin = {top: 20, right: 20, bottom: 30, left: 50};
-  private width: number;
-  private height: number;
-  private radius: number;
-
-  private arc: any;
-  private labelArc: any;
-  private pie: any;
-  private color: any;
-  private svg: any;
-
   foodComponents: any[] = [];
 
   mealForm: FormGroup;
@@ -57,8 +43,6 @@ export class MealBuilderComponent implements OnInit {
     description: undefined,
     type: undefined
   };
-
-  private Colors = ['#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56', '#d0743c', '#ff8c00'];
 
   Stats: any[] = [
     {component: 'MILK', population: 2, color: '#98abc5'},
@@ -77,14 +61,7 @@ export class MealBuilderComponent implements OnInit {
     public toastr: ToastsManager,
     vcr: ViewContainerRef,
   ) {
-    this.width = 1800 - this.margin.left - this.margin.right;
-    this.height = 1500 - this.margin.top - this.margin.bottom;
-    this.radius = 420; // Math.min(this.width, this.height) / 2;
-
-
-
     this.toastr.setRootViewContainerRef(vcr);
-
   }
 
   /**
@@ -93,9 +70,6 @@ export class MealBuilderComponent implements OnInit {
    * @onInit
    */
   ngOnInit() {
-    this.initSvg();
-    this.drawPie();
-    
     // create the meal form
     this.mealForm = this.formBuilder.group({
       id: undefined,
@@ -146,13 +120,13 @@ export class MealBuilderComponent implements OnInit {
       this.clearMealFoodItems();
             
       mealFoodItems.forEach( (mealFoodItem) => {
-            console.log( 'Adding ' + mealFoodItem.foodItem.description + ' to ' + mealFoodItem.ageGroup );
+            console.log( 'Adding ' + mealFoodItem.foodItem.description + ' to ' + mealFoodItem.ageGroup + ' units = ' + mealFoodItem.unit );
           (this.mealForm.get( mealFoodItem.ageGroup) as FormArray)
             .push(this.createMealFoodItem(            
               mealFoodItem.foodItem.description, 
               mealFoodItem.foodItem.foodComponent, 
               mealFoodItem.quantity.toString(), 
-              mealFoodItem.units, 
+              mealFoodItem.unit, 
               mealFoodItem.foodItem.id ) ); 
       });
     });
@@ -192,13 +166,13 @@ export class MealBuilderComponent implements OnInit {
    * 
    * @returns FormGroup
    */
-  createMealFoodItem(description: string, foodComponent: FoodComponent, quantity: string, units: string, foodItemId: string): FormGroup {
+  createMealFoodItem(description: string, foodComponent: FoodComponent, quantity: string, unit: string, foodItemId: string): FormGroup {
     const ctrl = this.formBuilder.group({
       mealFoodItemId: UUID.UUID(),
       description: [description, Validators.required],
       foodComponent: [foodComponent, Validators.required],
       quantity: [quantity, Validators.required],
-      units: [units, Validators.required],
+      unit: [unit, Validators.required],
       foodItemId: [foodItemId, Validators.required]
     });
     
@@ -272,54 +246,6 @@ export class MealBuilderComponent implements OnInit {
     this.state.deleteMealFoodItem( this.foodItems.at(i).get( 'mealFoodItemId' ).value );
     
     this.foodItems.removeAt(i);
-  }
-
-
-  /**
-   * Initialize the SVG drawing
-   */
-  private initSvg() {
-    this.color = d3Scale.scaleOrdinal()
-      .range(this.Colors);
-    this.arc = d3Shape.arc()
-      .outerRadius(this.radius - 10)
-      .innerRadius(0);
-    this.labelArc = d3Shape.arc()
-      .outerRadius(this.radius - 40)
-      .innerRadius(this.radius - 40);
-    this.pie = d3Shape.pie()
-      .sort(null)
-      .value((d: any) => d.population);
-
-    this.svg = d3.select('svg')
-      .append('g')
-      .attr('transform', 'translate( 870,935 )'); // + this.width / 2 + ',' + this.height / 2 + ')');
-
-  }
-
-
-  /**
-   * Callback when a pie segment is selected
-   */
-  private onClick(d: any) {
-    console.log('Selected ' + d.data.component);
-  }
-
-  /**
-   * draws the pie chart
-   */
-  private drawPie() {
-    const g = this.svg.selectAll('.arc')
-      .data(this.pie(this.Stats))
-      .enter().append('g')
-      .attr('class', 'arc')
-      .on('click', this.onClick);
-    g.append('path').attr('d', this.arc)
-      .style('fill', (d: any) => this.color(d.data.component));
-    g.append('text').attr('transform', (d: any) => 'translate(' + this.labelArc.centroid(d) + ')')
-
-      .attr('font-size', '48')
-      .text((d: any) => d.data.component);
   }
 
 }

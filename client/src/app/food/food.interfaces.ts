@@ -45,7 +45,7 @@ export interface MealFoodItem {
   id?: string;
   ageGroup?: string;
   quantity?: number;
-  units?: string;
+  unit?: string;
   foodItem?: FoodItem;
   _links?: MealFoodItemLinks;
 };
