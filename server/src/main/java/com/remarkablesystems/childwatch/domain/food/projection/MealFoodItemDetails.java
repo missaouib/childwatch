@@ -15,4 +15,5 @@ public interface MealFoodItemDetails {
 	AgeGroup getAgeGroup();
 	BigDecimal getQuantity();
 	FoodItemFull getFoodItem();
+	String getUnit();
 }

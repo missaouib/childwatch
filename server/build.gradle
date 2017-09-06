@@ -43,6 +43,7 @@ dependencies {
     compile('com.graphql-java:graphql-java-servlet:4.0.0');
     compile('com.github.javafaker:javafaker:0.13')
     compile('org.hibernate:hibernate-java8')
+	compile('com.deliveredtechnologies:rulebook-core:0.8')    
     runtime('org.postgresql:postgresql')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
