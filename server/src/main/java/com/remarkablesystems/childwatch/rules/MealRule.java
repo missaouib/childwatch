@@ -35,7 +35,7 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	}
 	
 	public MealRule then( RuleViolationSeverity severity ) {
-		return (MealRule)super.then( (meal,mealFoodItemList) -> new MealRuleViolation( severity, Messages.getString( "rule." + this.getName() ), this, meal.getId() ) );
+		return (MealRule)super.then( (meal, mealFoodItemList) -> new MealRuleViolation( severity, Messages.getString( "rule." + this.getName() ), this, meal.getId() ) );
 	}
 	
 	public MealRuleViolation evaluate( Meal meal, List<MealFoodItem> mealFoodItems ) {
@@ -43,10 +43,18 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	}
 	
 	static MealRule mustHaveMilk = MealRule.create("mustHaveMilk")
-			.when( (meal,mealFoodItems) -> mealFoodItems.stream().anyMatch( hasMilkItem.negate() ) ).thenFail();
+			.when( (meal,mealFoodItems) ->  { 
+				System.out.println( "MealItemSize = " + mealFoodItems.size() );
+				mealFoodItems.forEach( (item) -> {
+					System.out.println( "item - " + item.getId() + " has milk = " + hasMilkItem.test(item) );
+				});
+				return !mealFoodItems.stream().anyMatch( hasMilkItem ); 
+			}).thenFail();
+		
+		
 	
 	static MealRule shouldHaveThreeItems = MealRule.create( "shouldHaveThreeItems" )
-			.when( (meal,mealFoodItems) -> mealFoodItems.size() >= 3 ).then(RuleViolationSeverity.INFO );
+			.when( (meal,mealFoodItems) ->  mealFoodItems.size() < 3 ).then(RuleViolationSeverity.INFO );
 	
 	static List<MealRule> MEAL_RULES = Arrays.asList(MealRule.mustHaveMilk, MealRule.shouldHaveThreeItems );
 }

@@ -8,10 +8,10 @@ import * as moment from 'moment';
 import { Action } from '@ngrx/store';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 
-import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem} from './food.interfaces';
+import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem, MealRulesViolation} from './food.interfaces';
 import {Injectable} from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-// import { CalendarEvent } from 'angular-calendar';
+import { UUID } from 'angular2-uuid';
 
 
 /**
@@ -35,25 +35,27 @@ export class FoodActions {
   static FOOD_ITEM_UPDATED = 'FOOD_ITEM_UPDATED';
   static FOOD_ITEM_DELETED = 'FOOD_ITEM_DELETED';
   static MEAL_SCHEDULED = 'MEAL_SCHEDULED';
-  static MEAL_UPDATED = 'MEAL_UPDATED';
-  static MEALFOODITEM_UPDATED = 'MEALFOODITEM_UPDATED';
-  static MEALFOODITEMS_RECEIVED = 'MEALFOODITEMS_RECEIVED';
-  static MEALFOODITEMS_FOR = 'MEALFOODITEMS_FOR';
   
   static REMOVE_MEALEVENT = 'REMOVE_MEALEVENT';
   
   static SAVE_MEAL = 'SAVE_MEAL'; 
+  static MEAL_SAVED = 'MEAL_SAVED';
+  static LOAD_MEALFOODITEMS_FOR_MEAL = 'LOAD_MEALFOODITEMS_FOR_MEAL';
+  static MEALFOODITEMS_RECEIVED = 'MEALFOODITEMS_RECEIVED';
+  
   
   static SAVE_MEALFOODITEM = 'SAVE_MEALFOODITEM';
-  
-  static SET_CURRENT_MEAL = 'SET_CURRENT_MEAL';
-  
+  static MEALFOODITEM_SAVED = 'MEALFOODITEM_SAVED';      
   static DELETE_MEALFOODITEM = 'DELETE_MEALFOODITEM';
   
+  static VALIDATE_MEAL = 'VALIDATE_MEAL';
+  static MEAL_VIOLATIONS_RECEIVED = 'MEAL_VIOLATIONS_RECIEVED';
+  
+    
   /*
    * Actions
    */
-  mealsReceived = ActionCreatorFactory.create<Meal[]>(FoodActions.MEALS_RECEIVED, FoodActions.setMealsReceived);
+  mealsReceived = ActionCreatorFactory.create<Meal[]>(FoodActions.MEALS_RECEIVED );
   mealEventsReceived = ActionCreatorFactory.create<{start: Date, end: Date, menus: MealEvent[]}>(FoodActions.MEAL_EVENTS_RECEIVED);
   foodItemsReceived = ActionCreatorFactory.create<FoodItem[]>(FoodActions.FOOD_ITEMS_RECEIVED);
   foodComponentsReceived = ActionCreatorFactory.create< FoodComponent[] > (FoodActions.FOOD_COMPONENTS_RECEIVED );  
@@ -61,22 +63,21 @@ export class FoodActions {
   foodItemDeleted = ActionCreatorFactory.create<FoodItem>( FoodActions.FOOD_ITEM_DELETED );      
   menuTimeAdjusted = ActionCreatorFactory.create<{start: Date, end: Date}>(FoodActions.MENU_TIME_ADJUSTED);
   
-  mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED, FoodActions.setMealScheduled );
-  
-  mealUpdated = ActionCreatorFactory.create<Meal>( FoodActions.MEAL_UPDATED );
-  mealFoodItemUpdated = ActionCreatorFactory.create<MealFoodItem>( FoodActions.MEALFOODITEM_UPDATED );
-  mealFoodItemsReceived = ActionCreatorFactory.create<MealFoodItem[]>( FoodActions.MEALFOODITEMS_RECEIVED );
-  mealFoodItemsFor = ActionCreatorFactory.create<string>( FoodActions.MEALFOODITEMS_FOR );
-  deleteMealFoodItem = ActionCreatorFactory.create<string>( FoodActions.DELETE_MEALFOODITEM );
+  mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED );
   
   removeMealEvent = ActionCreatorFactory.create<CalendarEvent<Meal>>( FoodActions.REMOVE_MEALEVENT ); 
   
   saveMeal = ActionCreatorFactory.create<Meal>( FoodActions.SAVE_MEAL );
-  
-  saveMealFoodItem = ActionCreatorFactory
-      .create<{ id: string, ageGroup: string, quantity: number, unit: string, mealId: string, foodItemId: string }>( FoodActions.SAVE_MEALFOODITEM ); 
-  
-  setCurrentMeal = ActionCreatorFactory.create<Meal>( FoodActions.SET_CURRENT_MEAL );
+  mealSaved = ActionCreatorFactory.create<Meal>( FoodActions.MEAL_SAVED );  
+  loadMealFoodItemsForMeal = ActionCreatorFactory.create<Meal>( FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL );
+  mealFoodItemsReceived = ActionCreatorFactory.create<MealFoodItem[]>( FoodActions.MEALFOODITEMS_RECEIVED );
+      
+  saveMealFoodItem = ActionCreatorFactory.create<MealFoodItem>( FoodActions.SAVE_MEALFOODITEM ); 
+  mealFoodItemSaved = ActionCreatorFactory.create<MealFoodItem>( FoodActions.MEALFOODITEM_SAVED ); 
+  deleteMealFoodItem = ActionCreatorFactory.create<MealFoodItem>( FoodActions.DELETE_MEALFOODITEM );
+      
+  validateMeal = ActionCreatorFactory.create<Meal>( FoodActions.VALIDATE_MEAL );
+  mealViolationsReceived = ActionCreatorFactory.create<MealRulesViolation[]>( FoodActions.MEAL_VIOLATIONS_RECEIVED );
  
   /**
    * Main reducer for all Meal/Food related actions
@@ -102,14 +103,21 @@ export class FoodActions {
         return FoodActions.setFoodItemUpdated( state, action );
      case FoodActions.MEAL_SCHEDULED:
         return FoodActions.setMealScheduled( state, action );     
-     case FoodActions.MEAL_UPDATED:
-        return FoodActions.setMealUpdated( state, action );
-     case FoodActions.SET_CURRENT_MEAL:
-        return FoodActions.setCurrentMeal( state, action );   
-     case FoodActions.MEALFOODITEMS_RECEIVED:
-        return FoodActions.setMealFoodItemsReceived( state, action );
      case FoodActions.REMOVE_MEALEVENT:
         return FoodActions.setRemoveMealEvent( state, action );
+     case FoodActions.MEAL_VIOLATIONS_RECEIVED:
+        return FoodActions.setMealViolationsReceived( state, action );        
+     
+     case FoodActions.SAVE_MEAL:
+        return FoodActions.setSaveMeal( state, action );
+     case FoodActions.MEALFOODITEMS_RECEIVED:
+        return FoodActions.setMealFoodItemsReceived( state, action );
+     
+     case FoodActions.SAVE_MEALFOODITEM:
+        return FoodActions.setSaveMealFoodItem( state, action );
+     case FoodActions.DELETE_MEALFOODITEM:
+        return FoodActions.setDeleteMealFoodItem( state, action );
+        
     }
     return state;
   } 
@@ -177,7 +185,7 @@ export class FoodActions {
                       events: events } }; 
   }
   
-  static setRemoveMealEvent( state: FoodState, action: Action ){
+  static setRemoveMealEvent( state: FoodState, action: Action ) {
     const event = action.payload;
     const events = state.menuUI.events.filter( (e) => e !== event );
     return { ...state,
@@ -221,15 +229,18 @@ export class FoodActions {
   
   
   /**
-   * Set store data when a meal is scheduled; in response to the MEAL_UPDATED action
+   * Set store data when a meal is scheduled; in response to the SAVE_MEAL action
    * 
    * @param {FoodState} state current food state (immutable)
    * @param {Action} action action that triggered the event
    * 
    * @return {FoodState} next state
    */
-  static setMealUpdated( state: FoodState, action: Action ): FoodState {
-    const meal = action.payload;    
+  static setSaveMeal( state: FoodState, action: Action ): FoodState {
+    const meal = { ...action.payload };    
+    
+    // assign a GUID if there isnt one
+    if ( !meal.id ) { meal.id = UUID.UUID(); }
     
     const meals = state.meals.filter( (m) => m.id !== meal.id );
     meals.push( meal );
@@ -243,10 +254,12 @@ export class FoodActions {
            }; 
   }
   
+  /**
+   * Set store data when the meal food items come in for the current meal item;
+   * in response to the MEALFOODITEMS_RECEIVED action
+   */
   static setMealFoodItemsReceived( state: FoodState, action: Action ): FoodState {
-    const mealFoodItems = action.payload;
-    
-    // TODO: add to the mealFoodItems array, don't replace/destroy it...
+    const mealFoodItems: MealFoodItem[] = action.payload;
     return { ...state, 
              menuUI: { 
                ...state.menuUI, 
@@ -256,25 +269,49 @@ export class FoodActions {
   }
   
   /**
-   * Set store data when a meal is selected; in response to the SET_CURRENT_MEAL action
-   *  action payload is a Meal
+   * Set store data when a mealFoodItem is saved; 
+   * in response to the SAVE_MEALFOODITEM action
    * 
    * @param {FoodState} state current food state (immutable)
    * @param {Action} action action that triggered the event
    * 
    * @return {FoodState} next state
    */
-  static setCurrentMeal( state: FoodState, action: Action ): FoodState {
-    const meal = action.payload;
+  static setSaveMealFoodItem( state: FoodState, action: Action ): FoodState {
+    const mealFoodItem: MealFoodItem = action.payload;
     
-    return { ...state,
-             menuUI: {
-               ...state.menuUI,
-               currentMeal: meal
-             }
-    };
+    const mealFoodItems = state.menuUI.currentMealFoodItems.filter( (item) => item.id !== mealFoodItem.id );
+    mealFoodItems.push( mealFoodItem );
+    return { ...state, 
+             menuUI: { 
+               ...state.menuUI, 
+               currentMealFoodItems: mealFoodItems 
+             } 
+           };        
   }
   
+  /**
+   * Set store data when a mealFoodItem is deleted; 
+   * in response to the DELETE_MEALFOODITEM action
+   * 
+   * @param {FoodState} state current food state (immutable)
+   * @param {Action} action action that triggered the event
+   * 
+   * @return {FoodState} next state
+   */
+  static setDeleteMealFoodItem( state: FoodState, action: Action ): FoodState {
+    const mealFoodItem: MealFoodItem = action.payload;
+    
+    const mealFoodItems = state.menuUI.currentMealFoodItems.filter( (item) => item.id !== mealFoodItem.id );
+    return { ...state, 
+             menuUI: { 
+               ...state.menuUI, 
+               currentMealFoodItems: mealFoodItems 
+             } 
+           };        
+    
+  }
+    
   /**
    * Set store data when a meal is scheduled; in response to the MEAL_SCHEDULED action
    * 
@@ -314,6 +351,17 @@ export class FoodActions {
     return { ...state, 
              menuUI: { ...state.menuUI, 
                        events: events } };
+  }
+  
+  
+  static setMealViolationsReceived( state: FoodState, action: Action ) {
+    const mealRulesViolations = action.payload;
+    
+    return { ...state,
+             menuUI: {
+               ...state.menuUI,
+               mealRulesViolations: mealRulesViolations
+             } };
   }
 
 }

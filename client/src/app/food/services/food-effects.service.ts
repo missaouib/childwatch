@@ -5,15 +5,14 @@
  * All Rights reserved
  */
 import { FoodActions } from '../food.actions';
+import { Meal, MealFoodItem } from '../food.interfaces';
 import { MealEventService } from './meal-event.service';
 import { MealService } from './meal.service';
 import { Injectable } from '@angular/core';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { Action } from '@ngrx/store';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
-import {UUID} from 'angular2-uuid';
 
 
 /**
@@ -42,37 +41,40 @@ export class FoodEffectsService {
    * 
    * @redux-effect
    */
-  @Effect() mealUpdated = this.actions$
+  @Effect() _onSaveMeal = this.actions$
     .ofType( FoodActions.SAVE_MEAL )
     .map( toPayload )
-    .switchMap( (payload) => this._mealUpdated(payload) );
+    .switchMap( (payload: Meal) => Observable.of( this.onSaveMeal(payload) ) );
+  
+  @Effect() _onLoadMealFoodItemsForMeal = this.actions$
+    .ofType( FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL )
+    .map( toPayload )
+    .switchMap( (payload: Meal) => this.onLoadMealFoodItemsForMeal( payload ) );
+  
+   
+  @Effect() _onMealFoodItemReceived = this.actions$
+    .ofType( FoodActions.MEALFOODITEMS_RECEIVED )
+    .map( toPayload )
+    .switchMap( (payload: MealFoodItem[]) => this.onMealFoodItemsReceived(payload) );
   
   /**
-   * 
+   * Side effect of when a mealfooditem is requested to be saved; save to the database
    * @redux-effect
    */
-  @Effect() mealFoodItemSaved = this.actions$
+  @Effect() _onSaveMealFoodItem = this.actions$
     .ofType( FoodActions.SAVE_MEALFOODITEM )
     .map( toPayload )
-    .switchMap( (payload) => this._mealFoodItemSaved(payload) );
+    .switchMap( (payload: MealFoodItem) => this.onSaveMealFoodItem(payload) );
+    
   
-  @Effect() mealFoodItemsFor = this.actions$
-    .ofType( FoodActions.MEALFOODITEMS_FOR )
-    .map( toPayload )
-    .switchMap( (payload) => { 
-      const mealId = payload;
-      this.mealSvc.mealFoodItemsFor( mealId ).subscribe();
-      return Observable.of( { 
-        type: 'NOOP-MEALFOODITEMS_returned',
-        payload: mealId
-      });
-    });
-  
-  @Effect() mealFoodItemDeleted = this.actions$
+  @Effect() _onDeleteMealFoodItem = this.actions$
     .ofType( FoodActions.DELETE_MEALFOODITEM )
     .map( toPayload )
-    .switchMap( (payload) => this._mealFoodItemDeleted(payload) );
-   
+    .switchMap( (payload: MealFoodItem) => this.onDeleteMealFoodItem(payload) );
+          
+    
+  disablePersist: boolean;
+  
   /**
    * Constructor for the FoodEffectsService
    * 
@@ -85,37 +87,49 @@ export class FoodEffectsService {
   constructor( 
    private actions$: Actions,
    private mealEventSvc: MealEventService,
-   private mealSvc: MealService
-  ) {} 
+   private mealSvc: MealService,
+   private foodAction: FoodActions
+  ) {
+    this.disablePersist = false;  
+  } 
   
-  
-  private _mealUpdated( payload: any ): Observable<Action> {
-            const meal = {...payload };
-        if ( !meal.id ) { meal.id = UUID.UUID(); }
-        this.mealSvc.update( meal ).subscribe();
-        return Observable.of({
-          type: FoodActions.MEAL_UPDATED,
-          payload: meal
-        }); 
+  private onSaveMeal( meal: Meal ) {
+    if ( !this.disablePersist ) { this.mealSvc.save( meal ).subscribe(); }
+    return this.foodAction.loadMealFoodItemsForMeal( meal ); 
     
+    // Observable.of({ type: FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL, payload: meal } );
   }
   
-  private _mealFoodItemSaved( payload: any ): Observable<Action> {
-    const { id, ageGroup, quantity, unit, mealId, foodItemId } = payload;    
-    this.mealSvc.addMealFoodItem( id || UUID.UUID(), ageGroup, quantity, unit, mealId, foodItemId ).subscribe();
-    return Observable.of( {         
-      type: FoodActions.MEALFOODITEM_UPDATED,
-      payload: payload
-    });    
+  private onLoadMealFoodItemsForMeal( meal: Meal ) {
+     this.mealSvc.queryMealFoodItemsFor( meal ).subscribe();
+     return Observable.of({type: 'NOOP-ONLOADMEALFOODITEMS', payload: meal } );
   }
   
-  private _mealFoodItemDeleted( payload: any ): Observable<Action> {
-    const mealFoodItemId = payload;
-    this.mealSvc.deleteMealFoodItem( mealFoodItemId ).subscribe();
-    return Observable.of( { 
-      type: "NOOP-MEALFOODITEM_deleted",
-      payload: mealFoodItemId
-    });
+  private onMealFoodItemsReceived( mealFoodItems: MealFoodItem[] ) {
+    if ( mealFoodItems.length > 0 ) {
+      this.mealSvc.validate(mealFoodItems[0].meal).delay( 3000 ).subscribe();      
+    }
+    return Observable.of({type: 'NOOP-ONMEALFOODITEMSLOADED', payload: mealFoodItems } );
+  }
+    
+  private onSaveMealFoodItem( mealFoodItem: MealFoodItem ) {
+    if ( !this.disablePersist ) { 
+      this.mealSvc.saveMealFoodItem( mealFoodItem ).first().subscribe( () => { 
+        if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
+          this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
+        }}); 
+    } 
+    return Observable.of( { type: 'MEALFOODITEM_SAVED', payload: mealFoodItem });    
+  }
+  
+  private onDeleteMealFoodItem( mealFoodItem: MealFoodItem ) {
+    if ( !this.disablePersist ) { 
+      this.mealSvc.deleteMealFoodItem( mealFoodItem.id ).subscribe(() => { 
+        if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
+          this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
+        }}); 
+    }
+    return Observable.of( { type: 'MEALFOODITEM_DELETED', payload: mealFoodItem });
   }
 
 }

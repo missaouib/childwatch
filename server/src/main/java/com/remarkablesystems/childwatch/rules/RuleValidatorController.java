@@ -37,8 +37,12 @@ public class RuleValidatorController {
 		
 		if( meal == null ) return Collections.emptyList();
 		
-		List<MealFoodItem>mealFoodItems = (ageGroup!= null)? mealFoodItemRepo.findByMealId( mealId ) : mealFoodItemRepo.findByMealIdAndAgeGroup(mealId, ageGroup);
+		List<MealFoodItem>mealFoodItems = mealFoodItemRepo.findByMealId( mealId );
 		
-		return MEAL_RULES.stream().map( (rule) -> rule.evaluate(meal, mealFoodItems) ).collect(Collectors.toList() );
+		List<RuleViolation> violations =  MEAL_RULES.stream().map( (rule) -> rule.evaluate(meal, mealFoodItems) ).collect(Collectors.toList() );
+		
+		violations.removeIf( (violation) -> violation == null );
+		
+		return violations;
 	}
 }

@@ -46,47 +46,33 @@ export class FoodStateService {
   get currentMeal$(): Observable<Meal>{
     return this.store.select( s => s.food.menuUI.currentMeal );
   }
-  
-  set currentMeal$( meal: Observable<Meal> ) {
-    meal.subscribe( (m) => this.store.dispatch( this.actions.setCurrentMeal( m ) ) );
-  }
-  
+    
   scheduleMeal( meal: Meal, start: Date ) {
     this.store.dispatch( this.actions.mealScheduled( { meal: meal, date: start } ) );
   }
+    
+  get mealRuleViolations$(){
+    return this.store.select( s => s.food.menuUI.mealRulesViolations );
+  }
   
-  updateMeal( meal: Meal ) {
+    
+  saveMeal( meal: Meal ) {
     this.store.dispatch( this.actions.saveMeal( meal ) );
   }
   
-  /**
-   * Update the meal food item for the given meal
-   */
-  updateMealFoodItem( $event: any, ageGroup: string, meal: Meal ) {
-    console.log( $event, meal );
-    
-    const mealFoodItem = {      
-      id: $event.mealFoodItemId,
-      ageGroup: ageGroup,       
-      quantity: Number.parseInt($event.quantity as string),
-      unit: $event.unit, 
-      mealId: meal.id, 
-      foodItemId: $event.foodItemId 
-     };
-    
-    this.store.dispatch( this.actions.saveMealFoodItem(mealFoodItem) );  
+  loadMealFoodItemsForMeal( meal: Meal ) {
+    this.store.dispatch( this.actions.loadMealFoodItemsForMeal(meal) );
   }
   
-  mealFoodItemsFor( mealId : string ) {
-    this.store.dispatch( this.actions.mealFoodItemsFor( mealId ) );
+  deleteMealFoodItem( mealFoodItem: MealFoodItem ) {
+    this.store.dispatch( this.actions.deleteMealFoodItem( mealFoodItem ) );
   }
   
-  deleteMealFoodItem( mealFoodItemId: string ){
-    console.log( 'Deleting ' + mealFoodItemId );
-    this.store.dispatch( this.actions.deleteMealFoodItem( mealFoodItemId ) );
+  saveMealFoodItem( mealFoodItem: MealFoodItem ) {
+    this.store.dispatch( this.actions.saveMealFoodItem( mealFoodItem ) );
   }
-  
   removeEvent( event: CalendarEvent<Meal> ) {
     this.store.dispatch( this.actions.removeMealEvent( event ) );
   }
+   
 }

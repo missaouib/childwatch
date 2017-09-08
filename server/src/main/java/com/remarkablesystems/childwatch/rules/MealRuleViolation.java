@@ -15,8 +15,5 @@ public class MealRuleViolation extends RuleViolation {
 	
 	public String getMealId() {
 		return this.mealId;
-	}
-	
-
-
+	}	
 }

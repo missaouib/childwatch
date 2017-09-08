@@ -6,7 +6,7 @@
  */
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
-import { Meal } from '../food.interfaces';
+import { Meal, MealFoodItem } from '../food.interfaces';
 import { FoodComponentService } from './food-component.service';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -53,47 +53,31 @@ export class MealService {
    * 
    * @returns Observable<Response>
    */
-  update( meal: Meal ) {
+  save( meal: Meal ) {
     return this.http.post( this.URL, meal );
   }
   
   /**
    * Add the meal food item to the given meal via REST call
    * 
-   * @param id
-   * @param ageGroup
-   * @param quantity
-   * @param units
-   * @param mealId
-   * @param foodItemId
-   * 
    * @returns Observable<Response>
    */
-  addMealFoodItem( id: string, ageGroup: string, 
-                   quantity: number, units: string, mealId: string, foodItemId: string ): Observable<Response> {
-    // create the meal food item    
-    const URI = '/api/mealFoodItem';
-    const mealFoodItem = {
-      id: id,
-      ageGroup: ageGroup,
-      quantity: quantity,
-      units: units,
-      meal: (mealId) ? '/api/meal/' + mealId : undefined,
-      foodItem: (foodItemId) ? '/api/foodItem/' + foodItemId : undefined       
-    };
-    
-    console.log( 'Posting mealFoodItem' );
-    
-    return this.http.post( URI, mealFoodItem ).map( (res) => { 
-        const response = res.json();
-        console.log( response );
-        return response;
-      });          
+  saveMealFoodItem( mealFoodItem: MealFoodItem ): Observable<Response> {       
+    return this.http.post( '/api/mealFoodItem', {
+      id: mealFoodItem.id,
+      ageGroup: mealFoodItem.ageGroup,
+      quantity: mealFoodItem.quantity,
+      unit: mealFoodItem.unit,
+      meal: (mealFoodItem.meal) ? '/api/meal/' + mealFoodItem.meal.id : undefined,
+      foodItem: (mealFoodItem.foodItem) ? '/api/foodItem/' + mealFoodItem.foodItem.id : undefined       
+    }).map( res => res.json() );
   }
   
-  deleteMealFoodItem( id: string ) {
-    const URI = '/api/mealFoodItem/' + id;
-    return this.http.delete( URI ).map( (res) => res.json() );
+  /**
+   * Delete the meal food item
+   */
+  deleteMealFoodItem( mealFoodItemId: string ) {
+    return this.http.delete( '/api/mealFoodItem/' + mealFoodItemId ).map( (res) => res.json() );
   }
   
   /**
@@ -102,13 +86,20 @@ export class MealService {
    * @param id Meal id
    * 
    */
-  mealFoodItemsFor( id: string ) {
+  queryMealFoodItemsFor( meal: Meal ): Observable<void> {
     const params = new URLSearchParams();
-    params.set( 'mealId', id );
+    params.set( 'mealId', meal.id );
     params.set( 'projection', 'mealFoodItemFull' );
     return this.http.get( '/api/mealFoodItem/search/findByMealId', { search: params} )
       .map( res => res.json() )
-      .map( ({_embedded: { mealFoodItems } }) => this.store.dispatch( this.actions.mealFoodItemsReceived( mealFoodItems ) ) );    
+      .map( ({_embedded: { mealFoodItems } }) => mealFoodItems )
+      .map( ( m: MealFoodItem[] ) => {
+        m.forEach( (mfi) => {
+          mfi.foodComponent = mfi.foodItem ? mfi.foodItem.foodComponent : undefined;           
+         console.log( 'for ' + mfi.id + ', setting foodComponent to ' + mfi.foodComponent );         
+        } ); 
+        this.store.dispatch( this.actions.mealFoodItemsReceived( m ) ); 
+      });    
   }
    
 
@@ -124,6 +115,18 @@ export class MealService {
     return this.http.get( this.URL, {search: params} )
       .map( res => res.json() )
       .map( ({_embedded: {meals} })  => this.store.dispatch( this.actions.mealsReceived( meals ) ) );
+  }
+  
+  /**
+   * Validate the meal
+   */
+  validate( meal: Meal ) {
+    const params = new URLSearchParams();
+    params.set( 'mealId', meal.id );
+    
+    return this.http.get( '/rules', {search: params } )
+      .map( res => res.json() )
+      .map( violations => this.store.dispatch( this.actions.mealViolationsReceived( violations ) ) );
   }
   
 }

@@ -22,9 +22,9 @@ INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 
 INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'PASTA', 'Pasta and Rice', 'BREAD' );
 INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'BAKED', 'Baked Grain Products', 'BREAD' );
 INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'OTHERBREAD', 'Other Breads', 'BREAD' );
-INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'MILK', 'Milk/Milk Alternate', NULL );
-INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'MILKIE', 'Milk', 'MILK' );
-INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'MILKALT', 'Milk Alternate', 'MILK' );
+INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'MILKIE', 'Milk/Milk Alternate', NULL );
+INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'MILK', 'Milk', 'MILKIE' );
+INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'MILKALT', 'Milk Alternate', 'MILKIE' );
 INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'OTHER', 'Other Foods', NULL );
 INSERT INTO domain.food_component( id, description, parent_component ) VALUES ( 'OTHERFOOD', 'Other Foods', 'OTHER' ); COMMIT;
 	

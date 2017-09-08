@@ -13,10 +13,14 @@ public class MealRulePredicate {
 							  checkForFoodComponentType( mealFoodItem, "MILKALT" ); 
 	
 	
-	private static boolean checkForFoodComponentType( MealFoodItem mealFoodItem, String type ) {
-		return mealFoodItem != null  && 
-			   mealFoodItem.getFoodItem() != null && 
+	private static boolean checkForFoodComponentType( MealFoodItem mealFoodItem, String type ) {	
+
+		if( mealFoodItem.getFoodItem() == null )
+			System.out.println("item - " + mealFoodItem.getId() + " doenst have a food item" );
+		
+		
+		return mealFoodItem.getFoodItem() != null && 
 			   mealFoodItem.getFoodItem().getFoodComponent() != null && 
-			   mealFoodItem.getFoodItem().getFoodComponent().getId() == type;
+			   mealFoodItem.getFoodItem().getFoodComponent().getId().equals(type);
 	}
 }

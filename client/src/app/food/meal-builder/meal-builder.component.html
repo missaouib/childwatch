@@ -19,17 +19,24 @@
 			<option value="DINNER">Dinner</option>
 		</select>
 	</div>
+	
+</form>
 
 	<label>Age Group</label>
 	<!-- Agegroup tabs -->
 	<tabset [justified]="true"> <tab
 		*ngFor="let ageGroup of ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]"
-		(select)="activateTab(ageGroup)"> <ng-template tabHeading>{{ageGroup.substring(4).replace('_','-').replace('MO',
-	' MO').replace('YR',' YR')}}</ng-template>
+		(select)="activateTab(ageGroup)"> <ng-template tabHeading>{{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</ng-template>
 
 	<div class="row">
 
-		<div class="col-sm-4">Rules go here</div>
+		<div class="col-sm-4">
+			<ul *ngIf="rulesViolations.length > 0">
+				<li *ngFor="let violation of rulesViolations">
+					<span *ngIf="violation">{{violation.severity}} - {{violation.message}}</span>
+				</li>
+			</ul>
+		</div>
 
 		<!-- Meal List -->
 		<div class="col-sm-8">
@@ -42,42 +49,51 @@
 				<!-- end card-header -->
 
 				<div class="card-content">
-					<ul class="list-group">
-						<li formArrayName="{{ageGroup}}"
-							*ngFor="let item of mealForm.get(ageGroup).controls; let i = index"
+					<ul class="list-group" *ngIf="foodItemsForAgeGroup( ageGroup ).length > 0">
+						<!-- 
+						<li *ngFor="let mealFoodItem of currentMealFoodItems">
+							{{mealFoodItem.id}} {{mealFoodItem.ageGroup}}
+						</li>
+						-->
+						<li *ngFor="let mealFoodItem of foodItemsForAgeGroup( ageGroup )"
 							[style.border-left-color]="grey" style="border-left-width: 10px"
 							class="list-group-item">
-							<div [formGroupName]="i"
-								class="form-group input-group input-group-unstyled"
-								style="margin-top: 10px">
-								<i class="cw-icon input-group-addon icon-cereals circle-green"
-									style="font-size: 2.5em"></i> <span class="col-sm-7"> <label>{{item.get('foodComponent').value.description}}</label>
-									<input formControlName="description" class="form-control"
-									[typeahead]="foodForComponent( item.get('foodComponent').value )"
-									(typeaheadOnSelect)="item.patchValue( { 'foodItemId': $event.item.id } )"
-									typeaheadOptionField="description" typeaheadOptionsLimit="10" />
-								</span> <span class="col-sm-2"> <label>Quantity</label> <input
-									formControlName="quantity" class="form-control" value="0">
-								</span> <span class="col-sm-2"> <label>Units</label> <select
-									class="form-control" formControlName="units">
-										<option value="each">each</option>
-										<option value="oz">oz</option>
-										<option value="slice">slice</option>
-										<option value="lbs">lbs</option>
-								</select>
-								</span> <i class="text-danger pull-right fa fa-close"
-									(click)="removeComponent(i)"></i>
+							<form novalidate [formGroup]="foodItemForm[ageGroup].controls[ mealFoodItem.id ]">
+														
+							<div class="form-group input-group input-group-unstyled" style="margin-top: 10px">
+								<i class="cw-icon input-group-addon icon-cereals circle-green"></i> 
+								<span class="col-sm-7"> 
+									<label>{{mealFoodItem.foodComponent.description}}</label>
+									<input class="form-control" formControlName="description"
+									       [typeahead]="foodForComponent( mealFoodItem.foodComponent )"
+									       (typeaheadOnSelect)="foodItemForm[ageGroup].controls[mealFoodItem.id].patchValue( {foodItem: $event.item } )"
+										   typeaheadOptionField="description" typeaheadOptionsLimit="15" />
+								</span> 
+								<span class="col-sm-2"> 
+									<label>Quantity</label> 
+									<input class="form-control" formControlName="quantity" value="0">
+								</span> 
+								<span class="col-sm-2"> 
+									<label>Units</label> 
+										<select class="form-control" formControlName="unit">
+											<option value="each">each</option>
+											<option value="oz">oz</option>
+											<option value="slice">slice</option>
+											<option value="lbs">lbs</option>
+									</select>
+								</span> 
+								<i class="text-danger pull-right fa fa-close" (click)="removeComponent(mealFoodItem)"></i>
 							</div>
+							</form>							
 						</li>
 					</ul>
 				</div>
 				<!-- end card-content -->
 
 				<div class="card-footer">
-					<hr *ngIf="mealForm.get(ageGroup).controls.length>0" />
+					<hr *ngIf="foodItemsForAgeGroup( ageGroup ).length > 0" />
 
-					<div class="btn-group" dropdown
-						*ngIf="mealForm.get('name').valid && mealForm.get('type').valid">
+					<div class="btn-group" dropdown *ngIf="mealForm.valid">
 						<a dropdownToggle class="dropdown-toggle"><i
 							class="text-primary fa fa-plus"></i> Add</a>
 						<ul *dropdownMenu class="dropdown-menu" role="menu">
@@ -93,12 +109,11 @@
 						</ul>
 					</div>
 
-					<div *ngIf="mealForm.get(ageGroup).controls.length>0"
+					<div *ngIf="foodItemsForAgeGroup( ageGroup ).length > 0"
 						class="btn-group" dropdown [autoClose]="true" container="body"
 						style="margin-left: 10px">
-						<a dropdownToggle class="dropdown-toggle"
-							[class.disabled]="mealForm.get(ageGroup).controls.length == 0"><i
-							class="text-primary fa fa-copy"></i> Copy To...</a>
+						<a dropdownToggle class="dropdown-toggle">
+							<i class="text-primary fa fa-copy"></i> Copy To...</a>
 						<ul *dropdownMenu class="dropdown-menu" role="menu">
 							<li *ngIf="ageGroup !== 'AGE_0_5MO'" role="menuitem"><a
 								class="dropdown-item" (click)="copyTo('AGE_0_5MO')">0-5 MO</a></li>
@@ -131,8 +146,6 @@
 		<!-- end Meal list -->
 	</div>
 	<!-- end row --> </tab> </tabset>
-
-</form>
 
 
 

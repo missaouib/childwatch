@@ -46,8 +46,9 @@ export interface MealFoodItem {
   ageGroup?: string;
   quantity?: number;
   unit?: string;
+  meal?: Meal;
+  foodComponent?: FoodComponent;
   foodItem?: FoodItem;
-  _links?: MealFoodItemLinks;
 };
 
 export interface MealLinks {
@@ -65,6 +66,16 @@ export interface MealEvent {
   recurrenceId: string;
 }
 
+export interface MealRulesViolation {
+  severity: string;
+  message: string;
+  rule: {
+    name: string
+  };
+  mealId: string;
+};
+
+
 export interface MenuUIState {
   menuStart: Date;
   menuEnd: Date;
@@ -72,7 +83,15 @@ export interface MenuUIState {
   events: Array<CalendarEvent<Meal>>;
   currentMeal: Meal;
   currentMealFoodItems: MealFoodItem[];
+  currentAgeGroup: string;
+  mealRulesViolations: MealRulesViolation[];
 }
+
+export const INITIAL_MEALSTATE: Meal = {
+  id: undefined,
+  description: undefined,
+  type: undefined
+};
 
 export const INITIAL_MENUUISTATE: MenuUIState = {
   menuStart: undefined,
@@ -84,7 +103,9 @@ export const INITIAL_MENUUISTATE: MenuUIState = {
     description: undefined,
     type: undefined
   },
-  currentMealFoodItems: []
+  currentMealFoodItems: [],
+  currentAgeGroup: 'AGE_0-5MO',
+  mealRulesViolations: []
 };
 
 export interface Page {
@@ -112,4 +133,5 @@ export interface IData {
     label: string;
     value: number;
 };
+
 

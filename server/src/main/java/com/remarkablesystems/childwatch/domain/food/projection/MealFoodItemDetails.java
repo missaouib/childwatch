@@ -16,4 +16,5 @@ public interface MealFoodItemDetails {
 	BigDecimal getQuantity();
 	FoodItemFull getFoodItem();
 	String getUnit();
+	MealFull getMeal();
 }
