@@ -27,6 +27,7 @@ import { MealBuilderComponent } from './meal-builder/meal-builder.component';
 import {EffectsModule} from '@ngrx/effects';
 
 import {FoodEffectsService} from './services/food-effects.service';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 
 
@@ -50,7 +51,8 @@ const routes: Routes = [
     TooltipModule.forRoot(),
     ReactiveFormsModule, FormsModule,
     HttpModule, DragulaModule,
-    EffectsModule.run(FoodEffectsService)
+    EffectsModule.run(FoodEffectsService),
+    AlertModule.forRoot()
   ],
   declarations: [ 
     MealCalendarComponent, 

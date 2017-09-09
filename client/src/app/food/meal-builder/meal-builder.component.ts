@@ -54,13 +54,15 @@ export class MealBuilderComponent implements OnInit {
   
   food: FoodItem[] = [];
 
-  activeTab = 'AGE_0_5MO';
-  
+  currentAgeGroup = 'AGE_0_5MO';
+    
   rulesViolations: MealRulesViolation[] = [];
 
   
   currentMeal: Meal = INITIAL_MEALSTATE;  
   currrentMealFoodItems: MealFoodItem[] = [];
+  
+  editing = false;
   
   /**
    * constructor for the MealBuilderComponent
@@ -82,7 +84,7 @@ export class MealBuilderComponent implements OnInit {
    * @onInit
    */
   ngOnInit() {
-    // create the meal form
+    // create the meal form; food items are created on demand
     this.mealForm = this.formBuilder.group({
       id: undefined,
       name: [undefined, Validators.required],
@@ -90,12 +92,11 @@ export class MealBuilderComponent implements OnInit {
     });
     
     // subscribe to the current meal
-    // this is where the initial data will reside
     this.state.currentMeal$.subscribe( (currentMeal: Meal) => {
       if ( currentMeal.id !== this.currentMeal.id ) { console.log( 'Clear the data here!' ); } 
       console.log('currentMeal id = ' + currentMeal.id + '');
       this.mealForm.patchValue({'name': currentMeal.description, 'type': currentMeal.type});
-      this.currentMeal = currentMeal;
+      this.currentMeal = { ...currentMeal };
     });
 
     // get the food components
@@ -147,7 +148,7 @@ export class MealBuilderComponent implements OnInit {
    * @param tabName
    */
   activateTab(tabName: string) {
-    this.activeTab = tabName;
+    this.currentAgeGroup = tabName;
   }
 
   /**
@@ -206,7 +207,7 @@ export class MealBuilderComponent implements OnInit {
       quantity: 1,
       unit: 'each',
       meal: this.currentMeal,
-      ageGroup: this.activeTab,
+      ageGroup: this.currentAgeGroup,
       foodComponent: foodComponent
     };
     this.state.saveMealFoodItem( mealFoodItem );

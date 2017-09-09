@@ -1,155 +1,155 @@
 
-<form novalidate [formGroup]="mealForm">
-
-	<!-- Name/Type -->
-	<div class="form-group">
-		<label for="name">Name</label> <input #name class="form-control"
-			placeholder="Meal Name" formControlName="name" /> <small
-			class="text-danger" *ngIf="mealForm.get('name').hasError('required')">Name
-			is required</small>
-	</div>
-
-	<div class="form-group">
-		<label for="type">Type</label> <select #type class="form-control"
-			formControlName="type">
-			<option value="BREAKFAST">Breakfast</option>
-			<option value="AM_SNACK">AM Snack</option>
-			<option value="LUNCH">Lunch</option>
-			<option value="PM_SNACK">PM Snack</option>
-			<option value="DINNER">Dinner</option>
-		</select>
+<div class="card">
+	<div class="card-header">
+		<div class="card-title">
+			<h3 *ngIf="!editing" (click)="editing = !editing">
+				<span class="pull-right" >
+					<a><small class="text-primary"><i class="fa fa-pencil"></i> Edit </small></a>
+					<a><small class="text-danger"><i class="fa fa-trash"></i> Delete </small></a>
+				</span>
+				<em>{{ mealForm.get('name').value || "New Meal" }}</em>
+				<small>{{ mealForm.get('type').value || "Type"}}</small>
+			</h3>
+		
+			<form *ngIf="editing" novalidate [formGroup]="mealForm" >
+				<div class="row">
+					<div class="form-group col-sm-2">
+						<label for="type">Type</label>
+						<select #type class="form-control" formControlName="type" (blur)="editing = (mealForm.valid)? !editing : editing">
+							<option value="BREAKFAST">Breakfast</option>
+							<option value="AM_SNACK">AM Snack</option>
+							<option value="LUNCH">Lunch</option>
+							<option value="PM_SNACK">PM Snack</option>
+							<option value="DINNER">Dinner</option>
+						</select>
+						<small class="text-danger" *ngIf="mealForm.get('type').hasError('required')">Type is required</small>
+					</div>
+		
+					<div class="form-group col-sm-4">
+						<label for="name"></label>
+						<input #name class="form-control" placeholder="Meal Name" formControlName="name" (blur)="editing = (mealForm.valid)? !editing : editing"/> 
+						<small class="text-danger" *ngIf="mealForm.get('name').hasError('required')">Name is required</small>
+					</div>		
+				</div>				
+			</form>
+		</div>
+	
 	</div>
 	
-</form>
-
-	<label>Age Group</label>
-	<!-- Agegroup tabs -->
-	<tabset [justified]="true"> <tab
-		*ngFor="let ageGroup of ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]"
-		(select)="activateTab(ageGroup)"> <ng-template tabHeading>{{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</ng-template>
-
-	<div class="row">
-
-		<div class="col-sm-4">
+	<div class="card-content">
+	
+			<h5>Age Group</h5>
+				<div class="btn-group">
+	  				<label *ngFor="let grp of ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT' ]" 
+	  					   class="btn"
+	  					   [class.btn-warning]="grp === currentAgeGroup" (click)="activateTab(grp)">
+	  					{{grp.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
+	  				</label>
+				</div>	
+								
+			<hr />
+			
 			<ul *ngIf="rulesViolations.length > 0">
-				<li *ngFor="let violation of rulesViolations">
-					<span *ngIf="violation">{{violation.severity}} - {{violation.message}}</span>
-				</li>
+				<alert *ngFor="let violation of rulesViolations" [type]="(violation.severity === 'FAIL') ? 'danger' : (violation.severity === 'FAIL') ? 'warning' : 'info'">
+					<i class="fa" 
+					   [class.fa-exclamation-triangle]="violation.severity === 'FAIL'"
+					   [class.fa-exclamation-circle]="violation.severity === 'WARN'"
+					   [class.fa-info-circle]="violation.severity === 'INFO'"
+					   [class.fa-question-circle]="violation.severity === 'UNKNOWN'"></i> {{violation.message}}		
+				</alert>
+			</ul>
+						
+			<hr *ngIf="rulesViolations.length > 0" />
+
+			<div class="row">
+				<div class="col-sm-11" *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length > 0">
+						<div *ngFor="let mealFoodItem of foodItemsForAgeGroup( currentAgeGroup )" [style.border-left-color]="grey" style="{ border-left-width: 10px; margin-top: 10px}">
+							<form novalidate [formGroup]="foodItemForm[currentAgeGroup].controls[ mealFoodItem.id ]">
+
+								<div class="form-group">
+									<span class="col-xs-12 col-sm-7">
+									    <i class="cw-icon"></i>
+										<label>{{mealFoodItem.foodComponent.description}}</label>
+										<input class="form-control" formControlName="description"
+										       [typeahead]="foodForComponent( mealFoodItem.foodComponent )"
+										       (typeaheadOnSelect)="foodItemForm[currentAgeGroup].controls[mealFoodItem.id].patchValue( {foodItem: $event.item } )"
+											   typeaheadOptionField="description" typeaheadOptionsLimit="15" />
+									</span>
+								</div> 
+								<div class="form-group" style="margin-top: 10px">
+									<span class="col-xs-12 col-sm-2 "> 
+										<label>Quantity</label> 
+										<input class="form-control" formControlName="quantity" value="0">
+									</span> 
+								</div>
+								<div class="form-group" style="margin-top: 10px">							
+									<span class="col-xs-12 col-sm-2"> 
+										<label>Units</label> 
+											<select class="form-control" formControlName="unit">
+												<option value="each">each</option>
+												<option value="oz">oz</option>
+												<option value="slice">slice</option>
+												<option value="lbs">lbs</option>
+										</select>
+									</span> 
+								</div>
+								<i class="text-danger pull-right fa fa-close" (click)="removeComponent(mealFoodItem)"></i>
+							</form>
+						</div>
+					</div>	
+											
+
+					<div *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length == 0">
+						<strong>No food items found for age group {{currentAgeGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</strong>
+					</div>
+				</div>
+	</div>
+	
+	<div class="card-footer">
+		<hr *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length > 0" />
+
+		<div class="btn-group" dropdown *ngIf="mealForm.valid && !editing">
+			<a dropdownToggle class="dropdown-toggle"><i
+				class="text-primary fa fa-plus"></i> Add Food Items</a>
+			<ul *dropdownMenu class="dropdown-menu" role="menu">
+			
+				<ng-template ngFor let-top [ngForOf]="foodComponents">
+					<li class="dropdown-header"><strong>{{top.description}}</strong></li>
+					<li role="menuitem" *ngFor="let comp of top.children">
+						<a class="dropdown-item" (click)="addComponent(comp)">{{comp.description}}</a>
+					</li>
+				</ng-template>
 			</ul>
 		</div>
 
-		<!-- Meal List -->
-		<div class="col-sm-8">
-
-			<div class="card">
-
-				<div class="card-header">
-					<div class="card-title">Meal Components</div>
-				</div>
-				<!-- end card-header -->
-
-				<div class="card-content">
-					<ul class="list-group" *ngIf="foodItemsForAgeGroup( ageGroup ).length > 0">
-						<!-- 
-						<li *ngFor="let mealFoodItem of currentMealFoodItems">
-							{{mealFoodItem.id}} {{mealFoodItem.ageGroup}}
-						</li>
-						-->
-						<li *ngFor="let mealFoodItem of foodItemsForAgeGroup( ageGroup )"
-							[style.border-left-color]="grey" style="border-left-width: 10px"
-							class="list-group-item">
-							<form novalidate [formGroup]="foodItemForm[ageGroup].controls[ mealFoodItem.id ]">
-														
-							<div class="form-group input-group input-group-unstyled" style="margin-top: 10px">
-								<i class="cw-icon input-group-addon icon-cereals circle-green"></i> 
-								<span class="col-sm-7"> 
-									<label>{{mealFoodItem.foodComponent.description}}</label>
-									<input class="form-control" formControlName="description"
-									       [typeahead]="foodForComponent( mealFoodItem.foodComponent )"
-									       (typeaheadOnSelect)="foodItemForm[ageGroup].controls[mealFoodItem.id].patchValue( {foodItem: $event.item } )"
-										   typeaheadOptionField="description" typeaheadOptionsLimit="15" />
-								</span> 
-								<span class="col-sm-2"> 
-									<label>Quantity</label> 
-									<input class="form-control" formControlName="quantity" value="0">
-								</span> 
-								<span class="col-sm-2"> 
-									<label>Units</label> 
-										<select class="form-control" formControlName="unit">
-											<option value="each">each</option>
-											<option value="oz">oz</option>
-											<option value="slice">slice</option>
-											<option value="lbs">lbs</option>
-									</select>
-								</span> 
-								<i class="text-danger pull-right fa fa-close" (click)="removeComponent(mealFoodItem)"></i>
-							</div>
-							</form>							
-						</li>
-					</ul>
-				</div>
-				<!-- end card-content -->
-
-				<div class="card-footer">
-					<hr *ngIf="foodItemsForAgeGroup( ageGroup ).length > 0" />
-
-					<div class="btn-group" dropdown *ngIf="mealForm.valid">
-						<a dropdownToggle class="dropdown-toggle"><i
-							class="text-primary fa fa-plus"></i> Add</a>
-						<ul *dropdownMenu class="dropdown-menu" role="menu">
-							<li *ngFor="let top of foodComponents" role="menuitem" dropdown
-								triggers="mouseover" placement="right" container="body"
-								[autoClose]="true"><a dropdownToggle
-								class="dropdown-item dropdown-toggle" (click)="false">{{top.description}}<span
-									class="caret"></span></a>
-								<ul *dropdownMenu class="dropdown-menu" role="menu">
-									<li role="menuitem" *ngFor="let comp of top.children"><a
-										class="dropdown-item" (click)="addComponent(comp)">{{comp.description}}</a></li>
-								</ul></li>
-						</ul>
-					</div>
-
-					<div *ngIf="foodItemsForAgeGroup( ageGroup ).length > 0"
-						class="btn-group" dropdown [autoClose]="true" container="body"
-						style="margin-left: 10px">
-						<a dropdownToggle class="dropdown-toggle">
-							<i class="text-primary fa fa-copy"></i> Copy To...</a>
-						<ul *dropdownMenu class="dropdown-menu" role="menu">
-							<li *ngIf="ageGroup !== 'AGE_0_5MO'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_0_5MO')">0-5 MO</a></li>
-							<li *ngIf="ageGroup !== 'AGE_6_11MO'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_6_11MO')">6-11 MO</a></li>
-							<li *ngIf="ageGroup !== 'AGE_1_2YR'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_1_2YR')">1-2 YR</a></li>
-							<li *ngIf="ageGroup !== 'AGE__5YR'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_3_5YR')">3-5 YR</a></li>
-							<li *ngIf="ageGroup !== 'AGE_6_12YR'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_6_12YR')">6-12 YR</a></li>
-							<li *ngIf="ageGroup !== 'AGE_13_18YR'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_13_18YR')">13-18
-									YR</a></li>
-							<li *ngIf="ageGroup !== 'AGE_ADULT'" role="menuitem"><a
-								class="dropdown-item" (click)="copyTo('AGE_ADULT')">ADULT</a></li>
-							<li class="divider dropdown-divider"></li>
-							<li role="menuitem"><a class="dropdown-item"
-								(click)="copyTo('ALL',ageGroup)">ALL</a></li>
-						</ul>
-					</div>
-
-
-				</div>
-				<!-- end card-footer -->
-
-			</div>
-			<!-- end card -->
+		<div *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length > 0"
+			class="btn-group" dropdown [autoClose]="true" container="body"
+			style="margin-left: 10px">
+			<a dropdownToggle class="dropdown-toggle">
+				<i class="text-primary fa fa-copy"></i> Copy To...</a>
+			<ul *dropdownMenu class="dropdown-menu" role="menu">
+				<li *ngIf="currentAgeGroup !== 'AGE_0_5MO'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_0_5MO')">0-5 MO</a></li>
+				<li *ngIf="currentAgeGroup !== 'AGE_6_11MO'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_6_11MO')">6-11 MO</a></li>
+				<li *ngIf="currentAgeGroup !== 'AGE_1_2YR'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_1_2YR')">1-2 YR</a></li>
+				<li *ngIf="currentAgeGroup !== 'AGE__5YR'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_3_5YR')">3-5 YR</a></li>
+				<li *ngIf="currentAgeGroup !== 'AGE_6_12YR'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_6_12YR')">6-12 YR</a></li>
+				<li *ngIf="currentAgeGroup !== 'AGE_13_18YR'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_13_18YR')">13-18
+						YR</a></li>
+				<li *ngIf="currentAgeGroup !== 'AGE_ADULT'" role="menuitem"><a
+					class="dropdown-item" (click)="copyTo('AGE_ADULT')">ADULT</a></li>
+				<li class="divider dropdown-divider"></li>
+				<li role="menuitem"><a class="dropdown-item"
+					(click)="copyTo('ALL',currentAgeGroup)">ALL</a></li>
+			</ul>
 		</div>
-		<!-- end Meal list -->
+
 	</div>
-	<!-- end row --> </tab> </tabset>
-
-
-
-
-
+</div>
 
 
