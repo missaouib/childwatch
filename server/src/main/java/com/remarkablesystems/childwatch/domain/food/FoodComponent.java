@@ -25,6 +25,8 @@ public class FoodComponent implements Serializable {
 
 	private String description;
 	
+	private String icon;
+	
 	@ManyToOne
 	@JoinColumn(name="parent_component")
 	private FoodComponent parentComponent;
@@ -80,4 +82,12 @@ public class FoodComponent implements Serializable {
 		this.parentComponent = parentComponent;
 	}
 
+	public String getIcon() {
+		return this.icon;		
+	}
+	
+	public void setIcon( String icon ) {
+		this.icon = icon;
+	}
+	
 }

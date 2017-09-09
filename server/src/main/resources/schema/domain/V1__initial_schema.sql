@@ -4,6 +4,7 @@
     create table food_component(
     	id 					varchar(36) NOT NULL,
     	description 		varchar(128),
+    	icon				varchar(128),
     	parent_component 	varchar(36)
     );
     

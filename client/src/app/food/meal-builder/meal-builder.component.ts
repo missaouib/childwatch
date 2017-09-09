@@ -30,7 +30,15 @@ interface FormGroupMgr {
 @Component({
   selector: 'cw-meal-builder',
   templateUrl: './meal-builder.component.html',
-  styleUrls: ['./meal-builder.component.css']
+  styleUrls: ['./meal-builder.component.css'],
+  styles: [ `
+  :host >>> .alert-local {
+    background-color: #009688;
+    border-color: #00695C;
+    color: #fff;
+  }
+  `]
+  
 })
 export class MealBuilderComponent implements OnInit {
 
@@ -40,6 +48,8 @@ export class MealBuilderComponent implements OnInit {
   AGEGROUPS = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
 
   foodComponents: any[] = [];
+  
+  showGuidance = true;
 
   mealForm: FormGroup;
   foodItemForm: FormGroupMgr  = {

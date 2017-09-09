@@ -18,5 +18,7 @@ public interface FoodComponentFull {
 	Set<FoodItemFull> getFoodItems();
 	
 	FoodComponentWithId getParentComponent();
+	
+	String getIcon();
 
 }

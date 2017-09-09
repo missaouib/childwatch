@@ -11,6 +11,8 @@ public interface FoodComponentWithId {
 
 	String getDescription();
 	
+	String getIcon();
+	
 	FoodComponentWithId getParentComponent();
 
 }

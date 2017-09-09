@@ -30,6 +30,7 @@ export interface FoodComponentLinks {
 export interface FoodComponent {
   id: string;
   description: string;
+  icon?: string;
   _links?: FoodComponentLinks;
   foodItems?: FoodItem[];
   parentComponent: FoodComponent;
