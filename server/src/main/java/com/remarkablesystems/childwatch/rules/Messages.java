@@ -1,21 +1,9 @@
 package com.remarkablesystems.childwatch.rules;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "com.remarkablesystems.childwatch.rules.messages"; //$NON-NLS-1$
+	
+	static String mustHaveMilk="All meals must include a milk item";
+	static String shouldHaveThreeItems="All meals should include at least three items";	
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-	private Messages() {
-	}
-
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
-	}
 }

@@ -1,5 +1,6 @@
 package com.remarkablesystems.childwatch.rules;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,20 +29,24 @@ public class RuleValidatorController {
 
 	
 	@RequestMapping( "/rules" )
-	public List<RuleViolation> validate( @RequestParam( value="mealId", required=false ) String mealId, @RequestParam( value="ageGroup", required=false ) AgeGroup ageGroup ) {
+	public List<RuleViolation> validate( @RequestParam( value="mealId", required=false ) String mealId ) {
 		
-		if( mealId == null && ageGroup == null ) return Collections.emptyList();
+		if( mealId == null ) return Collections.emptyList();
 		
 	
 		Meal meal = mealRepo.findOne(mealId);
 		
 		if( meal == null ) return Collections.emptyList();
 		
-		List<MealFoodItem>mealFoodItems = mealFoodItemRepo.findByMealId( mealId );
-		
-		List<RuleViolation> violations =  MEAL_RULES.stream().map( (rule) -> rule.evaluate(meal, mealFoodItems) ).collect(Collectors.toList() );
-		
-		violations.removeIf( (violation) -> violation == null );
+		List<RuleViolation> violations = new ArrayList<RuleViolation>();
+		AgeGroup.ALL.stream().forEachOrdered( (ageGroup) -> {
+			List<MealFoodItem>mealFoodItems = mealFoodItemRepo.findByMealIdAndAgeGroup( mealId, ageGroup );
+			if( mealFoodItems.size() > 0 )
+				violations.addAll( MEAL_RULES.stream()
+										.map( (rule) -> rule.evaluate(meal, mealFoodItems) ) // evaluate the rules
+										.filter( (violation) -> violation != null ) // filter out nulls
+										.collect( Collectors.toList() ) );	// collect them into a list					
+		});
 		
 		return violations;
 	}

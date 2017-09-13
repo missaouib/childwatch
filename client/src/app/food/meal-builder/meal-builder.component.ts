@@ -133,13 +133,9 @@ export class MealBuilderComponent implements OnInit {
     
     this.state.currentMealFoodItems$.subscribe( (mealFoodItems) => {
             
-      mealFoodItems.forEach( (mealFoodItem) => {
-        const formGroup = (this.foodItemForm[ mealFoodItem.ageGroup ] as FormGroup );
-        if ( formGroup ) {
-          formGroup.addControl( mealFoodItem.id, this.createMealFoodItemFormGroup( mealFoodItem) );
-          console.log( 'Added a control to ' + mealFoodItem.ageGroup + ' component = ', mealFoodItem.foodComponent );
-        } else { console.log( 'Can\'t find a formGroup for ' + mealFoodItem.ageGroup ); }
-      });
+      mealFoodItems.forEach( (mealFoodItem) =>
+          (this.foodItemForm[ mealFoodItem.ageGroup ] as FormGroup )
+            .addControl( mealFoodItem.id, this.createMealFoodItemFormGroup( mealFoodItem) ) );
       this.currrentMealFoodItems = mealFoodItems;
     });
     
@@ -147,8 +143,12 @@ export class MealBuilderComponent implements OnInit {
 
   }
   
-  foodItemsForAgeGroup( ageGroup: string ){
-    return this.currrentMealFoodItems.filter( (i) => i.ageGroup === ageGroup );
+  foodItemsForCurrentAgeGroup() {
+    return this.currrentMealFoodItems.filter( (i) => i.ageGroup === this.currentAgeGroup );
+  }
+  
+  rulesViolationsForCurrentAgeGroup() {
+    return this.rulesViolations.filter( (v) => v.ageGroup === this.currentAgeGroup );
   }
   
 
@@ -206,11 +206,7 @@ export class MealBuilderComponent implements OnInit {
    * @param c {FoodComponent}
    */
   addComponent(foodComponent: FoodComponent): void {
-    
-    console.log( 'Save foodComponent ', foodComponent );
-    
-    //TODO add in food component
-    
+        
     const mealFoodItem: MealFoodItem = {
       id: UUID.UUID(),
       foodItem: undefined,

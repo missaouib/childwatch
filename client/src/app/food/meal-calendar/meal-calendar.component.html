@@ -15,10 +15,11 @@
 </ng-template>
 
 
-<div class="row">
+<!--  <div class="row"> -->
 
-  <div class="col-md-3">
-    <div class="card">
+  <ng-sidebar-container style="height: 100vh">
+  	<ng-sidebar #sidebar [(opened)]="_opened" mode="'slide'" >
+  		<div class="card">
     	<div class="card-header">
 	    	<h4 class="card-title">Meals 
 	    		<span class="btn-group pull-right small" dropdown [autoClose]="true" container="body">
@@ -46,11 +47,13 @@
           </li>
         </ul>
       </div>
-    </div>
-  </div>
-
-	<div class="col-md-9">
-		<h3 class="text-center">{{ viewDate | date:'MMMM' }}</h3>
+    </div>		
+  	</ng-sidebar>
+  	
+  	<div ng-sidebar-content>
+  	   <span class="btn pull-right bg-primary circle" *ngIf="_opened" (click)="sidebar.close()"><i class="fa fa-close"></i></span>
+  		<span class="btn pull-right bg-primary circle" *ngIf="!_opened" (click)="sidebar.open()"><i class="fa fa-bars"></i></span> 
+  				<h3 class="text-center">{{ viewDate | date:'MMMM' }}</h3>
 		<br />
 		<mwl-calendar-month-view
 		    [viewDate]="viewDate"
@@ -63,5 +66,6 @@
 			[cellTemplate]="customCellTemplate"
 			[excludeDays]="[0,6]">
 		</mwl-calendar-month-view>
-	</div>
-</div>
+  		 	
+  	</div>
+  </ng-sidebar-container>

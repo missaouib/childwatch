@@ -28,6 +28,8 @@ import {EffectsModule} from '@ngrx/effects';
 
 import {FoodEffectsService} from './services/food-effects.service';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import {SidebarModule} from 'ng-sidebar';
+
 
 
 
@@ -52,7 +54,8 @@ const routes: Routes = [
     ReactiveFormsModule, FormsModule,
     HttpModule, DragulaModule,
     EffectsModule.run(FoodEffectsService),
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    SidebarModule.forRoot()
   ],
   declarations: [ 
     MealCalendarComponent, 

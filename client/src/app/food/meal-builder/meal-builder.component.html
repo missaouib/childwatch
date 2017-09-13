@@ -50,11 +50,11 @@
 			
 			<alert type="local" *ngIf="showGuidance && mealForm.valid">
 				<h4 class="alert-heading">Guidance for {{currentAgeGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}} {{mealForm.get('type').value.toLowerCase() }}</h4>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus a fringilla nisi. Morbi sed vestibulum ligula, at venenatis tortor. Nullam non velit arcu. Maecenas vulputate commodo neque sit amet consectetur. Vivamus consectetur tortor nec enim tincidunt, ut vulputate ipsum ornare. In pellentesque purus non justo porta, sit amet vulputate quam porttitor. Pellentesque scelerisque, leo eu semper ultricies, arcu velit malesuada libero, quis vulputate mauris augue in orci. Nulla suscipit tellus id ullamcorper consectetur.</p>
-				<p>Nunc facilisis viverra bibendum. In et pretium sapien, vel iaculis elit. Morbi varius, erat quis sagittis vehicula, magna lorem aliquam lacus, sit amet venenatis ligula augue vulputate nisl. Aliquam mollis rhoncus sem nec ornare. Morbi quis lacus lectus. Morbi tempus urna eu vehicula luctus. Suspendisse hendrerit aliquet suscipit. Vestibulum malesuada fringilla libero, ac vehicula nibh. Morbi ut tellus arcu</p>
+				<p>Can we try some other colours maybe make it original could you rotate the picture to show the other side of the room? try making it a bit less blah jazz it up a little that's great, but can you make it work for ie 2 please. That's great, but we need to add this 2000 line essay can you put "find us on facebook" by the facebook logo? we don't need a contract, do we give us a complimentary logo along with the website is this the best we can do, so i love it, but can you invert all colors?. That's great, but can you make it work for ie 2 please I have an awesome idea for a startup, i need you to build it for me we are a big name to have in your portfolio, could you rotate the picture to show the other side of the room? I like it, but can the snow look a little warmer will royalties in the company do instead of cash we need more images of groups of people having non-specific types of fun.</p>
+				<p>Can you turn it around in photoshop so we can see more of the front. Can you make it look like this clipart i found try making it a bit less blah yet I really think this could go viral anyway, you are the designer, you know what to do can you make the blue bluer? nor I want you to take it to the next level. I need a website. How much will it cost the website doesn't have the theme i was going for, what you've given us is texty, we want sexy so can you lower the price for the website? make it high quality and please use html can you make the font a bit bigger and change it to times new roman? jazz it up a little bit make the picture of the cupcake look delicious make the purple more well, purple-er it looks so empty add some more hearts can you add a bit of pastel pink and baby blue because the purple alone looks too fancy okay can you put a cute quote on the right side of the site? oh no it looks messed up! i think we need to start from scratch that sandwich needs to be more playful. That sandwich needs to be more playful theres all this spanish text on my site. This red is too red the website doesn't have the theme i was going for, yet the target audience is makes and famles aged zero and up concept is bang on, but can we look at a better execution I have printed it out, but the animated gif is not moving the hair is just too polarising. You are lucky to even be doing this for us I know somebody who can do this for a reasonable cost, or I got your invoice...it seems really high, why did you charge so much. I got your invoice...it seems really high, why did you charge so much other agencies charge much lesser needs to be sleeker, so try making it a bit less blah the flier should feel like a warm handshake, and can you turn it around in photoshop so we can see more of the front, we are a big name to have in your portfolio.</p> 
 			</alert>
 			
-			<alert *ngFor="let violation of rulesViolations" [type]="(violation.severity === 'FAIL') ? 'danger' : (violation.severity === 'FAIL') ? 'warning' : 'info'">
+			<alert *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" [type]="(violation.severity === 'FAIL') ? 'danger' : (violation.severity === 'FAIL') ? 'warning' : 'info'">
 				<h4 class="alert-heading">
 					<i class="fa" 
 					   [class.fa-exclamation-triangle]="violation.severity === 'FAIL'"
@@ -67,9 +67,9 @@
 				   <p>{{violation.message}}</p>		
 			</alert>
 						
-			<hr *ngIf="rulesViolations.length > 0" />
+			<hr *ngIf="rulesViolationsForCurrentAgeGroup().length > 0" />
 
-			<div *ngFor="let mealFoodItem of foodItemsForAgeGroup( currentAgeGroup )" class="panel panel-default">
+			<div *ngFor="let mealFoodItem of foodItemsForCurrentAgeGroup()" class="panel panel-default">
 				<form novalidate [formGroup]="foodItemForm[currentAgeGroup].controls[ mealFoodItem.id ]">
 					<div class="row">
 						<span class="col-sm-1">
@@ -104,13 +104,13 @@
 			</div>
 											
 
-					<div *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length == 0">
-						<strong>No food items found for age group {{currentAgeGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</strong>
-					</div>
+			<div *ngIf="foodItemsForCurrentAgeGroup().length == 0">
+				<strong>No food items found for age group {{currentAgeGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</strong>
+			</div>
 	</div>
 	
 	<div class="card-footer">
-		<hr *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length > 0" />
+		<hr *ngIf="foodItemsForCurrentAgeGroup().length > 0" />
 
 		<div class="btn-group" dropdown *ngIf="mealForm.valid && !editing">
 			<a dropdownToggle class="dropdown-toggle"><i
@@ -126,7 +126,7 @@
 			</ul>
 		</div>
 
-		<div *ngIf="foodItemsForAgeGroup( currentAgeGroup ).length > 0"
+		<div *ngIf="foodItemsForCurrentAgeGroup().length > 0"
 			class="btn-group" dropdown [autoClose]="true" container="body"
 			style="margin-left: 10px">
 			<a dropdownToggle class="dropdown-toggle">

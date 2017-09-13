@@ -74,6 +74,7 @@ export interface MealRulesViolation {
     name: string
   };
   mealId: string;
+  ageGroup?: string;
 };
 
 

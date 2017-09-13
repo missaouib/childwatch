@@ -5,7 +5,7 @@ import java.util.function.BiPredicate;
 
 public interface IRule<T, U, R> {
 	
-	boolean appliesTo( Object obj1, Object obj2 );
+	IRule<T,U,R> appliesTo( BiPredicate<T,U> appliesTo );
 
 	IRule<T, U, R> when(BiPredicate<T,U> when);
 

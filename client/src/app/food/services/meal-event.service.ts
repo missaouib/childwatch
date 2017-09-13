@@ -1,6 +1,6 @@
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
-import { Meal } from '../food.interfaces';
+import { Meal, MealEvent } from '../food.interfaces';
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
 import { Store } from '@ngrx/store';
@@ -32,8 +32,8 @@ export class MealEventService {
       .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, menus: menus } ) ) );
   }
   
-  updateMealEvent( meal: Meal, start: Date, end?: Date ) {
-    console.log( meal, start, end );
+  updateMealEvent( mealEvent: MealEvent ) {
+    console.log( mealEvent );
   }
   
 }

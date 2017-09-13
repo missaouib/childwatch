@@ -31,6 +31,8 @@ export class MealCalendarComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   
   filter: any = undefined;
+  
+  _opened = false;
  
   constructor(
     private state: FoodStateService,
@@ -55,7 +57,10 @@ export class MealCalendarComponent implements OnInit {
     
   }
   
-  eventDropped( { event, newStart}: CalendarEventTimesChangedEvent): void {
+  eventDropped( { event, newStart }: CalendarEventTimesChangedEvent): void {
+    
+    console.log( event );
+    
     this.state.scheduleMeal( event.meta, newStart );
     this.viewDate = newStart;
   }
