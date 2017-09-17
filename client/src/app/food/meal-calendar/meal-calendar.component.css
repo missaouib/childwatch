@@ -7,9 +7,26 @@
 
 .circle {
     border-radius: 50%;
-    border-width: 0;
+    border-width: 3px;
     border-style: solid;
     vertical-align: middle;
 	font-size: 1.2em;
 	margin:10 auto;    
+}
+
+.chip {
+    padding: 0 10px;
+    height: 25px;
+    font-size: 12px;
+    line-height: 25px;
+    border-radius: 25px;   
+    border-style: solid;
+    border-width: 0px; 
+}
+
+.chip img {
+  min-height: 16px;
+  height: 16px;
+  min-width: 16px;
+  width: 16px;
 }

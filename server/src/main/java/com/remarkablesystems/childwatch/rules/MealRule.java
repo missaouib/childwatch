@@ -56,6 +56,10 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 		return violation;
 	}
 	
+	public String toString() {
+		return "[" + getName() +"]";
+	}
+	
 	static MealRule mustHaveFluidMilk = MealRule.create("mustHaveMilk")
 			.appliesTo( isNonInfant.and( isBreakfast ) )
 			.when( hasFluidMilkComponent.negate() ) 
@@ -92,11 +96,27 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 			.when( hasFlavoredMilkComponent )
 			.thenFail( "Flavored milk is not allowed for children under age six" );
 
-	static MealRule mustHaveFlavoredFatFree = MealRule.create( "noFlavoredUnderSix" )
-			.appliesTo( isUnder6YearsOld.negate().and( hasFlavoredMilkComponent) ) 
+	static MealRule mustHaveFlavoredFatFree = MealRule.create( "mustHaveFlavoredFatFree" )
+			.appliesTo( is6OrOver.and( hasFlavoredMilkComponent) ) 
 			.when( hasLowFatOrFatFreeMilkComponent.negate() )
 			.thenFail( "Flavored milk must be fat-free" );	
-		
+	
+	static MealRule halfCupMilk = MealRule.create( "halfCupMilk" )
+			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( hasFluidMilkComponent ) )
+			.when( hasHalfCupMilk.negate() )
+			.thenWarn( "Ages 1 - 2yrs must have at least 1/2 cup of milk serving" );
+
+	static MealRule threeQuartersCupMilk = MealRule.create( "threeQuartersCupMilk" )
+			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( hasFluidMilkComponent ) )
+			.when( hasThreeQuartersCupMilk.negate() )
+			.thenWarn( "Ages 3 -5yrs must have at least 3/4 cup of milk serving" );
+
+	static MealRule cupMilk = MealRule.create( "cupMilk" )
+			.appliesTo( is6OrOver.and( hasFluidMilkComponent ) )
+			.when( hasCupMilk.negate() )
+			.thenWarn( "Over age 6, milk servings must be at least 1 cup" );
+
+	
 	static List<MealRule> MEAL_RULES = Arrays.asList( 
 			mustHaveFluidMilk, 
 			mustHaveVegetableFruit, 
@@ -105,5 +125,8 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 			wholeMilkFor1to2YearOlds,
 			fatFreeSkimAfter2Years,
 			noFlavoredUnderSix,
-			mustHaveFlavoredFatFree);
+			mustHaveFlavoredFatFree,
+			halfCupMilk,
+			threeQuartersCupMilk, 
+			cupMilk );
 }

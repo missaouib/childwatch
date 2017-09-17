@@ -1,6 +1,6 @@
 import { AppState } from '../../app.state';
 import { FoodActions } from '../food.actions';
-import { Meal, MealEvent } from '../food.interfaces';
+import { MealEvent } from '../food.interfaces';
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
 import { Store } from '@ngrx/store';
@@ -29,11 +29,18 @@ export class MealEventService {
 
     return this.http.get( '/api/mealEvent/search/between', {search: params} )
       .map( res => res.json() )
-      .map( ({_embedded: {menus} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, menus: menus } ) ) );
+      .map( ({_embedded: {mealEvent} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, mealEvents: mealEvent } ) ) );
   }
   
-  updateMealEvent( mealEvent: MealEvent ) {
-    console.log( mealEvent );
+  saveMealEvent( mealEvent: MealEvent ) {
+    return this.http.post( '/api/mealEvent', 
+      {
+        id: mealEvent.id,
+        startDate: mealEvent.startDate,
+        endDate: mealEvent.endDate,
+        meal: '/api/meal/' + mealEvent.meal.id,
+        recurrence: 'NONE'
+      });
   }
   
 }

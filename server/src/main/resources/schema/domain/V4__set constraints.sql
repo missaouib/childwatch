@@ -7,9 +7,9 @@
     alter table domain.meal_food_item add primary key (id);
     
     alter table domain.meal_event add PRIMARY KEY (id);
-	
-	alter table domain.unit_of_measure add primary key(unit);
-		
+
+    alter table domain.conversion add PRIMARY KEY (id);
+
     
     alter table domain.food_item
         add constraint FK_food_component__id

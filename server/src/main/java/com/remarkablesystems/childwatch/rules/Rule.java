@@ -32,8 +32,12 @@ public class Rule<T, U, R> implements IRule<T, U, R> {
 	 */
 	@Override
 	public R evaluate( T fact1, U fact2 ){		
+		
+		boolean applies = _appliesTo != null && _appliesTo.test( fact1,  fact2 );
+		
+		System.out.println( "RULE: " + this + ((applies)? " applies": " does not apply") );
 				
-		return ( _appliesTo != null && _appliesTo.test( fact1,  fact2 ) &&  _when != null && _then != null &_when.test( fact1,fact2 ) )? _then.apply(fact1,fact2) : null;
+		return (  applies &&  _when != null && _then != null &_when.test( fact1,fact2 ) )? _then.apply(fact1,fact2) : null;
 	}
 	
 

@@ -60,7 +60,7 @@
     "@types/jasmine": "^2.5.38",
     "@types/lodash": "^4.14.69",
     "@types/node": "^6.0.88",
-    "angular-ide": "^0.9.30",
+    "angular-ide": "^0.9.31",
     "codelyzer": "~2.0.0",
     "faker": "^4.1.0",
     "jasmine-core": "~2.5.2",

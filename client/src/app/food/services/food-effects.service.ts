@@ -72,8 +72,6 @@ export class FoodEffectsService {
     .map( toPayload )
     .switchMap( (payload: MealFoodItem) => this.onDeleteMealFoodItem(payload) );
           
-    
-  disablePersist: boolean;
   
   /**
    * Constructor for the FoodEffectsService
@@ -90,14 +88,13 @@ export class FoodEffectsService {
    private mealSvc: MealService,
    private foodAction: FoodActions
   ) {
-    this.disablePersist = false;  
   } 
   
   private onSaveMeal( meal: Meal ) {
-    if ( !this.disablePersist ) { this.mealSvc.save( meal ).subscribe(); }
-    return this.foodAction.loadMealFoodItemsForMeal( meal ); 
-    
-    // Observable.of({ type: FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL, payload: meal } );
+    if ( meal.id !== undefined ) {
+      this.mealSvc.save( meal ).subscribe();
+      return this.foodAction.loadMealFoodItemsForMeal( meal );
+    } else { Observable.of({type: 'NOOP-MEALNOTREADYTOSAVE', payload: meal } ); }
   }
   
   private onLoadMealFoodItemsForMeal( meal: Meal ) {
@@ -113,22 +110,18 @@ export class FoodEffectsService {
   }
     
   private onSaveMealFoodItem( mealFoodItem: MealFoodItem ) {
-    if ( !this.disablePersist ) { 
-      this.mealSvc.saveMealFoodItem( mealFoodItem ).first().subscribe( () => { 
-        if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
-          this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
-        }}); 
-    } 
+    this.mealSvc.saveMealFoodItem( mealFoodItem ).first().subscribe( () => { 
+      if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
+        this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
+      }}); 
     return Observable.of( { type: 'MEALFOODITEM_SAVED', payload: mealFoodItem });    
   }
   
   private onDeleteMealFoodItem( mealFoodItem: MealFoodItem ) {
-    if ( !this.disablePersist ) { 
-      this.mealSvc.deleteMealFoodItem( mealFoodItem.id ).subscribe(() => { 
-        if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
-          this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
-        }}); 
-    }
+    this.mealSvc.deleteMealFoodItem( mealFoodItem.id ).subscribe(() => { 
+      if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
+        this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
+      }}); 
     return Observable.of( { type: 'MEALFOODITEM_DELETED', payload: mealFoodItem });
   }
 

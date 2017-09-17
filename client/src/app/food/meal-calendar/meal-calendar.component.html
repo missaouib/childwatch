@@ -1,71 +1,40 @@
 <ng-template #customCellTemplate let-day="day">
-  <div class="cal-cell-top">
-    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber' }}</span>
+  <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
+	<span *ngIf="showAdd === day.date" (click)="clickedDay({day: day})"><i class="text-succcess fa fa-plus"></i> Add</span>
+    
+    
+    <span class="cal-day-number"><strong>{{ day.date | calendarDate:'monthViewDayNumber' }}</strong></span>
   </div>
-  <div *ngFor="let event of day.events">
-  	<small style="margin: 5px" [ngSwitch]="event.meta.type" >
-  		<img *ngSwitchCase="'BREAKFAST'" class="small_image" src="/assets/img/meal/breakfast.svg" />
-        <img *ngSwitchCase="'AM_SNACK'" class="small_image" src="/assets/img/meal/ante-meridiem.svg" />
-        <img *ngSwitchCase="'LUNCH'" class="small_image" src="/assets/img/meal/lunch.svg" />
-        <img *ngSwitchCase="'PM_SNACK'" class="small_image" src="/assets/img/meal/post-meridiem.svg" />
-        <img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" />
-  		{{event.meta.description}} </small>
-  		<a class="pull-right"><i class="text-danger fa fa-close" (click)="removeEvent(event)"></i></a>
+  <div class="call-events" *ngFor="let event of day.events" >
+  	<div class="chip bg-warning" [ngSwitch]="event.meta.meal.type" >
+  		<img  *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
+        <img *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
+        <img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
+        <img *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
+        <img *ngSwitchCase="'DINNER'" src="/assets/img/meal/turkey.svg" />
+  		{{event.title}}
+  		<div class="pull-right">
+  			<a><i class="text-primary fa fa-pencil" (click)="editMeal(event.meta.meal)"></i></a>
+  			<a><i class="text-danger fa fa-close" (click)="removeEvent(event.meta)"></i></a>
+  		</div>
+  	</div>
   </div>
 </ng-template>
 
+<div class="main-content">
+	<span class="btn pull-right bg-primary circle" (click)="addMeal()"><i class="fa fa-plus"></i></span>
+	<h3 class="text-center">{{ viewDate | date:'MMMM' }}</h3>
+	<br />
+	<mwl-calendar-month-view
+	    [viewDate]="viewDate"
+	    [events]="events"
+	    [activeDayIsOpen]="false"
+	    [refresh]="refresh"
+	    (eventTimesChanged)="eventDropped($event)"
+	    (eventClicked)="eventClicked($event)"
+		[cellTemplate]="customCellTemplate"
+		[excludeDays]="[0,6]">
+	</mwl-calendar-month-view>
+</div>  		 	
 
-<!--  <div class="row"> -->
-
-  <ng-sidebar-container style="height: 100vh">
-  	<ng-sidebar #sidebar [(opened)]="_opened" mode="'slide'" >
-  		<div class="card">
-    	<div class="card-header">
-	    	<h4 class="card-title">Meals 
-	    		<span class="btn-group pull-right small" dropdown [autoClose]="true" container="body">
-			  	<a dropdownToggle type="button" class="dropdown-toggle"><i class="fa fa-filter"></i> {{filter? filter : 'Filter'}}</a>
-			  	<a *ngIf="filter" (click)="filterList(undefined)">&nbsp;<i class="text-danger fa fa-close"></i></a>
-			  	<ul *dropdownMenu class="dropdown-menu" role="menu">							 
-			    	<li *ngFor="let type of ['Breakfast', 'AM Snack', 'Lunch', 'PM Snack', 'Dinner']" role="menuitem">
-						<a class="dropdown-item" (click)="filterList(type)">{{type}}</a>
-					</li>
-			  	</ul>
-			  	</span>
-			  	<a style="margin-right: 5px" class="pull-right small" (click)="addMeal()"><i class="fa fa-plus"></i> New</a>
-			</h4>
-		</div>
-      <div class="card-content">
-        <ul class="list-group">
-          <li *ngFor="let event of filteredList" mwlDraggable [dropData]="{event: event}" style="position:relative; z-index: 10" class="list-group-item">
-            <span [style.color]="event.color.primary" [ngSwitch]="event.meta.type">
-  				<img *ngSwitchCase="'BREAKFAST'" class="small_image" src="/assets/img/meal/breakfast.svg" />
-        		<img *ngSwitchCase="'AM_SNACK'" class="small_image" src="/assets/img/meal/ante-meridiem.svg" />
-        		<img *ngSwitchCase="'LUNCH'" class="small_image" src="/assets/img/meal/lunch.svg" />
-        		<img *ngSwitchCase="'PM_SNACK'" class="small_image" src="/assets/img/meal/post-meridiem.svg" />
-        		<img *ngSwitchCase="'DINNER'" class="small_image" src="/assets/img/meal/turkey.svg" /> {{ event.meta.description }}</span>
-        	<a (click)="editMeal(event.meta)" class="pull-right small text-primary"><i class="fa fa-pencil"></i> Edit</a>
-          </li>
-        </ul>
-      </div>
-    </div>		
-  	</ng-sidebar>
-  	
-  	<div ng-sidebar-content>
-  	   <span class="btn pull-right bg-primary circle" *ngIf="_opened" (click)="sidebar.close()"><i class="fa fa-close"></i></span>
-  		<span class="btn pull-right bg-primary circle" *ngIf="!_opened" (click)="sidebar.open()"><i class="fa fa-bars"></i></span> 
-  				<h3 class="text-center">{{ viewDate | date:'MMMM' }}</h3>
-		<br />
-		<mwl-calendar-month-view
-		    [viewDate]="viewDate"
-		    [events]="events"
-		    [activeDayIsOpen]="false"
-		    [refresh]="refresh"
-		    (eventTimesChanged)="eventDropped($event)"
-		    (eventClicked)="eventClicked($event)"
-		    (dayClicked)="viewDate = $event.day.date"
-			[cellTemplate]="customCellTemplate"
-			[excludeDays]="[0,6]">
-		</mwl-calendar-month-view>
-  		 	
-  	</div>
-  </ng-sidebar-container>
+	    <!-- (dayClicked)="clickedDay($event)" -->

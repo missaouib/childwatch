@@ -56,7 +56,7 @@ export class FoodActions {
    * Actions
    */
   mealsReceived = ActionCreatorFactory.create<Meal[]>(FoodActions.MEALS_RECEIVED );
-  mealEventsReceived = ActionCreatorFactory.create<{start: Date, end: Date, menus: MealEvent[]}>(FoodActions.MEAL_EVENTS_RECEIVED);
+  mealEventsReceived = ActionCreatorFactory.create<{start: Date, end: Date, mealEvents: MealEvent[]}>(FoodActions.MEAL_EVENTS_RECEIVED);
   foodItemsReceived = ActionCreatorFactory.create<FoodItem[]>(FoodActions.FOOD_ITEMS_RECEIVED);
   foodComponentsReceived = ActionCreatorFactory.create< FoodComponent[] > (FoodActions.FOOD_COMPONENTS_RECEIVED );  
   foodItemUpdated = ActionCreatorFactory.create<FoodItem>( FoodActions.FOOD_ITEM_UPDATED );    
@@ -65,7 +65,7 @@ export class FoodActions {
   
   mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED );
   
-  removeMealEvent = ActionCreatorFactory.create<CalendarEvent<Meal>>( FoodActions.REMOVE_MEALEVENT ); 
+  removeMealEvent = ActionCreatorFactory.create<CalendarEvent<MealEvent>>( FoodActions.REMOVE_MEALEVENT ); 
   
   saveMeal = ActionCreatorFactory.create<Meal>( FoodActions.SAVE_MEAL );
   mealSaved = ActionCreatorFactory.create<Meal>( FoodActions.MEAL_SAVED );  
@@ -157,6 +157,7 @@ export class FoodActions {
    * @return {FoodState} next state
    */  
   static setMealsReceived( state: FoodState, action: Action ) {
+    
     return { ...state, 
              meals: action.payload };  
   }
@@ -170,26 +171,29 @@ export class FoodActions {
    * @return {FoodState} next state
    */
   static setMealEventsReceived( state: FoodState, action: Action ) {
-   const mealEvents: MealEvent[] = action.payload.menus || [];
+    
+   const mealEvents: MealEvent[] = action.payload.mealEvents;
      
    const events = mealEvents.map( (mealEvent) => ({ 
      title: mealEvent.meal.description, 
      start: new Date(mealEvent.startDate),
-     meta: mealEvent.meal,
+     meta: mealEvent,
      color: FoodActions.DEFAULT_COLOR
    }) );
     
    return { ...state,
             menuUI: { ...state.menuUI, 
-                      menus: action.payload.menus, 
+                      mealEvents: mealEvents,
                       events: events } }; 
   }
   
   static setRemoveMealEvent( state: FoodState, action: Action ) {
-    const event = action.payload;
-    const events = state.menuUI.events.filter( (e) => e !== event );
+    const event: MealEvent = action.payload;
+    const mealEvents = state.menuUI.mealEvents.filter( (e) => e.id !== event.id );
+    const events = state.menuUI.events.filter( (e) => e.meta.id !== event.id );
     return { ...state,
              menuUI: { ...state.menuUI,
+                       mealEvents: mealEvents,
                        events: events }
     };
   }
@@ -342,7 +346,7 @@ export class FoodActions {
     const event = {
       title: meal.description,
       start: new Date(date),
-      meta: meal,
+      meta: newMealEvent,
       color: FoodActions.DEFAULT_COLOR
     };
     

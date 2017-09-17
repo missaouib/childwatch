@@ -79,10 +79,8 @@ export interface MealRulesViolation {
 
 
 export interface MenuUIState {
-  menuStart: Date;
-  menuEnd: Date;
   mealEvents: MealEvent[];
-  events: Array<CalendarEvent<Meal>>;
+  events: Array<CalendarEvent<MealEvent>>;
   currentMeal: Meal;
   currentMealFoodItems: MealFoodItem[];
   currentAgeGroup: string;
@@ -96,8 +94,6 @@ export const INITIAL_MEALSTATE: Meal = {
 };
 
 export const INITIAL_MENUUISTATE: MenuUIState = {
-  menuStart: undefined,
-  menuEnd: undefined,
   mealEvents: [],
   events: [],
   currentMeal: {

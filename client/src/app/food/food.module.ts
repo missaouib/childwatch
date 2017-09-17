@@ -29,6 +29,9 @@ import {EffectsModule} from '@ngrx/effects';
 import {FoodEffectsService} from './services/food-effects.service';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import {SidebarModule} from 'ng-sidebar';
+import { MealDayComponent } from './meal-day/meal-day.component';
+
+import {ModalModule} from 'ngx-bootstrap/modal';
 
 
 
@@ -55,13 +58,15 @@ const routes: Routes = [
     HttpModule, DragulaModule,
     EffectsModule.run(FoodEffectsService),
     AlertModule.forRoot(),
-    SidebarModule.forRoot()
+    SidebarModule.forRoot(),
+    ModalModule.forRoot()
   ],
   declarations: [ 
     MealCalendarComponent, 
-    MealBuilderComponent
+    MealBuilderComponent, MealDayComponent
   ],
-  providers: [ FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService ]
+  providers: [ FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService ],
+  entryComponents: [MealDayComponent]
 })
 export class FoodModule {
   

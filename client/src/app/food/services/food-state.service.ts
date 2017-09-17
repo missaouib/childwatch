@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem } from '../food.interfaces';
 import { FoodActions } from '../food.actions';
 import { CalendarEvent } from 'angular-calendar';
-
+import { UUID } from 'angular2-uuid';
 
 
 @Injectable()
@@ -31,7 +31,7 @@ export class FoodStateService {
     return this.store.select( s => s.food.meals );
   }
   
-  get mealEvents$(): Observable<Array<CalendarEvent<Meal>>>{
+  get mealEvents$(): Observable<Array<CalendarEvent<MealEvent>>>{
     return this.store.select( s => s.food.menuUI.events );
   }
   
@@ -48,6 +48,7 @@ export class FoodStateService {
   }
     
   scheduleMeal( meal: Meal, start: Date ) {
+    console.log( 'Scheduling new meal ' + meal.description + ' for ' + start );
     this.store.dispatch( this.actions.mealScheduled( { meal: meal, date: start } ) );
   }
     
@@ -56,7 +57,10 @@ export class FoodStateService {
   }
   
     
-  saveMeal( meal: Meal ) {
+  saveMeal( meal: Meal ) {    
+    const mealToSave = { ...meal };
+    if( mealToSave.id === undefined )
+      mealToSave.id = UUID.UUID();
     this.store.dispatch( this.actions.saveMeal( meal ) );
   }
   
@@ -71,7 +75,7 @@ export class FoodStateService {
   saveMealFoodItem( mealFoodItem: MealFoodItem ) {
     this.store.dispatch( this.actions.saveMealFoodItem( mealFoodItem ) );
   }
-  removeEvent( event: CalendarEvent<Meal> ) {
+  removeEvent( event: CalendarEvent<MealEvent> ) {
     this.store.dispatch( this.actions.removeMealEvent( event ) );
   }
    

@@ -22,9 +22,10 @@ public class MealFoodItem implements Serializable {
 	@Column(name="age_group") @Enumerated( EnumType.STRING )
 	private AgeGroup ageGroup;
 	
-	private BigDecimal quantity;
+	private double quantity;
 	
-	private String unit;
+	@Enumerated(EnumType.STRING)
+	private UnitOfMeasure unit;
 
 
 	@ManyToOne
@@ -45,11 +46,11 @@ public class MealFoodItem implements Serializable {
 		this.ageGroup = ageGroup;
 	}
 
-	public BigDecimal getQuantity() {
+	public double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(BigDecimal quantity) {
+	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
 
@@ -73,11 +74,11 @@ public class MealFoodItem implements Serializable {
 		return id;
 	}
 
-	public String getUnit() {
+	public UnitOfMeasure getUnit() {
 		return unit;
 	}
 
-	public void setUnit(String unit) {
+	public void setUnit(UnitOfMeasure unit) {
 		this.unit = unit;
 	}
 	

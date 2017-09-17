@@ -11,6 +11,7 @@ import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.Meal;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 import com.remarkablesystems.childwatch.domain.food.MealType;
+import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
 
 public class MealPredicate {
 
@@ -57,5 +58,13 @@ public class MealPredicate {
 	static BiPredicate<Meal,List<MealFoodItem>> isUnder2YearsOld = isInfant.or( isAgeGroup(AgeGroup.AGE_1_2YR) );
 
 	static BiPredicate<Meal,List<MealFoodItem>> isUnder6YearsOld = isUnder2YearsOld.or( isAgeGroup(AgeGroup.AGE_3_5YR) );
-			
+	
+	static BiPredicate<Meal,List<MealFoodItem>> is6OrOver = isAgeGroup(AgeGroup.AGE_6_12YR).or(isAgeGroup(AgeGroup.AGE_13_18YR) ).or( isAgeGroup(AgeGroup.AGE_ADULT));
+	
+	static BiPredicate<Meal,List<MealFoodItem>> hasHalfCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 0.5, UnitOfMeasure.CUPS ) ) );
+
+	static BiPredicate<Meal,List<MealFoodItem>> hasThreeQuartersCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 0.75, UnitOfMeasure.CUPS ) ) );
+
+	static BiPredicate<Meal,List<MealFoodItem>> hasCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 1, UnitOfMeasure.CUPS ) ) );
+
 }

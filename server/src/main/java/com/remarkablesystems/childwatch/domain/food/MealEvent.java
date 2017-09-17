@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,8 +29,8 @@ public class MealEvent {
 	@Column( name="end_date" )
 	Date endDate;
 	
-	@Column( name="recurrence_id" )
-	String recurrenceId;
+	@Enumerated(EnumType.STRING) @Column( name="recurrence" )
+	Recurrence recurrence;
 
 	public Meal getMeal() {
 		return meal;
@@ -54,12 +56,12 @@ public class MealEvent {
 		this.endDate = endDate;
 	}
 
-	public String getRecurrenceId() {
-		return recurrenceId;
+	public Recurrence getRecurrence() {
+		return recurrence;
 	}
 
-	public void setRecurrenceId(String recurrenceId) {
-		this.recurrenceId = recurrenceId;
+	public void setRecurrence(Recurrence recurrence) {
+		this.recurrence = recurrence;
 	}
 
 	public String getId() {

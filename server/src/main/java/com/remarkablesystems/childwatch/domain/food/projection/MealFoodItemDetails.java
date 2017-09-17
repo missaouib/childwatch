@@ -7,6 +7,7 @@ import org.springframework.data.rest.core.config.Projection;
 
 import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
+import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
 
 @Projection(name="mealFoodItemDetails", types= MealFoodItem.class )
 public interface MealFoodItemDetails {
@@ -15,6 +16,6 @@ public interface MealFoodItemDetails {
 	AgeGroup getAgeGroup();
 	BigDecimal getQuantity();
 	FoodItemFull getFoodItem();
-	String getUnit();
+	UnitOfMeasure getUnit();
 	MealFull getMeal();
 }
