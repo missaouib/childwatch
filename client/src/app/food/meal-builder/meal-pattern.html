@@ -1,0 +1,43 @@
+<h4>Meal Pattern Guidance</h4>
+
+<span *ngIf="currentMeal.type === 'BREAKFAST">
+<h5>Breakfast</h5>
+<ul *ngIf="currentAgeGroup === 'AGE_1_2YR">
+	<li>Milk - 1/2 Cup</li>
+	<li>Vegetables/Fruit - 1/4 Cup</li>
+	<li>Grains - 1/2 oz eq</li>
+</ul>
+<ul *ngIf="currentAgeGroup === 'AGE_3_5YR">
+	<li>Milk - 3/4 Cup</li>
+	<li>Vegetables/Fruit - 1/2 Cup</li>
+	<li>Grains - 1/2 oz eq</li>
+</ul>
+<ul *ngIf="currentAgeGroup === 'AGE_6_12YR || currentAgeGroup === 'AGE_13_18YR">
+	<li>Milk - 1 Cup</li>
+	<li>Vegetables/Fruit - 1/2 Cup</li>
+	<li>Grains - 1 oz eq</li>
+</ul>
+<ul *ngIf="currentAgeGroup === 'AGE_ADULT">
+	<li>Milk - 1 Cup</li>
+	<li>Vegetables/Fruit - 1/2 Cup</li>
+	<li>Grains - 2 oz eq</li>
+</ul>
+</span>
+
+<h5>General</h5>
+<ul>
+	<li>The combined fruit and vegetable component is now a separate vegetable component and a separate fruit component.</li>
+	<li>At least one serving of grains per day must be whole grain-rich.</li>
+	<li>Grain-based desserts no longer count towards the grain component (sweet crackers allowed).</li>
+	<li *ngIf="currentMeal.type === 'BREAKFAST">Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+	<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+	<li *ngIf="currentAgeGroup === 'AGE_1_2YR">Unflavored whole milk must be served to 1 year olds;</li>
+	<li *ngIf="currentAgeGroup === 'AGE_3_5YR">Unflavored low-fat or fat-free milk must be served to children 2 through 5 years old;</li>
+	<li *ngIf="currentAgeGroup === 'AGE_6_12YR || currentAgeGroup === '13_18YR' || currentAgeGruop === 'AGE_ADULT'">Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+	<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+	<li *ngIf="currentMeal.type === 'BREAKFAST">Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+	<li>Frying is not allowed as a way of preparing foods on-site.</li>
+	<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+	<li>Tofu counts as a meat alternate.</li>
+	<li>Juice is limited to once per day.</li>
+</ul>

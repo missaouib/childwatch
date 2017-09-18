@@ -61,25 +61,20 @@ export class MealCalendarComponent implements OnInit {
   }
   
   scheduleMeal( { meal, start }: {meal: Meal, start: Date} ) {
-    this.state.scheduleMeal( meal, start );
+    this.state.scheduleMealEvent( this.createMealEvent( meal, start ) );
     this.viewDate = start;
   }
-  
-  eventDropped( { event, newStart }: { event: any, newStart: Date} ): void {    
-    this.state.scheduleMeal( event, newStart );
-    this.viewDate = newStart;
-  }
-  
+    
   eventClicked({ event }: { event: CalendarEvent }): void {
     console.log('Event clicked', event);
   }
   
-  createMealEvent( meal: Meal ): MealEvent {
+  createMealEvent( meal: Meal, start?: Date ): MealEvent {
     const mealEvent: MealEvent = {
       id: UUID.UUID(),
-      startDate: new Date(),
-      endDate: undefined,
-      recurrenceId: undefined,
+      startDate: (start) ? start : new Date(),
+      endDate: new Date(),
+      recurrence: undefined,
       meal: meal
     };
     return mealEvent;

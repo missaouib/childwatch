@@ -1,30 +1,21 @@
 <div class="modal-header">
-	<h4>Meal Plan for {{ day.date | date:'mediumDate'}}</h4>
+	<h4>Add Mealfor {{ day.date | date:'mediumDate'}}</h4>
 </div>
 
 <div class="modal-body">
-	<ul>
-	 <li *ngFor="let event of day.events" class="chip bg-warning" [ngSwitch]="event.meta.meal.type" >
+	<h4>Select meal to add</h4>
+	<hr />
+	<ul style="list-style-type: none;">
+	 <li *ngFor="let meal of filteredMeals()" 
+	 	 class="chip" 
+	 	 [ngSwitch]="meal.type" 
+	 	 (click)="addMeal(meal)">
   		<img  *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
         <img *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
         <img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
         <img *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
         <img *ngSwitchCase="'DINNER'" src="/assets/img/meal/turkey.svg" />
-  		{{event.title}}
+  		{{meal.description}}
 	  </li>
 	  </ul>
-</div>
-
-<div class="modal-footer">
-	<span dropdown class="dropdownToggle">
-		<a dropdownToggle (click)="false">
-		<i class="text-primary fa fa-plus"></i> Add</a>
-		<ul *dropdownMenu class="dropdown-menu">		
-			<li *ngFor="let meal of filteredMeals()">
-				<a class="dropdown-item" (click)="addMeal(meal)">{{meal.description}}</a>
-			</li>
-		</ul>
-	</span>
-
-	<a (click)="closeDialog()"><i class="fa fa-close"></i> Close</a>
 </div>

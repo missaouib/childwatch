@@ -1,6 +1,6 @@
 <ng-template #customCellTemplate let-day="day">
   <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
-	<span *ngIf="showAdd === day.date" (click)="clickedDay({day: day})"><i class="text-succcess fa fa-plus"></i> Add</span>
+	<span class="text-primary" *ngIf="showAdd === day.date" (click)="clickedDay({day: day})"><i class="text-success fa fa-plus"></i> Add</span>
     
     
     <span class="cal-day-number"><strong>{{ day.date | calendarDate:'monthViewDayNumber' }}</strong></span>

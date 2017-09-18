@@ -64,7 +64,7 @@ export interface MealEvent {
   meal: Meal;
   startDate: Date;
   endDate: Date;
-  recurrenceId: string;
+  recurrence: string;
 }
 
 export interface MealRulesViolation {

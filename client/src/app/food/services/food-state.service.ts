@@ -47,9 +47,8 @@ export class FoodStateService {
     return this.store.select( s => s.food.menuUI.currentMeal );
   }
     
-  scheduleMeal( meal: Meal, start: Date ) {
-    console.log( 'Scheduling new meal ' + meal.description + ' for ' + start );
-    this.store.dispatch( this.actions.mealScheduled( { meal: meal, date: start } ) );
+  scheduleMealEvent( mealEvent: MealEvent ) {
+    this.store.dispatch( this.actions.mealEventScheduled( mealEvent ) );
   }
     
   get mealRuleViolations$(){
@@ -59,8 +58,7 @@ export class FoodStateService {
     
   saveMeal( meal: Meal ) {    
     const mealToSave = { ...meal };
-    if( mealToSave.id === undefined )
-      mealToSave.id = UUID.UUID();
+    if ( mealToSave.id === undefined ) { mealToSave.id = UUID.UUID(); }
     this.store.dispatch( this.actions.saveMeal( meal ) );
   }
   
@@ -75,6 +73,7 @@ export class FoodStateService {
   saveMealFoodItem( mealFoodItem: MealFoodItem ) {
     this.store.dispatch( this.actions.saveMealFoodItem( mealFoodItem ) );
   }
+  
   removeEvent( event: CalendarEvent<MealEvent> ) {
     this.store.dispatch( this.actions.removeMealEvent( event ) );
   }

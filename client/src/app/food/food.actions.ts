@@ -4,7 +4,7 @@
  * Copyright (c) 2017 Remarkable Systems, Incorporated.  
  * All Rights reserved
  */
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import { Action } from '@ngrx/store';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 
@@ -34,7 +34,7 @@ export class FoodActions {
   static MENU_TIME_ADJUSTED = 'MENU_TIME_ADJUSTED';
   static FOOD_ITEM_UPDATED = 'FOOD_ITEM_UPDATED';
   static FOOD_ITEM_DELETED = 'FOOD_ITEM_DELETED';
-  static MEAL_SCHEDULED = 'MEAL_SCHEDULED';
+  static MEALEVENT_SCHEDULED = 'MEALEVENT_SCHEDULED';
   
   static REMOVE_MEALEVENT = 'REMOVE_MEALEVENT';
   
@@ -63,7 +63,7 @@ export class FoodActions {
   foodItemDeleted = ActionCreatorFactory.create<FoodItem>( FoodActions.FOOD_ITEM_DELETED );      
   menuTimeAdjusted = ActionCreatorFactory.create<{start: Date, end: Date}>(FoodActions.MENU_TIME_ADJUSTED);
   
-  mealScheduled = ActionCreatorFactory.create<{meal: Meal, date: Date}>( FoodActions.MEAL_SCHEDULED );
+  mealEventScheduled = ActionCreatorFactory.create<MealEvent>( FoodActions.MEALEVENT_SCHEDULED );
   
   removeMealEvent = ActionCreatorFactory.create<CalendarEvent<MealEvent>>( FoodActions.REMOVE_MEALEVENT ); 
   
@@ -101,8 +101,8 @@ export class FoodActions {
         return FoodActions.setMenuTimeAdjusted(state, action);
      case FoodActions.FOOD_ITEM_UPDATED:
         return FoodActions.setFoodItemUpdated( state, action );
-     case FoodActions.MEAL_SCHEDULED:
-        return FoodActions.setMealScheduled( state, action );     
+     case FoodActions.MEALEVENT_SCHEDULED:
+        return FoodActions.setMealEventScheduled( state, action );     
      case FoodActions.REMOVE_MEALEVENT:
         return FoodActions.setRemoveMealEvent( state, action );
      case FoodActions.MEAL_VIOLATIONS_RECEIVED:
@@ -324,29 +324,18 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setMealScheduled( state: FoodState, action: Action ) {
-    const { meal, date } = action.payload;
+  static setMealEventScheduled( state: FoodState, action: Action ) {
+    const mealEvent = action.payload;
                   
-    // get the menu for the date
-    const mealEventIdx = state.menuUI.mealEvents.findIndex( (m) => moment(m.startDate).isSame( new Date(date), 'day' ) );
-    
-    const newMealEvent = ( mealEventIdx < 0 ) ? 
-      {
-        id: undefined,
-        meal: undefined,
-        startDate: new Date(date),
-        endDate: undefined,
-        recurrenceId: undefined
-      } : { ...state.menuUI.mealEvents[mealEventIdx] };
-    
-    const mealEvents = state.menuUI.mealEvents.slice();
-        
-    if ( mealEventIdx < 0 ) { mealEvents.push( newMealEvent ); } else { mealEvents.splice( mealEventIdx, 0, newMealEvent ); }
                   
+    const mealEvents = state.menuUI.mealEvents.filter( (e) => e.id !== mealEvent.id );
+    
+    mealEvents.push( mealEvent );
+                     
     const event = {
-      title: meal.description,
-      start: new Date(date),
-      meta: newMealEvent,
+      title: mealEvent.meal.description,
+      start: new Date(mealEvent.startDate),
+      meta: mealEvent,
       color: FoodActions.DEFAULT_COLOR
     };
     
@@ -354,7 +343,8 @@ export class FoodActions {
     events.push( event );
     return { ...state, 
              menuUI: { ...state.menuUI, 
-                       events: events } };
+                       events: events,
+                       mealEvents: mealEvents } };
   }
   
   

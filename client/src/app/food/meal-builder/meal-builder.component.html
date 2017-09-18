@@ -2,13 +2,19 @@
 <div class="card">
 	<div class="card-header">
 		<div class="card-title">
-			<h3 *ngIf="!editing" (click)="editing = !editing">
+			<h3 *ngIf="!editing" >
 				<span class="pull-right" >
-					<a><small class="text-primary"><i class="fa fa-pencil"></i> Edit </small></a>
+					<a *ngIf="mealForm.get('name').value && mealForm.get('type').value"><small class="text-primary"><i class="fa fa-save"></i> Save </small></a>
+					<small *ngIf="mealForm.get('name').value === undefined || mealForm.get('type').value === undefined" class="text-default"><i class="fa fa-save"></i> Save </small>							   
+					<br/>
 					<a><small class="text-danger"><i class="fa fa-trash"></i> Delete </small></a>
 				</span>
-				<em>{{ mealForm.get('name').value || "New Meal" }}</em>
-				<small>{{ mealForm.get('type').value || "Type"}}</small>
+				<span (click)="editing = !editing">
+					<em>{{ mealForm.get('name').value || "New Meal" }}</em> <br />
+					<small>{{ mealForm.get('type').value || "Unknown Type"}}</small><br/>
+					<small *ngIf="mealForm.get('name').value === undefined || mealForm.get('type').value === undefined" 
+							class="text-danger">You must name the meal and set the type before adding food items</small>
+				</span>				
 			</h3>
 		
 			<form *ngIf="editing" novalidate [formGroup]="mealForm" >
@@ -49,9 +55,50 @@
 			<hr />
 			
 			<alert type="local" *ngIf="showGuidance && mealForm.valid">
-				<h4 class="alert-heading">Guidance for {{currentAgeGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}} {{mealForm.get('type').value.toLowerCase() }}</h4>
-				<p>Can we try some other colours maybe make it original could you rotate the picture to show the other side of the room? try making it a bit less blah jazz it up a little that's great, but can you make it work for ie 2 please. That's great, but we need to add this 2000 line essay can you put "find us on facebook" by the facebook logo? we don't need a contract, do we give us a complimentary logo along with the website is this the best we can do, so i love it, but can you invert all colors?. That's great, but can you make it work for ie 2 please I have an awesome idea for a startup, i need you to build it for me we are a big name to have in your portfolio, could you rotate the picture to show the other side of the room? I like it, but can the snow look a little warmer will royalties in the company do instead of cash we need more images of groups of people having non-specific types of fun.</p>
-				<p>Can you turn it around in photoshop so we can see more of the front. Can you make it look like this clipart i found try making it a bit less blah yet I really think this could go viral anyway, you are the designer, you know what to do can you make the blue bluer? nor I want you to take it to the next level. I need a website. How much will it cost the website doesn't have the theme i was going for, what you've given us is texty, we want sexy so can you lower the price for the website? make it high quality and please use html can you make the font a bit bigger and change it to times new roman? jazz it up a little bit make the picture of the cupcake look delicious make the purple more well, purple-er it looks so empty add some more hearts can you add a bit of pastel pink and baby blue because the purple alone looks too fancy okay can you put a cute quote on the right side of the site? oh no it looks messed up! i think we need to start from scratch that sandwich needs to be more playful. That sandwich needs to be more playful theres all this spanish text on my site. This red is too red the website doesn't have the theme i was going for, yet the target audience is makes and famles aged zero and up concept is bang on, but can we look at a better execution I have printed it out, but the animated gif is not moving the hair is just too polarising. You are lucky to even be doing this for us I know somebody who can do this for a reasonable cost, or I got your invoice...it seems really high, why did you charge so much. I got your invoice...it seems really high, why did you charge so much other agencies charge much lesser needs to be sleeker, so try making it a bit less blah the flier should feel like a warm handshake, and can you turn it around in photoshop so we can see more of the front, we are a big name to have in your portfolio.</p> 
+				<h4 class="alert-heading">Meal Pattern Guidance for {{currentAgeGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</h4>
+				
+				<span *ngIf="currentMeal.type === 'BREAKFAST'">
+				<h5>Breakfast</h5>
+				<ul *ngIf="currentAgeGroup === 'AGE_1_2YR'">
+					<li>Milk - 1/2 Cup</li>
+					<li>Vegetables/Fruit - 1/4 Cup</li>
+					<li>Grains - 1/2 oz eq</li>
+				</ul>
+				<ul *ngIf="currentAgeGroup === 'AGE_3_5YR'">
+					<li>Milk - 3/4 Cup</li>
+					<li>Vegetables/Fruit - 1/2 Cup</li>
+					<li>Grains - 1/2 oz eq</li>
+				</ul>
+				<ul *ngIf="currentAgeGroup === 'AGE_6_12YR' || currentAgeGroup === 'AGE_13_18YR'">
+					<li>Milk - 1 Cup</li>
+					<li>Vegetables/Fruit - 1/2 Cup</li>
+					<li>Grains - 1 oz eq</li>
+				</ul>
+				<ul *ngIf="currentAgeGroup === 'AGE_ADULT'">
+					<li>Milk - 1 Cup</li>
+					<li>Vegetables/Fruit - 1/2 Cup</li>
+					<li>Grains - 2 oz eq</li>
+				</ul>
+				</span>
+				
+				<h5>General</h5>
+				<ul>
+					<li>The combined fruit and vegetable component is now a separate vegetable component and a separate fruit component.</li>
+					<li>At least one serving of grains per day must be whole grain-rich.</li>
+					<li>Grain-based desserts no longer count towards the grain component (sweet crackers allowed).</li>
+					<li *ngIf="currentMeal.type === 'BREAKFAST'">Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+					<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+					<li *ngIf="currentAgeGroup === 'AGE_1_2YR'">Unflavored whole milk must be served to 1 year olds;</li>
+					<li *ngIf="currentAgeGroup === 'AGE_3_5YR'">Unflavored low-fat or fat-free milk must be served to children 2 through 5 years old;</li>
+					<li *ngIf="currentAgeGroup === 'AGE_6_12YR' || currentAgeGroup === '13_18YR' || currentAgeGroup === 'AGE_ADULT'">Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+					<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+					<li *ngIf="currentMeal.type === 'BREAKFAST'">Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+					<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+					<li>Tofu counts as a meat alternate.</li>
+					<li>Juice is limited to once per day.</li>
+				</ul>
+				
 			</alert>
 			
 			<alert *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" [type]="(violation.severity === 'FAIL') ? 'danger' : (violation.severity === 'FAIL') ? 'warning' : 'info'">
@@ -90,10 +137,11 @@
 						<span class="col-xs-12 col-sm-2"> 
 							<label>Units</label> 
 							<select class="form-control" formControlName="unit">
-								<option value="each">each</option>
-								<option value="oz">oz</option>
-								<option value="slice">slice</option>
-								<option value="lbs">lbs</option>
+								<option value="EACH">EACH</option>
+								<option value="OZ">OZ</option>
+								<option value="CUPS">CUPS</option>
+								<option value="SLICE">SLICE</option>
+								<option value="SERVING">SERVING</option>
 							</select>
 						</span> 
 						<span class="col-sm-1">

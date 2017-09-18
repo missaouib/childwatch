@@ -4,10 +4,11 @@
  * Copyright (c) 2017 Remarkable Systems, Incorporated.  
  * All Rights reserved
  */
-import { Meal } from '../food.interfaces';
+import { Meal, MealEvent } from '../food.interfaces';
 import { FoodStateService } from '../services/food-state.service';
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { UUID } from 'angular2-uuid';
 
 /**
  * MealDayComponent
@@ -33,37 +34,39 @@ export class MealDayComponent implements OnInit {
     private state: FoodStateService
     
   ) {}
-
   
   /**
    * 
    */
   ngOnInit() {
-    this.state.meals$.subscribe( (meals) => this.meals = meals );
-  
+    this.state.meals$.subscribe( (meals) => this.meals = meals );  
   }
-    
-  
+      
   /**
-   * Close the dialog window & emit the data
-   */
-  closeDialog() {
-    this.bsModalRef.hide();    
-  }
-  
-  filteredMeals(): Meal[] {
-    
-    const eventMeals: Meal[] = this.day.events ? this.day.events.map( (e: any) => e.meta.meal ) : [];
-    
+   * Filter the list of meals to only those that arent being shown for the given day
+   * 
+   * @returns Meal[] filtered array of Meals
+   */    
+  filteredMeals(): Meal[] {    
+    const eventMeals: Meal[] = this.day.events ? this.day.events.map( (e: any) => e.meta.meal ) : [];    
     return this.meals.filter( (meal) =>  eventMeals.find( (em) => em.id === meal.id ) === undefined );
   }
   
-  addMeal( meal: Meal ) {
-    this.state.scheduleMeal( meal, this.day.date );
+  /**
+   * Add a meal to the meal events list for the day and close the dialog window
+   * 
+   * @param meal Meal item to add
+   */
+  addMeal( meal: Meal ) {    
+    const event: MealEvent = {
+      id: UUID.UUID(),
+      startDate: new Date(this.day.date),
+      endDate: new Date(this.day.date),
+      recurrence: 'NONE',
+      meal: meal
+    }; 
+    this.state.scheduleMealEvent( event ) ;
+    this.bsModalRef.hide();
   }
 
 }
-
-/*
- * End meal-day.ts 
- */

@@ -8,6 +8,8 @@ import * as moment from 'moment';
 
 @Injectable()
 export class MealEventService {
+  
+  static URL = '/api/mealEvent';
 
   /**
    * @constructor
@@ -27,13 +29,14 @@ export class MealEventService {
     params.append( 'start', moment( start ).format( 'MM/DD/YYYY' ) );
     params.append( 'end', moment(end).format( 'MM/DD/YYYY' ) );
 
-    return this.http.get( '/api/mealEvent/search/between', {search: params} )
+    return this.http.get( MealEventService.URL + '/search/between', {search: params} )
       .map( res => res.json() )
-      .map( ({_embedded: {mealEvent} }) => this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, mealEvents: mealEvent } ) ) );
+      .map( ({_embedded: {mealEvent} }) => 
+          this.store.dispatch( this.actions.mealEventsReceived( { start: start, end: end, mealEvents: mealEvent } ) ) );
   }
   
-  saveMealEvent( mealEvent: MealEvent ) {
-    return this.http.post( '/api/mealEvent', 
+  save( mealEvent: MealEvent ) {
+    return this.http.post( MealEventService.URL, 
       {
         id: mealEvent.id,
         startDate: mealEvent.startDate,
@@ -41,6 +44,10 @@ export class MealEventService {
         meal: '/api/meal/' + mealEvent.meal.id,
         recurrence: 'NONE'
       });
+  }
+  
+  delete( mealEvent: MealEvent ) {
+      return this.http.delete( MealEventService.URL + '/' + mealEvent.id );
   }
   
 }

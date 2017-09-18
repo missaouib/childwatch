@@ -4,7 +4,7 @@
  * Copyright (c) 2017 Remarkable Systems, Incorporated.  
  * All Rights reserved
  */
-import {FoodComponent, Meal, FoodItem, MealRulesViolation, INITIAL_MEALSTATE, MealFoodItem} from '../food.interfaces';
+import {FoodComponent, Meal, FoodItem, MealRulesViolation, MealFoodItem} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
 import {Component, OnInit, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -69,7 +69,12 @@ export class MealBuilderComponent implements OnInit {
   rulesViolations: MealRulesViolation[] = [];
 
   
-  currentMeal: Meal = INITIAL_MEALSTATE;  
+  currentMeal: Meal = {
+    id: UUID.UUID(),
+    description: undefined,
+    type: undefined
+  };
+  
   currrentMealFoodItems: MealFoodItem[] = [];
   
   editing = false;
@@ -96,17 +101,15 @@ export class MealBuilderComponent implements OnInit {
   ngOnInit() {
     // create the meal form; food items are created on demand
     this.mealForm = this.formBuilder.group({
-      id: undefined,
+      id: UUID.UUID(),
       name: [undefined, Validators.required],
       type: [undefined, Validators.required]    
     });
     
     // subscribe to the current meal
     this.state.currentMeal$.subscribe( (currentMeal: Meal) => {
-      if ( currentMeal.id !== this.currentMeal.id ) { console.log( 'Clear the data here!' ); } 
-      console.log('currentMeal id = ' + currentMeal.id + '');
-      this.mealForm.patchValue({'name': currentMeal.description, 'type': currentMeal.type});
-      this.currentMeal = { ...currentMeal };
+      this.currentMeal = currentMeal;
+      this.mealForm.patchValue({ 'id': currentMeal.id, 'name': currentMeal.description, 'type': currentMeal.type});
     });
 
     // get the food components
@@ -122,15 +125,19 @@ export class MealBuilderComponent implements OnInit {
 
     // when the name/type change - save the meal
     this.mealForm.valueChanges.debounceTime(500).subscribe(() => {
+        this.currentMeal = {
+           id: (this.mealForm.get('id').value || UUID.UUID()),
+           description: this.mealForm.get('name').value,
+           type: (this.mealForm.get('type').value as string).toUpperCase().replace( ' ', '_')
+        };
+      
       if (this.mealForm.valid && (this.mealForm.get('name').dirty || this.mealForm.get('type').dirty)) {
-        //FIXME: need to copy the current meal and set the values...
-        this.currentMeal.description = this.mealForm.get('name').value;
-        this.currentMeal.type = (this.mealForm.get('type').value as string).toUpperCase().replace( ' ', '_');
-        this.state.saveMeal(this.currentMeal);
-        this.toastr.success('Saved the meal ' + this.currentMeal.description + ' (' + this.currentMeal.type + ' )', 'Save');        
+        this.state.saveMeal( this.currentMeal );
+        this.toastr.success('Saved the meal ' + this.currentMeal.description, 'Save');        
       }
     });
     
+    // subscribe to the list of meal food itmes
     this.state.currentMealFoodItems$.subscribe( (mealFoodItems) => {
             
       mealFoodItems.forEach( (mealFoodItem) =>
@@ -139,6 +146,7 @@ export class MealBuilderComponent implements OnInit {
       this.currrentMealFoodItems = mealFoodItems;
     });
     
+    // subscribe to the meal rules violations
     this.state.mealRuleViolations$.subscribe( (violations) => this.rulesViolations = violations );
 
   }
@@ -211,7 +219,7 @@ export class MealBuilderComponent implements OnInit {
       id: UUID.UUID(),
       foodItem: undefined,
       quantity: 1,
-      unit: 'each',
+      unit: 'EACH',
       meal: this.currentMeal,
       ageGroup: this.currentAgeGroup,
       foodComponent: foodComponent
