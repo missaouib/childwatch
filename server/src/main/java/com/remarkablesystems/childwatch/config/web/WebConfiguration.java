@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch;
+package com.remarkablesystems.childwatch.config.web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

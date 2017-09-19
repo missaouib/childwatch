@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch;
+package com.remarkablesystems.childwatch.config.db;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;

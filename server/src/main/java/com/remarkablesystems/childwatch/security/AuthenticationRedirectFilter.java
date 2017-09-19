@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch;
+package com.remarkablesystems.childwatch.security;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
