@@ -41,11 +41,17 @@ public class RuleValidatorController {
 		List<RuleViolation> violations = new ArrayList<RuleViolation>();
 		AgeGroup.ALL.stream().forEachOrdered( (ageGroup) -> {
 			List<MealFoodItem>mealFoodItems = mealFoodItemRepo.findByMealIdAndAgeGroup( mealId, ageGroup );
-			if( mealFoodItems.size() > 0 )
-				violations.addAll( MEAL_RULES.stream()
+			if( mealFoodItems.size() > 0 ) {
+				violations.addAll( MealRule.RULES.stream()
 										.map( (rule) -> rule.evaluate(meal, mealFoodItems) ) // evaluate the rules
 										.filter( (violation) -> violation != null ) // filter out nulls
-										.collect( Collectors.toList() ) );	// collect them into a list					
+										.collect( Collectors.toList() ) );	// collect them into a list
+				if( ageGroup.isInfant() )
+					violations.addAll( InfantRule.RULES.stream()
+							.map( (rule) -> rule.evaluate(meal, mealFoodItems) ) // evaluate the rules
+							.filter( (violation) -> violation != null ) // filter out nulls
+							.collect( Collectors.toList() ) );	// collect them into a list
+			}
 		});
 		
 		return violations;

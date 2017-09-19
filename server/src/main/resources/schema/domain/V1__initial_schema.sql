@@ -8,15 +8,16 @@
     	parent_component 	varchar(36)
     );
     
-    -- units IN ('OZ', 'CUPS', 'EACH')
+    -- units IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' )
+
     
     create table food_item(
     	id 					varchar(36) NOT NULL,
     	description 		varchar(256) NOT NULL,
     	short_description 	varchar(128),
     	food_component_id 	varchar(36) NOT NULL,
-    	serving_unit 		varchar(36) DEFAULT 'EACH' CHECK( serving_unit IN ('OZ', 'CUPS', 'EACH') ),
-    	purchase_unit 		varchar(36) DEFAULT 'EACH' CHECK( purchase_unit IN ('OZ', 'CUPS', 'EACH') ),
+    	serving_unit 		varchar(36) DEFAULT 'EACH' CHECK( serving_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
+    	purchase_unit 		varchar(36) DEFAULT 'EACH' CHECK( purchase_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
     	notes 				varchar(4096)
     );
     
@@ -46,8 +47,8 @@
 	-- to = (( from + from_offset ) * muliplicand / denominator ) + to_offset	
 	CREATE TABLE conversion(
 		id	varchar(36) NOT NULL,
-		from_unit  varchar(36) NOT NULL CHECK( from_unit IN ('OZ', 'CUPS', 'EACH') ),
-		to_unit	  varchar(36) NOT NULL CHECK( to_unit IN ('OZ', 'CUPS', 'EACH') ),
+		from_unit  varchar(36) NOT NULL CHECK( from_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
+		to_unit	  varchar(36) NOT NULL CHECK( to_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
 		from_offset	  numeric (4,2) NOT NULL DEFAULT 0,
 		multiplicand  numeric (4,2) NOT NULL DEFAULT 1,
 		denominator   numeric (4,2) NOT NULL DEFAULT 1,

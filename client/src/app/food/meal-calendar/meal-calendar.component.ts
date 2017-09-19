@@ -64,6 +64,33 @@ export class MealCalendarComponent implements OnInit {
     this.state.scheduleMealEvent( this.createMealEvent( meal, start ) );
     this.viewDate = start;
   }
+  
+  gotoPreviousMonth() {
+     this.viewDate = this.previousMonth();
+    this.state.adjustMenuTime( moment(this.viewDate).startOf('month').toDate(), moment(this.viewDate).endOf('month').toDate());    
+  }
+    
+  gotoNextMonth() {
+     this.viewDate = this.nextMonth();
+    this.state.adjustMenuTime( moment(this.viewDate).startOf('month').toDate(), moment(this.viewDate).endOf('month').toDate());    
+  }
+  
+  gotoToday() {
+    this.viewDate = new Date();
+    this.state.adjustMenuTime( moment(this.viewDate).startOf('month').toDate(), moment(this.viewDate).endOf('month').toDate());        
+  }
+  
+  nextMonth() {
+    return moment(this.viewDate).add( 1, 'months' ).toDate();
+  }
+    
+  previousMonth() {
+    return moment(this.viewDate).subtract( 1, 'months' ).toDate();
+  } 
+   
+   differentYear() {
+     return !moment( this.viewDate ).isSame( new Date(), 'year' );
+   }
     
   eventClicked({ event }: { event: CalendarEvent }): void {
     console.log('Event clicked', event);
@@ -80,13 +107,13 @@ export class MealCalendarComponent implements OnInit {
     return mealEvent;
   }
   
-  filterMealList( type: string ){
+  filterMealList( type: string ) {
     this.filter = type;    
     this.filteredMeals = (this.filter === undefined) ? 
       this.meals : this.meals.filter( (meal) => meal.type === type.toUpperCase().replace( ' ', '_') );    
   }
   
-  compare( a: CalendarEvent<MealEvent>, b: CalendarEvent<MealEvent> ){
+  compare( a: CalendarEvent<MealEvent>, b: CalendarEvent<MealEvent> ) {
     const MEALS = ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER'];
     const iA = MEALS.indexOf( a.meta.meal.type );
     const iB = MEALS.indexOf( b.meta.meal.type );

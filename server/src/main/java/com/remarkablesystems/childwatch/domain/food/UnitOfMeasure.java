@@ -4,9 +4,15 @@ import java.lang.reflect.Field;
 import java.util.function.DoubleFunction;
 
 public enum UnitOfMeasure {
-	OZ,
-	EACH,
-	CUPS;		
+	OUNCES,
+	LBS,
+	UNITS,
+	GALLONS,
+	CUPS,
+	SERVINGS,
+	TABLESPOONS,
+	TEASPOONS,
+	EACH;	
 	
 	
 	public static boolean canConvert( UnitOfMeasure from, UnitOfMeasure to ) {
@@ -38,6 +44,6 @@ public enum UnitOfMeasure {
 		return retValue;
 	}
 		
-	static DoubleFunction<Double> OZ_CUPS = (value) -> value / 8;
-	static DoubleFunction<Double> CUPS_OZ = (value) -> value * 8;
+	static DoubleFunction<Double> OUNCES_CUPS = (value) -> value / 8;
+	static DoubleFunction<Double> CUPS_OUNCES = (value) -> value * 8;
 }

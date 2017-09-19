@@ -4,6 +4,7 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ public class DatabaseMigration {
 
     private boolean domainMigrationExecuted;
     private boolean usersMigrationExecuted;
+    
+    @Value("${wipe.database:false}")
+    private boolean wipe;
 
     public DatabaseMigration(
             @Qualifier("domain") DataSource domainDataSource,
@@ -38,7 +42,6 @@ public class DatabaseMigration {
     }
 
     private int migrate(DataSource dataSource, String schema) {
-        boolean wipe = System.getProperty("wipe") != null;
 
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
@@ -47,6 +50,9 @@ public class DatabaseMigration {
         if (wipe) {
             logger.info("Wiping schema: " + schema);
             flyway.clean();
+        }
+        else {
+        	logger.info("Schema " + schema + " will not be wiped" );
         }
         logger.info("Migrating schema: " + schema);
         return flyway.migrate();

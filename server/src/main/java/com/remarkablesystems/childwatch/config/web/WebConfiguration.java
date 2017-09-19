@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebConfiguration extends WebMvcConfigurerAdapter {
     public static final String INDEX_VIEW_NAME = "forward:index.html";
+    
 
     // This makes Spring serve index.html in response to /, /schedule, etc. without redirecting the browser or making
     // it change the URL in any way. IOW it's more like a transparent "proxy" than an invasive redirect.

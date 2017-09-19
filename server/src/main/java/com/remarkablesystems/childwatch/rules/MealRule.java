@@ -18,7 +18,7 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	static MealRule create( String name ) { return  new MealRule( name ); };
 	
 	
-	private MealRule( String name ) {
+	MealRule( String name ) {
 		this.name = name;
 	}
 	
@@ -117,7 +117,7 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 			.thenWarn( "Over age 6, milk servings must be at least 1 cup" );
 
 	
-	static List<MealRule> MEAL_RULES = Arrays.asList( 
+	static List<MealRule> RULES = Arrays.asList( 
 			mustHaveFluidMilk, 
 			mustHaveVegetableFruit, 
 			mustHaveGrainBreadOrMeat, 

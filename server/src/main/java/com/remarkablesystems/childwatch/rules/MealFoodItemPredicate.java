@@ -25,6 +25,7 @@ public class MealFoodItemPredicate {
 	static Predicate<MealFoodItem> isFlavoredMilkItem = isMilkItem.and( descriptionContains("chocolate" ) ); 
 			
 	static Predicate<MealFoodItem> isLowFatOrFatFreeMilkItem = isMilkItem.and( descriptionContains( Arrays.asList("lowfat", "1%", "1 %", "skim" ) ) ); 
+	
 			
 			
 	static Predicate<MealFoodItem> isVegOrFruitItem = isFoodComponentType( "VEG" ).or( isFoodComponentType( "FRUIT" ) );
@@ -40,11 +41,11 @@ public class MealFoodItemPredicate {
 		return ( convert.isNaN() )? false : convert.doubleValue() >= quantity;
 	}; };
 
-    private static Predicate<MealFoodItem> descriptionContains( String target ){ return (item) -> item.getFoodItem().getDescription().toLowerCase().contains(target); };
-    private static Predicate<MealFoodItem> descriptionContains( List<String> targets ){ return (item) -> targets.stream().anyMatch( (target) -> item.getFoodItem().getDescription().toLowerCase().contains(target) ); };
+    static Predicate<MealFoodItem> descriptionContains( String target ){ return (item) -> item.getFoodItem().getDescription().toLowerCase().contains(target); };
+    static Predicate<MealFoodItem> descriptionContains( List<String> targets ){ return (item) -> targets.stream().anyMatch( (target) -> item.getFoodItem().getDescription().toLowerCase().contains(target) ); };
 	
 	
-	private static Predicate<MealFoodItem> isFoodComponentType(String type) { return ( mealFoodItem ) -> {	
+	static Predicate<MealFoodItem> isFoodComponentType(String type) { return ( mealFoodItem ) -> {	
 		
 		FoodItem item = mealFoodItem.getFoodItem();
 		FoodComponent component = item != null ? item.getFoodComponent() : null; 
