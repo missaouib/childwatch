@@ -24,11 +24,40 @@ public class MealPredicate {
 	static BiPredicate<Meal,List<MealFoodItem>> isLunch = (meal,mealFoodItems) -> meal.getType().equals( MealType.LUNCH );
 	static BiPredicate<Meal,List<MealFoodItem>> isSnack = (meal,mealFoodItems) -> meal.getType().equals( MealType.AM_SNACK ) || meal.getType().equals( MealType.PM_SNACK );
 	static BiPredicate<Meal,List<MealFoodItem>> isDinner = (meal,mealFoodItems) -> meal.getType().equals( MealType.DINNER );
+	static BiPredicate<Meal,List<MealFoodItem>> isLunchOrDinner = isDinner.or( isLunch );
 	
 	static BiPredicate<Meal,List<MealFoodItem>> hasAnyItem(Predicate<MealFoodItem> any) { return (meal,item) -> item.stream().anyMatch( any ); }
 	static BiPredicate<Meal,List<MealFoodItem>> hasAllItems(Predicate<MealFoodItem> all) { return (meal,item) -> item.stream().allMatch( all ); }
 	static BiPredicate<Meal,List<MealFoodItem>> hasNoItems(Predicate<MealFoodItem> none) { return (meal,item) -> item.stream().noneMatch( none ); }
 	
+	static BiPredicate<Meal,List<MealFoodItem>> hasAtLeastCountItems( int count, Predicate<MealFoodItem> any) { return (meal,item) -> item.stream().filter( any ).count() >= count; }
+	
+	/**
+	 * Predicate for mustHave items; this predicate will fail if the item is not present or if the item is present but not in sufficient quantities
+	 * 
+	 * @param itemRequired predicate to determine the required item
+	 * @param quantity amount of the item required
+	 * @param units unit of measure for the quantity required
+	 * 
+	 * @return true if the item is present and in sufficient quantities; false otherwise
+	 */
+	static BiPredicate<Meal,List<MealFoodItem>> mustHave( Predicate<MealFoodItem> itemRequired, double quantity, UnitOfMeasure units ){
+		return hasNoItems( itemRequired ).or( hasAnyItem( itemRequired.and( isQuantityItem( quantity, units ).negate() )) );
+	}
+
+	/**
+	 * Predicate for ifHas items; this predicate will fail if the item is present and not in sufficient quantities.  Unlike the mustHave predicate
+	 *  this will not fail if the item is not there
+	 *  
+	 * @param itemRequired
+	 * @param quantity
+	 * @param units
+	 * @return 
+	 */
+	static BiPredicate<Meal,List<MealFoodItem>> ifHas( Predicate<MealFoodItem> itemRequired, double quantity, UnitOfMeasure units ){
+		return hasAnyItem( itemRequired.and( isQuantityItem( quantity, units ).negate() ) );
+	}
+
 	
 	static BiPredicate<Meal,List<MealFoodItem>> hasVegFruitComponent = hasAnyItem( isVegOrFruitItem );
 		
@@ -60,7 +89,9 @@ public class MealPredicate {
 	static BiPredicate<Meal,List<MealFoodItem>> isUnder6YearsOld = isUnder2YearsOld.or( isAgeGroup(AgeGroup.AGE_3_5YR) );
 	
 	static BiPredicate<Meal,List<MealFoodItem>> is6OrOver = isAgeGroup(AgeGroup.AGE_6_12YR).or(isAgeGroup(AgeGroup.AGE_13_18YR) ).or( isAgeGroup(AgeGroup.AGE_ADULT));
-	
+
+	static BiPredicate<Meal,List<MealFoodItem>> isOver2YearsOld = is6OrOver.or( isAgeGroup( AgeGroup.AGE_3_5YR ) );
+
 	static BiPredicate<Meal,List<MealFoodItem>> hasHalfCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 0.5, UnitOfMeasure.CUPS ) ) );
 
 	static BiPredicate<Meal,List<MealFoodItem>> hasThreeQuartersCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 0.75, UnitOfMeasure.CUPS ) ) );

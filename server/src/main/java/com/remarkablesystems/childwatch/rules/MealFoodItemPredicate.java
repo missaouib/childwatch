@@ -16,9 +16,12 @@ public class MealFoodItemPredicate {
 	static Predicate<MealFoodItem> isMilkItem = isFoodComponentType( "MILKIE" ) ;
 
 	static Predicate<MealFoodItem> isVegJuiceItem = isFoodComponentType( "VEGIEJUICE" );
+	
+	static Predicate<MealFoodItem> isVegItem = isFoodComponentType( "VEG" );
+	
+	static Predicate<MealFoodItem> isFruitItem = isFoodComponentType( "FRUIT" );
 			
 	static Predicate<MealFoodItem> isFruitJuiceItem = isFoodComponentType( "FRUITJUICE" );
-
 			
 	static Predicate<MealFoodItem> isWholeMilkItem = isMilkItem.and( descriptionContains( "whole" ) ); 
 
@@ -26,9 +29,8 @@ public class MealFoodItemPredicate {
 			
 	static Predicate<MealFoodItem> isLowFatOrFatFreeMilkItem = isMilkItem.and( descriptionContains( Arrays.asList("lowfat", "1%", "1 %", "skim" ) ) ); 
 	
-			
-			
-	static Predicate<MealFoodItem> isVegOrFruitItem = isFoodComponentType( "VEG" ).or( isFoodComponentType( "FRUIT" ) );
+						
+	static Predicate<MealFoodItem> isVegOrFruitItem = isVegItem.or( isFruitItem );
 			
 	static Predicate<MealFoodItem> isGrainOrBreadItem = isFoodComponentType( "BRC" );
 
