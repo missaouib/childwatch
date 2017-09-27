@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem } from '../food.interfaces';
 import { FoodActions } from '../food.actions';
 import { CalendarEvent } from 'angular-calendar';
-import { UUID } from 'angular2-uuid';
 
 
 @Injectable()
@@ -57,9 +56,9 @@ export class FoodStateService {
   
     
   saveMeal( meal: Meal ) {    
-    const mealToSave = { ...meal };
-    if ( mealToSave.id === undefined ) { mealToSave.id = UUID.UUID(); }
-    this.store.dispatch( this.actions.saveMeal( meal ) );
+    if ( meal.id ) { 
+      this.store.dispatch( this.actions.saveMeal( meal ) );
+    }
   }
   
   loadMealFoodItemsForMeal( meal: Meal ) {

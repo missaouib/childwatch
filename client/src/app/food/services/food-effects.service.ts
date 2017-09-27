@@ -46,6 +46,7 @@ export class FoodEffectsService {
     .map( toPayload )
     .switchMap( (payload: Meal) => Observable.of( this.onSaveMeal(payload) ) );
   
+    
   @Effect() _onLoadMealFoodItemsForMeal = this.actions$
     .ofType( FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL )
     .map( toPayload )
@@ -99,12 +100,14 @@ export class FoodEffectsService {
   } 
   
   private onSaveMeal( meal: Meal ) {
-    if ( meal.id !== undefined ) {
-      this.mealSvc.save( meal ).subscribe();
+    if ( meal.id ) {
+      console.log( 'Saving the meal ' + meal.id + ':' + meal.description );
+      if( meal.description && meal.type ){ this.mealSvc.save( meal ).subscribe(); }
+      // this.mealSvc.validate(meal).delay( 3000 ).subscribe();
       return this.foodAction.loadMealFoodItemsForMeal( meal );
     } else { Observable.of({type: 'NOOP-MEALNOTREADYTOSAVE', payload: meal } ); }
   }
-  
+    
   private onLoadMealFoodItemsForMeal( meal: Meal ) {
      this.mealSvc.queryMealFoodItemsFor( meal ).subscribe();
      return Observable.of({type: 'NOOP-ONLOADMEALFOODITEMS', payload: meal } );
@@ -112,23 +115,25 @@ export class FoodEffectsService {
   
   private onMealFoodItemsReceived( mealFoodItems: MealFoodItem[] ) {
     if ( mealFoodItems.length > 0 ) {
-      this.mealSvc.validate(mealFoodItems[0].meal).delay( 3000 ).subscribe();      
+      // this.mealSvc.validate(mealFoodItems[0].meal).delay( 3000 ).subscribe();      
     }
     return Observable.of({type: 'NOOP-ONMEALFOODITEMSLOADED', payload: mealFoodItems } );
   }
     
   private onSaveMealFoodItem( mealFoodItem: MealFoodItem ) {
+    /*
     this.mealSvc.saveMealFoodItem( mealFoodItem ).first().subscribe( () => { 
       if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
-        this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
-      }}); 
+        // this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
+      }});
+     */ 
     return Observable.of( { type: 'MEALFOODITEM_SAVED', payload: mealFoodItem });    
   }
   
   private onDeleteMealFoodItem( mealFoodItem: MealFoodItem ) {
     this.mealSvc.deleteMealFoodItem( mealFoodItem.id ).subscribe(() => { 
       if ( mealFoodItem.foodItem && mealFoodItem.meal ) { 
-        this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
+        // this.mealSvc.validate(mealFoodItem.meal).delay( 3000 ).subscribe(); 
       }}); 
     return Observable.of( { type: 'MEALFOODITEM_DELETED', payload: mealFoodItem });
   }

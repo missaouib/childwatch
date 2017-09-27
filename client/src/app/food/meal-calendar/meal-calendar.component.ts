@@ -127,7 +127,7 @@ export class MealCalendarComponent implements OnInit {
   }
   
   addMeal() {
-    this.state.saveMeal( { id: undefined, description: undefined, type: undefined }  );
+    this.state.saveMeal( { id: UUID.UUID(), description: undefined, type: undefined }  );
     this.router.navigate( ['./meals/meal-builder']);   
   }
   
@@ -146,6 +146,10 @@ export class MealCalendarComponent implements OnInit {
   
   mealsChanged( $event: any ) {
     console.log( 'Meals changed', $event ); 
+  }
+  
+  afterStart( date: Date ) {
+    return moment( date ).diff( moment( '01/10/2017', 'DD/MM/YYYY'), 'days') >= 0;
   }
   
 }

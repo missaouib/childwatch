@@ -27,6 +27,7 @@ import { RoomDetailsComponent } from './rooms/room-details/room-details.componen
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import { ToastOptions } from 'ng2-toastr';
 import { CustomOption } from './shared/toast-custom-options';
+import { BasicLayoutComponent } from './layouts/basic-layout/basic-layout.component';
 
 
 
@@ -37,7 +38,8 @@ import { CustomOption } from './shared/toast-custom-options';
     AdminLayoutComponent,
     AuthLayoutComponent,
     RoomDetailsComponent,
-    ChildDetailComponent
+    ChildDetailComponent,
+    BasicLayoutComponent
   ],
   imports: [
     BrowserModule,

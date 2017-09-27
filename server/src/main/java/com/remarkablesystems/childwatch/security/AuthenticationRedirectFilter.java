@@ -22,16 +22,27 @@ public class AuthenticationRedirectFilter implements Filter {
             ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+        
+        //checkForRedirectFromCW( httpRequest );
+        
+        
         boolean anonymous = SecurityContextHolder.getContext().getAuthentication() instanceof
                 AnonymousAuthenticationToken;
+        
         String path = httpRequest.getRequestURI();
         if (!anonymous && asList("/", "/login").contains(path)) {
-            httpResponse.sendRedirect("/dashboard");
+            httpResponse.sendRedirect("/meals");
         }
         chain.doFilter(request, response);
     }
 
     @Override
     public void destroy() {
+    }
+    
+    void checkForRedirectFromCW( HttpServletRequest request ){
+    	AnonymousAuthenticationToken authentication = new AnonymousAuthenticationToken(null, null, null);
+    	
+    	SecurityContextHolder.getContext().setAuthentication(authentication);	
     }
 }

@@ -1,24 +1,18 @@
 
-import { ChildDetailComponent } from './child/child-detail/child-detail.component';
+import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
+import { BasicLayoutComponent } from './layouts/basic-layout/basic-layout.component';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
-import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
-import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
 
 
 
 export const AppRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full', },
-  { path: '', component: AdminLayoutComponent,
+  { path: '', component: BasicLayoutComponent,
     children: [
           { path: 'meals', loadChildren: './food/food.module#FoodModule' },
-          { path: 'billing', loadChildren: './billing/billing.module#BillingModule' },
-          { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
-          { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-          { path: 'room', component: RoomDetailsComponent },
-          { path: 'child-detail', component: ChildDetailComponent }
         ]},
     { path: '', component: AuthLayoutComponent,
       children: [

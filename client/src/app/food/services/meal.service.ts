@@ -54,7 +54,8 @@ export class MealService {
    * @returns Observable<Response>
    */
   save( meal: Meal ) {
-    return this.http.post( this.URL, meal );
+     return this.http.post( this.URL, meal )
+       .map( () => this.store.dispatch( this.actions.mealSaved( meal ) ) );
   }
   
   /**

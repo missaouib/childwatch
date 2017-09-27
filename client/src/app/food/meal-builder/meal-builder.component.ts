@@ -6,10 +6,14 @@
  */
 import {FoodComponent, Meal, FoodItem, MealRulesViolation, MealFoodItem} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
+import { ComponentCanDeactivate } from './pending-changes-guard';
+import { HostListener } from '@angular/core';
 import {Component, OnInit, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToastsManager} from 'ng2-toastr/ng2-toastr';
 import { UUID } from 'angular2-uuid';
+import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 interface FormGroupMgr {
     AGE_0_5MO: FormGroup; 
@@ -40,7 +44,8 @@ interface FormGroupMgr {
   `]
   
 })
-export class MealBuilderComponent implements OnInit {
+export class MealBuilderComponent implements OnInit, ComponentCanDeactivate {
+  
 
   @ViewChild('containerPieChart')
   element: ElementRef;
@@ -89,6 +94,7 @@ export class MealBuilderComponent implements OnInit {
     private formBuilder: FormBuilder,
     public toastr: ToastsManager,
     vcr: ViewContainerRef,
+    private router: Router    
   ) {
     this.toastr.setRootViewContainerRef(vcr);
   }
@@ -99,6 +105,7 @@ export class MealBuilderComponent implements OnInit {
    * @onInit
    */
   ngOnInit() {
+        
     // create the meal form; food items are created on demand
     this.mealForm = this.formBuilder.group({
       id: UUID.UUID(),
@@ -131,10 +138,12 @@ export class MealBuilderComponent implements OnInit {
            type: (this.mealForm.get('type').value as string).toUpperCase().replace( ' ', '_')
         };
       
+      /*
       if (this.mealForm.valid && (this.mealForm.get('name').dirty || this.mealForm.get('type').dirty)) {
         this.state.saveMeal( this.currentMeal );
         this.toastr.success('Saved the meal ' + this.currentMeal.description, 'Save');        
       }
+       */
     });
     
     // subscribe to the list of meal food itmes
@@ -201,10 +210,9 @@ export class MealBuilderComponent implements OnInit {
     ctrl.valueChanges.debounceTime(3000).subscribe( ($event) => {
         if ( ctrl.valid ) {
           this.state.saveMealFoodItem( $event );
-          this.toastr.success('Saved the mealFoodItem ' + $event.id, 'Save' );
+          //this.toastr.success('Saved the mealFoodItem ' + $event.id, 'Save' );
         }
     });
-     
     return ctrl;
   }
 
@@ -252,4 +260,31 @@ export class MealBuilderComponent implements OnInit {
     this.state.deleteMealFoodItem( item );
   }
 
+  canDelete() {
+    return false;
+  }
+  
+  save() {
+    this.currentMeal = {
+           id: (this.mealForm.get('id').value || UUID.UUID()),
+           description: this.mealForm.get('name').value,
+           type: (this.mealForm.get('type').value as string).toUpperCase().replace( ' ', '_')
+        };
+    this.state.saveMeal( this.currentMeal );
+    this.mealForm.markAsPristine(true);
+    // TODO save all the mealItems...
+    
+    
+    this.toastr.success('Saved the meal ' + this.currentMeal.description, 'Save');        
+  }
+  
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return ( !this.mealForm.dirty );
+  }
+  
+  back() {
+    this.router.navigate( ['/meals'] ); 
+  }
+  
 }

@@ -23,6 +23,7 @@ import { MealCalendarComponent } from './meal-calendar/meal-calendar.component';
 import {CalendarModule} from 'angular-calendar';
 import {DragAndDropModule} from 'angular-draggable-droppable';
 import { MealBuilderComponent } from './meal-builder/meal-builder.component';
+import { PendingChangesGuard } from './meal-builder/pending-changes-guard';
 
 import {EffectsModule} from '@ngrx/effects';
 
@@ -39,8 +40,8 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 
 
 const routes: Routes = [
-  { path: 'meal-calendar', component: MealCalendarComponent },
-  { path: 'meal-builder', component: MealBuilderComponent }
+  { path: '', component: MealCalendarComponent },
+  { path: 'meal-builder', component: MealBuilderComponent, canDeactivate: [PendingChangesGuard] }
 ];
 
 @NgModule({
@@ -65,7 +66,7 @@ const routes: Routes = [
     MealCalendarComponent, 
     MealBuilderComponent, MealDayComponent
   ],
-  providers: [ FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService ],
+  providers: [ FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard ],
   entryComponents: [MealDayComponent]
 })
 export class FoodModule {

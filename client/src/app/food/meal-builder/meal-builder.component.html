@@ -1,19 +1,22 @@
 
 <div class="card">
 	<div class="card-header">
+		<button class="btn btn-default" (click)="back()"><i class="fa fa-calendar"></i> Back to Calendar <i class="fa fa-chevron-right"></i></button>
 		<div class="card-title">
 			<h3 *ngIf="!editing" >
 				<span class="pull-right" >
-					<a *ngIf="mealForm.get('name').value && mealForm.get('type').value"><small class="text-primary"><i class="fa fa-save"></i> Save </small></a>
+					<a *ngIf="mealForm.get('name').value && mealForm.get('type').value" (click)="save()" ><small class="text-primary"><i class="fa fa-save"></i> Save </small></a>
 					<small *ngIf="mealForm.get('name').value === undefined || mealForm.get('type').value === undefined" class="text-default"><i class="fa fa-save"></i> Save </small>							   
 					<br/>
-					<a><small class="text-danger"><i class="fa fa-trash"></i> Delete </small></a>
+					<a><small *ngIf="canDelete()" class="text-danger"><i class="fa fa-trash"></i> Delete </small></a>
+					<small *ngIf="!canDelete()" class="text-danger"><i class="fa fa-trash"></i> Delete </small>
+					
 				</span>
 				<span (click)="editing = !editing">
 					<em>{{ mealForm.get('name').value || "New Meal" }}</em> <br />
 					<small>{{ mealForm.get('type').value || "Unknown Type"}}</small><br/>
 					<small *ngIf="mealForm.get('name').value === undefined || mealForm.get('type').value === undefined" 
-							class="text-danger">You must name the meal and set the type before adding food items</small>
+							class="text-danger">Click on the type/name above to edit enter a meal type and value</small>
 				</span>				
 			</h3>
 		
@@ -51,7 +54,7 @@
 	  					{{grp.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
 	  				</label>
 				</div>	
-			<a (click)="showGuidance = !showGuidance"><small class="text-primary"><i class="fa fa-book"></i> Guidance </small></a>					
+			<a (click)="showGuidance = !showGuidance"><small class="text-primary"><i class="fa fa-info-circle"></i> Help </small></a>					
 			<hr />
 			
 			<alert type="local" *ngIf="showGuidance && mealForm.valid">
@@ -61,7 +64,7 @@
 					<span *ngIf="currentMeal.type === 'BREAKFAST'">
 					<h5>BREAKFAST</h5>
 					<ul *ngIf="currentAgeGroup === 'AGE_0_5MO'">
-						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
+						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula <em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
 					</ul>
 					<ul *ngIf="currentAgeGroup === 'AGE_6_11MO'">
 						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
@@ -94,7 +97,7 @@
 					<span *ngIf="currentMeal.type === 'LUNCH' || currentMeal.type === 'DINNER'">
 					<h5>Lunch/Dinner</h5>
 					<ul *ngIf="currentAgeGroup === 'AGE_0_5MO'">
-						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
+						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula <em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
 					</ul>
 					<ul *ngIf="currentAgeGroup === 'AGE_6_11MO'">
 						<li>6-8 fl. oz. Breast Milk or Iron Fortified Infant Formula <strong>and</strong></li>
@@ -138,7 +141,7 @@
 					<span *ngIf="currentMeal.type === 'AM_SNACK' || currentMeal.type === 'PM_SNACK'">
 					<h5>Snack (AM and/or PM)</h5>
 					<ul *ngIf="currentAgeGroup === 'AGE_0_5MO'">
-						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
+						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula <em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
 					</ul>
 					<ul *ngIf="currentAgeGroup === 'AGE_6_11MO'">
 						<li>2-4 fl. oz. Breast Milk or Iron Fortified Infant Formula or Fruit Juice <strong>and</strong></li>
@@ -146,7 +149,7 @@
 						<li>0-2 Crackers</li>
 					</ul>
 					
-					<div *ngIf="currentAgeGroup !== 'AGE_0_5MO' || currentAgeGroup !== 'AGE_6_11MO'">
+					<div *ngIf="currentAgeGroup !== 'AGE_0_5MO' && currentAgeGroup !== 'AGE_6_11MO'">
 					Select at least 2 of the following:
 					</div>
 					<ul *ngIf="currentAgeGroup === 'AGE_1_2YR' || currentAgeGroup === 'AGE_3_5YR'">
@@ -178,6 +181,7 @@
 						<li *ngIf="currentAgeGroup === 'AGE_6_11MO'">Vegetable or fruit, or both, required to be served at snack for infants 6 through 11 months old.</li>
 						<li *ngIf="currentAgeGroup === 'AGE_0_5MO' || currentAgeGroup === 'AGE_6_11MO'">Juice or cheese food or cheese spread are no longer allowed to be served.</li>
 						<li *ngIf="currentAgeGroup === 'AGE_0_5MO' || currentAgeGroup === 'AGE_6_11MO'">Allows ready-to-eat cereals at snack.</li>
+						<li *ngIf="currentAgeGroup === 'AGE_0_5MO'">Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
 						<li>At least one serving of grains per day must be whole grain-rich.</li>
 						<li>Grain-based desserts no longer count towards the grain component (sweet crackers allowed).</li>
 						<li *ngIf="currentMeal.type === 'BREAKFAST'">Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
