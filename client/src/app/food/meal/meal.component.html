@@ -1,0 +1,104 @@
+<div *ngIf="isValidating" class="loading">
+	<div class="loading-inner text-center">
+		<h2> Validating...</h2>
+		<i class="fa fa-pulse fa-spinner fa-3x fa-fw"></i>
+	</div>
+</div>  
+
+<div *ngIf="!isValidating" class="container">
+
+	<div class="row">
+	<alert *ngIf="!mealForm.valid" class="alert alert-warn">You must enter a meal name and type before adding food items</alert>
+	<h3 *ngIf="!editing"  >
+		<span (click)="editing = !editing">
+			<span tooltip="Click to edit" placement="bottom">{{mealForm.get('description').value}}</span> 
+			<small tooltip="Click to edit" placement="bottom">{{mealForm.get('type').value }}</small>
+		</span>
+		<span class="pull-right" >
+			<a *ngIf="!canDeactivate() && mealForm.get('description').value && mealForm.get('type').value" (click)="save()" ><small class="text-primary"><i class="fa fa-save"></i> Save </small></a>
+			<small *ngIf="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined" class="text-default"><i class="fa fa-save"></i> Save </small>							   
+		</span>		
+	</h3>
+		<form *ngIf="editing" novalidate [formGroup]="mealForm" >
+			<div>
+				<div class="form-group col-sm-4">
+					<label for="name">Name</label>
+					<input #name class="form-control" placeholder="Meal Name" formControlName="description" (blur)="editing = (mealForm.valid)? !editing : editing"/> 
+					<small class="text-danger" *ngIf="mealForm.get('description').hasError('required')">Meal name is required</small>
+				</div>		
+
+				<div class="form-group col-sm-2">
+					<label for="type">Type</label>
+					<select #type class="form-control" formControlName="type" (blur)="editing = (mealForm.valid)? !editing : editing">
+						<option value="BREAKFAST">Breakfast</option>
+						<option value="AM_SNACK">AM Snack</option>
+						<option value="LUNCH">Lunch</option>
+						<option value="PM_SNACK">PM Snack</option>
+						<option value="DINNER">Dinner</option>
+					</select>
+					<small class="text-danger" *ngIf="mealForm.get('type').hasError('required')">Meal type is required</small>
+				</div>	
+			</div>				
+		</form>
+	</div>
+	
+	<div class="row">
+	<accordion >
+	  <accordion-group #group [isOpen]="true" >
+	    <div accordion-heading>
+	      <i class="fa fa-info-circle"></i> <strong>Meal Pattern Help</strong>
+	      <i class="pull-right float-xs-right glyphicon"
+	         [ngClass]="{'glyphicon-chevron-down': group?.isOpen, 'glyphicon-chevron-right': !group?.isOpen}"></i>
+	    </div>
+	    	<cw-meal-pattern-help [ageGroup]="activeTab" [mealType]="mealForm.get('type').value"></cw-meal-pattern-help>
+	  </accordion-group>
+	</accordion>
+	</div>
+	
+	<div class="row">
+		<alert *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" [type]="(violation.severity === 'FAIL') ? 'danger' : (violation.severity === 'FAIL') ? 'warning' : 'info'">
+			<h4 class="alert-heading">
+				<i class="fa" 
+				   [class.fa-exclamation-triangle]="violation.severity === 'FAIL'"
+				   [class.fa-exclamation-circle]="violation.severity === 'WARN'"
+				   [class.fa-info-circle]="violation.severity === 'INFO'"
+				   [class.fa-question-circle]="violation.severity === 'UNKNOWN'"></i> 
+				   {{violation.severity}} 
+			</h4>
+			   
+			   <p>{{violation.message}}</p>		
+		</alert>	
+	</div>
+	
+	<div class="row">
+	<label>Age Group</label>
+	<tabset>
+		<tab *ngFor="let ageGroup of AGEGROUPS"
+			 [heading]="ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')"
+			 (select)="activeTab=ageGroup">
+			 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( ageGroup )"
+ 					[mealFoodItem]="mealFoodItem" 
+ 					(changed)="changed($event)" 
+ 					(deleted)="deleted($event)"></cw-food-item>	
+ 					
+ 		<hr />
+ 		
+		<div class="btn-group" dropdown *ngIf="mealForm.valid && !editing">
+			<a dropdownToggle class="dropdown-toggle"><i
+				class="text-primary fa fa-plus"></i> Add Food Items...</a>
+			<ul *dropdownMenu class="dropdown-menu" role="menu">			
+				<ng-template ngFor let-top [ngForOf]="foodComponentList">
+					<li class="dropdown-header"><strong>{{top.description}}</strong></li>
+					<li role="menuitem" *ngFor="let comp of top.children">
+						<a class="dropdown-item" (click)="addMealFoodItemForComponent(comp)">{{comp.description}}</a>
+					</li>
+				</ng-template>
+			</ul>
+		</div>
+					 
+	</tab>
+		     
+	</tabset>
+	</div>
+
+</div>

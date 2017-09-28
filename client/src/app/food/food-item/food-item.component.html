@@ -1,0 +1,44 @@
+<div class="panel panel-default">
+	<form novalidate [formGroup]="foodItemForm">
+		<div class="row">
+			<span class="col-sm-1">
+				<i class="cw-icon" style="font-size: 5em;" [ngClass]="mealFoodItem.foodComponent.icon ? mealFoodItem.foodComponent.icon : 'icon-food'"></i>
+			</span>					
+	    
+			<span class="col-xs-12 col-sm-6">
+				<label>{{mealFoodItem.foodComponent.description}}</label>
+				<input #description class="form-control" formControlName="description"
+				       [typeahead]="foodItemList"
+					   typeaheadOptionField="description" typeaheadOptionsLimit="15" 				
+				       (typeaheadOnSelect)="setFoodItem($event.item)" />
+				<span *ngIf="foodItemForm.get('foodItem').hasError('required')" class="text-danger">Select a food item by typing</span>
+			</span>
+			<span class="col-xs-12 col-sm-2 "> 
+				<label>Quantity</label> 
+				<input class="form-control" formControlName="quantity" value="0">
+				<span *ngIf="foodItemForm.get('quantity').hasError('required')" class="text-danger">Quantity is required</span>
+			</span> 
+			<span class="col-xs-12 col-sm-2"> 
+				<label>Units</label> 
+				<select class="form-control" formControlName="unit">
+					<option value="EACH">EACH</option>
+					<option value="OUNCES">OUNCES</option>
+					<option value="CUPS">CUPS</option>
+					<option value="LBS">LBS</option>
+					<option value="SERVINGS">SERVING</option>
+					<option value="UNITS">UNITS</option>
+					<option value="GALLONS">GALLONS</option>
+					<option value="TABLESPOONS">TABLESPOONS</option>
+					<option value="TEASPOONS">TEASPOONS</option>								
+				</select>
+			</span> 
+			<span class="col-sm-1">
+				<i class="text-danger pull-right fa fa-close" (click)="deleteFoodItem()"></i>
+			</span>
+		</div>
+		<div>
+			<alert *ngIf="noUnitMatch()" class="alert" type="warning" dismissable="true">Typically this item has a unit type of {{foodItemForm.get('foodItem').value.servingUom}}</alert>
+		</div>		
+	</form>
+</div>
+

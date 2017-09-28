@@ -121,13 +121,10 @@ export class MealCalendarComponent implements OnInit {
   }
   
   editMeal( meal: Meal ) {
-    console.log( 'Setting current meal to ' + meal.id );
-    this.state.saveMeal( meal );
-    this.router.navigate( ['./meals/meal-builder']);
+    this.router.navigate( ['./meals/meal-builder'], { queryParams: { id: meal.id } } );
   }
   
   addMeal() {
-    this.state.saveMeal( { id: UUID.UUID(), description: undefined, type: undefined }  );
     this.router.navigate( ['./meals/meal-builder']);   
   }
   

@@ -23,7 +23,7 @@ import { MealCalendarComponent } from './meal-calendar/meal-calendar.component';
 import {CalendarModule} from 'angular-calendar';
 import {DragAndDropModule} from 'angular-draggable-droppable';
 import { MealBuilderComponent } from './meal-builder/meal-builder.component';
-import { PendingChangesGuard } from './meal-builder/pending-changes-guard';
+import { PendingChangesGuard } from './meal/pending-changes-guard';
 
 import {EffectsModule} from '@ngrx/effects';
 
@@ -33,15 +33,14 @@ import {SidebarModule} from 'ng-sidebar';
 import { MealDayComponent } from './meal-day/meal-day.component';
 
 import {ModalModule} from 'ngx-bootstrap/modal';
-
-
-
-
+import { FoodItemComponent } from './food-item/food-item.component';
+import { MealComponent } from './meal/meal.component';
+import { MealPatternHelpComponent } from './meal-pattern-help/meal-pattern-help.component';
 
 
 const routes: Routes = [
   { path: '', component: MealCalendarComponent },
-  { path: 'meal-builder', component: MealBuilderComponent, canDeactivate: [PendingChangesGuard] }
+  { path: 'meal-builder', component: MealComponent, canDeactivate: [PendingChangesGuard] }
 ];
 
 @NgModule({
@@ -64,7 +63,7 @@ const routes: Routes = [
   ],
   declarations: [ 
     MealCalendarComponent, 
-    MealBuilderComponent, MealDayComponent
+    MealBuilderComponent, MealDayComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent
   ],
   providers: [ FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard ],
   entryComponents: [MealDayComponent]

@@ -6,13 +6,14 @@
  */
 import {FoodComponent, Meal, FoodItem, MealRulesViolation, MealFoodItem} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
-import { ComponentCanDeactivate } from './pending-changes-guard';
+import { ComponentCanDeactivate } from '../meal/pending-changes-guard';
 import { HostListener } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import {Component, OnInit, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToastsManager} from 'ng2-toastr/ng2-toastr';
 import { UUID } from 'angular2-uuid';
-import { Observable } from 'rxjs/Observable';
+
 import { Router } from '@angular/router';
 
 interface FormGroupMgr {

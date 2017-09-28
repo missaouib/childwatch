@@ -54,8 +54,8 @@ export class MealService {
    * @returns Observable<Response>
    */
   save( meal: Meal ) {
-     return this.http.post( this.URL, meal )
-       .map( () => this.store.dispatch( this.actions.mealSaved( meal ) ) );
+     return this.http.post( this.URL, meal );
+       // .map( () => this.store.dispatch( this.actions.mealSaved( meal ) ) );
   }
   
   /**
@@ -63,7 +63,10 @@ export class MealService {
    * 
    * @returns Observable<Response>
    */
-  saveMealFoodItem( mealFoodItem: MealFoodItem ): Observable<Response> {       
+  saveMealFoodItem( mealFoodItem: MealFoodItem ): Observable<Response> {  
+         
+    console.log( 'Saving a mealFoodItem for ', mealFoodItem.meal );
+         
     return this.http.post( '/api/mealFoodItem', {
       id: mealFoodItem.id,
       ageGroup: mealFoodItem.ageGroup,
@@ -87,7 +90,7 @@ export class MealService {
    * @param id Meal id
    * 
    */
-  queryMealFoodItemsFor( meal: Meal ): Observable<void> {
+  queryMealFoodItemsFor( meal: Meal ) {
     const params = new URLSearchParams();
     params.set( 'mealId', meal.id );
     params.set( 'projection', 'mealFoodItemFull' );
@@ -96,10 +99,9 @@ export class MealService {
       .map( ({_embedded: { mealFoodItems } }) => mealFoodItems )
       .map( ( m: MealFoodItem[] ) => {
         m.forEach( (mfi) => {
-          mfi.foodComponent = mfi.foodItem ? mfi.foodItem.foodComponent : undefined;           
-         console.log( 'for ' + mfi.id + ', setting foodComponent to ' + mfi.foodComponent );         
-        } ); 
-        this.store.dispatch( this.actions.mealFoodItemsReceived( m ) ); 
+          mfi.foodComponent = mfi.foodItem ? mfi.foodItem.foodComponent : undefined;                          
+        });
+        return m; 
       });    
   }
    
@@ -118,6 +120,15 @@ export class MealService {
       .map( ({_embedded: {meals} })  => this.store.dispatch( this.actions.mealsReceived( meals ) ) );
   }
   
+  fetch( id : string ) {
+    const params = new URLSearchParams();
+    params.set( 'projection', MealService.FULL );
+    
+    return this.http.get( this.URL + '/' + id, {search: params} )
+      .map( res => res.json() );
+    
+  }
+  
   /**
    * Validate the meal
    */
@@ -126,8 +137,7 @@ export class MealService {
     params.set( 'mealId', meal.id );
     
     return this.http.get( '/rules', {search: params } )
-      .map( res => res.json() )
-      .map( violations => this.store.dispatch( this.actions.mealViolationsReceived( violations ) ) );
+      .map( res => res.json() );
   }
   
 }
