@@ -29,6 +29,8 @@ import { ToastOptions } from 'ng2-toastr';
 import { CustomOption } from './shared/toast-custom-options';
 import { BasicLayoutComponent } from './layouts/basic-layout/basic-layout.component';
 
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+
 
 
 
@@ -54,7 +56,8 @@ import { BasicLayoutComponent } from './layouts/basic-layout/basic-layout.compon
     FixedPluginModule,
     SidebarModule,
     CollapseModule.forRoot(),
-    ToastModule.forRoot()
+    ToastModule.forRoot(),
+    BsDropdownModule.forRoot()
   ],
   bootstrap: [AppComponent],
   providers: [ { provide: ToastOptions, useClass: CustomOption} ]

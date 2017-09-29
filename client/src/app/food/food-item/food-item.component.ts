@@ -40,8 +40,8 @@ export class FoodItemComponent implements OnInit {
       unit: [this.mealFoodItem.unit, Validators.required]
     });
     
-    // when the mealFoodItem changes - save it
-    this.foodItemForm.valueChanges.debounceTime(3000).subscribe( () => {
+    // when the mealFoodItem changes
+    this.foodItemForm.valueChanges.debounceTime(1000).subscribe( () => {
         if ( this.foodItemForm.valid ) {
           this.changed.emit( this.extractMealFoodItem() );
         }
@@ -65,7 +65,7 @@ export class FoodItemComponent implements OnInit {
   }
   
   setFoodItem( foodItem: FoodItem ) {
-    this.foodItemForm.patchValue( {foodItem: foodItem } );
+    this.foodItemForm.patchValue( {foodItem: foodItem, unit: foodItem.servingUom } );
   }
   
   noUnitMatch(): boolean {

@@ -7,15 +7,30 @@ import { ActivatedRoute } from '@angular/router';
 import { ComponentCanDeactivate } from './pending-changes-guard';
 import { Observable } from 'rxjs/Observable';
 import { MealService } from '../services/meal.service';
+import { ViewContainerRef } from '@angular/core';
+import {ToastsManager} from 'ng2-toastr/ng2-toastr';
+
+import 'rxjs/add/observable/forkJoin';
 
 
 @Component({
   selector: 'cw-meal',
-  templateUrl: './meal.component.html'
+  templateUrl: './meal.component.html',
+  styles: [`
+    .customClass {
+      background-color: #5bc0de;
+      color: #fff;
+    }
+    .customClass .panel-body {
+      background-color: #337aa7;
+    }
+  `]
 })
 export class MealComponent implements OnInit, ComponentCanDeactivate {
   
   editing = false;
+  
+  saving = false;
   
   meal: Meal = this.createNewMeal();
   
@@ -54,8 +69,12 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     private formBuilder: FormBuilder,
     private state: FoodStateService,
     private activeRoute: ActivatedRoute,
-    private mealSvc: MealService
+    private mealSvc: MealService,
+    public toastr: ToastsManager,
+    vcr: ViewContainerRef,
   ) { 
+    
+    this.toastr.setRootViewContainerRef(vcr);
     
     this.activeRoute.queryParams.subscribe( (params: any) => this.loadMeal( params['id'] ) );
     this.state.foodComponents$.subscribe((fc: FoodComponent[]) => {
@@ -72,6 +91,18 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       type: [this.meal.type, Validators.required]    
     });
   
+  }
+  
+  mealCacfpStatus(): string {
+    return ( !this.mealForm || !this.mealForm.valid || this.mealForm.dirty || this.dirtyFoodItems )? 'UNKNOWN' :
+           ( this.rulesViolations.length > 0 )? 'NONCOMPLIANT' : 'COMPLIANT';          
+  }
+  
+  ageGroupCacfpStatus( ageGroup: string ) {    
+    const foundItems = this.mealFoodItems.filter( fi => fi.ageGroup === ageGroup ).length;
+    const foundViolations = this.rulesViolations.filter( rv => rv.ageGroup === ageGroup ).length;
+    return ( foundItems === 0 || this.dirtyFoodItems ) ? 'UNKNOWN' :
+           ( foundViolations > 0 ) ? 'NONCOMPLIANT' : 'COMPLIANT';              
   }
   
   @HostListener('window:beforeunload')
@@ -105,18 +136,21 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       description: this.mealForm.get( 'description').value,
       type: this.mealForm.get( 'type' ).value
     };
-    this.mealSvc.save( meal ).first().subscribe( () => { 
-      console.log( 'saved' );
-          this.mealFoodItems.forEach( mfi => { 
-            mfi.meal = meal;
-            this.mealForm.markAsPristine();
-            this.mealSvc.saveMealFoodItem( mfi ).first().subscribe(() => {
-              this.dirtyFoodItems = false;
-              this.mealSvc.validate( meal )
-                .delay( 3000 )
-                .subscribe( violations => this.rulesViolations = violations );            
-            });
-          });
+    this.mealSvc.save( meal ).first().subscribe( () => {
+      this.mealForm.markAsPristine();
+      if ( this.mealFoodItems.length === 0 ) { 
+        this.toastr.success('Meal ' + meal.description + ' has been saved', 'Save' );        
+        this.saving = false;
+        this.editing = false;
+      }
+      
+      Observable.forkJoin( this.mealFoodItems.map( mfi => this.mealSvc.saveMealFoodItem(mfi) ) ).subscribe(() => {
+          this.toastr.success('Meal ' + meal.description + ' has been saved', 'Save' );   
+          this.dirtyFoodItems = false;
+          this.editing = false;
+          this.saving = false;
+          this.mealSvc.validate( meal ).subscribe( violations => this.rulesViolations = violations );            
+      });
     });
   }
   
@@ -151,11 +185,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
         this.mealForm.patchValue( { description: this.meal.description, type: this.meal.type } );         
         this.editing = (meal === undefined);
         if ( meal ) {
-          this.mealSvc.queryMealFoodItemsFor( meal )
-            .subscribe( mealItems => this.mealFoodItems = mealItems );
-          this.mealSvc.validate( meal )
-                .delay( 3000 )
-                .subscribe( violations => this.rulesViolations = violations );                      
+          this.mealSvc.queryMealFoodItemsFor( meal ).subscribe( mealItems => this.mealFoodItems = mealItems );
+          this.mealSvc.validate( meal ).subscribe( violations => this.rulesViolations = violations );                      
         }             
       });
     } else {

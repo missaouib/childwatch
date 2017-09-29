@@ -23,6 +23,7 @@ import { UUID } from 'angular2-uuid';
 export class MealDayComponent implements OnInit {
   meals: Meal[] = [];
   day: any = {};
+  filterBy: string = undefined;
   
   /**
    * constructor for the MealDayBuilderComponent
@@ -49,7 +50,7 @@ export class MealDayComponent implements OnInit {
    */    
   filteredMeals(): Meal[] {    
     const eventMeals: Meal[] = this.day.events ? this.day.events.map( (e: any) => e.meta.meal ) : [];    
-    return this.meals.filter( (meal) =>  eventMeals.find( (em) => em.id === meal.id ) === undefined );
+    return this.meals.filter( (meal) =>  eventMeals.find( (em) => em.id === meal.id ) === undefined  && (!this.filterBy || meal.type === this.filterBy) );
   }
   
   /**

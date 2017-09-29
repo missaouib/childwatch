@@ -99,7 +99,7 @@ export class MealCalendarComponent implements OnInit {
   createMealEvent( meal: Meal, start?: Date ): MealEvent {
     const mealEvent: MealEvent = {
       id: UUID.UUID(),
-      startDate: (start) ? start : new Date(),
+      startDate: (start) ? new Date(start) : new Date(),
       endDate: new Date(),
       recurrence: undefined,
       meal: meal

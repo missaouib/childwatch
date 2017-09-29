@@ -1,6 +1,5 @@
 <div class="panel panel-default">
-	<form novalidate [formGroup]="foodItemForm">
-		<div class="row">
+	<form novalidate [formGroup]="foodItemForm" class="row">
 			<span class="col-sm-1">
 				<i class="cw-icon" style="font-size: 5em;" [ngClass]="mealFoodItem.foodComponent.icon ? mealFoodItem.foodComponent.icon : 'icon-food'"></i>
 			</span>					
@@ -10,7 +9,8 @@
 				<input #description class="form-control" formControlName="description"
 				       [typeahead]="foodItemList"
 					   typeaheadOptionField="description" typeaheadOptionsLimit="15" 				
-				       (typeaheadOnSelect)="setFoodItem($event.item)" />
+				       (typeaheadOnSelect)="setFoodItem($event.item)"
+				       (typeaheadOnBlur)="setFoodItem($event.item)" />
 				<span *ngIf="foodItemForm.get('foodItem').hasError('required')" class="text-danger">Select a food item by typing</span>
 			</span>
 			<span class="col-xs-12 col-sm-2 "> 
@@ -31,14 +31,12 @@
 					<option value="TABLESPOONS">TABLESPOONS</option>
 					<option value="TEASPOONS">TEASPOONS</option>								
 				</select>
+				<span *ngIf="noUnitMatch()" class="text-warning">Typically served in {{foodItemForm.get('foodItem').value.servingUom}}</span>
 			</span> 
 			<span class="col-sm-1">
 				<i class="text-danger pull-right fa fa-close" (click)="deleteFoodItem()"></i>
 			</span>
-		</div>
-		<div>
-			<alert *ngIf="noUnitMatch()" class="alert" type="warning" dismissable="true">Typically this item has a unit type of {{foodItemForm.get('foodItem').value.servingUom}}</alert>
-		</div>		
-	</form>
+	</form>	
+	
 </div>
 
