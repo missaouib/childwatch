@@ -26,6 +26,7 @@ import java.util.Map;
         transactionManagerRef = "domainTransactionManager",
         basePackages = {"com.remarkablesystems.childwatch.domain"})
 public class DomainPersistenceConfiguration {
+	
     @Bean
     @Primary
     @Qualifier("domain")
