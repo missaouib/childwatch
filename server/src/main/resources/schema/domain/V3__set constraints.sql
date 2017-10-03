@@ -30,3 +30,8 @@
     add constraint FK_meal_event_id
     foreign key (meal_id)
     references meal;        
+
+    alter table domain.food_item_tag
+    add constraint FK_food_item_id
+    foreign key (food_item_id)
+    references food_item;

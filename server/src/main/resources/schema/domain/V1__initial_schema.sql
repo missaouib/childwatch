@@ -43,6 +43,11 @@
    		end_date        DATE NOT NULL DEFAULT DATE '12/31/3000',
    		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) )
 	);
+	
+	create table food_item_tag(
+		food_item_id	varchar( 36 ) NOT NULL,
+		tag_value       	varchar(128) NOT NULL
+	);
 		
 	-- to = (( from + from_offset ) * muliplicand / denominator ) + to_offset	
 	CREATE TABLE conversion(

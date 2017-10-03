@@ -41,6 +41,12 @@ public class FoodItem implements Serializable {
 	@JoinColumn(name="food_component_id")	
 	private FoodComponent foodComponent;
 	
+	@ElementCollection
+	@CollectionTable(
+			name="food_item_tag",
+			joinColumns=@JoinColumn( name="food_item_id" )
+	)
+	private Set<FoodItemTag> tags;
 	
 	public FoodItem() {}
 	
@@ -100,6 +106,19 @@ public class FoodItem implements Serializable {
 
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+	
+	public Set<FoodItemTag> getTags() {
+		return this.tags;
+	}
+	
+	public void addTag( FoodItemTag tag ) {
+		if( this.tags == null ) this.tags = new HashSet<FoodItemTag>();
+		this.tags.add( tag );
+	}
+	
+	public boolean hasTag( FoodItemTag tag ) {
+		return this.tags == null || this.tags.contains(tag); 
 	}
 	
 }

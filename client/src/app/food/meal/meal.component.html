@@ -1,10 +1,10 @@
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-sm-3">
+		<div class="col-xs-2 col-xs-offset-1">
 			<cw-food-item-list></cw-food-item-list>
 		</div>
 		
-		<div class="col-sm-8 col-sm-offset-1">
+		<div class="col-xs-8 col-xs-offset-1">
 	<div class="row">
 	<h3 *ngIf="!editing"  >
 		<span (click)="editing = !editing" >
@@ -105,6 +105,18 @@
 		 					(deleted)="deleted($event)"></cw-food-item>	
 
 				 		<p class="panel-body"><strong>Drag items from the food list and drop here to create a meal</strong></p>
+
+						<table class="table table-condensed">
+							<tr>
+								<td class="col-xs-2 bg-info">Milk</td>
+								<td>Drop milk items here</td>
+							</tr>
+							<tr>
+								<td class="col-xs-2 bg-danger">Meat</td>
+								<td>Drop meat items here</td>
+							</tr>
+						
+						</table>
 
 					</div>	 					
 	 				<hr />

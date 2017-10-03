@@ -1,4 +1,4 @@
-import { CalendarEvent } from 'angular-calendar';
+import {CalendarEvent} from 'angular-calendar';
 
 export interface Meal {
   id?: string;
@@ -12,6 +12,10 @@ export interface Link {
   href: string;
 }
 
+export interface FoodItemTag {
+  value: string;
+}
+
 export interface FoodItem {
   id?: string;
   description?: string;
@@ -20,6 +24,8 @@ export interface FoodItem {
   purchaseUom: string;
   servingUom: string;
   notes: string;
+  favorite?: boolean;
+  tags?: FoodItemTag[];
 };
 
 export interface FoodComponentLinks {
@@ -128,8 +134,8 @@ export const INITIAL_FOODSTATE: FoodState = {
 };
 
 export interface IData {
-    label: string;
-    value: number;
+  label: string;
+  value: number;
 };
 
 

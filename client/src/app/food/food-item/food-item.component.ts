@@ -19,6 +19,7 @@ export class FoodItemComponent implements OnInit {
   @Output() changed: EventEmitter<MealFoodItem> = new EventEmitter<MealFoodItem>();
 
   foodItemForm: FormGroup;
+  favorite = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,7 +30,7 @@ export class FoodItemComponent implements OnInit {
     this.foodItemForm = this.formBuilder.group({
       foodItem: [this.mealFoodItem.foodItem, Validators.required],
       quantity: [this.mealFoodItem.quantity.toString(), Validators.required],
-      unit: [this.mealFoodItem.unit, Validators.required]
+      unit: [this.mealFoodItem.foodItem.servingUom, Validators.required]
     });
 
     // when the mealFoodItem changes

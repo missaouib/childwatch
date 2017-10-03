@@ -4,7 +4,7 @@
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<a><span><i class="fa fa-plus"></i> Add...</span></a>
 		<span dropdown container="body">
-					<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">:{{filter}}</span></a>
+					<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">:<strong>{{filter.toUpperCase()}}</strong></span></a>
  					<ul *dropdownMenu class="dropdown-menu">
    						<li ><a class="dropdown-item" (click)="filterFoodItems( 'ALL' )">SHOW ALL</a></li>
    						<li class="divider dropdown-divider"></li>
@@ -37,9 +37,12 @@
 				<img class="small-img" *ngSwitchCase="'other'" src="/assets/img/food/other.svg" />
 
 			</td>
-			<td class="col-sm-11">
+			<td class="col-sm-10">
 				<strong class="text-primary">{{foodItem.description}}</strong><br />
 				<span><em>{{foodItem.foodComponent.description}}</em></span>
+			</td>
+			<td class="col-sm-1">
+				<i (click)="foodItem.favorite = !foodItem.favorite" class="text-warning fa" [class.fa-star-o]="!foodItem.favorite" [class.fa-star]="foodItem.favorite"></i>
 			</td>
 		</tr>				
 	</table>

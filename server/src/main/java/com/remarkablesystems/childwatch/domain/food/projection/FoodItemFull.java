@@ -16,6 +16,8 @@ public interface FoodItemFull{
 	
 	String getPurchaseUom();
 	String getServingUom();
+	
+	Set<FoodItemTag> getTags();
 
 	
 }
