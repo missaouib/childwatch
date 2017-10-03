@@ -1,0 +1,16 @@
+.search {
+   width: 75px;
+   -webkit-transition: all .5s ease;
+   -moz-transition: all .5s ease;
+   transition: all .5s ease;
+}
+.search:focus {
+   width: 200px;
+}
+
+.small-img {
+  min-height: 30px;
+  height: 30px;
+  min-width: 30px;
+  width: 30px;
+}

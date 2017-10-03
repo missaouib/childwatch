@@ -1,0 +1,59 @@
+<div class="row">
+	<h3 class="text-primary">Food Items</h3>	
+	<div class="pull-right">
+		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
+		<a><span><i class="fa fa-plus"></i> Add...</span></a>
+		<span dropdown container="body">
+					<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">:{{filter}}</span></a>
+ 					<ul *dropdownMenu class="dropdown-menu">
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'ALL' )">SHOW ALL</a></li>
+   						<li class="divider dropdown-divider"></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'milk' )">Milk</a></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'vegetable' )">Vegetables</a></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'fruit' )">Fruit</a></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'meat' )">Meats</a></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'grain' )">Grains</a></li>
+   						<li class="divider dropdown-divider"></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'infant' )">Infant</a></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'cn' )">CN Items</a></li>
+   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'other' )">Other</a></li>
+ 					</ul>
+		</span>
+	</div>		
+	<br />
+</div>
+
+<div class="row">
+	<table class="table table-condensed" >
+		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="true" [dragData]="foodItem" >
+			<td class="col=sm-1" [ngSwitch]="foodItem.foodComponent.icon">
+				<img class="small-img" *ngSwitchCase="'milk'" src="/assets/img/food/milk.svg" />
+				<img class="small-img" *ngSwitchCase="'meat'" src="/assets/img/food/meat.svg" />
+				<img class="small-img" *ngSwitchCase="'vegetable'" src="/assets/img/food/vegetable.svg" />
+				<img class="small-img" *ngSwitchCase="'fruit'" src="/assets/img/food/fruit.svg" />
+				<img class="small-img" *ngSwitchCase="'grain'" src="/assets/img/food/grain.svg" />
+				<img class="small-img" *ngSwitchCase="'infant'" src="/assets/img/food/infant.svg" />
+				<img class="small-img" *ngSwitchCase="'cn'" src="/assets/img/food/cn.svg" />
+				<img class="small-img" *ngSwitchCase="'other'" src="/assets/img/food/other.svg" />
+
+			</td>
+			<td class="col-sm-11">
+				<strong class="text-primary">{{foodItem.description}}</strong><br />
+				<span><em>{{foodItem.foodComponent.description}}</em></span>
+			</td>
+		</tr>				
+	</table>
+
+	<pagination class="pagination-sm" 
+				[totalItems]="totalItems" 
+				(numPages)="totalItems" 
+				[(ngModel)]="currentPage" 
+				[maxSize]="5" 
+				[boundaryLinks]="true" 
+				[rotate]="false" 
+				(numPages)="numPages = $event"
+				previousText="&lsaquo;" 
+				nextText="&rsaquo;" 
+				firstText="&laquo;" 
+				lastText="&raquo;"></pagination>
+</div>

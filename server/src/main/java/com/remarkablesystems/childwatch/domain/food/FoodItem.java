@@ -1,8 +1,12 @@
 package com.remarkablesystems.childwatch.domain.food;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -36,6 +40,7 @@ public class FoodItem implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="food_component_id")	
 	private FoodComponent foodComponent;
+	
 	
 	public FoodItem() {}
 	
@@ -96,4 +101,5 @@ public class FoodItem implements Serializable {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+	
 }

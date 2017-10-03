@@ -27,7 +27,8 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         registry.addViewController("/room").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/meals/meal-calendar").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/meals/meal-builder").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/meals/**/{spring:\\\\w+}").setViewName(INDEX_VIEW_NAME);      
+        registry.addViewController("/meals/food-item-list").setViewName(INDEX_VIEW_NAME);        
+        registry.addViewController("/meals/{spring:\\\\w+}").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/child-detail").setViewName(INDEX_VIEW_NAME);      
     }
     

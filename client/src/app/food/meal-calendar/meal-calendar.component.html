@@ -1,45 +1,101 @@
 <ng-template #customCellTemplate let-day="day">
   <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
-	<span class="text-primary" *ngIf="afterStart(day.date) && showAdd === day.date" (click)="clickedDay({day: day})"><i class="text-success fa fa-plus"></i> Add</span>
-    
-    
     <span class="cal-day-number"><strong>{{ day.date | calendarDate:'monthViewDayNumber' }}</strong></span>
   </div>
   <div class="call-events" *ngFor="let event of day.events" >
-  	<div class="chip bg-warning" [ngSwitch]="event.meta.meal.type" >
+  	<div class="chip bg-warning" [ngSwitch]="event.meta.meal.type" 
+  			 			[class.bg-info]="event.meta.meal.type === 'AM_SNACK' || event.meta.meal.type === 'PM_SNACK'"
+		 				[class.bg-success]="event.meta.meal.type === 'BREAKFAST'"
+		 				[class.bg-warning]="event.meta.meal.type === 'LUNCH'"
+		 				[class.bg-primary]="event.meta.meal.type === 'DINNER'" >
   		<img  *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
         <img *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
         <img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
         <img *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
         <img *ngSwitchCase="'DINNER'" src="/assets/img/meal/turkey.svg" />
-  		{{event.title}}
+  		{{event.meta.meal.description}}
   		<div class="pull-right">
-  			<a><i class="text-primary fa fa-pencil" (click)="editMeal(event.meta.meal)"></i></a>
-  			<a><i class="text-danger fa fa-close" (click)="removeEvent(event.meta)"></i></a>
+  			<a><i class="text-danger fa fa-close" (click)="removeEvent(event)"></i></a>
   		</div>
   	</div>
   </div>
 </ng-template>
 
 <div class="container-fluid">
-	<span class="btn pull-right bg-primary circle" (click)="addMeal()"><i class="fa fa-plus"></i></span>
-	<span class="pull-left btn-group" role="group">
-		<button type="button" class="btn" (click)="gotoPreviousMonth()"><i class="fa fa-chevron-left"></i> {{previousMonth() | date: 'MMM' }}</button>
-		<button type="button" class="btn" (click)="gotoToday()">Today</button>
-		<button type="button" class="btn" (click)="gotoNextMonth()">{{nextMonth() | date: 'MMM'}} <i class="fa fa-chevron-right"></i></button>
-	</span>
-	<h3 class="text-center">
-		{{ viewDate | date:'MMMM' }} <span *ngIf="differentYear()">{{viewDate | date:'yyyy'}}</span> 
-	</h3>
-	<br />
-	<mwl-calendar-month-view
-	    [viewDate]="viewDate"
-	    [events]="events"
-	    [activeDayIsOpen]="false"
-	    [refresh]="refresh"
-	    (eventTimesChanged)="eventDropped($event)"
-	    (eventClicked)="eventClicked($event)"
-		[cellTemplate]="customCellTemplate">
-<!-- 		[excludeDays]="[0,6]"> -->
-	</mwl-calendar-month-view>
+
+	<div class="row">
+	
+		<!-- MENU -->
+		<div class="col-sm-2">
+			<div class="row">
+				<h3 class="text-primary">Meals</h3>	
+				<div class="pull-right">
+					<a (click)="addMeal()"><span><i class="fa fa-plus"></i> Add...</span></a>
+					<span dropdown container="body">
+  						<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">:{{filter}}</span></a>
+    					<ul *dropdownMenu class="dropdown-menu">
+      						<li ><a class="dropdown-item" (click)="filter='ALL'">SHOW ALL</a></li>
+      						<li class="divider dropdown-divider"></li>
+      						<li ><a class="dropdown-item" (click)="filter='BREAKFAST'">Breakfast</a></li>
+      						<li ><a class="dropdown-item" (click)="filter='AM_SNACK'">AM Snack</a></li>
+      						<li ><a class="dropdown-item" (click)="filter='LUNCH'">Lunch</a></li>
+      						<li ><a class="dropdown-item" (click)="filter='PM_SNACK'">PM Snack</a></li>
+      						<li ><a class="dropdown-item" (click)="filter='DINNER'">Dinner</a></li>
+    					</ul>
+					</span>
+				</div>		
+				<br />
+				<hr />		
+			</div>
+			<div class="row">
+				<div>
+		 			<a *ngFor="let event of filteredMeals(filter)"
+		 				type="button"
+		 				class="btn col-sm-12"
+		 				[class.btn-info]="event.meta.meal.type === 'AM_SNACK' || event.meta.meal.type === 'PM_SNACK'"
+		 				[class.btn-success]="event.meta.meal.type === 'BREAKFAST'"
+		 				[class.btn-warning]="event.meta.meal.type === 'LUNCH'"
+		 				[class.btn-primary]="event.meta.meal.type === 'DINNER'" 
+		 	 			[ngSwitch]="event.meta.meal.type"
+		 	 			style="width: 100%; position:relative; z-index: 10">
+		 	 			<span class="pull-left">
+				  			<img class="img-chip" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
+				        	<img class="img-chip" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
+				        	<img class="img-chip" *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
+				        	<img class="img-chip" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
+				        	<img class="img-chip" *ngSwitchCase="'DINNER'" src="/assets/img/meal/turkey.svg" />
+			  				{{event.meta.meal.description}}
+			  			</span>
+			  			<span class="pull-right">
+			  				<i class="fa fa-pencil" (click)="editMeal(event.meta.meal)"></i>
+			  			</span>
+				  	</a>
+				</div>
+			</div>
+		</div>
+		
+		<!-- CALENDAR -->
+		<div class="col-sm-10">
+			<span class="pull-left btn-group" role="group">
+				<button type="button" class="btn" (click)="gotoPreviousMonth()"><i class="fa fa-chevron-left"></i> {{previousMonth() | date: 'MMM' }}</button>
+				<button type="button" class="btn" (click)="gotoToday()">Today</button>
+				<button type="button" class="btn" (click)="gotoNextMonth()">{{nextMonth() | date: 'MMM'}} <i class="fa fa-chevron-right"></i></button>
+			</span>
+			<h3 class="text-center text-primary">
+				{{ viewDate | date:'MMMM yyyy' }} 
+			</h3>
+			<br />
+			<mwl-calendar-month-view
+			    [viewDate]="viewDate"
+			    [events]="eventList"
+			    [activeDayIsOpen]="false"
+			    [refresh]="refresh"
+			    (eventTimesChanged)="eventDropped($event)"
+			    (eventClicked)="eventClicked($event)"
+				[cellTemplate]="customCellTemplate">
+			</mwl-calendar-month-view>
+		</div>
+	
+	</div>
+
 </div>  		 	

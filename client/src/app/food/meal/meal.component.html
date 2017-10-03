@@ -1,12 +1,10 @@
-<div *ngIf="isValidating" class="loading">
-	<div class="loading-inner text-center">
-		<h2> Validating...</h2>
-		<i class="fa fa-pulse fa-spinner fa-3x fa-fw"></i>
-	</div>
-</div>  
-
-<div *ngIf="!isValidating" class="container">
-
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3">
+			<cw-food-item-list></cw-food-item-list>
+		</div>
+		
+		<div class="col-sm-8 col-sm-offset-1">
 	<div class="row">
 	<h3 *ngIf="!editing"  >
 		<span (click)="editing = !editing" >
@@ -83,13 +81,6 @@
 			<p>{{violation.message}}</p>		
 		</alert>	
 	</div>
-
-	<div class="row" *ngIf="mealCacfpStatus() === 'UNKNOWN'">
-		<alert  [type]="'warning'">
-			<h4 class="alert-heading"><i class="fa fa-exclamation-circle"></i> UNKNOWN CACFP STATUS</h4>
-			Unable to determine CACFP status.  Please add food items and save the meal to assess CACFP Compliance.
-		</alert>
-	</div>
 	
 	
 	<div class="row">
@@ -106,26 +97,28 @@
 				 		   [class.text-danger]="ageGroupCacfpStatus(ageGroup)==='NONCOMPLIANT'"
 				 		   [class.text-info]="ageGroupCacfpStatus(ageGroup)==='UNKNOWN'"></i> {{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
 				 	</template>
-				 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( ageGroup )"
-	 					[mealFoodItem]="mealFoodItem" 
-	 					(changed)="changed($event)" 
-	 					(deleted)="deleted($event)"></cw-food-item>	
-	 					
-	 				<hr /> 							 
-					<div class="btn-group" dropdown *ngIf="mealForm.valid" [dropup]="false">
-						<a dropdownToggle class="dropdown-toggle"><i
-							class="text-primary fa fa-plus"></i> Add Food Items...</a>
-						<ul *dropdownMenu class="dropdown-menu" role="menu">			
-							<ng-template ngFor let-top [ngForOf]="foodComponentList">
-								<li class="dropdown-header"><strong>{{top.description}}</strong></li>
-								<li role="menuitem" *ngFor="let comp of top.children">
-									<a class="dropdown-item" (click)="addMealFoodItemForComponent(comp)">{{comp.description}}</a>
-								</li>
-							</ng-template>
-						</ul>
-					</div>	
+				 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )">
+				 	
+					 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( ageGroup )"
+		 					[mealFoodItem]="mealFoodItem" 
+		 					(changed)="changed($event)" 
+		 					(deleted)="deleted($event)"></cw-food-item>	
+
+				 		<p class="panel-body"><strong>Drag items from the food list and drop here to create a meal</strong></p>
+
+					</div>	 					
+	 				<hr />
 			</tab>		     
 		</tabset>
 	</div>
+		
+		
+		</div>
+	
+	
+	</div>
+	
+
+
 
 </div>
