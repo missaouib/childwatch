@@ -48,6 +48,7 @@ public class DatabaseMigration {
         flyway.setLocations("schema." + schema);
         flyway.setSchemas(schema);
         if (wipe) {
+        	flyway.setValidateOnMigrate(false);
             logger.info("Wiping schema: " + schema);
             flyway.clean();
         }

@@ -1,9 +1,9 @@
 <div class="row">
-	<h3 class="text-primary">Food Items</h3>	
+	<h3 class="text-primary">Food Items <small>for {{ageGroup}}</small></h3>	
 	<div class="pull-right">
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
-		<a><span><i class="fa fa-plus"></i> Add...</span></a>
-		<span dropdown container="body">
+		<a *ngIf="false"><span><i class="fa fa-plus"></i> Add...</span></a>
+		<span *ngIf="false" dropdown container="body">
 					<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">:<strong>{{filter.toUpperCase()}}</strong></span></a>
  					<ul *dropdownMenu class="dropdown-menu">
    						<li ><a class="dropdown-item" (click)="filterFoodItems( 'ALL' )">SHOW ALL</a></li>
@@ -23,6 +23,29 @@
 	<br />
 </div>
 
+<div class="well pre-scrollable">
+	<table class="table table-condensed" >
+		<ng-template ngFor let-category [ngForOf]="['MILK','MEAT','VEGETABLE','FRUIT','GRAIN']">
+			<tr>
+			<td class="col-sm-1" [ngSwitch]="category">
+				<img class="small-img" *ngSwitchCase="'MILK'" src="/assets/img/food/milk.svg" />
+				<img class="small-img" *ngSwitchCase="'MEAT'" src="/assets/img/food/meat.svg" />
+				<img class="small-img" *ngSwitchCase="'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
+				<img class="small-img" *ngSwitchCase="'FRUIT'" src="/assets/img/food/fruit.svg" />
+				<img class="small-img" *ngSwitchCase="'GRAIN'" src="/assets/img/food/grain.svg" />
+			</td>				
+				<td class="col-sm-11">
+					<strong>{{category}}</strong>
+				</td>
+			</tr>
+			<tr dnd-draggable [dragEnabled]="true" [dragData]="foodItem" *ngFor="let foodItem of foodItemWithTag([category], ['CN'])">
+				<td class="col-sm-1">&nbsp;</td>
+				<td class="col-sm-11"> <span class="text-primary">{{limit( foodItem.shortDescription )}}</span></td>
+			</tr>
+		</ng-template>
+	</table>
+</div>
+<!-- 
 <div class="row">
 	<table class="table table-condensed" >
 		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="true" [dragData]="foodItem" >
@@ -60,3 +83,4 @@
 				firstText="&laquo;" 
 				lastText="&raquo;"></pagination>
 </div>
+-->

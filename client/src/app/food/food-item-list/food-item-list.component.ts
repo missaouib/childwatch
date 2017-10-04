@@ -1,6 +1,6 @@
 import {FoodItem} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 
 @Component({
   selector: 'cw-food-item-list',
@@ -8,6 +8,14 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./food-item-list.component.css']
 })
 export class FoodItemListComponent implements OnInit {
+
+  _ageGroup: string;
+
+  @Input()
+  set ageGroup(ageGroup: string) {
+    this._ageGroup = ageGroup;
+  }
+  get ageGroup(): string {return this._ageGroup;}
 
   FoodItems: FoodItem[] = [];
   currentPage = 1;
@@ -18,6 +26,8 @@ export class FoodItemListComponent implements OnInit {
   search: string = undefined;
 
   PagedItems: FoodItem[] = [];
+
+  filteredList: FoodItem[] = [];
 
   constructor(
     private state: FoodStateService
@@ -39,19 +49,59 @@ export class FoodItemListComponent implements OnInit {
     this.PagedItems = filteredList;
   }
 
+  tagContainsAll(arr: string[], items: string[]) {
+    for (var i = 0; i < items.length; i++) {
+      if (arr.indexOf(items[i]) === -1)
+        return false;
+    }
+    return true;
+  }
+
+  tagContainsAny(arr: string[], items: string[]) {
+    return items.some(v => arr.indexOf(v) >= 0);
+  }
+
+
+  foodItemWithTag(tag: string[], except: string[]) {
+
+    const _tag = tag.slice();
+    const _except = except ? except.slice() : [];
+
+    ((this.ageGroup == 'AGE_0_5MO' || this.ageGroup == 'AGE_6_11MO') ? _tag : _except).push('INFANT');
+
+
+    return (this.search ? this.filteredList : this.FoodItems)
+      .filter(({tags}) => {
+        const tagAsStringArray = tags.map(t => t.value);
+        return this.tagContainsAll(tagAsStringArray, _tag) &&
+          ((_except) ? !this.tagContainsAny(tagAsStringArray, _except) : true);
+      });
+  }
 
   pagedFoodItems() {
     const start = (this.currentPage - 1) * 10;
     return (this.filter !== 'ALL') ? this.PagedItems.slice(start, start + 10) : this.FoodItems.slice(start, start + 10);
   }
 
+  filterList() {
+    this.filteredList = this.search ? this.FoodItems.filter(item => item.description.toLowerCase().includes(this.search.toLowerCase())) : this.FoodItems;
+  }
+
 
   searchList() {
+
+    this.filterList();
+    /*
     this.currentPage = 1;
     this.filter = this.search && this.search.length > 0 ? 'CUSTOM' : 'ALL';
     const filteredList = this.search ? this.FoodItems.filter(item => item.description.toLowerCase().includes(this.search.toLowerCase())) : this.FoodItems;
     console.log('search = ' + this.search);
     this.totalItems = filteredList.length;
     this.PagedItems = filteredList;
+     */
+  }
+
+  limit(text: string) {
+    return text.slice(0, 30) + (text.length > 30 ? "..." : "");
   }
 }
