@@ -1,52 +1,35 @@
 <div class="row">
-	<h3 class="text-primary">Food Items <small>for {{ageGroup}}</small></h3>	
-	<div class="pull-right">
+	<h3 class="text-primary">Food Items </h3>	
+	<div *ngIf="show" class="pull-right">
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
+		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
 		<a *ngIf="false"><span><i class="fa fa-plus"></i> Add...</span></a>
-		<span *ngIf="false" dropdown container="body">
-					<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">:<strong>{{filter.toUpperCase()}}</strong></span></a>
- 					<ul *dropdownMenu class="dropdown-menu">
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'ALL' )">SHOW ALL</a></li>
-   						<li class="divider dropdown-divider"></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'milk' )">Milk</a></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'vegetable' )">Vegetables</a></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'fruit' )">Fruit</a></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'meat' )">Meats</a></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'grain' )">Grains</a></li>
-   						<li class="divider dropdown-divider"></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'infant' )">Infant</a></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'cn' )">CN Items</a></li>
-   						<li ><a class="dropdown-item" (click)="filterFoodItems( 'other' )">Other</a></li>
- 					</ul>
+		<span dropdown container="body">
+			<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">: <strong>{{filter.toUpperCase()}}</strong></span></a>
+			<ul *dropdownMenu class="dropdown-menu">
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'ALL' )">SHOW ALL</a></li>
+				<li class="divider dropdown-divider"></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'milk' )">Milk</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'vegetable' )">Vegetables</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'fruit' )">Fruit</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'meat' )">Meats</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'grain' )">Grains</a></li>
+				<li class="divider dropdown-divider"></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'infant' )">Infant</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'cn' )">CN Items</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'other' )">Other</a></li>
+			</ul>
 		</span>
 	</div>		
 	<br />
 </div>
 
-<div class="well pre-scrollable">
-	<table class="table table-condensed" >
-		<ng-template ngFor let-category [ngForOf]="['MILK','MEAT','VEGETABLE','FRUIT','GRAIN']">
-			<tr>
-			<td class="col-sm-1" [ngSwitch]="category">
-				<img class="small-img" *ngSwitchCase="'MILK'" src="/assets/img/food/milk.svg" />
-				<img class="small-img" *ngSwitchCase="'MEAT'" src="/assets/img/food/meat.svg" />
-				<img class="small-img" *ngSwitchCase="'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
-				<img class="small-img" *ngSwitchCase="'FRUIT'" src="/assets/img/food/fruit.svg" />
-				<img class="small-img" *ngSwitchCase="'GRAIN'" src="/assets/img/food/grain.svg" />
-			</td>				
-				<td class="col-sm-11">
-					<strong>{{category}}</strong>
-				</td>
-			</tr>
-			<tr dnd-draggable [dragEnabled]="true" [dragData]="foodItem" *ngFor="let foodItem of foodItemWithTag([category], ['CN'])">
-				<td class="col-sm-1">&nbsp;</td>
-				<td class="col-sm-11"> <span class="text-primary">{{limit( foodItem.shortDescription )}}</span></td>
-			</tr>
-		</ng-template>
-	</table>
+
+<div *ngIf="!show">
+	<p><strong><em>Set a meal name/type to show food items</em></strong></p>
 </div>
-<!-- 
-<div class="row">
+
+<div class="row" *ngIf="show">
 	<table class="table table-condensed" >
 		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="true" [dragData]="foodItem" >
 			<td class="col=sm-1" [ngSwitch]="foodItem.foodComponent.icon">
@@ -61,8 +44,11 @@
 
 			</td>
 			<td class="col-sm-10">
-				<strong class="text-primary">{{foodItem.description}}</strong><br />
-				<span><em>{{foodItem.foodComponent.description}}</em></span>
+				<strong class="text-primary">
+					<span class="hidden-sm hidden-md">{{foodItem.shortDescription}}</span>
+					<span class="hidden-lg">{{limit( foodItem.shortDescription )}}</span>
+				</strong><br />
+				<span class="hidden-sm hidden-xs"><em>{{foodItem.foodComponent.description}}</em></span>
 			</td>
 			<td class="col-sm-1">
 				<i (click)="foodItem.favorite = !foodItem.favorite" class="text-warning fa" [class.fa-star-o]="!foodItem.favorite" [class.fa-star]="foodItem.favorite"></i>
@@ -70,11 +56,12 @@
 		</tr>				
 	</table>
 
+	<span *ngIf="totalItems > 10">
 	<pagination class="pagination-sm" 
 				[totalItems]="totalItems" 
 				(numPages)="totalItems" 
 				[(ngModel)]="currentPage" 
-				[maxSize]="5" 
+				[maxSize]="3" 
 				[boundaryLinks]="true" 
 				[rotate]="false" 
 				(numPages)="numPages = $event"
@@ -82,5 +69,6 @@
 				nextText="&rsaquo;" 
 				firstText="&laquo;" 
 				lastText="&raquo;"></pagination>
+	</span>
+
 </div>
--->

@@ -1,11 +1,14 @@
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-xs-2 col-xs-offset-1">
-			<cw-food-item-list [ageGroup]="activeTab"></cw-food-item-list>
+		<div class="hidden-xs col-sm-4">
+			<cw-food-item-list [ageGroup]="activeTab" [show]="showFoodList()"></cw-food-item-list>
 		</div>
 		
-		<div class="col-xs-7 col-xs-offset-1">
+		<div class="col-xs-12 col-sm-7 col-sm-offset-1">
 	<div class="row">
+	<h3> 
+		<span class="text-primary">Meal</span> 
+	</h3>	
 	<h3 *ngIf="!editing"  >
 		<span (click)="editing = !editing" >
 			<span tooltip="Click to edit" placement="bottom">{{mealForm.get('description').value}}</span> 
@@ -14,13 +17,13 @@
 	</h3>
 		<form *ngIf="editing" novalidate [formGroup]="mealForm">
 			<div>
-				<div class="form-group col-sm-4">
+				<div class="form-group col-xs-4">
 					<label for="name">Name</label>
 					<input #name class="form-control" placeholder="Meal Name" formControlName="description" /> 
 					<small class="text-danger" *ngIf="mealForm.get('description').hasError('required')">Meal name is required</small>
 				</div>		
 
-				<div class="form-group col-sm-2">
+				<div class="form-group col-xs-2">
 					<label for="type">Type</label>
 					<select #type class="form-control" formControlName="type" >
 						<option value="BREAKFAST">Breakfast</option>
@@ -34,9 +37,11 @@
 			</div>				
 		</form>
 		<span class="pull-right" >
-			<a *ngIf="!canDeactivate() && mealForm.get('description').value && mealForm.get('type').value" (click)="save()" ><small class="text-primary"><i class="fa fa-save"></i> Save </small></a>
-			<small *ngIf="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined" class="text-default"><i class="fa fa-save"></i> Save </small>	
-			<i *ngIf="saving" class="fa fa-cog fa-spin fa-3x fa-fw"></i>						   
+			<a *ngIf="!canDeactivate() && mealForm.get('description').value && mealForm.get('type').value" (click)="save()" ><span class="text-primary" tooltip="Save meal" placement="left"><i class="fa fa-save"></i> Save </span></a>
+			<span *ngIf="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined" 
+				  class="text-default pseudolink" 
+				  tooltip="Fix meal issues prior to saving" placement="left" container="body">
+				  <i class="fa fa-save"></i> Save</span>	
 		</span>				
 	</div>
 	<div class="row">
@@ -69,21 +74,17 @@
 	</div>
 	
 	<div class="row" *ngIf="mealCacfpStatus() === 'NONCOMPLIANT'">
-		<alert *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" [type]="(violation.severity === 'FAIL') ? 'danger' : (violation.severity === 'FAIL') ? 'warning' : 'info'">
+		<alert  [type]="'danger'">
 			<h4 class="alert-heading">
-				<i class="fa" 
-				   [class.fa-exclamation-triangle]="violation.severity === 'FAIL'"
-				   [class.fa-exclamation-circle]="violation.severity === 'WARN'"
-				   [class.fa-info-circle]="violation.severity === 'INFO'"
-				   [class.fa-question-circle]="violation.severity === 'UNKNOWN'"></i> 
-				   {{violation.severity}} 
-			</h4>			   
-			<p>{{violation.message}}</p>		
+				<i class="fa fa-exclamation-triangle"></i>
+				   CACFP Check Fail
+			</h4>	
+			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" >{{violation.message}}</li></ul>		
 		</alert>	
 	</div>
 	
 	
-	<div class="row">
+	<div class="hidden-xs row">
 		<label>Age Group</label>
 		<tabset>
 			<tab *ngFor="let ageGroup of AGEGROUPS"
@@ -95,7 +96,8 @@
 				 		   [class.fa-question-circle]="ageGroupCacfpStatus(ageGroup)==='UNKNOWN'"
 				 		   [class.text-success]="ageGroupCacfpStatus(ageGroup)==='COMPLIANT'"
 				 		   [class.text-danger]="ageGroupCacfpStatus(ageGroup)==='NONCOMPLIANT'"
-				 		   [class.text-info]="ageGroupCacfpStatus(ageGroup)==='UNKNOWN'"></i> {{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
+				 		   [class.text-info]="ageGroupCacfpStatus(ageGroup)==='UNKNOWN'"></i>&nbsp;
+				 		   {{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
 				 	</template>
 				 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )" >
 				 	
@@ -104,12 +106,48 @@
 		 					(changed)="changed($event)" 
 		 					(deleted)="deleted($event)"></cw-food-item>	
 
-				 		<p class="panel-body"><strong>Drag items from the food list and drop here to create a meal</strong></p>
+				 		<p class="panel-body">
+				 			<strong *ngIf="showFoodList()">Drag items from the food list and drop here to create a meal <span *ngIf="!emptyShow">or click <a (click)="emptyShow=true">here</a> to search items to add</span></strong>
+				 			<strong *ngIf="!showFoodList()"><em>Set a meal name/type to add food items</em></strong>
+				 		</p>
+				 		
+				 		<cw-food-item *ngIf="emptyShow" (selectedItem)="droppedFoodItem($event); emptyShow=false;"></cw-food-item>
 
 					</div>	 					
 	 				<hr />
 			</tab>		     
 		</tabset>
+	</div>
+	
+	<div class="visible-xs-block row">
+			<span dropdown container="body">
+				<label>Age Group:</label> <a dropdownToggle (click)="false">{{activeTab.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}} <i class="fa fa-chevron-down"></i></a> 
+				<i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus(activeTab)==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus(activeTab)==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus(activeTab)==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus(activeTab)==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus(activeTab)==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus(activeTab)==='UNKNOWN'"></i>
+				<ul *dropdownMenu class="dropdown-menu">
+					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_0_5MO'">0 - 5 MO</a></li>
+					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_6_11MO'">6 - 11 MO</a></li>
+					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_1_2YR'">1 - 2 YR</a></li>
+					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_3_5YR'">3 - 5 YR</a></li>
+					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_6_12YR'">6 - 12 YR</a></li>
+					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_13_18YR'">13 - 18 YR</a></li>
+				</ul>
+			</span>	
+			<hr />
+		 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )" >
+				 	
+			 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( activeTab )"
+	   	 					  [mealFoodItem]="mealFoodItem" 
+		 					  (changed)="changed($event)" 
+		 					  (deleted)="deleted($event)"></cw-food-item>	
+		 					  
+		 		<cw-food-item (selectedItem)="droppedFoodItem($event)"></cw-food-item>
+			</div>	 					
 	</div>
 		
 		

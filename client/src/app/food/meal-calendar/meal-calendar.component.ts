@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import {CalendarEvent, CalendarEventTimesChangedEvent} from 'angular-calendar';
+import {CalendarEvent} from 'angular-calendar';
 
 import {Meal, MealEvent} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
@@ -20,8 +20,10 @@ export class MealCalendarComponent implements OnInit {
   view = 'month';
   activeDayIsOpen = false;
 
+  showHideWeekends = [0, 6];
+  showWeekends = false;
+
   eventList: Array<CalendarEvent<MealEvent>> = [];
-  mealEvents: Array<CalendarEvent<MealEvent>> = [];
 
   refresh: Subject<any> = new Subject();
 
@@ -39,19 +41,6 @@ export class MealCalendarComponent implements OnInit {
 
   ngOnInit() {
     this.mealSvc.query().subscribe();
-
-    this.state.meals$
-      .subscribe((meals: Meal[]) => {
-        this.mealEvents = meals.map(meal => (
-          {
-            title: meal.description,
-            color: undefined,
-            start: undefined,
-            draggable: true,
-            meta: this.createMealEvent(meal)
-          }
-        ));
-      });
 
     const today = new Date();
 
@@ -98,10 +87,6 @@ export class MealCalendarComponent implements OnInit {
     return mealEvent;
   }
 
-  filteredMeals(type: string) {
-    return (type === 'ALL') ? this.mealEvents.sort(this.compareEvnt) : this.mealEvents.filter(event => event.meta.meal.type === type).sort(this.compareEvnt);
-  }
-
   compare(a: Meal, b: Meal) {
     const MEALS = ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER'];
     return MEALS.indexOf(a.type) - MEALS.indexOf(b.type);
@@ -131,19 +116,32 @@ export class MealCalendarComponent implements OnInit {
     return moment(date).diff(moment('01/10/2017', 'DD/MM/YYYY'), 'days') >= 0;
   }
 
-  eventDropped({event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
-    const newEvent = {
-      ...event,
-      start: newStart,
-      end: newEnd,
-      meta: event.meta
+  mealDropped(meal: Meal, when: Date) {
+    const mealEvent: CalendarEvent<MealEvent> = {
+      start: when,
+      end: when,
+      meta: this.createMealEvent(meal, when),
+      title: meal.description,
+      color: {primary: 'red', secondary: 'yellow'}
     }
-
-    //this.state.scheduleMealEvent(event.meta);
-
-    this.eventList.push(newEvent);
-    this.viewDate = newStart;
+    this.eventList.push(mealEvent);
+    this.viewDate = when;
     this.activeDayIsOpen = true;
+    this.state.scheduleMealEvent(mealEvent.meta);
+  }
+
+  flipWeekend() {
+    this.showHideWeekends = this.showWeekends ? [] : [0, 6];
+  }
+
+  limit(text: string, len?: number) {
+    const _len = len || 30;
+    return text.slice(0, _len) + (text.length > _len ? "..." : "");
+  }
+
+  dayClicked(event: any) {
+    console.log(event);
+    this.viewDate = event.day.date;
   }
 
 }

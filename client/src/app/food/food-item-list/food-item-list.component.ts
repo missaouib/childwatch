@@ -9,13 +9,10 @@ import {Component, OnInit, Input} from '@angular/core';
 })
 export class FoodItemListComponent implements OnInit {
 
-  _ageGroup: string;
 
-  @Input()
-  set ageGroup(ageGroup: string) {
-    this._ageGroup = ageGroup;
-  }
-  get ageGroup(): string {return this._ageGroup;}
+  @Input() show: boolean;
+
+  @Input() ageGroup: string;
 
   FoodItems: FoodItem[] = [];
   currentPage = 1;
@@ -43,6 +40,7 @@ export class FoodItemListComponent implements OnInit {
 
   filterFoodItems(filter: string) {
     this.filter = filter;
+    this.search = undefined;
     const filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.FoodItems : this.FoodItems.filter(item => item.foodComponent.icon === filter);
     this.currentPage = 1;
     this.totalItems = filteredList.length;
@@ -90,15 +88,14 @@ export class FoodItemListComponent implements OnInit {
 
   searchList() {
 
-    this.filterList();
-    /*
+    // this.filterList();
+
     this.currentPage = 1;
     this.filter = this.search && this.search.length > 0 ? 'CUSTOM' : 'ALL';
     const filteredList = this.search ? this.FoodItems.filter(item => item.description.toLowerCase().includes(this.search.toLowerCase())) : this.FoodItems;
     console.log('search = ' + this.search);
     this.totalItems = filteredList.length;
     this.PagedItems = filteredList;
-     */
   }
 
   limit(text: string) {

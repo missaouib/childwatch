@@ -24,6 +24,12 @@ import 'rxjs/add/observable/forkJoin';
     .customClass .panel-body {
       background-color: #337aa7;
     }
+    a:hover {
+      cursor:pointer;
+    }
+    pseudolink:hover {
+      cursor:pointer;
+    }
   `]
 })
 export class MealComponent implements OnInit, ComponentCanDeactivate {
@@ -91,6 +97,10 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       type: [this.meal.type, Validators.required]
     });
 
+  }
+
+  showFoodList() {
+    return !this.mealForm.invalid;
   }
 
   mealCacfpStatus(): string {

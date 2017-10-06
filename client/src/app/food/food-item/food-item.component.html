@@ -1,6 +1,6 @@
 <div class="panel">
 	<form novalidate [formGroup]="foodItemForm" class="row">
-			<span class="col-sm-1" [ngSwitch]="mealFoodItem.foodItem.foodComponent.icon">
+			<span class="col-xs-1" [ngSwitch]="mealFoodItem?.foodItem.foodComponent.icon || 'other'">
 				<img class="small-img" *ngSwitchCase="'milk'" src="/assets/img/food/milk.svg" />
 				<img class="small-img" *ngSwitchCase="'meat'" src="/assets/img/food/meat.svg" />
 				<img class="small-img" *ngSwitchCase="'vegetable'" src="/assets/img/food/vegetable.svg" />
@@ -11,17 +11,33 @@
 				<img class="small-img" *ngSwitchCase="'other'" src="/assets/img/food/other.svg" />
 				
 			</span>					
-	    
-			<span class="col-xs-12 col-sm-4">
-				<strong class="form-control-static text-primary">{{mealFoodItem.foodItem.description}}</strong>
-				<p><em>{{mealFoodItem.foodItem.foodComponent.description}}</em></p>
+			<span *ngIf="!mealFoodItem" class="col-xs-11">
+				<strong class="form-control-static text-primary">Add food item</strong>
+				<input class="form-control" 
+					   formControlName="description" 
+					   placeholder="Type here to search for food item" 
+					   [typeahead]="FoodItems"
+					   typeaheadOptionField="description"
+					   [typeaheadItemTemplate]="foodItemTemplate"
+					   (typeaheadOnSelect)="selectItem( $event.item )"
+					   (typeaheadOnBlur)="selectItem( $event.item )"					   
+					   typeaheadSingleWords="false"
+					   typeaheadOptionsLimit="7"
+         			   typeaheadMinLength="0" 
+					   />
 			</span>
-			<span class="col-xs-12 col-sm-3 "> 
+
+	    
+			<span *ngIf="mealFoodItem" class="col-xs-4">
+				<strong class="form-control-static text-primary">{{mealFoodItem?.foodItem.description}}</strong>
+				<p><em>{{mealFoodItem?.foodItem.foodComponent.description }}</em></p>
+			</span>
+			<span *ngIf="mealFoodItem" class="col-xs-3 "> 
 				<label>Quantity</label> 
 				<input class="form-control" formControlName="quantity" value="0">
 				<span *ngIf="foodItemForm.get('quantity').hasError('required')" class="text-danger">Quantity is required</span>
 			</span> 
-			<span class="col-xs-12 col-sm-3"> 
+			<span *ngIf="mealFoodItem" class="col-xs-3"> 
 				<label>Units</label> 
 				<select class="form-control" formControlName="unit">
 					<option value="EACH">EACH</option>
@@ -34,11 +50,15 @@
 					<option value="TABLESPOONS">TABLESPOONS</option>
 					<option value="TEASPOONS">TEASPOONS</option>								
 				</select>
-				<span *ngIf="noUnitMatch()" class="text-warning">Typically served in {{foodItemForm.get('foodItem').value.servingUom}}</span>
+				<span *ngIf="mealFoodItem && noUnitMatch()" class="text-warning">Typically served in {{foodItemForm.get('foodItem').value.servingUom}}</span>
 			</span> 
-			<span class="col-sm-1">
+			<span class="col-xs-1" *ngIf="mealFoodItem" >
 				<i class="text-danger pull-right fa fa-close" (click)="deleteFoodItem()"></i>
 			</span>
 	</form>	
 </div>
+
+<ng-template #foodItemTemplate let-item="item" let-index="index">
+	<h5>{{item.description}}</h5>
+</ng-template>
 

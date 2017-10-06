@@ -1,4 +1,5 @@
 import {MealFoodItem, FoodItem} from '../food.interfaces';
+import {FoodStateService} from '../services/food-state.service';
 import {EventEmitter} from '@angular/core';
 import {Output} from '@angular/core';
 import {Input} from '@angular/core';
@@ -17,20 +18,29 @@ export class FoodItemComponent implements OnInit {
   @Input() mealFoodItem: MealFoodItem;
   @Output() deleted: EventEmitter<string> = new EventEmitter<string>();
   @Output() changed: EventEmitter<MealFoodItem> = new EventEmitter<MealFoodItem>();
+  @Output() selectedItem: EventEmitter<FoodItem> = new EventEmitter<FoodItem>();
 
+
+  FoodItems: any[] = [];
   foodItemForm: FormGroup;
   favorite = false;
 
   constructor(
     private formBuilder: FormBuilder,
+    private state: FoodStateService,
   ) {}
 
   ngOnInit() {
 
+    if (!this.mealFoodItem) {
+      this.state.foodItems$.subscribe(foodItems => this.FoodItems = foodItems);
+    }
+
     this.foodItemForm = this.formBuilder.group({
-      foodItem: [this.mealFoodItem.foodItem, Validators.required],
-      quantity: [this.mealFoodItem.quantity.toString(), Validators.required],
-      unit: [this.mealFoodItem.foodItem.servingUom, Validators.required]
+      foodItem: [this.mealFoodItem ? this.mealFoodItem.foodItem : undefined, Validators.required],
+      description: [undefined],
+      quantity: [this.mealFoodItem ? this.mealFoodItem.quantity.toString() : undefined, Validators.required],
+      unit: [this.mealFoodItem ? this.mealFoodItem.foodItem.servingUom : undefined, Validators.required]
     });
 
     // when the mealFoodItem changes
@@ -53,8 +63,12 @@ export class FoodItemComponent implements OnInit {
   }
 
   deleteFoodItem() {
-    console.log('Emitting ' + this.mealFoodItem.id);
     this.deleted.emit(this.mealFoodItem.id);
+  }
+
+  selectItem(foodItem: FoodItem) {
+    this.selectedItem.emit(foodItem);
+    this.foodItemForm.reset();
   }
 
   setFoodItem(foodItem: FoodItem) {

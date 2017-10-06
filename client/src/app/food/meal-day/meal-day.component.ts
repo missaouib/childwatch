@@ -1,73 +1,53 @@
-/*
- * REMARKABLE SYSTEMS CONFIDENTIAL
- * 
- * Copyright (c) 2017 Remarkable Systems, Incorporated.  
- * All Rights reserved
- */
-import { Meal, MealEvent } from '../food.interfaces';
-import { FoodStateService } from '../services/food-state.service';
-import { Component, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { UUID } from 'angular2-uuid';
+import {MealEvent, Meal} from '../food.interfaces';
+import {FoodStateService} from '../services/food-state.service';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {CalendarEvent} from 'angular-calendar';
+import * as moment from 'moment';
 
-/**
- * MealDayComponent
- * 
- * @component
- */
 @Component({
   selector: 'cw-meal-day',
   templateUrl: './meal-day.component.html',
   styleUrls: ['./meal-day.component.css']
 })
 export class MealDayComponent implements OnInit {
-  meals: Meal[] = [];
-  day: any = {};
-  filterBy: string = undefined;
-  
-  /**
-   * constructor for the MealDayBuilderComponent
-   * 
-   * @constructor
-   */
+
+  Meals: Meal[] = [];
+
+  @Input() day: Date
+  @Output() edit: EventEmitter<Meal> = new EventEmitter<Meal>();
+  @Output() add: EventEmitter<any> = new EventEmitter();
+  @Output() remove: EventEmitter<CalendarEvent<MealEvent>> = new EventEmitter();
+
+  Events: Array<CalendarEvent<MealEvent>> = [];
+
   constructor(
-    public bsModalRef: BsModalRef,
     private state: FoodStateService
-    
   ) {}
-  
-  /**
-   * 
-   */
+
   ngOnInit() {
-    this.state.meals$.subscribe( (meals) => this.meals = meals );  
+    this.state.mealEvents$.subscribe(events => this.Events = events);
+    this.state.meals$.subscribe(meals => this.Meals = meals);
   }
-      
-  /**
-   * Filter the list of meals to only those that arent being shown for the given day
-   * 
-   * @returns Meal[] filtered array of Meals
-   */    
-  filteredMeals(): Meal[] {    
-    const eventMeals: Meal[] = this.day.events ? this.day.events.map( (e: any) => e.meta.meal ) : [];    
-    return this.meals.filter( (meal) =>  eventMeals.find( (em) => em.id === meal.id ) === undefined  && (!this.filterBy || meal.type === this.filterBy) );
+
+  todaysEvents() {
+    return this.Events.filter(event => moment(event.start).diff(this.day, 'day') === 0);
   }
-  
-  /**
-   * Add a meal to the meal events list for the day and close the dialog window
-   * 
-   * @param meal Meal item to add
-   */
-  addMeal( meal: Meal ) {    
-    const event: MealEvent = {
-      id: UUID.UUID(),
-      startDate: new Date(this.day.date),
-      endDate: new Date(this.day.date),
-      recurrence: 'NONE',
-      meal: meal
-    }; 
-    this.state.scheduleMealEvent( event ) ;
-    this.bsModalRef.hide();
+
+  limit(text: string, len?: number) {
+    const _len = len || 30;
+    return text.slice(0, _len) + (text.length > _len ? "..." : "");
+  }
+
+  editMeal(meal: Meal) {
+    this.edit.emit(meal);
+  }
+
+  addMeal() {
+    this.add.emit();
+  }
+
+  removeMealEvent(mealEvent: CalendarEvent<MealEvent>) {
+    this.remove.emit(mealEvent);
   }
 
 }

@@ -30,7 +30,6 @@ import {EffectsModule} from '@ngrx/effects';
 import {FoodEffectsService} from './services/food-effects.service';
 import {AlertModule} from 'ngx-bootstrap/alert';
 import {SidebarModule} from 'ng-sidebar';
-import {MealDayComponent} from './meal-day/meal-day.component';
 
 import {ModalModule} from 'ngx-bootstrap/modal';
 import {FoodItemComponent} from './food-item/food-item.component';
@@ -39,6 +38,8 @@ import {MealPatternHelpComponent} from './meal-pattern-help/meal-pattern-help.co
 import {FoodItemListComponent} from './food-item-list/food-item-list.component';
 
 import {PaginationModule} from 'ngx-bootstrap/pagination';
+import {MealListComponent} from './meal-list/meal-list.component';
+import { MealDayComponent } from './meal-day/meal-day.component';
 
 
 const routes: Routes = [
@@ -68,10 +69,9 @@ const routes: Routes = [
   ],
   declarations: [
     MealCalendarComponent,
-    MealBuilderComponent, MealDayComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent
+    MealBuilderComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent
   ],
-  providers: [FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard],
-  entryComponents: [MealDayComponent]
+  providers: [FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard]
 })
 export class FoodModule {
 

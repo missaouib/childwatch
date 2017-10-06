@@ -1,0 +1,62 @@
+<div class="row">
+	<h3 class="text-primary">Meals </h3>	
+	<div class="pull-right">
+		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
+		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
+		<a (click)="addMeal()"><span><i class="fa fa-plus"></i> Add...</span></a>
+		<span dropdown container="body">
+			<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">: <strong>{{filter}}</strong></span></a>
+			<ul *dropdownMenu class="dropdown-menu">
+				<li ><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL</a></li>
+				<li class="divider dropdown-divider"></li>
+				<li ><a class="dropdown-item" (click)="filterMeals( 'BREAKFAST' )">Breakfast</a></li>
+				<li ><a class="dropdown-item" (click)="filterMeals( 'AM_SNACK' )">AM Snack</a></li>
+				<li ><a class="dropdown-item" (click)="filterMeals( 'LUNCH' )">Lunch</a></li>
+				<li ><a class="dropdown-item" (click)="filterMeals( 'PM_SNACK ' )">PM Snack</a></li>
+				<li ><a class="dropdown-item" (click)="filterMeals( 'DINNER' )">Dinner</a></li>
+			</ul>
+		</span>
+	</div>		
+	<br />
+</div>
+
+<div class="row">
+	<table class="table table-condensed" >
+		<tr *ngFor="let meal of pagedMeals()" dnd-draggable [dragEnabled]="true" [dragData]="meal" >
+			<td class="col=sm-1" [ngSwitch]="meal.type">
+				<img class="small-img" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
+				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
+				<img class="small-img" *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
+				<img class="small-img" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
+				<img class="small-img" *ngSwitchCase="'DINNER'" src="/assets/img/food/turkey.svg" />
+			</td>
+			<td class="col-sm-10">
+				<strong class="text-primary">
+					<span class="hidden-sm hidden-md">{{meal.description}}</span>
+					<span class="hidden-lg">{{limit( meal.description )}}</span>
+				</strong><br />
+				<span class="hidden-sm hidden-xs"><em>{{meal.type}}</em></span>
+			</td>
+			<td class="col-sm-1">
+				<i (click)="editMeal(meal)" class="text-primary fa fa-pencil"></i>
+				<i class="text-warning fa fa-star-o"></i>
+			</td>
+		</tr>				
+	</table>
+
+	<span *ngIf="totalItems > 10">
+	<pagination class="pagination-sm" 
+				[totalItems]="totalItems" 
+				(numPages)="totalItems" 
+				[(ngModel)]="currentPage" 
+				[maxSize]="3" 
+				[boundaryLinks]="true" 
+				[rotate]="false" 
+				(numPages)="numPages = $event"
+				previousText="&lsaquo;" 
+				nextText="&rsaquo;" 
+				firstText="&laquo;" 
+				lastText="&raquo;"></pagination>
+	</span>
+
+</div>
