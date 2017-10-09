@@ -1,12 +1,13 @@
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container-fluid">
     <div class="navbar-header">
-    	<img class="navbar-brand" src="/assets/img/cw_text_logo.png"/>
+    	<a class="logo pull-left" href="#"><img class="sm-img" src="/assets/img/childwatch.png"/></a>
+        <span class="name pull-left"><strong>Childwatch</strong></span>
     </div>
-    <div class="collapse navbar-collapse">
+    	<div class="collapse navbar-collapse" id="myNavbar">
     	<ul class="nav navbar-nav navbar-right">
-    		<li><a (click)="navToCalendar()"><i class="fa fa-calendar"></i> Meal Schedule</a></li>
-    		<li dropdown>
+    		<li><a class="active" (click)="navToCalendar()"><i class="fa fa-calendar"></i> Meal Schedule</a></li>
+    		<li class="hidden-xs" dropdown>
 	          <a dropdownToggle><i class="fa fa-gear"></i> <span class="caret"></span></a>
 	          <ul *dropdownMenu class="dropdown-menu">
 	            <li class="dropdown-header">Theme</li>
@@ -29,7 +30,7 @@
 	          </ul>
 	        </li>
     	</ul>
-    </div>
+    	</div>
     </div>
 </nav>
 

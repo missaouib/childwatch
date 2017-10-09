@@ -71,9 +71,6 @@ export class FoodItemComponent implements OnInit {
     this.foodItemForm.reset();
   }
 
-  setFoodItem(foodItem: FoodItem) {
-    this.foodItemForm.patchValue({foodItem: foodItem, unit: foodItem.servingUom});
-  }
 
   noUnitMatch(): boolean {
     const foodItem = this.foodItemForm.get('foodItem').value;

@@ -1,10 +1,10 @@
-import { AppState } from '../../app.state';
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem } from '../food.interfaces';
-import { FoodActions } from '../food.actions';
-import { CalendarEvent } from 'angular-calendar';
+import {AppState} from '../../app.state';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem} from '../food.interfaces';
+import {FoodActions} from '../food.actions';
+import {CalendarEvent} from 'angular-calendar';
 
 
 @Injectable()
@@ -12,69 +12,70 @@ export class FoodStateService {
 
   constructor(
     private store: Store<AppState>,
-    private actions: FoodActions ) {}
+    private actions: FoodActions) {}
 
   get foodItems$(): Observable<FoodItem[]> {
-      return this.store.select( s => s.food.foodItems );
+    return this.store.select(s => s.food.foodItems);
   }
 
   get foodComponents$(): Observable<FoodComponent[]> {
-    return this.store.select( s => s.food.foodComponents );
+    return this.store.select(s => s.food.foodComponents);
   }
 
-  get menus$(): Observable<MealEvent[]>{
-    return this.store.select( s => s.food.menuUI.mealEvents );
+  get menus$(): Observable<MealEvent[]> {
+    return this.store.select(s => s.food.menuUI.mealEvents);
   }
 
-  get meals$(): Observable<Meal[]>{
-    return this.store.select( s => s.food.meals );
+  get meals$(): Observable<Meal[]> {
+    return this.store.select(s => s.food.meals);
   }
-  
-  get mealEvents$(): Observable<Array<CalendarEvent<MealEvent>>>{
-    return this.store.select( s => s.food.menuUI.events );
+
+  get mealEvents$(): Observable<Array<CalendarEvent<MealEvent>>> {
+    return this.store.select(s => s.food.menuUI.events);
   }
-  
+
   get currentMealFoodItems$(): Observable<MealFoodItem[]> {
-    return this.store.select( s => s.food.menuUI.currentMealFoodItems );
+    return this.store.select(s => s.food.menuUI.currentMealFoodItems);
   }
 
-  adjustMenuTime( start: Date, end: Date ) {
-    this.store.dispatch( this.actions.menuTimeAdjusted( { start: start, end: end } ) );
+  adjustMenuTime(start: Date, end: Date) {
+    this.store.dispatch(this.actions.menuTimeAdjusted({start: start, end: end}));
   }
-  
-  get currentMeal$(): Observable<Meal>{
-    return this.store.select( s => s.food.menuUI.currentMeal );
+
+  get currentMeal$(): Observable<Meal> {
+    return this.store.select(s => s.food.menuUI.currentMeal);
   }
-    
-  scheduleMealEvent( mealEvent: MealEvent ) {
-    this.store.dispatch( this.actions.mealEventScheduled( mealEvent ) );
+
+  scheduleMealEvent(mealEvent: MealEvent) {
+    this.store.dispatch(this.actions.mealEventScheduled(mealEvent));
   }
-    
-  get mealRuleViolations$(){
-    return this.store.select( s => s.food.menuUI.mealRulesViolations );
+
+  get mealRuleViolations$() {
+    return this.store.select(s => s.food.menuUI.mealRulesViolations);
   }
-  
-    
-  saveMeal( meal: Meal ) {    
-    if ( meal.id ) { 
-      this.store.dispatch( this.actions.saveMeal( meal ) );
+
+
+  saveMeal(meal: Meal) {
+    if (meal.id) {
+      this.store.dispatch(this.actions.saveMeal(meal));
     }
   }
-  
-  loadMealFoodItemsForMeal( meal: Meal ) {
-    this.store.dispatch( this.actions.loadMealFoodItemsForMeal(meal) );
+
+  loadMealFoodItemsForMeal(meal: Meal) {
+    this.store.dispatch(this.actions.loadMealFoodItemsForMeal(meal));
   }
-  
-  deleteMealFoodItem( mealFoodItem: MealFoodItem ) {
-    this.store.dispatch( this.actions.deleteMealFoodItem( mealFoodItem ) );
+
+  deleteMealFoodItem(mealFoodItem: MealFoodItem) {
+    this.store.dispatch(this.actions.deleteMealFoodItem(mealFoodItem));
   }
-  
-  saveMealFoodItem( mealFoodItem: MealFoodItem ) {
-    this.store.dispatch( this.actions.saveMealFoodItem( mealFoodItem ) );
+
+  saveMealFoodItem(mealFoodItem: MealFoodItem) {
+    this.store.dispatch(this.actions.saveMealFoodItem(mealFoodItem));
   }
-  
-  removeEvent( event: CalendarEvent<MealEvent> ) {
-    this.store.dispatch( this.actions.removeMealEvent( event ) );
+
+  removeEvent(event: CalendarEvent<MealEvent>) {
+    console.log('State - removeEvent ', event);
+    this.store.dispatch(this.actions.removeMealEvent(event));
   }
-   
+
 }

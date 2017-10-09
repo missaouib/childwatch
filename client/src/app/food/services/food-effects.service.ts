@@ -5,11 +5,12 @@
  * All Rights reserved
  */
 import {FoodActions} from '../food.actions';
-import {Meal, MealFoodItem} from '../food.interfaces';
+import {Meal, MealFoodItem, MealEvent} from '../food.interfaces';
 import {MealEventService} from './meal-event.service';
 import {MealService} from './meal.service';
 import {Injectable} from '@angular/core';
 import {Effect, Actions, toPayload} from '@ngrx/effects';
+import {CalendarEvent} from 'angular-calendar';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
@@ -72,17 +73,17 @@ export class FoodEffectsService {
     .map(toPayload)
     .switchMap((payload: MealFoodItem) => this.onDeleteMealFoodItem(payload));
 
-  /*
+
   @Effect() _onMealEventScheduled = this.actions$
-    .ofType( FoodActions.MEALEVENT_SCHEDULED )
-    .map( toPayload )
-    .switchMap( (payload: MealEvent) => this.onMealEventScheduled(payload) );
-          
+    .ofType(FoodActions.MEALEVENT_SCHEDULED)
+    .map(toPayload)
+    .switchMap((payload: MealEvent) => this.onMealEventScheduled(payload));
+
   @Effect() _onMealEventRemoved = this.actions$
-    .ofType( FoodActions.REMOVE_MEALEVENT )
-    .map( toPayload )
-    .switchMap( (payload: MealEvent) => this.onMealEventRemoved(payload) );
-  */
+    .ofType(FoodActions.REMOVE_MEALEVENT)
+    .map(toPayload)
+    .switchMap((payload: CalendarEvent<MealEvent>) => this.onMealEventRemoved(payload));
+
 
   /**
    * Constructor for the FoodEffectsService
@@ -140,16 +141,16 @@ export class FoodEffectsService {
     });
     return Observable.of({type: 'MEALFOODITEM_DELETED', payload: mealFoodItem});
   }
-  /*
-  private onMealEventScheduled( mealEvent: MealEvent ) {
-    this.mealEventSvc.save( mealEvent ).first().subscribe();
-    return Observable.of({type: 'NOOP-MEALEVENTSAVED', payload: mealEvent } );
+
+  private onMealEventScheduled(mealEvent: MealEvent) {
+    this.mealEventSvc.save(mealEvent).first().subscribe();
+    return Observable.of({type: 'NOOP-MEALEVENTSAVED', payload: mealEvent});
   }
-  
-  private onMealEventRemoved( mealEvent: MealEvent ) {
-    console.log( 'Removeing mealEvent from database' );
-    this.mealEventSvc.delete( mealEvent ).first().subscribe();
-    return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: mealEvent } );   
+
+  private onMealEventRemoved(calMealEvent: CalendarEvent<MealEvent>) {
+    console.log('Removing mealEvent ' + calMealEvent.meta.id + 'from database');
+    this.mealEventSvc.delete(calMealEvent.meta).first().subscribe();
+    return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: calMealEvent});
   }
- */
+
 }

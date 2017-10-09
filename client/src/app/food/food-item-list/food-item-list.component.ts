@@ -33,7 +33,7 @@ export class FoodItemListComponent implements OnInit {
   ngOnInit() {
     this.state.foodItems$.subscribe(foodItems => {
       this.FoodItems = foodItems.slice();
-      this.FoodItems.sort((a, b) => a.description.localeCompare(b.description));
+      this.FoodItems.sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase()));
       this.totalItems = this.FoodItems.length;
     });
   }
@@ -86,6 +86,8 @@ export class FoodItemListComponent implements OnInit {
   }
 
 
+
+
   searchList() {
 
     // this.filterList();
@@ -98,7 +100,8 @@ export class FoodItemListComponent implements OnInit {
     this.PagedItems = filteredList;
   }
 
-  limit(text: string) {
-    return text.slice(0, 30) + (text.length > 30 ? "..." : "");
+  limit(text: string, len?: number) {
+    const _len = len || 30;
+    return text.slice(0, _len) + (text.length > _len ? "..." : "");
   }
 }

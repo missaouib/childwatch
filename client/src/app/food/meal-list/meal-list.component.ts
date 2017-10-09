@@ -23,7 +23,7 @@ export class MealListComponent implements OnInit {
   constructor(private state: FoodStateService) {}
 
   ngOnInit() {
-    this.state.meals$.subscribe(meals => this.Meals = meals);
+    this.state.meals$.share().subscribe(meals => this.Meals = meals);
   }
 
   filterMeals(filter: string) {

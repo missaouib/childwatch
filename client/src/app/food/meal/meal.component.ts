@@ -42,21 +42,6 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   mealFoodItems: MealFoodItem[] = [];
 
-  mealFoodItem: MealFoodItem = {
-    id: 'MYID',
-    ageGroup: 'AGE_0_5MO',
-    quantity: 1,
-    unit: 'EACH',
-    meal: this.meal,
-    foodComponent: {
-      id: 'FISH',
-      description: 'Seafood & Fish',
-      icon: 'icon-fish',
-      parentComponent: undefined
-    },
-    foodItem: undefined
-  };
-
   mealForm: FormGroup;
 
   AGEGROUPS = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
@@ -70,6 +55,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   isValidating = false;
 
+
+  deletedList: string[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -130,6 +117,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   deleted(id: string) {
     console.log('deleting ' + id);
+    this.deletedList.push(id);
     const copy = this.mealFoodItems.filter(mfi => mfi.id !== id);
     this.mealFoodItems = copy;
     this.dirtyFoodItems = true;
@@ -154,11 +142,20 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
         this.editing = false;
       }
 
-      Observable.forkJoin(this.mealFoodItems.map(mfi => this.mealSvc.saveMealFoodItem(mfi))).subscribe(() => {
+      var join: Array<Observable<Response>> = new Array<Observable<Response>>();
+
+      join = join.concat(
+        this.mealFoodItems.map(mfi => this.mealSvc.saveMealFoodItem(mfi)),
+        this.deletedList.map(del => this.mealSvc.deleteMealFoodItem(del))
+      );
+
+
+      Observable.forkJoin(join).subscribe(() => {
         this.toastr.success('Meal ' + meal.description + ' has been saved', 'Save');
         this.dirtyFoodItems = false;
         this.editing = false;
         this.saving = false;
+        this.deletedList = [];
         this.mealSvc.validate(meal).subscribe(violations => this.rulesViolations = violations);
       });
     });
@@ -170,7 +167,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       id: UUID.UUID(),
       ageGroup: this.activeTab,
       quantity: 1,
-      unit: 'EACH',
+      unit: foodItem.servingUom,
       meal: this.meal,
       foodItem: foodItem
     });
@@ -202,6 +199,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       this.meal = this.createNewMeal();
       this.editing = true;
     }
+    this.deletedList = [];
   }
 
 

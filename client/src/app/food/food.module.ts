@@ -39,7 +39,7 @@ import {FoodItemListComponent} from './food-item-list/food-item-list.component';
 
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {MealListComponent} from './meal-list/meal-list.component';
-import { MealDayComponent } from './meal-day/meal-day.component';
+import {MealDayComponent} from './meal-day/meal-day.component';
 
 
 const routes: Routes = [
@@ -76,9 +76,14 @@ const routes: Routes = [
 export class FoodModule {
 
   constructor(
-    private foodItemSvc: FoodItemService) {
+    private foodItemSvc: FoodItemService,
+    private mealSvc: MealService
+  ) {
 
     this.foodItemSvc.query(FoodItemService.FULL).subscribe();
+    this.mealSvc.query().subscribe();
+
+
     // this.foodComponentSvc.query(FoodComponentService.WITH_ID).subscribe();
   }
 }

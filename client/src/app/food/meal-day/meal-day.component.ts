@@ -17,6 +17,10 @@ export class MealDayComponent implements OnInit {
   @Output() edit: EventEmitter<Meal> = new EventEmitter<Meal>();
   @Output() add: EventEmitter<any> = new EventEmitter();
   @Output() remove: EventEmitter<CalendarEvent<MealEvent>> = new EventEmitter();
+  @Output() previousDay: EventEmitter<any> = new EventEmitter();
+  @Output() nextDay: EventEmitter<any> = new EventEmitter();
+  @Output() today: EventEmitter<any> = new EventEmitter();
+  @Output() schedule: EventEmitter<Meal> = new EventEmitter<Meal>();
 
   Events: Array<CalendarEvent<MealEvent>> = [];
 
@@ -48,6 +52,10 @@ export class MealDayComponent implements OnInit {
 
   removeMealEvent(mealEvent: CalendarEvent<MealEvent>) {
     this.remove.emit(mealEvent);
+  }
+
+  scheduleMeal(meal: Meal) {
+    this.schedule.emit(meal);
   }
 
 }
