@@ -2,6 +2,7 @@ package com.remarkablesystems.childwatch.domain.food;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -50,10 +51,13 @@ public class FoodItem implements Serializable {
 	
 	public FoodItem() {}
 	
-	public FoodItem( String id, String description, FoodComponent foodComponent ) {
+	public FoodItem( String id, String description, FoodComponent foodComponent, List<String> tags ) {
 		this.id = id;
 		this.description = description;
 		this.foodComponent = foodComponent;
+		if( tags != null )
+			tags.stream().forEach( tag -> this.addTag( tag ) );
+		
 	}
 
 	public String getDescription() {
@@ -112,13 +116,25 @@ public class FoodItem implements Serializable {
 		return this.tags;
 	}
 	
+	public void clearTags() {
+		if( this.tags != null ) this.tags.clear();
+	}
+	
+	public void addTag( String tagValue ) {
+		addTag( new FoodItemTag( tagValue ) );
+	}
+	
 	public void addTag( FoodItemTag tag ) {
 		if( this.tags == null ) this.tags = new HashSet<FoodItemTag>();
 		this.tags.add( tag );
 	}
 	
+	public boolean hasTag( String tagValue ) {
+		return this.tags != null && this.tags.contains( new FoodItemTag(tagValue) );
+	}
+	
 	public boolean hasTag( FoodItemTag tag ) {
-		return this.tags == null || this.tags.contains(tag); 
+		return this.tags != null && this.tags.contains(tag); 
 	}
 	
 }

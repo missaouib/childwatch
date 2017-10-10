@@ -39,6 +39,11 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 		return this;
 	}
 	
+	public MealRule whenNot( BiPredicate<Meal,List<MealFoodItem>> pred) {
+		super.whenNot( pred );
+		return this;
+	}
+	
 	public MealRule thenFail( String msg ) {
 		return then( RuleViolationSeverity.FAIL, msg );
 	}
@@ -59,7 +64,7 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	}
 	
 	public String toString() {
-		return "[" + getName() +"]";
+		return "Rule: [" + getName() +"]";
 	}
 
 	

@@ -25,4 +25,8 @@ public class RuleViolation{
 		return this.rule;
 	}
 	
+	public String toString() {
+		return "RuleViolation: " + getRule() + " => " + getMessage();
+	}
+	
 }

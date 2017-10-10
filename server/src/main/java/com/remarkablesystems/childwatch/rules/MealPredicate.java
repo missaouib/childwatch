@@ -45,6 +45,13 @@ public class MealPredicate {
 		return hasNoItems( itemRequired ).or( hasAnyItem( itemRequired.and( isQuantityItem( quantity, units ).negate() )) );
 	}
 
+	static BiPredicate<Meal,List<MealFoodItem>> mustHaveBetween( Predicate<MealFoodItem> itemRequired, double low, double high, UnitOfMeasure units ){
+		if( low == 0 )
+			return ifHas( itemRequired, high, units );
+		else
+			return hasNoItems( itemRequired ).or( hasAnyItem( itemRequired.and( isQuantityBetweenItem( low, high, units ).negate() )) );
+	}
+
 	/**
 	 * Predicate for ifHas items; this predicate will fail if the item is present and not in sufficient quantities.  Unlike the mustHave predicate
 	 *  this will not fail if the item is not there
@@ -56,6 +63,32 @@ public class MealPredicate {
 	 */
 	static BiPredicate<Meal,List<MealFoodItem>> ifHas( Predicate<MealFoodItem> itemRequired, double quantity, UnitOfMeasure units ){
 		return hasAnyItem( itemRequired.and( isQuantityItem( quantity, units ).negate() ) );
+	}
+	
+	public static BiPredicate<Meal,List<MealFoodItem>> sumHasQuantity( Predicate<MealFoodItem> itemFilter, double quantity, UnitOfMeasure units ){
+		return (meal,items) -> { 
+			Double sum = items.stream().filter( itemFilter )		
+				.mapToDouble( item -> { 
+					Double convert = UnitOfMeasure.convert(item.getQuantity(), item.getUnit(), units );
+					System.out.println( "Convert = " + convert );
+					return convert.isNaN() ? 0 : convert;
+				} ).sum();
+			System.out.println( "SUM = " + sum );
+			return sum >= quantity;
+		};
+	}
+
+	public static BiPredicate<Meal,List<MealFoodItem>> sumHasQuantityBetween( Predicate<MealFoodItem> itemFilter, double low, double high, UnitOfMeasure units ){
+		return (meal,items) -> { 
+				Double sum = items.stream().filter( itemFilter )
+				.mapToDouble( item -> { 
+					Double convert = UnitOfMeasure.convert(item.getQuantity(), item.getUnit(), units );
+					System.out.println( "Convert = " + convert );
+					return convert.isNaN() ? 0 : convert;
+				} ).sum();
+				System.out.println( "SUM = " + sum + " low = " + low + " high = " + high );
+				return sum >= low && sum <= high;
+		};
 	}
 
 	

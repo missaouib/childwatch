@@ -18,6 +18,12 @@ public class Rule<T, U, R> implements IRule<T, U, R> {
 		return this;
 	}
 	
+	@Override
+	public IRule<T,U,R> whenNot( BiPredicate<T,U> whenNot ){
+		this._when = whenNot.negate();
+		return this;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.remarkablesystems.childwatch.rules.IRule#then(java.util.function.Function)
 	 */
@@ -34,8 +40,6 @@ public class Rule<T, U, R> implements IRule<T, U, R> {
 	public R evaluate( T fact1, U fact2 ){		
 		
 		boolean applies = _appliesTo != null && _appliesTo.test( fact1,  fact2 );
-		
-		System.out.println( "RULE: " + this + ((applies)? " applies": " does not apply") );
 				
 		return (  applies &&  _when != null && _then != null &_when.test( fact1,fact2 ) )? _then.apply(fact1,fact2) : null;
 	}

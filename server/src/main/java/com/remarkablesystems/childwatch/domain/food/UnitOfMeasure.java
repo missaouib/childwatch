@@ -30,6 +30,7 @@ public enum UnitOfMeasure {
 	
 	@SuppressWarnings("unchecked")
 	public static Double convert( double value, UnitOfMeasure from, UnitOfMeasure to ) {
+		System.out.println("Converting " + value +" from:" + from + " to:" + to );
 		Double retValue = Double.NaN;
 		
 		if( from.equals(to) ) return value;
@@ -39,8 +40,6 @@ public enum UnitOfMeasure {
 			DoubleFunction<Double> fn = (DoubleFunction<Double>) field.get(null);
 			retValue = fn.apply(value);
 		} catch (Exception e) {}
-		
-		System.out.println( "Converted " + value + " " + from + " to " + retValue + " " + to );
 		return retValue;
 	}
 		

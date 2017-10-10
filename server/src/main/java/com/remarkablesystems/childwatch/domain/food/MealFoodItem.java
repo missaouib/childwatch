@@ -38,6 +38,11 @@ public class MealFoodItem implements Serializable {
 	
 	public MealFoodItem() {}
 
+	public MealFoodItem( String id, FoodItem item ) {
+		this.id = id;
+		this.foodItem = item;
+	}
+	
 	public AgeGroup getAgeGroup() {
 		return ageGroup;
 	}
