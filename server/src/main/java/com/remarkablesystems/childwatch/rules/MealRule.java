@@ -3,18 +3,31 @@ package com.remarkablesystems.childwatch.rules;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import static com.remarkablesystems.childwatch.rules.MealPredicate.*;
+import static com.remarkablesystems.childwatch.rules.InfantRule.*;
+
 import static com.remarkablesystems.childwatch.rules.MealFoodItemPredicate.*;
 
 import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.Meal;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
-import com.remarkablesystems.childwatch.domain.food.MealType;
 import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
 
 public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	
+	static Predicate<MealFoodItem> isGrainItem = hasTag( "GRAIN" );
+	
+	static Predicate<MealFoodItem> isMeatOrAlt = hasTag( "MEAT").or( hasTag("MEATALT") );
+
+	static BiPredicate<Meal,List<MealFoodItem>> isNonInfant = isAgeGroup( AgeGroup.AGE_1_2YR )
+															  .or( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+															  .or( isAgeGroup( AgeGroup.AGE_6_12YR ) )
+															  .or(isAgeGroup( AgeGroup.AGE_13_18YR ))
+															  .or(isAgeGroup( AgeGroup.AGE_ADULT ));
+
+	static BiPredicate<Meal,List<MealFoodItem>> isAge6_18 = isAgeGroup( AgeGroup.AGE_6_12YR ).or( isAgeGroup(AgeGroup.AGE_13_18YR ) );
 	String name;
 
 	static MealRule create( String name ) { return  new MealRule( name ); };
@@ -66,255 +79,633 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	public String toString() {
 		return "Rule: [" + getName() +"]";
 	}
-
 	
-	// BREAKFAST RULES
-	static MealRule breakfast_1_2YR_MILK = MealRule.create("breakfast_1_2YR_MILK")
-		.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isBreakfast ) )
-		.when( mustHave( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS ))
+	//----------------------------------------------------------------------------------------------------------------
+	// 1-2 Year olds
+	static MealRule breakfast_1_2YR = MealRule.create("breakfast_1_2YR")
+		.appliesTo( isBreakfast.and( isAgeGroup( AgeGroup.AGE_1_2YR ) ) )
+		.whenNot( hasAllItems( isWholeMilkItem.or( isVegOrFruitItem ).or( isGrainItem.or( isMeatOrAlt ) ) ) 
+				  .and( sumHasQuantity( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isVegOrFruitItem, 0.25, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 0.5, UnitOfMeasure.OUNCES ) )
+				)
 		.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
 
-	static MealRule breakfast_3_5YR_MILK = MealRule.create( "breakfast_3_5YR_MILK" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isBreakfast ) )
-			.when( mustHave( isLowFatOrFatFreeMilkItem, 0.75, UnitOfMeasure.CUPS ))
-			.thenFail( "Ages 3-5 must have 3/4 cup low fat milk for breakfast" );
-
-	static MealRule breakfast_Over6YR_MILK = MealRule.create( "breakfast_Over6YR_MILK" )
-			.appliesTo( is6OrOver.and( isBreakfast ) )
-			.when( mustHave( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ))
-			.thenFail( "Over age 6, must have 1 cup low fat milk for breakfast" );
-
-	static MealRule breakfast_1_2YR_VEGFRUIT = MealRule.create("breakfast_1_2YR_VEGFRUIT")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isBreakfast ) )
-			.when( mustHave( isVegOrFruitItem, 0.25, UnitOfMeasure.CUPS ))
-			.thenFail( "Ages 1-2 must have 1/4 cup fruit and/or vegetables for breakfast");
+	static MealRule lunchdinner_1_2YR = MealRule.create("lunchdinner_1_2YR")
+			.appliesTo( isLunchOrDinner.and( isAgeGroup( AgeGroup.AGE_1_2YR ) ) )
+			.whenNot( hasAllItems( isWholeMilkItem.or( isVegItem ).or( isFruitItem ).or( isMeatOrAlt ).or( isGrainItem ) ) 
+					  .and( sumHasQuantity( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )
+					  .and( sumHasQuantity( isVegItem, 0.125, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isFruitItem, 0.125, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
 	
-	static MealRule breakfast_Over2_VEGFRUIT = MealRule.create("breakfast_Over2_VEGFRUIT")
-			.appliesTo( isOver2YearsOld.and( isBreakfast ) )
-			.when( mustHave( isVegOrFruitItem, 0.5, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 3+ must have 1/2 cup fruit and/or vegetables for breakfast");
-	
-	static MealRule breakfast_1_2YR_GRAIN = MealRule.create("breakfast_1_2YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isBreakfast ) )
-			.when( mustHave( isGrainOrBreadItem.or( isMeatItem ), 0.5, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 1-2 must have 1/2 oz eq grain or meat/alternative for breakfast");
-
-	static MealRule breakfast_3_5YR_GRAIN = MealRule.create("breakfast_3_5YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isBreakfast ) )
-			.when( mustHave( isGrainOrBreadItem.or( isMeatItem ), 0.5, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 1-2 must have 1/2 oz eq grain or meat/alternative for breakfast");
-
-	static MealRule breakfast_6_18YR_GRAIN = MealRule.create("breakfast_6_18YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or(isAgeGroup(AgeGroup.AGE_13_18YR)).and( isBreakfast ) )
-			.when( mustHave( isGrainOrBreadItem.or( isMeatItem ), 1, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 6-18 must have 1 oz eq grain or meat/alternative for breakfast");
-
-	static MealRule breakfast_ADULT_GRAIN = MealRule.create("breakfast_ADULT_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_ADULT ).and( isBreakfast ) )
-			.when( mustHave( isGrainOrBreadItem.or( isMeatItem ), 2, UnitOfMeasure.OUNCES ))
-			.thenFail( "Adults must have 2 oz eq grain or meat/alternative for breakfast");
-	
-	// LUNCH/DINNER RULES
-	static MealRule lunchdinner_1_2YR_MILK = MealRule.create("lunchdinner_1_2YR_MILK")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS ))
-			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for lunch/dinner");
-	
-	static MealRule lunchdinner_3_5YR_MILK = MealRule.create( "lunchdinner_3_5YR_MILK" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isLowFatOrFatFreeMilkItem,  0.75, UnitOfMeasure.CUPS ))
-			.thenFail( "Ages 3-5 must have 3/4 cup low fat milk for lunch/dinner" );
-
-	static MealRule lunchdinner_6_18YR_MILK = MealRule.create( "lunchdinner_6_18YR_MILK" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or( isAgeGroup( AgeGroup.AGE_13_18YR) ).and( isLunchOrDinner ) )
-			.when( mustHave( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ))
-			.thenFail( "Over age 6, must have 1 cup low fat milk for lunch/dinner" );
-
-	static MealRule lunchdinner_1_2YR_MEAT = MealRule.create("lunchdinner_1_2YR_MEAT")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isMeatItem, 1, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Ages 1-2 must have 1 oz meat/alternate for lunch/dinner");
-
-	static MealRule lunchdinner_3_5YR_MEAT = MealRule.create( "lunchdinner_3_5YR_MEAT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isMeatItem, 1.5, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Ages 3-5 must have 1 1/2 oz meat/alternate for lunch/dinner" );
-
-	static MealRule lunchdinner_Over6YR_MEAT = MealRule.create( "lunchdinner_Over6YR_MEAT" )
-			.appliesTo( is6OrOver.and( isLunchOrDinner ) )
-			.when( mustHave( isMeatItem, 2, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Over age 6, must have 2 oz meat/alternate for lunch/dinner" );
-
-	static MealRule lunchdinner_1_2YR_VEG = MealRule.create("lunchdinner_1_2YR_VEG")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isVegItem, 0.125, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 1-2 must have 1/8 cup vegetables for lunch/dinner");
-
-	static MealRule lunchdinner_3_5YR_VEG = MealRule.create( "lunchdinner_3_5YR_VEG" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isVegItem, 0.25, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 3-5 must have 1/4 cup vegetables for lunch/dinner" );
-
-	static MealRule lunchdinner_Over6YR_VEG = MealRule.create( "lunchdinner_Over6YR_VEG" )
-			.appliesTo( is6OrOver.and( isLunchOrDinner ) )
-			.when( mustHave( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
-			.thenFail( "Over age 6, must have 1/2 cup vegetables for lunch/dinner" );
-
-	static MealRule lunchdinner_1_2YR_FRUIT = MealRule.create("lunchdinner_1_2YR_FRUIT")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isFruitItem, 0.125, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 1-2 must have 1/8 cup fruit for lunch/dinner");
-
-	static MealRule lunchdinner_3_5YR_FRUIT = MealRule.create( "lunchdinner_3_5YR_FRUIT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isFruitItem, 0.25, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 3-5 must have 1/4 cup fruit for lunch/dinner" );
-
-	static MealRule lunchdinner_6_18YR_FRUIT= MealRule.create( "lunchdinner_6_18YR_FRUIT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or( isAgeGroup( AgeGroup.AGE_13_18YR) ).and( isLunchOrDinner ) )
-			.when( mustHave( isFruitItem, 0.25, UnitOfMeasure.CUPS ))
-			.thenFail( "Over age 6 must have 1/4 cup fruit for lunch/dinner" );
-
-	static MealRule lunchdinner_ADULT_FRUIT= MealRule.create( "lunchdinner_ADULT_FRUIT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_ADULT ).and( isLunchOrDinner ) )
-			.when( mustHave( isFruitItem, 0.5, UnitOfMeasure.CUPS ))
-			.thenFail( "Adults must have 1/2 cup fruit for lunch/dinner" );
-	
-	static MealRule lunchdinner_1_2YR_GRAIN = MealRule.create("lunchdinner_1_2YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isGrainOrBreadItem, 0.5, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 1-2 must have 1/2 oz eq grain for lunch/dinner");
-
-	static MealRule lunchdinner_3_5YR_GRAIN = MealRule.create("lunchdinner_3_5YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isLunchOrDinner ) )
-			.when( mustHave( isGrainOrBreadItem, 0.5, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 1-2 must have 1/2 oz eq grain for lunch/dinner");
-
-	static MealRule lunchdinner_6_18YR_GRAIN = MealRule.create("lunchdinner_6_18YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or(isAgeGroup(AgeGroup.AGE_13_18YR)).and( isLunchOrDinner ) )
-			.when( mustHave( isGrainOrBreadItem, 1, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 6-18 must have 1 oz eq grain for lunch/dinner");
-
-	static MealRule lunchdinner_ADULT_GRAIN = MealRule.create("lunchdinner_ADULT_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_ADULT ).and( isLunchOrDinner ) )
-			.when( mustHave( isGrainOrBreadItem, 2, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Adults must have 2 oz eq grain or meat/alternative for lunch/dinner");
-
-	// SNACK RULES
-	static MealRule snack_Pick2 = MealRule.create( "snack_Pick2" )
-			.appliesTo( isNonInfant.and( isSnack ) )
-			.when( hasAtLeastCountItems( 2, isMilkItem.or(isMeatItem).or(isVegItem).or(isFruitItem).or(isGrainOrBreadItem) ) )
-			.thenFail( "Snacks must contain at least 2 items from milk, meat, vegetables, fruit, or grains" );
-
-	static MealRule snack_1_2YR_MILK = MealRule.create("snack_1_2YR_MILK")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isSnack ) )
-			.when( ifHas( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS ))
-			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for snack");
-
-	static MealRule snack_3_5YR_MILK = MealRule.create("snack_3_5YR_MILK")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isSnack ) )
-			.when( ifHas( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS ))
-			.thenFail( "Ages 3-5 must have 1/2 cup whole milk for snack");
-	
-	static MealRule snack_Over6YR_MILK = MealRule.create( "snack_Over6YR_MILK" )
-			.appliesTo( is6OrOver.and( isSnack ) )
-			.when( mustHave( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ))
-			.thenFail( "Over age 6, must have 1 cup low fat milk for snack" );
-
-	static MealRule snack_1_2YR_MEAT = MealRule.create("snack_1_2YR_MEAT")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isSnack ) )
-			.when( mustHave( isMeatItem, 0.5, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Ages 1-2 must have 1/2 oz meat/alternate for snack");
-
-	static MealRule snack_3_5YR_MEAT = MealRule.create( "snack_3_5YR_MEAT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isSnack ) )
-			.when( mustHave( isMeatItem, 0.5, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Ages 3-5 must have 1/2 oz meat/alternate for snack" );
-
-	static MealRule snack_Over6YR_MEAT = MealRule.create( "snack_Over6YR_MEAT" )
-			.appliesTo( is6OrOver.and( isSnack ) )
-			.when( mustHave( isMeatItem, 1, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Over age 6, must have 1 oz meat/alternate for snack" );
-
-	static MealRule snack_1_2YR_VEG = MealRule.create("snack_1_2YR_VEG")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isSnack ) )
-			.when( mustHave( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 1-2 must have 1/2 cup vegetables for snack");
-
-	static MealRule snack_3_5YR_VEG = MealRule.create( "snack_3_5YR_VEG" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isSnack ) )
-			.when( mustHave( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 3-5 must have 1/2 cup vegetables for snack" );
-
-	static MealRule snack_6_18YR_VEG = MealRule.create( "snack_6_18YR_Veg" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or( isAgeGroup( AgeGroup.AGE_13_18YR) ).and( isSnack ) )
-			.when( mustHave( isVegItem, 0.75, UnitOfMeasure.CUPS ))
-			.thenFail( "Over age 6 must have 3/4 cup vegetables for snack" );
-
-	static MealRule snack_ADULT_VEG = MealRule.create( "snack_ADULT_VEG" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_ADULT ).and( isSnack ) )
-			.when( mustHave( isVegItem, 0.5, UnitOfMeasure.CUPS ))
-			.thenFail( "Adults must have 1/2 cup vegetables for snack" );
-
-	static MealRule snack_1_2YR_FRUIT = MealRule.create("snack_1_2YR_FRUIT")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isSnack ) )
-			.when( mustHave( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 1-2 must have 1/2 cup fruit for snack");
-
-	static MealRule snack_3_5YR_FRUIT = MealRule.create( "snack_3_5YR_FRUIT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isSnack ) )
-			.when( mustHave( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
-			.thenFail( "Ages 3-5 must have 1/2 cup fruit for snack" );
-
-	static MealRule snack_6_18YR_FRUIT= MealRule.create( "snack_6_18YR_FRUIT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or( isAgeGroup( AgeGroup.AGE_13_18YR) ).and( isSnack ) )
-			.when( mustHave( isFruitItem, 0.75, UnitOfMeasure.CUPS ))
-			.thenFail( "Over age 6 must have 3/4 cup fruit for snack" );
-
-	static MealRule snack_ADULT_FRUIT= MealRule.create( "snack_ADULT_FRUIT" )
-			.appliesTo( isAgeGroup( AgeGroup.AGE_ADULT ).and( isSnack ) )
-			.when( mustHave( isFruitItem, 0.5, UnitOfMeasure.CUPS ))
-			.thenFail( "Adults must have 1/2 cup fruit for snack" );
-	
-	static MealRule snack_1_2YR_GRAIN = MealRule.create("snack_1_2YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_1_2YR ).and( isSnack ) )
-			.when( mustHave( isGrainOrBreadItem, 0.5, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 1-2 must have 1/2 oz eq grain for snack");
-
-	static MealRule snack_3_5YR_GRAIN = MealRule.create("snack_3_5YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_3_5YR ).and( isSnack ) )
-			.when( mustHave( isGrainOrBreadItem, 0.5, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 1-2 must have 1/2 oz eq grain for snack");
-
-	static MealRule snack_6_18YR_GRAIN = MealRule.create("snack_6_18YR_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_6_12YR ).or(isAgeGroup(AgeGroup.AGE_13_18YR)).and( isBreakfast ) )
-			.when( mustHave( isGrainOrBreadItem, 1, UnitOfMeasure.OUNCES ))
-			.thenFail( "Ages 6-18 must have 1 oz eq grain for snack");
-
-	static MealRule snack_ADULT_GRAIN = MealRule.create("snack_ADULT_GRAIN")
-			.appliesTo( isAgeGroup( AgeGroup.AGE_ADULT ).and( isSnack ) )
-			.when( mustHave( isGrainOrBreadItem, 1, UnitOfMeasure.OUNCES ) )
-			.thenFail( "Adults must have 1 oz eq grain or meat/alternative for snack");
+	static MealRule snack_1_2YR_items = MealRule.create("snack_1_2YR_items")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) ) )
+			.whenNot( hasAllItems( isWholeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) 
+					  .or( hasAllItems( isWholeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  .or( hasAllItems( isWholeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isWholeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
 
 	
+	static MealRule snack_1_2YR_milkveg = MealRule.create("snack_1_2YR_milkveg")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isWholeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_1_2YR_milkmeat = MealRule.create("snack_1_2YR_milkmeat")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isWholeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_1_2YR_milkfruit = MealRule.create("snack_1_2YR_milkfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isWholeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_1_2YR_milkgrain = MealRule.create("snack_1_2YR_milkgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isWholeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isWholeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isWholeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_1_2YR_vegmeat = MealRule.create("snack_1_2YR_vegmeat")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_1_2YR_vegfruit = MealRule.create("snack_1_2YR_vegfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_1_2YR_veggrain = MealRule.create("snack_1_2YR_veggrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_1_2YR_meatfruit = MealRule.create("snack_1_2YR_meatfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_1_2YR_meatgrain = MealRule.create("snack_1_2YR_meatgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_1_2YR_fruitgrain = MealRule.create("snack_1_2YR_fruitgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_1_2YR ) )
+					    .and(hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+	//----------------------------------------------------------------------------------------------------------------
+	// 3-5 Year olds
+	static MealRule breakfast_3_5YR = MealRule.create("breakfast_3_5YR")
+		.appliesTo( isBreakfast.and( isAgeGroup( AgeGroup.AGE_3_5YR ) ) )
+		.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegOrFruitItem ).or( isGrainItem.or( isMeatOrAlt ) ) ) 
+				  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.75, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isVegOrFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 0.5, UnitOfMeasure.OUNCES ) )
+				)
+		.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+
+	static MealRule lunchdinner_3_5YR = MealRule.create("lunchdinner_3_5YR")
+			.appliesTo( isLunchOrDinner.and( isAgeGroup( AgeGroup.AGE_3_5YR ) ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegItem ).or( isFruitItem ).or( isMeatOrAlt ).or( isGrainItem ) ) 
+					  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.75, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isMeatOrAlt, 1.5, UnitOfMeasure.OUNCES ) )
+					  .and( sumHasQuantity( isVegItem, 0.25, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isFruitItem, 0.25, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+	
+	static MealRule snack_3_5YR_items = MealRule.create("snack_3_5YR_items")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) 
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_3_5YR_milkveg = MealRule.create("snack_3_5YR_milkveg")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_3_5YR_milkmeat = MealRule.create("snack_3_5YR_milkmeat")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_3_5YR_milkfruit = MealRule.create("snack_3_5YR_milkfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_3_5YR_milkgrain = MealRule.create("snack_3_5YR_milkgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_3_5YR_vegmeat = MealRule.create("snack_3_5YR_vegmeat")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_3_5YR_vegfruit = MealRule.create("snack_3_5YR_vegfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_3_5YR_veggrain = MealRule.create("snack_3_5YR_veggrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_3_5YR_meatfruit = MealRule.create("snack_3_5YR_meatfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_3_5YR_meatgrain = MealRule.create("snack_3_5YR_meatgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 0.5, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_3_5YR_fruitgrain = MealRule.create("snack_3_5YR_fruitgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_3_5YR ) )
+					    .and(hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	//----------------------------------------------------------------------------------------------------------------
+	// 6-18 Year olds
+	static MealRule breakfast_6_18YR = MealRule.create("breakfast_6_18YR")
+		.appliesTo( isBreakfast.and( isAge6_18 ) )
+		.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegOrFruitItem ).or( isGrainItem.or( isMeatOrAlt ) ) ) 
+				  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isVegOrFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 1, UnitOfMeasure.OUNCES ) )
+				)
+		.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+
+	static MealRule lunchdinner_6_18YR = MealRule.create("lunchdinner_6_18YR")
+			.appliesTo( isLunchOrDinner.and( isAge6_18 ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegItem ).or( isFruitItem ).or( isMeatOrAlt ).or( isGrainItem ) ) 
+					  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ) )
+					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isFruitItem, 0.25, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+	
+	static MealRule snack_6_18YR_items = MealRule.create("snack_6_18YR_items")
+			.appliesTo( isSnack.and( isAge6_18 ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) 
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_6_18YR_milkveg = MealRule.create("snack_6_18YR_milkveg")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isVegItem, 0.75, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_6_18YR_milkmeat = MealRule.create("snack_6_18YR_milkmeat")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_6_18YR_milkfruit = MealRule.create("snack_6_18YR_milkfruit")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.75, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_6_18YR_milkgrain = MealRule.create("snack_6_18YR_milkgrain")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_6_18YR_vegmeat = MealRule.create("snack_6_18YR_vegmeat")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.75, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_6_18YR_vegfruit = MealRule.create("snack_6_18YR_vegfruit")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.75, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.75, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_6_18YR_veggrain = MealRule.create("snack_6_18YR_veggrain")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.75, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_6_18YR_meatfruit = MealRule.create("snack_6_18YR_meatfruit")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isFruitItem, 0.75, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_6_18YR_meatgrain = MealRule.create("snack_6_18YR_meatgrain")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_6_18YR_fruitgrain = MealRule.create("snack_6_18YR_fruitgrain")
+			.appliesTo( isSnack.and( isAge6_18 )
+					    .and(hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isFruitItem, 0.75, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	//----------------------------------------------------------------------------------------------------------------
+	// Adults
+	static MealRule breakfast_ADULT = MealRule.create("breakfast_ADULT")
+		.appliesTo( isBreakfast.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
+		.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegOrFruitItem ).or( isGrainItem.or( isMeatOrAlt ) ) ) 
+				  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isVegOrFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 2, UnitOfMeasure.OUNCES ) )
+				)
+		.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+
+	static MealRule lunch_ADULT = MealRule.create("lunch_ADULT")
+			.appliesTo( isLunch.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegItem ).or( isFruitItem ).or( isMeatOrAlt ).or( isGrainItem ) ) 
+					  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ) )
+					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isGrainItem, 2, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+
+	static MealRule dinner_ADULT = MealRule.create("dinner_ADULT")
+			.appliesTo( isDinner.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or( isVegItem ).or( isFruitItem ).or( isMeatOrAlt ).or( isGrainItem ) ) 
+					  .and( hasNoItems(isLowFatOrFatFreeMilkItem).or( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ) ) )
+					  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ) )
+					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					  .and( sumHasQuantity( isGrainItem, 2, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must have 1/2 cup whole milk for breakfast");
+
+	static MealRule snack_ADULT_items = MealRule.create("snack_ADULT_items")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
+			.whenNot( hasAllItems( isLowFatOrFatFreeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) 
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isLowFatOrFatFreeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )		  
+					  .or( hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					  .or( hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )		  
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_ADULT_milkveg = MealRule.create("snack_ADULT_milkveg")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isVegItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isVegItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_ADULT_milkmeat = MealRule.create("snack_ADULT_milkmeat")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_ADULT_milkfruit = MealRule.create("snack_ADULT_milkfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_ADULT_milkgrain = MealRule.create("snack_ADULT_milkgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isLowFatOrFatFreeMilkItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isLowFatOrFatFreeMilkItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_ADULT_vegmeat = MealRule.create("snack_ADULT_vegmeat")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isVegItem.or(isMeatOrAlt) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isMeatOrAlt ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	
+	static MealRule snack_ADULT_vegfruit = MealRule.create("snack_ADULT_vegfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isVegItem.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_ADULT_veggrain = MealRule.create("snack_ADULT_veggrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isVegItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isVegItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+
+	static MealRule snack_ADULT_meatfruit = MealRule.create("snack_ADULT_meatfruit")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isMeatOrAlt.or(isFruitItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isFruitItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_ADULT_meatgrain = MealRule.create("snack_ADULT_meatgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isMeatOrAlt.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isMeatOrAlt ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+
+	static MealRule snack_ADULT_fruitgrain = MealRule.create("snack_ADULT_fruitgrain")
+			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) )
+					    .and(hasAllItems( isFruitItem.or(isGrainItem) ).and( hasAtLeastCountItems( 1, isFruitItem ).and( hasAtLeastCountItems( 1, isGrainItem ) ) ) )
+					  )
+			.whenNot( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS )		  
+					  .and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) )
+					)
+			.thenFail( "Ages 1-2 must a snack consisting of 2 of the categories of milk, meat, vegetable, fruit, grain");
+	
+	//----------------------------------------------------------------------------------------------------------------	
 	// OTHER RULES
+	static MealRule noInfantFoods = MealRule.create("noInfantFoods")
+			.appliesTo( isNonInfant )
+			.when( hasAnyItem( isForInfant ) )
+			.thenFail( "Infant items can only be served to ages < 1yr" );
+
 	
 	static MealRule warnOnlyMeatSubThreeTimePerWeek = MealRule.create("warnOnlyMeatSubThreeTimePerWeek")
 			.appliesTo( isNonInfant.and( isBreakfast ) )
-			.when( hasMeatComponent.and( hasGrainBreadComponent.negate() ) )
+			.when( hasAnyItem( isMeatOrAlt).and( hasNoItems(isGrainItem) ) )
 			.thenWarn( "Meat can only be used as a substitute for grains/breads up to 3 times per week" );
 	
-	
+
+	// TODO
 	static MealRule noFlavoredUnderSix = MealRule.create( "noFlavoredUnderSix" )
 			.appliesTo( isUnder6YearsOld.and( hasFluidMilkComponent) ) 
 			.when( hasFlavoredMilkComponent )
 			.thenFail( "Flavored milk is not allowed for children under age six" );
 
+	// TODO
 	static MealRule mustHaveFlavoredFatFree = MealRule.create( "mustHaveFlavoredFatFree" )
 			.appliesTo( is6OrOver.and( hasFlavoredMilkComponent) ) 
 			.when( hasLowFatOrFatFreeMilkComponent.negate() )
 			.thenFail( "Flavored milk must be fat-free" );	
 	
 	
-	static List<MealRule> RULES = Arrays.asList( );
+	static List<MealRule> RULES = Arrays.asList( 
+			noInfantFoods,
+			warnOnlyMeatSubThreeTimePerWeek,
+			
+			breakfast_1_2YR,
+			lunchdinner_1_2YR,
+			snack_1_2YR_items,
+			snack_1_2YR_milkveg,
+			snack_1_2YR_milkmeat,
+			snack_1_2YR_milkfruit,
+			snack_1_2YR_milkgrain,
+			snack_1_2YR_vegmeat,
+			snack_1_2YR_vegfruit,
+			snack_1_2YR_veggrain,
+			snack_1_2YR_meatfruit,
+			snack_1_2YR_meatgrain,
+			snack_1_2YR_fruitgrain,
+			
+			breakfast_3_5YR,
+			lunchdinner_3_5YR,
+			snack_3_5YR_items,
+			snack_3_5YR_milkveg,
+			snack_3_5YR_milkmeat,
+			snack_3_5YR_milkfruit,
+			snack_3_5YR_milkgrain,
+			snack_3_5YR_vegmeat,
+			snack_3_5YR_vegfruit,
+			snack_3_5YR_veggrain,
+			snack_3_5YR_meatfruit,
+			snack_3_5YR_meatgrain,
+			snack_3_5YR_fruitgrain,
+			
+			breakfast_6_18YR,
+			lunchdinner_6_18YR,
+			snack_6_18YR_items,
+			snack_6_18YR_milkveg,
+			snack_6_18YR_milkmeat,
+			snack_6_18YR_milkfruit,
+			snack_6_18YR_milkgrain,
+			snack_6_18YR_vegmeat,
+			snack_6_18YR_vegfruit,
+			snack_6_18YR_veggrain,
+			snack_6_18YR_meatfruit,
+			snack_6_18YR_meatgrain,
+			snack_6_18YR_fruitgrain,
+
+			breakfast_ADULT,
+			lunch_ADULT,
+			dinner_ADULT,
+			snack_ADULT_items,
+			snack_ADULT_milkveg,
+			snack_ADULT_milkmeat,
+			snack_ADULT_milkfruit,
+			snack_ADULT_milkgrain,
+			snack_ADULT_vegmeat,
+			snack_ADULT_vegfruit,
+			snack_ADULT_veggrain,
+			snack_ADULT_meatfruit,
+			snack_ADULT_meatgrain,
+			snack_ADULT_fruitgrain
+
+
+	);
 }

@@ -164,7 +164,7 @@ export class MealCalendarComponent implements OnInit {
     const mealEvent: MealEvent = {
       id: UUID.UUID(),
       startDate: (start) ? new Date(start) : new Date(),
-      endDate: new Date(),
+      endDate: (start) ? new Date(start) : new Date(),
       recurrence: undefined,
       meal: meal
     };
@@ -201,7 +201,7 @@ export class MealCalendarComponent implements OnInit {
   }
 
   mealDropped(meal: Meal, when?: Date) {
-    const _when = when || this.viewDate;
+    const _when = new Date(when) || new Date(this.viewDate);
 
     const mealEvent: CalendarEvent<MealEvent> = {
       start: _when,
@@ -221,7 +221,7 @@ export class MealCalendarComponent implements OnInit {
   }
 
   limit(text: string, len?: number) {
-    const _len = len || 30;
+    const _len = len || 25;
     return text.slice(0, _len) + (text.length > _len ? "..." : "");
   }
 

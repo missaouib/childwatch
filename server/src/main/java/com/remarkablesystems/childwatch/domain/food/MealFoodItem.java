@@ -43,6 +43,14 @@ public class MealFoodItem implements Serializable {
 		this.foodItem = item;
 	}
 	
+	public MealFoodItem( FoodItem item, AgeGroup ageGroup, double quantity, UnitOfMeasure unit, Meal meal ) {
+		this.foodItem = item;
+		this.ageGroup = ageGroup;
+		this.quantity = quantity;
+		this.unit = unit;
+		this.meal = meal;
+	}
+	
 	public AgeGroup getAgeGroup() {
 		return ageGroup;
 	}
