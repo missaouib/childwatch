@@ -1,5 +1,5 @@
 <div class="row">
-	<h3 class="text-primary">Food Items </h3>	
+	<h3 class="text-primary">Food Items <small>Age appropriate</small></h3>	
 	<div *ngIf="show" class="pull-right">
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
@@ -9,17 +9,21 @@
 			<ul *dropdownMenu class="dropdown-menu">
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'ALL' )">SHOW ALL</a></li>
 				<li class="divider dropdown-divider"></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'milk' )">Milk</a></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'vegetable' )">Vegetables</a></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'fruit' )">Fruit</a></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'meat' )">Meats</a></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'grain' )">Grains</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'MILK' )">Milk</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'VEGETABLE' )">Vegetables</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'FRUIT' )">Fruit</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'MEAT' )">Meats</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'GRAIN' )">Grains</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'OTHER' )">Other</a></li>
 				<li class="divider dropdown-divider"></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'infant' )">Infant</a></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'cn' )">CN Items</a></li>
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'other' )">Other</a></li>
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'CEREAL' )">Cereal</a></li>				
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'MEATALT' )">Meat Alternative</a></li>				
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'BREAD' )">Bread</a></li>				
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'CHEESE' )">Cheese</a></li>				
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'CRACKER' )">Cracker</a></li>				
 				<li class="divider dropdown-divider"></li>
-				<li><a class="dropdown-item disabled">Favorites</a></li>
+				<li><a class="dropdown-item" (click)="filterFoodItems( 'CNITEM' )">CN Item</a></li>								
+				<li *ngIf="false"><a class="dropdown-item disabled">Favorites</a></li>
 			</ul>
 		</span>
 	</div>		
@@ -34,26 +38,25 @@
 <div class="row" *ngIf="show">
 	<table class="table table-condensed" >
 		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="true" [dragData]="foodItem" >
-			<td class="col=sm-1" [ngSwitch]="foodItem.foodComponent.icon">
-				<img class="small-img" *ngSwitchCase="'milk'" src="/assets/img/food/milk.svg" />
-				<img class="small-img" *ngSwitchCase="'meat'" src="/assets/img/food/meat.svg" />
-				<img class="small-img" *ngSwitchCase="'vegetable'" src="/assets/img/food/vegetable.svg" />
-				<img class="small-img" *ngSwitchCase="'fruit'" src="/assets/img/food/fruit.svg" />
-				<img class="small-img" *ngSwitchCase="'grain'" src="/assets/img/food/grain.svg" />
-				<img class="small-img" *ngSwitchCase="'infant'" src="/assets/img/food/infant.svg" />
-				<img class="small-img" *ngSwitchCase="'cn'" src="/assets/img/food/cn.svg" />
-				<img class="small-img" *ngSwitchCase="'other'" src="/assets/img/food/other.svg" />
-
+			<td class="col=sm-1">
+					<img class="small-img" *ngIf="foodItem.category === 'MILK'" src="/assets/img/food/milk.svg" />
+					<img class="small-img" *ngIf="foodItem.category === 'MEAT'" src="/assets/img/food/meat.svg" />
+					<img class="small-img" *ngIf="foodItem.category === 'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
+					<img class="small-img" *ngIf="foodItem.category === 'FRUIT'" src="/assets/img/food/fruit.svg" />
+					<img class="small-img" *ngIf="foodItem.category === 'GRAIN'" src="/assets/img/food/grain.svg" />
+					<img class="small-img" *ngIf="foodItem.category === 'OTHER'" src="/assets/img/food/other.svg" />
+					<img *ngIf="foodItem.isInfant()" class="small-img" src="/assets/img/food/infant.svg" />
+					<img *ngIf="foodItem.isCN()" class="small-img" src="/assets/img/food/cn.svg" />
 			</td>
 			<td class="col-sm-10">
 				<strong class="text-primary">
 					<span class="hidden-sm hidden-md">{{foodItem.shortDescription}}</span>
 					<span class="hidden-lg">{{limit( foodItem.shortDescription )}}</span>
 				</strong><br />
-				<span class="hidden-sm hidden-xs"><em>{{foodItem.foodComponent.description}}</em></span>
+				<span class="hidden-sm hidden-xs"><em>{{foodItem.tagstring}}</em></span>
 			</td>
 			<td class="col-sm-1">
-				<i (click)="foodItem.favorite = !foodItem.favorite" class="text-warning fa" [class.fa-star-o]="!foodItem.favorite" [class.fa-star]="foodItem.favorite"></i>
+				<i *ngIf="false" (click)="foodItem.favorite = !foodItem.favorite" class="text-warning fa" [class.fa-star-o]="!foodItem.favorite" [class.fa-star]="foodItem.favorite"></i>
 			</td>
 		</tr>				
 	</table>

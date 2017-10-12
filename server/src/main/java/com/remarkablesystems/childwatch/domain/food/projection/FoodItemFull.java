@@ -12,7 +12,6 @@ public interface FoodItemFull{
 	String getId();
 	String getDescription();
 	String getShortDescription();
-	FoodComponentWithId getFoodComponent();
 	
 	String getPurchaseUom();
 	String getServingUom();

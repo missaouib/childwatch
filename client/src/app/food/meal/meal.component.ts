@@ -1,7 +1,7 @@
-import {MealFoodItem, Meal, FoodComponent, MealRulesViolation, FoodItem} from '../food.interfaces';
+import {MealFoodItem, Meal, MealRulesViolation} from '../food.interfaces';
+import {FoodItem} from '../model/food-item';
 import {Component, OnInit, HostListener} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FoodStateService} from '../services/food-state.service';
 import {UUID} from 'angular2-uuid';
 import {ActivatedRoute} from '@angular/router';
 import {ComponentCanDeactivate} from './pending-changes-guard';
@@ -47,8 +47,6 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   AGEGROUPS = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
   activeTab = 'AGE_0_5MO';
 
-  foodComponentList: any[] = [];
-
   dirtyFoodItems = false;
 
   rulesViolations: MealRulesViolation[] = [];
@@ -60,7 +58,6 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   constructor(
     private formBuilder: FormBuilder,
-    private state: FoodStateService,
     private activeRoute: ActivatedRoute,
     private mealSvc: MealService,
     public toastr: ToastsManager,
@@ -68,14 +65,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   ) {
 
     this.toastr.setRootViewContainerRef(vcr);
-
     this.activeRoute.queryParams.subscribe((params: any) => this.loadMeal(params['id']));
-    this.state.foodComponents$.subscribe((fc: FoodComponent[]) => {
-      this.foodComponentList = fc.filter((c) => !c.parentComponent).map((f) => ({...f, children: []}));
-      fc.filter((c) => c.parentComponent !== null)
-        .forEach((c) => this.foodComponentList.find((p) => p.id === c.parentComponent.id).children.push(c));
-
-    });
   }
 
   ngOnInit() {
@@ -91,8 +81,12 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   mealCacfpStatus(): string {
-    return (!this.mealForm || !this.mealForm.valid || this.mealForm.dirty || this.dirtyFoodItems) ? 'UNKNOWN' :
-      (this.rulesViolations.length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
+    if (!this.mealForm || !this.mealForm.valid || this.mealForm.dirty || this.dirtyFoodItems)
+      return 'UNKNOWN';
+    else if (this.mealFoodItems.length < 1)
+      return 'UNKNOWN / NO ITEMS';
+
+    return (this.rulesViolations.length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
   }
 
   ageGroupCacfpStatus(ageGroup: string) {
@@ -110,6 +104,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   changed(mealFoodItem: MealFoodItem) {
     const copy = this.mealFoodItems.filter(mfi => mfi.id !== mealFoodItem.id);
+
+    console.log('Changed ', mealFoodItem);
     copy.push(mealFoodItem);
     this.mealFoodItems = copy;
     this.dirtyFoodItems = true;
@@ -129,6 +125,12 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
 
   save() {
+
+    if (this.canDeactivate() || this.mealForm.get('description').value === undefined || this.mealForm.get('type').value === undefined) {
+      this.toastr.info('There are no changes to be saved', 'Save');
+      return;
+
+    }
     const meal: Meal = {
       id: this.meal.id,
       description: this.mealForm.get('description').value,
@@ -202,15 +204,6 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.deletedList = [];
   }
 
-
-  copyTo(ageGroup: string): void {
-    if (ageGroup === 'ALL') {
-      this.AGEGROUPS.filter((ag) => ag !== this.activeTab)
-        .forEach((ag) => this.copyTo(ag));
-    } else {
-      console.log('Copy to ' + ageGroup);
-    }
-  }
 
   rulesViolationsForCurrentAgeGroup() {
     return this.rulesViolations.filter((v) => v.ageGroup === this.activeTab);

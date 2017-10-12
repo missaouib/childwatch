@@ -8,7 +8,8 @@
 import {Action} from '@ngrx/store';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 
-import {FoodItem, FoodComponent, Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem, MealRulesViolation} from './food.interfaces';
+import {Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem, MealRulesViolation} from './food.interfaces';
+import {FoodItem} from './model/food-item';
 import {Injectable} from '@angular/core';
 import {CalendarEvent} from 'angular-calendar';
 import {UUID} from 'angular2-uuid';
@@ -27,8 +28,6 @@ export class FoodActions {
    * Action types
    */
   static FOOD_ITEMS_RECEIVED = 'FOOD_ITEMS_RECEIVED';
-  static FOOD_COMPONENTS_RECEIVED = 'FOOD_COMPONENTS_RECEIVED';
-  static FOOD_COMPONENT_SELECTED = 'FOOD_COMPONENT_SELECTED';
   static MEALS_RECEIVED = 'MEALS_RECEIVED';
   static MEAL_EVENTS_RECEIVED = 'MEAL_EVENTS_RECEIVED';
   static MENU_TIME_ADJUSTED = 'MENU_TIME_ADJUSTED';
@@ -58,7 +57,6 @@ export class FoodActions {
   mealsReceived = ActionCreatorFactory.create<Meal[]>(FoodActions.MEALS_RECEIVED);
   mealEventsReceived = ActionCreatorFactory.create<{start: Date, end: Date, mealEvents: MealEvent[]}>(FoodActions.MEAL_EVENTS_RECEIVED);
   foodItemsReceived = ActionCreatorFactory.create<FoodItem[]>(FoodActions.FOOD_ITEMS_RECEIVED);
-  foodComponentsReceived = ActionCreatorFactory.create<FoodComponent[]>(FoodActions.FOOD_COMPONENTS_RECEIVED);
   foodItemUpdated = ActionCreatorFactory.create<FoodItem>(FoodActions.FOOD_ITEM_UPDATED);
   foodItemDeleted = ActionCreatorFactory.create<FoodItem>(FoodActions.FOOD_ITEM_DELETED);
   menuTimeAdjusted = ActionCreatorFactory.create<{start: Date, end: Date}>(FoodActions.MENU_TIME_ADJUSTED);
@@ -91,8 +89,6 @@ export class FoodActions {
     switch (action.type) {
       case FoodActions.FOOD_ITEMS_RECEIVED:
         return FoodActions.setFoodItemsReceived(state, action);
-      case FoodActions.FOOD_COMPONENTS_RECEIVED:
-        return FoodActions.setFoodComponentsReceived(state, action);
       case FoodActions.MEALS_RECEIVED:
         return FoodActions.setMealsReceived(state, action);
       case FoodActions.MEAL_EVENTS_RECEIVED:
@@ -131,26 +127,14 @@ export class FoodActions {
    * @return {FoodState} next state
    */
   static setFoodItemsReceived(state: FoodState, action: Action) {
+
+
     return {
       ...state,
-      foodItems: action.payload
+      foodItems: action.payload.map((item: any) => Object.assign(new FoodItem(), item))
     };
   }
 
-  /**
-   * Set store data when a meal is scheduled; in response to the FOOD_COMPONENTS_RECEIVED action
-   * 
-   * @param {FoodState} state current food state (immutable)
-   * @param {Action} action action that triggered the event
-   * 
-   * @return {FoodState} next state
-   */
-  static setFoodComponentsReceived(state: FoodState, action: Action) {
-    return {
-      ...state,
-      foodComponents: action.payload
-    };
-  }
 
   /**
    * Set store data when a meal is scheduled; in response to the MEALS_RECEIVED action

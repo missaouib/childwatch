@@ -15,11 +15,9 @@ import com.remarkablesystems.childwatch.domain.food.FoodItem;
 
 @RepositoryRestResource(collectionResourceRel = "foodItems", path = "foodItem")
 public interface FoodItemRepository extends CrudRepository<FoodItem, String> {
-	
-	Set<FoodItem> findByFoodComponentDescription( String description );
-	
+		
 	@RestResource(path="searchBy", rel="searchBy" )
-	@Query( "select i from FoodItem i where i.description like %?1% or i.shortDescription like %?1% or i.foodComponent.description like %?1%" )
+	@Query( "select i from FoodItem i where i.description like %?1% or i.shortDescription like %?1%" )
 	Set<FoodItem> findByDescriptionContaining( @Param("filter") String descriptionString);
 
 }

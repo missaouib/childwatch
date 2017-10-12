@@ -122,7 +122,11 @@ export class MealCalendarComponent implements OnInit {
     const today = new Date();
 
     this.state.adjustMenuTime(moment(today).startOf('month').toDate(), moment(today).endOf('month').toDate());
-    this.state.mealEvents$.subscribe((events) => this.eventList = events.slice());
+    this.state.mealEvents$.subscribe((events) => {
+      console.log('Events list was updated - now ' + events.length + ' events');
+      this.eventList = events;
+      this.refresh.next();
+    });
 
   }
 
@@ -155,10 +159,6 @@ export class MealCalendarComponent implements OnInit {
     const month = this.viewDate.getMonth();
     return month === 11 || month === 0 || month === 1;
   }
-
-
-
-
 
   createMealEvent(meal: Meal, start?: Date): MealEvent {
     const mealEvent: MealEvent = {
@@ -210,7 +210,6 @@ export class MealCalendarComponent implements OnInit {
       title: meal.description,
       color: {primary: 'red', secondary: 'yellow'}
     }
-    this.eventList.push(mealEvent);
     this.viewDate = _when;
     this.activeDayIsOpen = true;
     this.state.scheduleMealEvent(mealEvent.meta);

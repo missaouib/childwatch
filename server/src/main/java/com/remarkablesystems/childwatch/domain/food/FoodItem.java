@@ -38,9 +38,6 @@ public class FoodItem implements Serializable {
 	@Column(name="notes")
 	private String notes;
 	
-	@ManyToOne
-	@JoinColumn(name="food_component_id")	
-	private FoodComponent foodComponent;
 	
 	@ElementCollection
 	@CollectionTable(
@@ -51,10 +48,9 @@ public class FoodItem implements Serializable {
 	
 	public FoodItem() {}
 	
-	public FoodItem( String id, String description, FoodComponent foodComponent, List<String> tags ) {
+	public FoodItem( String id, String description, List<String> tags ) {
 		this.id = id;
 		this.description = description;
-		this.foodComponent = foodComponent;
 		if( tags != null )
 			tags.stream().forEach( tag -> this.addTag( tag ) );
 		
@@ -90,14 +86,6 @@ public class FoodItem implements Serializable {
 
 	public void setServingUom(String servingUom) {
 		this.servingUom = servingUom;
-	}
-
-	public FoodComponent getFoodComponent() {
-		return foodComponent;
-	}
-
-	public void setFoodComponent(FoodComponent foodComponent) {
-		this.foodComponent = foodComponent;
 	}
 
 	public String getId() {

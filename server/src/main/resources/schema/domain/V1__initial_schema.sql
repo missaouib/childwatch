@@ -1,13 +1,4 @@
-    
--- Meal items
-    
-    create table food_component(
-    	id 					varchar(36) NOT NULL,
-    	description 		varchar(128),
-    	icon				varchar(128),
-    	parent_component 	varchar(36)
-    );
-    
+        
     -- units IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' )
 
     
@@ -15,7 +6,6 @@
     	id 					varchar(36) NOT NULL,
     	description 		varchar(256) NOT NULL,
     	short_description 	varchar(128),
-    	food_component_id 	varchar(36) NOT NULL,
     	serving_unit 		varchar(36) DEFAULT 'EACH' CHECK( serving_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
     	purchase_unit 		varchar(36) DEFAULT 'EACH' CHECK( purchase_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
     	notes 				varchar(4096)
@@ -24,7 +14,8 @@
     create table meal(
     	id 				varchar(36) not null,
     	description 	varchar(128) not null,
-    	meal_type 		varchar(36) not null CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER', 'LATE_SNACK', 'OTHER' ) )
+    	meal_type 		varchar(36) not null CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER', 'LATE_SNACK', 'OTHER' ) ),
+    	notes			varchar(4096)
     );
     
     create table meal_food_item(

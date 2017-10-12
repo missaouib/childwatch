@@ -127,7 +127,7 @@
 						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
 						<li *ngIf="ageGroup === 'AGE_1_2YR'">Unflavored whole milk must be served to 1 year olds;</li>
 						<li *ngIf="ageGroup === 'AGE_3_5YR'">Unflavored low-fat or fat-free milk must be served to children 2 through 5 years old;</li>
-						<li *ngIf="ageGroup === 'AGE_6_12YR' || ageGroup === '13_18YR' || currentAgeGruop === 'AGE_ADULT'">Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li *ngIf="ageGroup === 'AGE_6_12YR' || ageGroup === '13_18YR' || ageGroup === 'AGE_ADULT'">Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
 						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
 						<li *ngIf="mealType === 'BREAKFAST'">Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
 						<li>Frying is not allowed as a way of preparing foods on-site.</li>

@@ -15,12 +15,10 @@ import {FormsModule} from '@angular/forms';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {MealEventService} from './services/meal-event.service';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {FoodComponentService} from './services/food-component.service';
 import {FoodItemService} from './services/food-item.service';
 import {MealCalendarComponent} from './meal-calendar/meal-calendar.component';
 
 import {CalendarModule} from 'angular-calendar';
-import {MealBuilderComponent} from './meal-builder/meal-builder.component';
 import {PendingChangesGuard} from './meal/pending-changes-guard';
 
 import {DndModule} from 'ng2-dnd';
@@ -69,9 +67,9 @@ const routes: Routes = [
   ],
   declarations: [
     MealCalendarComponent,
-    MealBuilderComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent
+    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent
   ],
-  providers: [FoodItemService, FoodComponentService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard]
+  providers: [FoodItemService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard]
 })
 export class FoodModule {
 
@@ -82,8 +80,5 @@ export class FoodModule {
 
     this.foodItemSvc.query(FoodItemService.FULL).subscribe();
     this.mealSvc.query().subscribe();
-
-
-    // this.foodComponentSvc.query(FoodComponentService.WITH_ID).subscribe();
   }
 }

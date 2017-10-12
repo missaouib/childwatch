@@ -54,7 +54,8 @@
 	
 	<div class="row">
 		<strong>CACFP Status:</strong> 
-			<span class="label" [class.label-info]="mealCacfpStatus() === 'UNKNOWN'"
+			<span class="label" 
+			[class.label-info]="mealCacfpStatus() === 'UNKNOWN' || mealCacfpStatus() === 'UNKNOWN / NO ITEMS'"
 			[class.label-success]="mealCacfpStatus() === 'COMPLIANT'"
 			[class.label-danger]="mealCacfpStatus() === 'NONCOMPLIANT'">{{mealCacfpStatus()}}</span>
 	</div>
@@ -76,14 +77,10 @@
 	
 	<div class="row" *ngIf="mealCacfpStatus() === 'NONCOMPLIANT'">
 		<alert  [type]="'danger'">
-			<h4 class="alert-heading">
-				<i class="fa fa-exclamation-triangle"></i>
-				   CACFP Check Fail
-			</h4>	
+			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i>CACFP Compliance Errors</h4>	
 			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" >{{violation.message}}</li></ul>		
 		</alert>	
 	</div>
-	
 	
 	<div class="hidden-xs row">
 		<label>Age Group</label>
@@ -100,13 +97,15 @@
 				 		   [class.text-info]="ageGroupCacfpStatus(ageGroup)==='UNKNOWN'"></i>&nbsp;
 				 		   {{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
 				 	</template>
-				 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )" >
 				 	
+				 	
+				 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )" >
+						
 					 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( ageGroup )"
 		 					[mealFoodItem]="mealFoodItem" 
 		 					(changed)="changed($event)" 
 		 					(deleted)="deleted($event)"></cw-food-item>	
-
+		 					
 				 		<p class="panel-body">
 				 			<strong *ngIf="showFoodList()">Drag items from the food list and drop here to create a meal <span *ngIf="!emptyShow">or click <a (click)="emptyShow=true">here</a> to search items to add</span></strong>
 				 			<strong *ngIf="!showFoodList()"><em>Set a meal name/type to add food items</em></strong>
@@ -114,12 +113,14 @@
 				 		
 				 		<cw-food-item *ngIf="emptyShow" (selectedItem)="droppedFoodItem($event); emptyShow=false;"></cw-food-item>
 
-					</div>	 					
+					</div>	
+					 					
 	 				<hr />
 			</tab>		     
 		</tabset>
 	</div>
 	
+	<!--
 	<div class="visible-xs-block row">
 			<span dropdown container="body">
 				<label>Age Group:</label> <a dropdownToggle (click)="false">{{activeTab.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}} <i class="fa fa-chevron-down"></i></a> 
@@ -150,7 +151,7 @@
 		 		<cw-food-item (selectedItem)="droppedFoodItem($event)"></cw-food-item>
 			</div>	 					
 	</div>
-		
+		-->
 		
 		</div>
 	

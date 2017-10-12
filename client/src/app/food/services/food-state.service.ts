@@ -2,8 +2,9 @@ import {AppState} from '../../app.state';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {FoodItem, FoodComponent, Meal, MealEvent, MealFoodItem} from '../food.interfaces';
+import {Meal, MealEvent, MealFoodItem} from '../food.interfaces';
 import {FoodActions} from '../food.actions';
+import {FoodItem} from '../model/food-item';
 import {CalendarEvent} from 'angular-calendar';
 
 
@@ -16,10 +17,6 @@ export class FoodStateService {
 
   get foodItems$(): Observable<FoodItem[]> {
     return this.store.select(s => s.food.foodItems);
-  }
-
-  get foodComponents$(): Observable<FoodComponent[]> {
-    return this.store.select(s => s.food.foodComponents);
   }
 
   get menus$(): Observable<MealEvent[]> {

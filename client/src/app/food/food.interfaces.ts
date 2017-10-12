@@ -1,10 +1,11 @@
+import {FoodItem} from './model/food-item';
 import {CalendarEvent} from 'angular-calendar';
+
 
 export interface Meal {
   id?: string;
   description: string;
   'type': string;
-  _links?: MealLinks;
   mealFoodItems?: MealFoodItem[];
 };
 
@@ -16,52 +17,14 @@ export interface FoodItemTag {
   value: string;
 }
 
-export interface FoodItem {
-  id?: string;
-  description?: string;
-  shortDescription?: string;
-  foodComponent: FoodComponent;
-  purchaseUom: string;
-  servingUom: string;
-  notes: string;
-  favorite?: boolean;
-  tags?: FoodItemTag[];
-};
-
-export interface FoodComponentLinks {
-  self: Link;
-  foodItems: Link;
-};
-
-export interface FoodComponent {
-  id: string;
-  description: string;
-  icon?: string;
-  _links?: FoodComponentLinks;
-  foodItems?: FoodItem[];
-  parentComponent: FoodComponent;
-};
-
-export interface MealFoodItemLinks {
-  self: Link;
-  foodItem: Link;
-  meal: Link;
-};
 
 export interface MealFoodItem {
-  id?: string;
-  ageGroup?: string;
+  id: string;
+  ageGroup: string;
   quantity?: number;
   unit?: string;
-  meal?: Meal;
-  foodComponent?: FoodComponent;
-  foodItem?: FoodItem;
-};
-
-export interface MealLinks {
-  self: Link;
-  meal: Link;
-  mealFoodItems: Link;
+  meal: Meal;
+  foodItem: FoodItem;
 };
 
 
@@ -73,12 +36,14 @@ export interface MealEvent {
   recurrence: string;
 }
 
+export interface Rule {
+  name: string;
+}
+
 export interface MealRulesViolation {
   severity: string;
   message: string;
-  rule: {
-    name: string
-  };
+  rule: Rule;
   mealId: string;
   ageGroup?: string;
 };
@@ -121,14 +86,12 @@ export interface Page {
 
 export interface FoodState {
   foodItems: FoodItem[];
-  foodComponents: FoodComponent[];
   meals: Meal[];
   menuUI: MenuUIState;
 };
 
 export const INITIAL_FOODSTATE: FoodState = {
   foodItems: [],
-  foodComponents: [],
   meals: [],
   menuUI: INITIAL_MENUUISTATE
 };

@@ -1,4 +1,5 @@
-import {MealFoodItem, FoodItem} from '../food.interfaces';
+import {MealFoodItem} from '../food.interfaces';
+import {FoodItem} from '../model/food-item';
 import {FoodStateService} from '../services/food-state.service';
 import {EventEmitter} from '@angular/core';
 import {Output} from '@angular/core';
@@ -40,7 +41,7 @@ export class FoodItemComponent implements OnInit {
       foodItem: [this.mealFoodItem ? this.mealFoodItem.foodItem : undefined, Validators.required],
       description: [undefined],
       quantity: [this.mealFoodItem ? this.mealFoodItem.quantity.toString() : undefined, Validators.required],
-      unit: [this.mealFoodItem ? this.mealFoodItem.foodItem.servingUom : undefined, Validators.required]
+      unit: [this.mealFoodItem ? (this.mealFoodItem.unit || this.mealFoodItem.foodItem.servingUom) : undefined, Validators.required]
     });
 
     // when the mealFoodItem changes

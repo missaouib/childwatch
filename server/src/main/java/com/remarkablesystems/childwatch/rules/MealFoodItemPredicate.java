@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.remarkablesystems.childwatch.domain.food.AgeGroup;
-import com.remarkablesystems.childwatch.domain.food.FoodComponent;
 import com.remarkablesystems.childwatch.domain.food.FoodItem;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
@@ -35,8 +34,7 @@ public class MealFoodItemPredicate {
 
 	static Predicate<MealFoodItem> isMeatItem =  hasTag( "MEAT" );
 					
-	static Predicate<MealFoodItem> forInfant = (item) -> item.getAgeGroup().equals(AgeGroup.AGE_0_5MO ) || item.getAgeGroup().equals(AgeGroup.AGE_6_11MO);
-
+	
 	static Predicate<MealFoodItem> isQuantityItem( double quantity, UnitOfMeasure unit ) { return (item) -> { 
 		Double convert = UnitOfMeasure.convert(item.getQuantity(), item.getUnit(), unit );
 		return ( convert.isNaN() )? false : convert.doubleValue() >= quantity;

@@ -16,9 +16,7 @@ import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
 public class MealPredicate {
 
 
-	static BiPredicate<Meal,List<MealFoodItem>> isInfant = hasAllItems( forInfant );
 
-	static BiPredicate<Meal,List<MealFoodItem>> isNonInfant = hasNoItems( forInfant );
 			
 	static BiPredicate<Meal,List<MealFoodItem>> isBreakfast = (meal,mealFoodItems) -> meal.getType().equals( MealType.BREAKFAST );
 	static BiPredicate<Meal,List<MealFoodItem>> isLunch = (meal,mealFoodItems) -> meal.getType().equals( MealType.LUNCH );
@@ -117,7 +115,7 @@ public class MealPredicate {
 			
 	static BiPredicate<Meal,List<MealFoodItem>> isAgeGroup( AgeGroup group ) { return hasAllItems( (i) -> i.getAgeGroup().equals(group) ); }
 	
-	static BiPredicate<Meal,List<MealFoodItem>> isUnder2YearsOld = isInfant.or( isAgeGroup(AgeGroup.AGE_1_2YR) );
+	static BiPredicate<Meal,List<MealFoodItem>> isUnder2YearsOld = isAgeGroup(AgeGroup.AGE_1_2YR).or( isAgeGroup( AgeGroup.AGE_0_5MO) ).or( isAgeGroup(AgeGroup.AGE_6_11MO ) );
 
 	static BiPredicate<Meal,List<MealFoodItem>> isUnder6YearsOld = isUnder2YearsOld.or( isAgeGroup(AgeGroup.AGE_3_5YR) );
 	
