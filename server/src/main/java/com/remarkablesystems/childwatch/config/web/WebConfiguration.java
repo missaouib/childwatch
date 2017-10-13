@@ -16,20 +16,13 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(final ViewControllerRegistry registry) {    	
         registry.addViewController("/").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/schedule").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/family").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/meals").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/billing").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/login").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/admin").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/admin/food-items").setViewName(INDEX_VIEW_NAME);
-        registry.addViewController("/dashboard").setViewName(INDEX_VIEW_NAME);        
-        registry.addViewController("/room").setViewName(INDEX_VIEW_NAME);      
         registry.addViewController("/meals/meal-calendar").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/meals/meal-builder").setViewName(INDEX_VIEW_NAME);
         registry.addViewController("/meals/food-item-list").setViewName(INDEX_VIEW_NAME);        
+        registry.addViewController("/meals/food-editor").setViewName(INDEX_VIEW_NAME);        
         registry.addViewController("/meals/{spring:\\\\w+}").setViewName(INDEX_VIEW_NAME);      
-        registry.addViewController("/child-detail").setViewName(INDEX_VIEW_NAME);      
     }
     
     @Override

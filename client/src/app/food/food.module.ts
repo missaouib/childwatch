@@ -38,12 +38,14 @@ import {FoodItemListComponent} from './food-item-list/food-item-list.component';
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {MealListComponent} from './meal-list/meal-list.component';
 import {MealDayComponent} from './meal-day/meal-day.component';
+import {FoodItemEditorComponent} from './food-item-editor/food-item-editor.component';
 
 
 const routes: Routes = [
   {path: '', component: MealCalendarComponent},
   {path: 'meal-builder', component: MealComponent, canDeactivate: [PendingChangesGuard]},
-  {path: 'food-item-list', component: FoodItemListComponent}
+  {path: 'food-item-list', component: FoodItemListComponent},
+  {path: 'food-editor', component: FoodItemEditorComponent}
 ];
 
 @NgModule({
@@ -67,7 +69,7 @@ const routes: Routes = [
   ],
   declarations: [
     MealCalendarComponent,
-    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent
+    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, FoodItemEditorComponent
   ],
   providers: [FoodItemService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard]
 })

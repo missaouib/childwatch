@@ -1,20 +1,20 @@
         
-    -- units IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' )
+    -- units IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'EACH', 'SLICE' )
 
     
     create table food_item(
     	id 					varchar(36) NOT NULL,
     	description 		varchar(256) NOT NULL,
     	short_description 	varchar(128),
-    	serving_unit 		varchar(36) DEFAULT 'EACH' CHECK( serving_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
-    	purchase_unit 		varchar(36) DEFAULT 'EACH' CHECK( purchase_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
+    	serving_unit 		varchar(36) DEFAULT 'EACH' CHECK( serving_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'EACH', 'SLICE' ) ),
+    	purchase_unit 		varchar(36) DEFAULT 'EACH' CHECK( purchase_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'EACH', 'SLICE' ) ),
     	notes 				varchar(4096)
     );
     
     create table meal(
     	id 				varchar(36) not null,
     	description 	varchar(128) not null,
-    	meal_type 		varchar(36) not null CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER', 'LATE_SNACK', 'OTHER' ) ),
+    	meal_type 		varchar(36) not null CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER' ) ),
     	notes			varchar(4096)
     );
     
@@ -43,8 +43,8 @@
 	-- to = (( from + from_offset ) * muliplicand / denominator ) + to_offset	
 	CREATE TABLE conversion(
 		id	varchar(36) NOT NULL,
-		from_unit  varchar(36) NOT NULL CHECK( from_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
-		to_unit	  varchar(36) NOT NULL CHECK( to_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'TEASPOONS', 'EACH' ) ),
+		from_unit  varchar(36) NOT NULL CHECK( from_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'EACH', 'SLICE' ) ),
+		to_unit	  varchar(36) NOT NULL CHECK( to_unit IN ('OUNCES', 'LBS', 'UNITS', 'GALLONS', 'CUPS', 'SERVINGS', 'TABLESPOONS', 'EACH', 'SLICE' ) ),
 		from_offset	  numeric (4,2) NOT NULL DEFAULT 0,
 		multiplicand  numeric (4,2) NOT NULL DEFAULT 1,
 		denominator   numeric (4,2) NOT NULL DEFAULT 1,

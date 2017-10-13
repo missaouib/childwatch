@@ -56,5 +56,8 @@ public class MealFoodItemPredicate {
 		return item != null && item.hasTag(type);
 	}; };
 	
+	
+	static Predicate<MealFoodItem> hasNoAgeTags = (mealFoodItem) -> mealFoodItem.getFoodItem().getTags().stream().noneMatch( (tag) -> tag.getValue().startsWith("AGE_") );
+	
 
 }

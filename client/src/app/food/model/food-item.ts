@@ -16,6 +16,10 @@ export class FoodItem {
     return this.tags.map(tag => tag.value).filter(tag => !tag.startsWith('AGE_')).join();
   }
 
+  public get agetagstring(): string {
+    return this.tags.map(tag => tag.value).filter(tag => tag.startsWith('AGE_')).join();
+  }
+
   public get category(): string {
     if (this.tagContainsAll(['MILK']))
       return 'MILK';

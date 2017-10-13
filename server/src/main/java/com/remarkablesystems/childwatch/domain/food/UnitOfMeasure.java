@@ -11,7 +11,7 @@ public enum UnitOfMeasure {
 	CUPS,
 	SERVINGS,
 	TABLESPOONS,
-	TEASPOONS,
+	SLICE,
 	EACH;	
 	
 	
@@ -51,31 +51,28 @@ public enum UnitOfMeasure {
 	static DoubleFunction<Double> CUPS_OUNCES = (value) -> value * 8;
 	static DoubleFunction<Double> OUNCES_TABLESPOONS = (value) -> value * 2;
 	static DoubleFunction<Double> TABLESPOONS_OZ = (value) -> value / 2;
-	static DoubleFunction<Double> OUNCES_TEASPOONS = (value) -> value * 6;
-	static DoubleFunction<Double> TEASPOONS_OZ = (value) -> value / 6;
 
 	static DoubleFunction<Double> UNITS_SERVINGS = (value) -> value;
 	static DoubleFunction<Double> SERVINGS_UNITS = (value) -> value;
 	static DoubleFunction<Double> UNITS_EACH = (value) -> value;
 	static DoubleFunction<Double> EACH_UNITS = (value) -> value;
+	static DoubleFunction<Double> UNITS_SLICE = (value) -> value;
+	static DoubleFunction<Double> SLICE_UNITS = (value) -> value;
+	static DoubleFunction<Double> EACH_SLICE = (value) -> value;
+	static DoubleFunction<Double> SLICE_EACH = (value) -> value;
+	static DoubleFunction<Double> SERVINGS_EACH = (value) -> value;
+	static DoubleFunction<Double> EACH_SERVINGS = (value) -> value;
+	static DoubleFunction<Double> SERVINGS_SLICE = (value) -> value;
+	static DoubleFunction<Double> SLICE_SERVINGS = (value) -> value;
 
 	static DoubleFunction<Double> GALLONS_CUPS = (value) -> value * 16;
 	static DoubleFunction<Double> CUPS_GALLONS = (value) -> value / 16;
 	static DoubleFunction<Double> GALLONS_TABLESPOONS = (value) -> value * 256;
 	static DoubleFunction<Double> TABLESPOONS_GALLONS = (value) -> value / 256;
-	static DoubleFunction<Double> GALLONS_TEASPOONS = (value) -> value * 768;
-	static DoubleFunction<Double> TEASPOONS_GALLONS = (value) -> value / 768;
 	
 	static DoubleFunction<Double> CUPS_TABLESPOONS = (value) -> value * 16;
 	static DoubleFunction<Double> TABLESPOONS_CUPS = (value) -> value / 16;
-	static DoubleFunction<Double> CUPS_TEASPOONS = (value) -> value * 48;
-	static DoubleFunction<Double> TEASPOONS_CUPS = (value) -> value / 48;
-
-	static DoubleFunction<Double> TABLESPOONS_TEASPOONS = (value) -> value * 3;
-	static DoubleFunction<Double> TEASPOONS_TABLESPOONS = (value) -> value / 3;
 	
-	static DoubleFunction<Double> SERVINGS_EACH = (value) -> value;
-	static DoubleFunction<Double> EACH_SERVINGS = (value) -> value;
 
 
 

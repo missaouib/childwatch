@@ -15,7 +15,7 @@ import com.remarkablesystems.childwatch.domain.food.Meal;
 import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 
-public class Rules_1_2YR_Test {
+public class NonInfantRulesTest {
 	
 
 	RuleValidatorController ctrl = new RuleValidatorController();
@@ -372,7 +372,7 @@ public class Rules_1_2YR_Test {
 		
 		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
 		
-		assertFalse( violations.isEmpty() );
+		assertTrue( violations.isEmpty() );
 	}
 	
 	@Test
