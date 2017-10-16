@@ -1,3 +1,4 @@
+import {ConfigService} from '../../config/config.service';
 import {MealFoodItem, Meal, MealRulesViolation} from '../food.interfaces';
 import {FoodItem} from '../model/food-item';
 import {Component, OnInit, HostListener} from '@angular/core';
@@ -44,8 +45,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   mealForm: FormGroup;
 
-  AGEGROUPS = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
-  activeTab = 'AGE_0_5MO';
+  AGEGROUPS: string[] = []; // = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
+  activeTab: string = undefined; // 'AGE_0_5MO';
 
   dirtyFoodItems = false;
 
@@ -61,6 +62,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     private activeRoute: ActivatedRoute,
     private mealSvc: MealService,
     public toastr: ToastsManager,
+    private configSvc: ConfigService,
     vcr: ViewContainerRef,
   ) {
 
@@ -69,6 +71,10 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   ngOnInit() {
+    this.configSvc.AGEGROUPS$.subscribe(ag => {
+      this.AGEGROUPS = ag;
+      if (ag.length > 0) this.activeTab = this.AGEGROUPS[0];
+    });
     this.mealForm = this.formBuilder.group({
       description: [this.meal.description, Validators.required],
       type: [this.meal.type, Validators.required]

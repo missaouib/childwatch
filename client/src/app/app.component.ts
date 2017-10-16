@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { Router, Routes} from '@angular/router';
+import {ConfigService} from './config/config.service';
+import {Component} from '@angular/core';
+import {Router, Routes} from '@angular/router';
+import {CookieService} from 'ngx-cookie-service';
 
 
 @Component({
@@ -10,8 +12,19 @@ import { Router, Routes} from '@angular/router';
 export class AppComponent {
   title = 'cw works!';
   menuItems: Routes;
-  constructor(router: Router){
+  constructor(
+    router: Router,
+    configSvc: ConfigService,
+    cookieSvc: CookieService
+  ) {
     const routes = router.config as Routes;
     this.menuItems = routes; //.filter(route => route.navLink);
+
+
+    const exceptionAgesStr = cookieSvc.get('CW_AGEEXCEPTION');
+
+    if (exceptionAgesStr) exceptionAgesStr.split(',').forEach(age => configSvc.supportAgeGroup(age, false));
+
+
   }
 }

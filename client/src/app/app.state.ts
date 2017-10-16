@@ -1,12 +1,13 @@
-import { ActionReducer, Action, combineReducers } from '@ngrx/store';
-import { compose } from '@ngrx/core';
-import { storeFreeze } from 'ngrx-store-freeze';
-import { storeLogger } from 'ngrx-store-logger';
+import {ActionReducer, Action, combineReducers} from '@ngrx/store';
+import {compose} from '@ngrx/core';
+import {storeFreeze} from 'ngrx-store-freeze';
+import {storeLogger} from 'ngrx-store-logger';
 
-import { environment } from '../environments/environment';
-import { FoodState, INITIAL_FOODSTATE } from './food/food.interfaces';
-import { FoodActions } from './food/food.actions';
-import { User } from './security/interfaces';
+import {environment} from '../environments/environment';
+import {ConfigState, INITIAL_ConfigState, ConfigActions} from './config/config.actions';
+import {FoodState, INITIAL_FOODSTATE} from './food/food.interfaces';
+import {FoodActions} from './food/food.actions';
+import {User} from './security/interfaces';
 
 export interface AppState {
   // Current time is combined into many displays across the application
@@ -14,22 +15,24 @@ export interface AppState {
   currentTime: number;
   loggedInUser?: User;
   food: FoodState;
+  config: ConfigState;
 }
 
 // Allow subreducers to initialize their own state
 export const INITIAL_APP_STATE: AppState = {
   currentTime: Date.now(),
-  food: INITIAL_FOODSTATE
+  food: INITIAL_FOODSTATE,
+  config: INITIAL_ConfigState
 };
 
 export const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 export function setCurrentTime(time: number): Action {
-  return { type: SET_CURRENT_TIME, payload: time };
+  return {type: SET_CURRENT_TIME, payload: time};
 }
 
 export const LOGGED_IN_USER_DATA_ARRIVED = 'LOGGED_IN_USER_DATA_ARRIVED';
 export function loggedInUserDataArrived(data: User): Action {
-  return { type: LOGGED_IN_USER_DATA_ARRIVED, payload: data };
+  return {type: LOGGED_IN_USER_DATA_ARRIVED, payload: data};
 }
 
 export function currentTime(state: number = Date.now(), action: Action): number {
@@ -55,9 +58,10 @@ function loggedInUser(state: User = undefined, action: Action): User {
 const productionReducer = compose(combineReducers)({
   currentTime,
   loggedInUser,
-  food: FoodActions.mealReducer
+  food: FoodActions.mealReducer,
+  config: ConfigActions.configReducer
 });
-const developmentReducer = compose(storeLogger({ filter: { blacklist: ['SET_CURRENT_TIME'] } }), storeFreeze)(productionReducer);
+const developmentReducer = compose(storeLogger({filter: {blacklist: ['SET_CURRENT_TIME']}}), storeFreeze)(productionReducer);
 
 export function appReducer(previousAppState: AppState = INITIAL_APP_STATE, action: Action): ActionReducer<AppState> {
   if (environment.production) {

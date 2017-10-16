@@ -47,6 +47,7 @@
     "ng2-toastr": "^4.1.2",
     "ngrx-store-logger": "^0.1.8",
     "ngx-bootstrap": "^1.9.1",
+    "ngx-cookie-service": "^1.0.9",
     "normalizr": "^3.2.3",
     "prob.js": "^1.0.6",
     "rxjs": "^5.1.0",

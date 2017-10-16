@@ -1,3 +1,5 @@
+import {ConfigActions} from '../config/config.actions';
+import {ConfigService} from '../config/config.service';
 import {MealService} from './services/meal.service';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -71,7 +73,7 @@ const routes: Routes = [
     MealCalendarComponent,
     FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, FoodItemEditorComponent
   ],
-  providers: [FoodItemService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard]
+  providers: [FoodItemService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard, ConfigService, ConfigActions]
 })
 export class FoodModule {
 
