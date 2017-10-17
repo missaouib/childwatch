@@ -1,5 +1,5 @@
-import {MealFoodItem} from '../food.interfaces';
-import {FoodItem} from '../model/food-item';
+import {MealFoodItem, FoodItem} from '../food.interfaces';
+import {FoodItemUtils} from '../model/food-item-utils';
 import {FoodStateService} from '../services/food-state.service';
 import {EventEmitter} from '@angular/core';
 import {Output} from '@angular/core';
@@ -79,4 +79,19 @@ export class FoodItemComponent implements OnInit {
     return foodItem && foodItem.servingUom !== this.foodItemForm.get('unit').value;
   }
 
+  category(item: FoodItem): string {
+    return FoodItemUtils.category(item);
+  }
+
+  isInfant(item: FoodItem): boolean {
+    return FoodItemUtils.isInfant(item);
+  }
+
+  isCN(item: FoodItem): boolean {
+    return FoodItemUtils.isCN(item);
+  }
+
+  tagstring(item: FoodItem): string {
+    return FoodItemUtils.tagstring(item);
+  }
 }

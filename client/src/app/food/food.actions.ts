@@ -8,8 +8,7 @@
 import {Action} from '@ngrx/store';
 import {ActionCreatorFactory} from '../utils/actioncreatorfactory';
 
-import {Meal, FoodState, MealEvent, INITIAL_FOODSTATE, MealFoodItem, MealRulesViolation} from './food.interfaces';
-import {FoodItem} from './model/food-item';
+import {Meal, FoodUIState, MealEvent, INITIAL_FoodUIState, MealFoodItem, MealRulesViolation, FoodItem} from './food.interfaces';
 import {Injectable} from '@angular/core';
 import {CalendarEvent} from 'angular-calendar';
 import {UUID} from 'angular2-uuid';
@@ -50,6 +49,9 @@ export class FoodActions {
   static VALIDATE_MEAL = 'VALIDATE_MEAL';
   static MEAL_VIOLATIONS_RECEIVED = 'MEAL_VIOLATIONS_RECIEVED';
 
+  static SHOW_BACKGROUND = 'SHOW_BACKGROUND';
+  static SHOW_WEEKENDS = 'SHOW_WEEKENDS';
+
 
   /*
    * Actions
@@ -77,6 +79,9 @@ export class FoodActions {
   validateMeal = ActionCreatorFactory.create<Meal>(FoodActions.VALIDATE_MEAL);
   mealViolationsReceived = ActionCreatorFactory.create<MealRulesViolation[]>(FoodActions.MEAL_VIOLATIONS_RECEIVED);
 
+  showBackground = ActionCreatorFactory.create<boolean>(FoodActions.SHOW_BACKGROUND);
+  showWeekends = ActionCreatorFactory.create<boolean>(FoodActions.SHOW_WEEKENDS);
+
   /**
    * Main reducer for all Meal/Food related actions
    * 
@@ -85,7 +90,7 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static mealReducer(state: FoodState = INITIAL_FOODSTATE, action: Action): FoodState {
+  static reducer(state: FoodUIState = INITIAL_FoodUIState, action: Action): FoodUIState {
     switch (action.type) {
       case FoodActions.FOOD_ITEMS_RECEIVED:
         return FoodActions.setFoodItemsReceived(state, action);
@@ -93,8 +98,6 @@ export class FoodActions {
         return FoodActions.setMealsReceived(state, action);
       case FoodActions.MEAL_EVENTS_RECEIVED:
         return FoodActions.setMealEventsReceived(state, action);
-      case FoodActions.MENU_TIME_ADJUSTED:
-        return FoodActions.setMenuTimeAdjusted(state, action);
       case FoodActions.FOOD_ITEM_UPDATED:
         return FoodActions.setFoodItemUpdated(state, action);
       case FoodActions.MEALEVENT_SCHEDULED:
@@ -114,6 +117,12 @@ export class FoodActions {
       case FoodActions.DELETE_MEALFOODITEM:
         return FoodActions.setDeleteMealFoodItem(state, action);
 
+      case FoodActions.SHOW_BACKGROUND:
+        return FoodActions.setShowBackground(state, action);
+
+      case FoodActions.SHOW_WEEKENDS:
+        return FoodActions.setShowWeekends(state, action);
+
     }
     return state;
   }
@@ -126,12 +135,12 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setFoodItemsReceived(state: FoodState, action: Action) {
+  static setFoodItemsReceived(state: FoodUIState, action: Action): FoodUIState {
 
 
     return {
       ...state,
-      foodItems: action.payload.map((item: any) => Object.assign(new FoodItem(), item))
+      foodItems: action.payload
     };
   }
 
@@ -144,7 +153,7 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setMealsReceived(state: FoodState, action: Action) {
+  static setMealsReceived(state: FoodUIState, action: Action): FoodUIState {
 
     return {
       ...state,
@@ -160,7 +169,7 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setMealEventsReceived(state: FoodState, action: Action) {
+  static setMealEventsReceived(state: FoodUIState, action: Action): FoodUIState {
 
     const mealEvents: MealEvent[] = action.payload.mealEvents;
 
@@ -173,11 +182,8 @@ export class FoodActions {
 
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        mealEvents: mealEvents,
-        events: events
-      }
+      mealEvents: mealEvents,
+      events: events
     };
   }
 
@@ -191,39 +197,17 @@ export class FoodActions {
    * @return {FoodState} next state
    * 
    */
-  static setRemoveMealEvent(state: FoodState, action: Action) {
+  static setRemoveMealEvent(state: FoodUIState, action: Action): FoodUIState {
     const event: MealEvent = action.payload.meta;
-    const mealEvents = state.menuUI.mealEvents.filter((e) => e.id !== event.id);
-    const events = state.menuUI.events.filter((e) => e.meta.id !== event.id);
+    const mealEvents = state.mealEvents.filter((e) => e.id !== event.id);
+    const events = state.events.filter((e) => e.meta.id !== event.id);
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        mealEvents: mealEvents,
-        events: events
-      }
+      mealEvents: mealEvents,
+      events: events
     };
   }
 
-  /**
-   * Set store data when a meal is scheduled; in response to the MENU_TIMEADJUSTED action
-   * 
-   * @param {FoodState} state current food state (immutable)
-   * @param {Action} action action that triggered the event
-   * 
-   * @return {FoodState} next state
-   */
-  static setMenuTimeAdjusted(state: FoodState, action: Action) {
-
-    return {
-      ...state,
-      menuUI: {
-        ...state.menuUI,
-        startMenu: action.payload.start,
-        endMenu: action.payload.end
-      }
-    };
-  }
 
   /**
    * Set store data when a meal is scheduled; in response to the FOODITEM_UPDATED action
@@ -233,7 +217,7 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setFoodItemUpdated(state: FoodState, action: Action) {
+  static setFoodItemUpdated(state: FoodUIState, action: Action): FoodUIState {
     const foodItem = action.payload;
     const idxFoodItem = state.foodItems.findIndex((fi: FoodItem) => fi.id === foodItem.id);
     const foodItems = state.foodItems.filter((fi: FoodItem) => fi.id !== foodItem.id);
@@ -253,7 +237,7 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setSaveMeal(state: FoodState, action: Action): FoodState {
+  static setSaveMeal(state: FoodUIState, action: Action): FoodUIState {
     const meal = {...action.payload};
 
     // assign a GUID if there isnt one
@@ -265,10 +249,7 @@ export class FoodActions {
     return {
       ...state,
       meals: meals,
-      menuUI: {
-        ...state.menuUI,
-        currentMeal: meal
-      }
+      currentMeal: meal
     };
   }
 
@@ -276,14 +257,11 @@ export class FoodActions {
    * Set store data when the meal food items come in for the current meal item;
    * in response to the MEALFOODITEMS_RECEIVED action
    */
-  static setMealFoodItemsReceived(state: FoodState, action: Action): FoodState {
+  static setMealFoodItemsReceived(state: FoodUIState, action: Action): FoodUIState {
     const mealFoodItems: MealFoodItem[] = action.payload;
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        currentMealFoodItems: mealFoodItems
-      }
+      currentMealFoodItems: mealFoodItems
     };
   }
 
@@ -296,17 +274,14 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setSaveMealFoodItem(state: FoodState, action: Action): FoodState {
+  static setSaveMealFoodItem(state: FoodUIState, action: Action): FoodUIState {
     const mealFoodItem: MealFoodItem = action.payload;
 
-    const mealFoodItems = state.menuUI.currentMealFoodItems.filter((item) => item.id !== mealFoodItem.id);
+    const mealFoodItems = state.currentMealFoodItems.filter((item) => item.id !== mealFoodItem.id);
     mealFoodItems.push(mealFoodItem);
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        currentMealFoodItems: mealFoodItems
-      }
+      currentMealFoodItems: mealFoodItems
     };
   }
 
@@ -319,16 +294,13 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setDeleteMealFoodItem(state: FoodState, action: Action): FoodState {
+  static setDeleteMealFoodItem(state: FoodUIState, action: Action): FoodUIState {
     const mealFoodItem: MealFoodItem = action.payload;
 
-    const mealFoodItems = state.menuUI.currentMealFoodItems.filter((item) => item.id !== mealFoodItem.id);
+    const mealFoodItems = state.currentMealFoodItems.filter((item) => item.id !== mealFoodItem.id);
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        currentMealFoodItems: mealFoodItems
-      }
+      currentMealFoodItems: mealFoodItems
     };
 
   }
@@ -341,11 +313,11 @@ export class FoodActions {
    * 
    * @return {FoodState} next state
    */
-  static setMealEventScheduled(state: FoodState, action: Action) {
+  static setMealEventScheduled(state: FoodUIState, action: Action): FoodUIState {
     const mealEvent = action.payload;
 
 
-    const mealEvents = state.menuUI.mealEvents.filter((e) => e.id !== mealEvent.id);
+    const mealEvents = state.mealEvents.filter((e) => e.id !== mealEvent.id);
 
     mealEvents.push(mealEvent);
 
@@ -356,29 +328,37 @@ export class FoodActions {
       color: FoodActions.DEFAULT_COLOR
     };
 
-    const events = state.menuUI.events.slice();
+    const events = state.events.slice();
     events.push(event);
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        events: events,
-        mealEvents: mealEvents
-      }
+      events: events,
+      mealEvents: mealEvents
     };
   }
 
 
-  static setMealViolationsReceived(state: FoodState, action: Action) {
+  static setMealViolationsReceived(state: FoodUIState, action: Action): FoodUIState {
     const mealRulesViolations = action.payload;
 
     return {
       ...state,
-      menuUI: {
-        ...state.menuUI,
-        mealRulesViolations: mealRulesViolations
-      }
+      mealRulesViolations: mealRulesViolations
     };
+  }
+
+  static setShowBackground(state: FoodUIState, action: Action): FoodUIState {
+    return {
+      ...state,
+      showBackground: action.payload
+    }
+  }
+
+  static setShowWeekends(state: FoodUIState, action: Action): FoodUIState {
+    return {
+      ...state,
+      showWeekends: action.payload
+    }
   }
 
 }

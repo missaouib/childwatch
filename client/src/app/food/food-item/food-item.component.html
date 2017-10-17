@@ -1,14 +1,14 @@
 <div class="panel">
 	<form novalidate [formGroup]="foodItemForm" class="row">
 			<span class="col-xs-1">
-					<img class="small-img" *ngIf="mealFoodItem?.foodItem.category === 'MILK'" src="/assets/img/food/milk.svg" />
-					<img class="small-img" *ngIf="mealFoodItem?.foodItem.category === 'MEAT'" src="/assets/img/food/meat.svg" />
-					<img class="small-img" *ngIf="mealFoodItem?.foodItem.category === 'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
-					<img class="small-img" *ngIf="mealFoodItem?.foodItem.category === 'FRUIT'" src="/assets/img/food/fruit.svg" />
-					<img class="small-img" *ngIf="mealFoodItem?.foodItem.category === 'GRAIN'" src="/assets/img/food/grain.svg" />
-					<img class="small-img" *ngIf="!mealFoodItem || mealFoodItem?.foodItem.category === 'OTHER'" src="/assets/img/food/other.svg" />
-					<img *ngIf="mealFoodItem?.foodItem.isInfant()" class="small-img" src="/assets/img/food/infant.svg" />
-					<img *ngIf="mealFoodItem?.foodItem.isCN()" class="small-img" src="/assets/img/food/cn.svg" />
+					<img class="small-img" *ngIf="category(mealFoodItem?.foodItem) === 'MILK'" src="/assets/img/food/milk.svg" />
+					<img class="small-img" *ngIf="category(mealFoodItem?.foodItem) === 'MEAT'" src="/assets/img/food/meat.svg" />
+					<img class="small-img" *ngIf="category(mealFoodItem?.foodItem) === 'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
+					<img class="small-img" *ngIf="category(mealFoodItem?.foodItem) === 'FRUIT'" src="/assets/img/food/fruit.svg" />
+					<img class="small-img" *ngIf="category(mealFoodItem?.foodItem) === 'GRAIN'" src="/assets/img/food/grain.svg" />
+					<img class="small-img" *ngIf="!mealFoodItem || category(mealFoodItem?.foodItem) === 'OTHER'" src="/assets/img/food/other.svg" />
+					<img *ngIf="isInfant(mealFoodItem?.foodItem)" class="small-img" src="/assets/img/food/infant.svg" />
+					<img *ngIf="isCN(mealFoodItem?.foodItem)" class="small-img" src="/assets/img/food/cn.svg" />
 				
 			</span>					
 			<span *ngIf="!mealFoodItem" class="col-xs-11">
@@ -30,7 +30,7 @@
 	    
 			<span *ngIf="mealFoodItem" class="col-xs-4">
 				<strong class="form-control-static text-primary">{{mealFoodItem?.foodItem.description}}</strong>
-				<p><em>{{mealFoodItem?.foodItem.tagstring }}</em></p>
+				<p><em>{{tagstring(mealFoodItem?.foodItem)}}</em></p>
 			</span>
 			<span *ngIf="mealFoodItem" class="col-xs-3 "> 
 				<label>Quantity</label> 

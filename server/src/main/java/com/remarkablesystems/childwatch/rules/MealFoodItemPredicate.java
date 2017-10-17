@@ -16,11 +16,11 @@ public class MealFoodItemPredicate {
 
 	static Predicate<MealFoodItem> isVegItem = hasTag( "VEGETABLE" );
 
-	static Predicate<MealFoodItem> isVegJuiceItem = isVegItem.and( descriptionContains( "juice" ) );	
+	static Predicate<MealFoodItem> isVegJuiceItem = isVegItem.and( hasTag( "JUICE" ) );	
 	
 	static Predicate<MealFoodItem> isFruitItem = hasTag( "FRUIT" );
 			
-	static Predicate<MealFoodItem> isFruitJuiceItem = isFruitItem.and( descriptionContains( "juice") );
+	static Predicate<MealFoodItem> isFruitJuiceItem = isFruitItem.and( hasTag( "JUICE" ) );
 			
 	static Predicate<MealFoodItem> isWholeMilkItem = isMilkItem.and( descriptionContains( "whole" ) ); 
 
@@ -57,7 +57,7 @@ public class MealFoodItemPredicate {
 	}; };
 	
 	
-	static Predicate<MealFoodItem> hasNoAgeTags = (mealFoodItem) -> mealFoodItem.getFoodItem().getTags().stream().noneMatch( (tag) -> tag.getValue().startsWith("AGE_") );
+	static Predicate<MealFoodItem> hasNoAgeTags = (mealFoodItem) -> mealFoodItem.getFoodItem().getTags().stream().noneMatch( (tag) -> tag.getValue().startsWith( "AGE_" ) );
 	
 
 }

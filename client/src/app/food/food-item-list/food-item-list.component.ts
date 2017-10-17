@@ -1,4 +1,5 @@
-import {FoodItem} from '../model/food-item';
+import {FoodItem} from '../food.interfaces';
+import {FoodItemUtils} from '../model/food-item-utils';
 import {FoodStateService} from '../services/food-state.service';
 import {Component, OnInit, Input} from '@angular/core';
 
@@ -17,7 +18,7 @@ export class FoodItemListComponent implements OnInit {
   @Input()
   set ageGroup(ageGroup: string) {
 
-    this.AgeAppropriateItems = this.FoodItems.filter(item => item.isAppropriateForAgeGroup(ageGroup));
+    this.AgeAppropriateItems = this.FoodItems.filter(item => FoodItemUtils.isAppropriateForAgeGroup(item, ageGroup));
     this.filterFoodItems(this.filter);
   }
 
@@ -45,7 +46,7 @@ export class FoodItemListComponent implements OnInit {
       this.FoodItems = foodItems.slice();
       this.FoodItems.sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase()));
       this.totalItems = this.FoodItems.length;
-      this.AgeAppropriateItems = this.FoodItems.filter(item => item.isAppropriateForAgeGroup(this._ageGroup))
+      this.AgeAppropriateItems = this.FoodItems.filter(item => FoodItemUtils.isAppropriateForAgeGroup(item, this._ageGroup))
       this.PagedItems = this.AgeAppropriateItems;
 
     });
@@ -54,7 +55,7 @@ export class FoodItemListComponent implements OnInit {
   filterFoodItems(filter: string) {
     this.filter = filter;
     this.search = undefined;
-    const filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.AgeAppropriateItems : this.AgeAppropriateItems.filter(item => item.category === filter || item.hasTag(filter));
+    const filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.AgeAppropriateItems : this.AgeAppropriateItems.filter(item => FoodItemUtils.category(item) === filter || FoodItemUtils.hasTag(item, filter));
 
     this.currentPage = 1;
     this.totalItems = filteredList.length;
@@ -73,7 +74,7 @@ export class FoodItemListComponent implements OnInit {
 
     this.currentPage = 1;
     this.filter = this.search && this.search.length > 0 ? 'CUSTOM' : 'ALL';
-    const filteredList = this.search ? this.FoodItems.filter(item => item.description.toLowerCase().includes(this.search.toLowerCase())) : this.FoodItems;
+    const filteredList = this.search ? this.AgeAppropriateItems.filter(item => item.description.toLowerCase().includes(this.search.toLowerCase())) : this.AgeAppropriateItems;
     console.log('search = ' + this.search);
     this.totalItems = filteredList.length;
     this.PagedItems = filteredList;
@@ -82,5 +83,25 @@ export class FoodItemListComponent implements OnInit {
   limit(text: string, len?: number) {
     const _len = len || 30;
     return text.slice(0, _len) + (text.length > _len ? "..." : "");
+  }
+
+  category(item: FoodItem): string {
+    return FoodItemUtils.category(item);
+  }
+
+  isInfant(item: FoodItem): boolean {
+    return FoodItemUtils.isInfant(item);
+  }
+
+  isCN(item: FoodItem): boolean {
+    return FoodItemUtils.isCN(item);
+  }
+
+  tagstring(item: FoodItem): string {
+    return FoodItemUtils.tagstring(item);
+  }
+
+  agetagstring(item: FoodItem): string {
+    return FoodItemUtils.agetagstring(item);
   }
 }

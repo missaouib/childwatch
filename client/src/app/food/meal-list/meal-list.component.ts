@@ -46,6 +46,7 @@ export class MealListComponent implements OnInit {
 
   pagedMeals() {
     const start = (this.currentPage - 1) * 10;
+    this.totalItems = (this.filter !== 'ALL') ? this.PagedMeals.length : this.Meals.length;
     return (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.Meals.slice(start, start + 10);
   }
 

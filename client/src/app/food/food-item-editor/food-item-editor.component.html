@@ -36,16 +36,16 @@
 				<td class="col-sm-3">{{foodItem.description}}</td>
 				<td class="col-sm-3">{{foodItem.shortDescription}}</td>
 				<td class="col-sm-2">
-					<img class="small-img" *ngIf="foodItem.category === 'MILK'" src="/assets/img/food/milk.svg" />
-					<img class="small-img" *ngIf="foodItem.category === 'MEAT'" src="/assets/img/food/meat.svg" />
-					<img class="small-img" *ngIf="foodItem.category === 'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
-					<img class="small-img" *ngIf="foodItem.category === 'FRUIT'" src="/assets/img/food/fruit.svg" />
-					<img class="small-img" *ngIf="foodItem.category === 'GRAIN'" src="/assets/img/food/grain.svg" />
-					<img class="small-img" *ngIf="foodItem.category === 'OTHER'" src="/assets/img/food/other.svg" />
-					<img *ngIf="foodItem.isInfant()" class="small-img" src="/assets/img/food/infant.svg" />
-					<img *ngIf="foodItem.isCN()" class="small-img" src="/assets/img/food/cn.svg" />				
+					<img class="small-img" *ngIf="category(foodItem) === 'MILK'" src="/assets/img/food/milk.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'MEAT'" src="/assets/img/food/meat.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'FRUIT'" src="/assets/img/food/fruit.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'GRAIN'" src="/assets/img/food/grain.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'OTHER'" src="/assets/img/food/other.svg" />
+					<img *ngIf="isInfant(foodItem)" class="small-img" src="/assets/img/food/infant.svg" />
+					<img *ngIf="isCN(foodItem)" class="small-img" src="/assets/img/food/cn.svg" />				
 				</td>
-				<td class="col-sm-2">{{foodItem.agetagstring}}</td>
+				<td class="col-sm-2">{{agetagstring(foodItem)}}</td>
 				<td class="col-sm-1">{{foodItem.servingUom}}</td>
 				<td class="col-sm-1">{{foodItem.purchaseUom}}</td>
 			</tr>

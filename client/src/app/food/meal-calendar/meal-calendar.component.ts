@@ -97,8 +97,24 @@ export class MealCalendarComponent implements OnInit {
   activeDayIsOpen = false;
 
   showHideWeekends = [0, 6];
-  showWeekends = false;
-  showBackground = false;
+  _showWeekends = false;
+  _showBackground = false;
+
+  get showWeekends() {
+    return this._showWeekends;
+  }
+
+  set showWeekends(show: boolean) {
+    this.state.showWeekends(show);
+  }
+
+  get showBackground() {
+    return this._showBackground;
+  }
+
+  set showBackground(show: boolean) {
+    this.state.showBackground(show);
+  }
 
   eventList: Array<CalendarEvent<MealEvent>> = [];
 
@@ -127,6 +143,9 @@ export class MealCalendarComponent implements OnInit {
       this.eventList = events;
       this.refresh.next();
     });
+
+    this.state.canShowBackground.subscribe(show => {this._showBackground = show; this.refresh.next();});
+    this.state.canShowWeekends.subscribe(show => {this._showWeekends = show; this.flipWeekend(); this.refresh.next();});
 
   }
 
@@ -204,9 +223,9 @@ export class MealCalendarComponent implements OnInit {
     const _when = new Date(when) || new Date(this.viewDate);
 
     const mealEvent: CalendarEvent<MealEvent> = {
-      start: _when,
-      end: _when,
-      meta: this.createMealEvent(meal, _when),
+      start: new Date(_when),
+      end: new Date(_when),
+      meta: this.createMealEvent(meal, new Date(_when)),
       title: meal.description,
       color: {primary: 'red', secondary: 'yellow'}
     }

@@ -1,6 +1,6 @@
 import {ConfigService} from '../../config/config.service';
-import {MealFoodItem, Meal, MealRulesViolation} from '../food.interfaces';
-import {FoodItem} from '../model/food-item';
+import {MealFoodItem, Meal, MealRulesViolation, FoodItem} from '../food.interfaces';
+import {FoodItemUtils} from '../model/food-item-utils';
 import {Component, OnInit, HostListener} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UUID} from 'angular2-uuid';
@@ -54,6 +54,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   isValidating = false;
 
+  emptyShow = false;
 
   deletedList: string[] = [];
 
@@ -92,12 +93,12 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     else if (this.mealFoodItems.length < 1)
       return 'UNKNOWN / NO ITEMS';
 
-    return (this.rulesViolations.length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
+    return (this.rulesViolations.filter(v => v.severity === 'FAIL').length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
   }
 
   ageGroupCacfpStatus(ageGroup: string) {
     const foundItems = this.mealFoodItems.filter(fi => fi.ageGroup === ageGroup).length;
-    const foundViolations = this.rulesViolations.filter(rv => rv.ageGroup === ageGroup).length;
+    const foundViolations = this.rulesViolations.filter(rv => rv.ageGroup === ageGroup && rv.severity === 'FAIL').length;
     return (foundItems === 0 || this.dirtyFoodItems) ? 'UNKNOWN' :
       (foundViolations > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
   }
@@ -125,8 +126,15 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.dirtyFoodItems = true;
   }
 
+  compareMealFoodItems(a: MealFoodItem, b: MealFoodItem): number {
+    var catA = FoodItemUtils.category(a.foodItem);
+    var catB = FoodItemUtils.category(b.foodItem);
+    const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
+    return categories.indexOf(catA) - categories.indexOf(catB);
+  }
+
   mealFoodItemsFor(ageGroup: string) {
-    return this.mealFoodItems.filter(mfi => mfi.ageGroup === ageGroup);
+    return this.mealFoodItems.filter(mfi => mfi.ageGroup === ageGroup).sort(this.compareMealFoodItems);
   }
 
 
@@ -211,8 +219,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
 
-  rulesViolationsForCurrentAgeGroup() {
-    return this.rulesViolations.filter((v) => v.ageGroup === this.activeTab);
+  rulesViolationsForCurrentAgeGroup(severity: string) {
+    return this.rulesViolations.filter((v) => v.ageGroup === this.activeTab && v.severity === severity);
   }
 
   droppedFoodItem(foodItem: FoodItem) {

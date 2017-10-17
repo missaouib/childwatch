@@ -21,7 +21,7 @@ export class ConfigActions {
   supportedAgeGroup = ActionCreatorFactory.create<{ageGroup: string, supported: boolean}>(ConfigActions.SUPPORTED_AGEGROUP);
 
 
-  static configReducer(state: ConfigState = INITIAL_ConfigState, action: Action): ConfigState {
+  static reducer(state: ConfigState = INITIAL_ConfigState, action: Action): ConfigState {
     switch (action.type) {
       case ConfigActions.SUPPORTED_AGEGROUP:
         return ConfigActions.setSupportedAgeGroup(state, action);

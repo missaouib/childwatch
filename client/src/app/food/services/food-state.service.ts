@@ -2,9 +2,8 @@ import {AppState} from '../../app.state';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {Meal, MealEvent, MealFoodItem} from '../food.interfaces';
+import {Meal, MealEvent, MealFoodItem, FoodItem} from '../food.interfaces';
 import {FoodActions} from '../food.actions';
-import {FoodItem} from '../model/food-item';
 import {CalendarEvent} from 'angular-calendar';
 
 
@@ -20,7 +19,7 @@ export class FoodStateService {
   }
 
   get menus$(): Observable<MealEvent[]> {
-    return this.store.select(s => s.food.menuUI.mealEvents);
+    return this.store.select(s => s.food.mealEvents);
   }
 
   get meals$(): Observable<Meal[]> {
@@ -28,11 +27,11 @@ export class FoodStateService {
   }
 
   get mealEvents$(): Observable<Array<CalendarEvent<MealEvent>>> {
-    return this.store.select(s => s.food.menuUI.events);
+    return this.store.select(s => s.food.events);
   }
 
   get currentMealFoodItems$(): Observable<MealFoodItem[]> {
-    return this.store.select(s => s.food.menuUI.currentMealFoodItems);
+    return this.store.select(s => s.food.currentMealFoodItems);
   }
 
   adjustMenuTime(start: Date, end: Date) {
@@ -40,7 +39,7 @@ export class FoodStateService {
   }
 
   get currentMeal$(): Observable<Meal> {
-    return this.store.select(s => s.food.menuUI.currentMeal);
+    return this.store.select(s => s.food.currentMeal);
   }
 
   scheduleMealEvent(mealEvent: MealEvent) {
@@ -48,7 +47,7 @@ export class FoodStateService {
   }
 
   get mealRuleViolations$() {
-    return this.store.select(s => s.food.menuUI.mealRulesViolations);
+    return this.store.select(s => s.food.mealRulesViolations);
   }
 
 
@@ -71,8 +70,23 @@ export class FoodStateService {
   }
 
   removeEvent(event: CalendarEvent<MealEvent>) {
-    console.log('State - removeEvent ', event);
     this.store.dispatch(this.actions.removeMealEvent(event));
+  }
+
+  get canShowWeekends() {
+    return this.store.select(s => s.food.showWeekends);
+  }
+
+  showWeekends(show: boolean) {
+    this.store.dispatch(this.actions.showWeekends(show));
+  }
+
+  get canShowBackground() {
+    return this.store.select(s => s.food.showBackground);
+  }
+
+  showBackground(show: boolean) {
+    this.store.dispatch(this.actions.showBackground(show));
   }
 
 }

@@ -64,7 +64,7 @@
 	
 	<div class="row">
 	<accordion >
-	  <accordion-group #group [isOpen]="false" [panelClass]="customClass">
+	  <accordion-group #group [isOpen]="false">
 	    <div accordion-heading>
 	      <i class="fa fa-info-circle"></i> <strong>Meal Pattern Help</strong>
 	      <i class="pull-right float-xs-right glyphicon"
@@ -75,11 +75,23 @@
 	</accordion>
 	</div>
 	
-	<div class="row" *ngIf="mealCacfpStatus() === 'NONCOMPLIANT'">
-		<alert  [type]="'danger'">
-			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i>CACFP Compliance Errors</h4>	
-			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup()" >{{violation.message}}</li></ul>		
+	<div class="row">
+		<alert  [type]="'danger'" *ngIf="rulesViolationsForCurrentAgeGroup('FAIL').length">
+			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> CACFP Compliance Errors</h4>	
+			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup('FAIL')" >{{violation.severity}} {{violation.message}}</li></ul>		
 		</alert>	
+
+		<alert  [type]="'warning'" *ngIf="rulesViolationsForCurrentAgeGroup('WARN').length" >
+			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> CACFP Compliance Warnings</h4>	
+			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup('WARN')" >{{violation.message}}</li></ul>		
+		</alert>	
+
+		<alert  [type]="'info'" *ngIf="rulesViolationsForCurrentAgeGroup('INFO').length">
+			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> CACFP Compliance Info</h4>	
+			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup('INFO')" >{{violation.message}}</li></ul>		
+		</alert>	
+
+
 	</div>
 	
 	<div class="hidden-xs row">

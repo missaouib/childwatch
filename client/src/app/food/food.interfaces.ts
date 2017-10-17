@@ -1,6 +1,15 @@
-import {FoodItem} from './model/food-item';
 import {CalendarEvent} from 'angular-calendar';
 
+
+export interface FoodItem {
+  id: string;
+  description: string;
+  shortDescription: string;
+  purchaseUom: string;
+  servingUom: string;
+  notes: string;
+  tags: FoodItemTag[];
+}
 
 export interface Meal {
   id?: string;
@@ -9,9 +18,6 @@ export interface Meal {
   mealFoodItems?: MealFoodItem[];
 };
 
-export interface Link {
-  href: string;
-}
 
 export interface FoodItemTag {
   value: string;
@@ -49,22 +55,22 @@ export interface MealRulesViolation {
 };
 
 
-export interface MenuUIState {
+export interface FoodUIState {
+  foodItems: FoodItem[];
+  meals: Meal[];
   mealEvents: MealEvent[];
   events: Array<CalendarEvent<MealEvent>>;
   currentMeal: Meal;
   currentMealFoodItems: MealFoodItem[];
   currentAgeGroup: string;
   mealRulesViolations: MealRulesViolation[];
-}
-
-export const INITIAL_MEALSTATE: Meal = {
-  id: undefined,
-  description: undefined,
-  type: undefined
+  showWeekends: boolean;
+  showBackground: boolean;
 };
 
-export const INITIAL_MENUUISTATE: MenuUIState = {
+export const INITIAL_FoodUIState: FoodUIState = {
+  foodItems: [],
+  meals: [],
   mealEvents: [],
   events: [],
   currentMeal: {
@@ -74,31 +80,10 @@ export const INITIAL_MENUUISTATE: MenuUIState = {
   },
   currentMealFoodItems: [],
   currentAgeGroup: 'AGE_0-5MO',
-  mealRulesViolations: []
+  mealRulesViolations: [],
+  showWeekends: false,
+  showBackground: false
 };
 
-export interface Page {
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  number: number;
-};
-
-export interface FoodState {
-  foodItems: FoodItem[];
-  meals: Meal[];
-  menuUI: MenuUIState;
-};
-
-export const INITIAL_FOODSTATE: FoodState = {
-  foodItems: [],
-  meals: [],
-  menuUI: INITIAL_MENUUISTATE
-};
-
-export interface IData {
-  label: string;
-  value: number;
-};
 
 
