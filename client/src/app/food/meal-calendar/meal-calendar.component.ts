@@ -182,8 +182,8 @@ export class MealCalendarComponent implements OnInit {
   createMealEvent(meal: Meal, start?: Date): MealEvent {
     const mealEvent: MealEvent = {
       id: UUID.UUID(),
-      startDate: (start) ? new Date(start) : new Date(),
-      endDate: (start) ? new Date(start) : new Date(),
+      startDate: moment((start) ? new Date(start) : new Date()).toDate(),
+      endDate: moment((start) ? new Date(start) : new Date()).toDate(),
       recurrence: undefined,
       meal: meal
     };
@@ -220,16 +220,20 @@ export class MealCalendarComponent implements OnInit {
   }
 
   mealDropped(meal: Meal, when?: Date) {
-    const _when = new Date(when) || new Date(this.viewDate);
+
+    const _when = moment(new Date(when) || new Date(this.viewDate)).toDate();
+
+    console.log('Dropping meal on ' + _when);
+
 
     const mealEvent: CalendarEvent<MealEvent> = {
-      start: new Date(_when),
-      end: new Date(_when),
-      meta: this.createMealEvent(meal, new Date(_when)),
+      start: moment(new Date(_when)).toDate(),
+      end: moment(new Date(_when)).toDate(),
+      meta: this.createMealEvent(meal, moment(new Date(_when)).toDate()),
       title: meal.description,
       color: {primary: 'red', secondary: 'yellow'}
     }
-    this.viewDate = _when;
+    this.viewDate = moment(new Date(_when)).toDate();
     this.activeDayIsOpen = true;
     this.state.scheduleMealEvent(mealEvent.meta);
   }

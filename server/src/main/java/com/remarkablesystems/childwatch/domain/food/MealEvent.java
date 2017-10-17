@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 @Entity
@@ -24,10 +26,10 @@ public class MealEvent {
 	Meal meal;
 	
 	@Column( name="start_date" )
-	Date startDate;
+	java.sql.Timestamp startDate;
 
 	@Column( name="end_date" )
-	Date endDate;
+	java.sql.Timestamp endDate;
 	
 	@Enumerated(EnumType.STRING) @Column( name="recurrence" )
 	Recurrence recurrence;
@@ -44,7 +46,7 @@ public class MealEvent {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(java.sql.Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
@@ -52,7 +54,7 @@ public class MealEvent {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(java.sql.Timestamp endDate) {
 		this.endDate = endDate;
 	}
 

@@ -30,8 +30,8 @@
 	create table meal_event(
 		id 				varchar( 36 ) NOT NULL,
 		meal_id 		varchar(36),
-   		start_date      DATE NOT NULL,
-   		end_date        DATE NOT NULL DEFAULT DATE '12/31/3000',
+   		start_date      TIMESTAMP WITH TIME ZONE NOT NULL,
+   		end_date        TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT DATE '12/31/3000',
    		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) )
 	);
 	
