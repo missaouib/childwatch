@@ -2,17 +2,21 @@ import {FoodItem} from '../food.interfaces';
 export class FoodItemUtils {
 
   public static tagstring(foodItem: FoodItem): string {
+    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return "";
+
     return foodItem.tags.map(tag => tag.value).filter(tag => !tag.startsWith('AGE_')).join();
   }
 
   public static agetagstring(foodItem: FoodItem): string {
+    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return "";
+
     return foodItem.tags.map(tag => tag.value).filter(tag => tag.startsWith('AGE_')).join();
   }
 
   public static category(foodItem: FoodItem): string {
     if (FoodItemUtils.tagContainsAll(foodItem, ['MILK']))
       return 'MILK';
-    else if (FoodItemUtils.tagContainsAll(foodItem, ['VEGIE']))
+    else if (FoodItemUtils.tagContainsAll(foodItem, ['VEGETABLE']))
       return 'VEGETABLE';
     else if (FoodItemUtils.tagContainsAll(foodItem, ['FRUIT']))
       return 'FRUIT';
@@ -49,6 +53,9 @@ export class FoodItemUtils {
   }
 
   static tagContainsAll(foodItem: FoodItem, items: string[]) {
+
+    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return false;
+
     const arr = foodItem.tags.map(tag => tag.value);
     for (var i = 0; i < items.length; i++) {
       if (arr.indexOf(items[i]) === -1)
@@ -58,6 +65,8 @@ export class FoodItemUtils {
   }
 
   static tagContainsAny(foodItem: FoodItem, items: string[]) {
+    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return false;
+
     const arr = foodItem.tags.map(tag => tag.value);
     return items.some(v => arr.indexOf(v) >= 0);
   }

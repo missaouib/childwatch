@@ -46,7 +46,17 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   mealForm: FormGroup;
 
   AGEGROUPS: string[] = []; // = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
-  activeTab: string = undefined; // 'AGE_0_5MO';
+
+  _activeTab: string = undefined; // 'AGE_0_5MO';
+
+  set activeTab(tab: string) {
+    this._activeTab = tab;
+    this.emptyShow = false;
+  }
+
+  get activeTab(): string {
+    return this._activeTab;
+  }
 
   dirtyFoodItems = false;
 
@@ -105,7 +115,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
-    return !this.mealForm.dirty && !this.dirtyFoodItems;
+    return !this.mealForm.dirty && !this.dirtyFoodItems && !this.emptyShow;
   }
 
 
@@ -224,9 +234,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   droppedFoodItem(foodItem: FoodItem) {
-    console.log('Adding ', foodItem);
-    this.addMealFoodItem(foodItem);
-
+    if (foodItem)
+      this.addMealFoodItem(foodItem);
+    this.emptyShow = false;
   }
 
 }

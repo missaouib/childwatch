@@ -68,6 +68,7 @@ export class FoodItemComponent implements OnInit {
   }
 
   selectItem(foodItem: FoodItem) {
+    console.log('selected item ', foodItem);
     this.selectedItem.emit(foodItem);
     this.foodItemForm.reset();
   }

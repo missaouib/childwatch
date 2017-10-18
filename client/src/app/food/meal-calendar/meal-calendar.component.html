@@ -19,6 +19,17 @@
 </div>
 </ng-template>
 
+<ng-template #modalTemplate>
+	  <div class="modal-header">
+	    <h4 class="modal-title pull-left">Meal type already planned</h4>
+	  </div>
+	  <div class="modal-body">
+	    There is already a {{mealToDrop?.type}} planned for this day.  Do you want to replace it or cancel? <br/><br/>
+	    <hr/>
+	    <div class="text-center"><button class="btn btn-default" (click)="replaceMeal()">Replace</button> <button class="btn" (click)="modalRef.hide(); mealToDrop=undefined; whenToDropp=undefined;">Cancel</button></div>
+	  </div>
+</ng-template>
+
 
 <div class="container-fluid">
 

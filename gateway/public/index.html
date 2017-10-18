@@ -1,8 +1,86 @@
-<h1>Childwatch Gateway</h1>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-<ul>
-	<li><a href="/client/2">Test Client ABC</a></li>
-	<li><a href="/client/3">Test Client XYZ</a></li>
-	<li><a href="/client/2/ageexcept/AGE_0_5MO,AGE_6_11MO">Test Client ABC (ages <1 yr only)</a></li>
-	<li><a href="/client/3/ageexcept/AGE_ADULT">Test Client XYZ (except adult)</a></li>
-</ul>
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://use.fontawesome.com/cf0a7cbf0b.js"></script>
+
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Childwatch Gateway</a>
+    </div>
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Version</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="col-xs-3"><a href="/client/2" target="_blank">Client ABC <i class="fa fa-external-link"></i></a></td>
+			<td class="col-xs-4">Full test client for ABC</td>
+			<td class="col-xs-2">Beta 13</td>
+			<td class="col-xs-3"><button class="disabled btn btn-success"><i class="fa fa-play"></i> Start</button><button class="disabled btn btn-danger"><i class="fa fa-stop"></i> Stop</button><button class="disabled btn"><i class="fa fa-trash"></i> Drop Tables</button></td>
+		</tr>
+		<tr>
+			<td ><a href="/client/3" target="_blank">Client XYZ <i class="fa fa-external-link"></i></a></td>
+			<td>Full test client for XYZ</td>
+			<td>Beta 13</td>
+			<td><button class="disabled btn btn-success"><i class="fa fa-play"></i> Start</button><button class="disabled btn btn-danger"><i class="fa fa-stop"></i> Stop</button><button class="disabled btn"><i class="fa fa-trash"></i> Drop Tables</button></td>
+		</tr>
+		<tr>
+			<td ><a href="/client/4" target="_blank">Client A <i class="fa fa-external-link"></i></a></td>
+			<td>Full test client for A</td>
+			<td>Beta 13</td>
+			<td><button class="disabled btn btn-success"><i class="fa fa-play"></i> Start</button><button class="disabled btn btn-danger"><i class="fa fa-stop"></i> Stop</button><button class="disabled btn"><i class="fa fa-trash"></i> Drop Tables</button></td>
+		</tr>
+		<tr>
+			<td><a href="/client/2/ageexcept/AGE_1_2YR,AGE_3_5YR,AGE_6_12YR,AGE_13_18YR,AGE_ADULT" target="_blank">Client ABC (infant only) <i class="fa fa-external-link"></i></a></td>
+			<td>Test client for ABC (infant only)</td>
+			<td>Beta 13</td>
+			<td><button class="disabled btn btn-success"><i class="fa fa-play"></i> Start</button><button class="disabled btn btn-danger"><i class="fa fa-stop"></i> Stop</button><button class="disabled btn"><i class="fa fa-trash"></i> Drop Tables</button></td>
+		</tr>
+		<tr>
+			<td><a href="/client/3/ageexcept/AGE_ADULT" target="_blank">Client XYZ (except ADULT) <i class="fa fa-external-link"></i></a></td>
+			<td>Test client for XYZ (except ADULT)</td>
+			<td>Beta 13</td>
+			<td><button class="disabled btn btn-success"><i class="fa fa-play"></i> Start</button><button class="disabled btn btn-danger"><i class="fa fa-stop"></i> Stop</button><button class="disabled btn"><i class="fa fa-trash"></i> Drop Tables</button></td>
+		</tr>
+		<tr>
+			<td><a href="/client/1" target="_blank">Localhost/Dev client <i class="fa fa-external-link"></i></a></td>
+			<td>Test client localhost (use only in dev environments)</td>
+			<td>Latest</td>
+			<td><button class="disabled btn btn-success"><i class="fa fa-play"></i> Start</button><button class="disabled btn btn-danger"><i class="fa fa-stop"></i> Stop</button><button class="disabled btn"><i class="fa fa-trash"></i> Drop Tables</button></td>
+		</tr>
+
+	</tbody>
+	
+
+</table>
+
+<div>
+	<hr />
+	<a><i class="text-info fa fa-plus-circle"></i> Add client...</a>	
+</div>
+
+</div>

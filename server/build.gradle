@@ -24,7 +24,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
 
-version = '2.0.0-BETA.12'
+version = '2.0.0-BETA.13'
 sourceCompatibility = 1.8
 
 repositories {
@@ -58,7 +58,7 @@ springBoot {
 
 task buildDocker(type: Docker) {
   baseImage = 'develar/java:latest'
-  push = true
+  push = project.hasProperty('push')
   tag = 'bisonburger/childwatch'
   addFile {
     from jar

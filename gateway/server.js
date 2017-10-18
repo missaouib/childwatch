@@ -7,7 +7,8 @@ app.use( basicAuth( 'admin', 'childwatch!@' ) );
 const routeTable = {
 	client1: 'http://localhost:8080',
 	client2: 'http://162.244.67.121:8081',
-	client3: 'http://162.244.67.121:53754'
+	client3: 'http://162.244.67.121:53754',
+	client4: 'http://162.244.67.121:8082'	
 };
 
 function redirect( req, res, clientId, ageException ) {

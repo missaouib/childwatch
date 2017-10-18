@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, ElementRef} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {CalendarEvent, CalendarMonthViewDay} from 'angular-calendar';
 
@@ -8,6 +8,8 @@ import {MealService} from '../services/meal.service';
 import * as moment from 'moment';
 import {Router} from '@angular/router';
 import {UUID} from 'angular2-uuid';
+import {BsModalService} from 'ngx-bootstrap/modal';
+import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 
 @Component({
   selector: 'cw-meal-calendar',
@@ -92,6 +94,11 @@ import {UUID} from 'angular2-uuid';
 })
 export class MealCalendarComponent implements OnInit {
 
+  @ViewChild('modalTemplate') modal: ElementRef;
+
+  mealToDrop: Meal = undefined;
+  whenToDrop: Date = undefined;
+
   viewDate: Date = new Date();
   view = 'month';
   activeDayIsOpen = false;
@@ -126,10 +133,13 @@ export class MealCalendarComponent implements OnInit {
 
   selectedDaysMeals: Meal[] = [];
 
+  modalRef: BsModalRef;
+
   constructor(
     private state: FoodStateService,
     private mealSvc: MealService,
     private router: Router,
+    private modalSvc: BsModalService
   ) {}
 
   ngOnInit() {
@@ -215,8 +225,41 @@ export class MealCalendarComponent implements OnInit {
   }
 
 
+
   afterStart(date: Date) {
     return moment(date).diff(moment('01/10/2017', 'DD/MM/YYYY'), 'days') >= 0;
+  }
+
+  showDialog() {
+    this.modalRef = this.modalSvc.show(this.modal, {ignoreBackdropClick: true});
+  }
+
+
+  replaceMeal() {
+    if (this.mealToDrop && this.whenToDrop) {
+      this.eventList.filter(e => moment(e.start).diff(this.whenToDrop, 'days') === 0 && e.meta.meal.type === this.mealToDrop.type).forEach(event => this.removeEvent(event));
+      this.dropMeal(this.mealToDrop, this.whenToDrop);
+      this.mealToDrop = undefined;
+      this.whenToDrop = undefined;
+    }
+    this.modalRef.hide();
+  }
+
+  mealTypeAlreadyPlanned(meal: Meal, when: Date) {
+    return this.eventList.filter(e => moment(e.start).diff(when, 'days') === 0 && e.meta.meal.type === meal.type).length > 0;
+  }
+
+  dropMeal(meal: Meal, when: Date) {
+    const mealEvent: CalendarEvent<MealEvent> = {
+      start: moment(new Date(when)).toDate(),
+      end: moment(new Date(when)).toDate(),
+      meta: this.createMealEvent(meal, moment(new Date(when)).toDate()),
+      title: meal.description,
+      color: {primary: 'red', secondary: 'yellow'}
+    }
+    this.viewDate = moment(new Date(when)).toDate();
+    this.activeDayIsOpen = true;
+    this.state.scheduleMealEvent(mealEvent.meta);
   }
 
   mealDropped(meal: Meal, when?: Date) {
@@ -225,17 +268,16 @@ export class MealCalendarComponent implements OnInit {
 
     console.log('Dropping meal on ' + _when);
 
-
-    const mealEvent: CalendarEvent<MealEvent> = {
-      start: moment(new Date(_when)).toDate(),
-      end: moment(new Date(_when)).toDate(),
-      meta: this.createMealEvent(meal, moment(new Date(_when)).toDate()),
-      title: meal.description,
-      color: {primary: 'red', secondary: 'yellow'}
+    if (this.mealTypeAlreadyPlanned(meal, _when)) {
+      this.mealToDrop = meal;
+      this.whenToDrop = _when;
+      this.showDialog()
     }
-    this.viewDate = moment(new Date(_when)).toDate();
-    this.activeDayIsOpen = true;
-    this.state.scheduleMealEvent(mealEvent.meta);
+    else {
+      this.dropMeal(meal, _when);
+    }
+
+
   }
 
   flipWeekend() {

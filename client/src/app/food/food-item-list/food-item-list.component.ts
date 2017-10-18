@@ -19,7 +19,10 @@ export class FoodItemListComponent implements OnInit {
   set ageGroup(ageGroup: string) {
 
     this.AgeAppropriateItems = this.FoodItems.filter(item => FoodItemUtils.isAppropriateForAgeGroup(item, ageGroup));
-    this.filterFoodItems(this.filter);
+    if (this.filter === 'CUSTOM')
+      this.searchList();
+    else
+      this.filterFoodItems(this.filter);
   }
 
   get ageGroup() {return this._ageGroup;}
@@ -66,7 +69,9 @@ export class FoodItemListComponent implements OnInit {
   pagedFoodItems() {
     const start = (this.currentPage - 1) * 10;
 
-    return ((this.filter !== 'ALL') ? this.PagedItems : this.AgeAppropriateItems).slice(start, start + 10);
+    const foodItemsList = ((this.filter !== 'ALL') ? this.PagedItems : this.AgeAppropriateItems).slice(start, start + 10);
+
+    return foodItemsList.sort((a, b) => a.shortDescription.toLowerCase().localeCompare(b.shortDescription.toLowerCase()))
   }
 
 
