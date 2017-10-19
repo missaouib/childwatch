@@ -279,14 +279,25 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	static MealRule mustHaveFlavoredFatFree = MealRule.create( "mustHaveFlavoredFatFree" )
 			.appliesTo( is6OrOver.and( hasFlavoredMilkComponent) ) 
 			.when( hasLowFatOrFatFreeMilkComponent.negate() )
-			.thenFail( "Flavored milk must be low-fat/fat-free" );	
+			.thenFail( "Flavored milk must be low-fat/fat-free" );
 	
+	static MealRule noMilkAndJuiceForSnack = MealRule.create( "noMilkAndJuiceForSnack" )
+			.appliesTo( isNonInfant.and( isSnack ) )
+			.when( hasAllItems( isMilkItem.or(hasTag( "JUICE" ) ) )
+				   .and( hasAtLeastCountItems( 1, isMilkItem ) )
+				   .and( hasAtLeastCountItems( 1, hasTag("JUICE") ) )
+				)
+			.thenFail( "Cannot serve milk and juice for snacks" );
+			
+			
+
 	
 	static List<MealRule> RULES = Arrays.asList( 
 			noInfantFoods,
 			warnOnlyMeatSubThreeTimePerWeek,
 			noFlavoredUnderSix,
 			mustHaveFlavoredFatFree,
+			noMilkAndJuiceForSnack,
 			
 			breakfast_1_2YR,
 			lunchdinner_1_2YR,

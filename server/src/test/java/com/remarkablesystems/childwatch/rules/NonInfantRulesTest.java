@@ -483,5 +483,50 @@ public class NonInfantRulesTest {
 		assertTrue( violations.isEmpty() );
 	}
 
+	@Test
+	public void child1_2Snack_MilkFruitJuice() {
+		Meal meal = SNACK;
+		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( FRUITJUICE, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertFalse( violations.isEmpty() );
+	}
+
+	public void child1_2Snack_MilkVegJuice() {
+		Meal meal = SNACK;
+		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( VEGJUICE, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertFalse( violations.isEmpty() );
+	}
+
+	public void child1_2Snack_MilkFruitVegJuice() {
+		Meal meal = SNACK;
+		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( VEGJUICE, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
+			new MealFoodItem( PEACHES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+			
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
+
 
 }
