@@ -1,5 +1,6 @@
 package com.remarkablesystems.childwatch.domain.food.projection;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.rest.core.config.Projection;
@@ -16,7 +17,17 @@ public interface FoodItemFull{
 	String getPurchaseUom();
 	String getServingUom();
 	
+	String getNotes();
+	
 	Set<FoodItemTag> getTags();
+	
+	List<FoodItemFull> getComponents();
+	FoodItemFull getParent();
+	
+	double getServingQuantity();
+	public String getServingType();
+	double getPortionSize();
+
 
 	
 }

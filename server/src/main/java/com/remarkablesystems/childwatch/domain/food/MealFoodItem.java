@@ -3,7 +3,7 @@ package com.remarkablesystems.childwatch.domain.food;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import java.math.BigDecimal;
+import com.remarkablesystems.childwatch.domain.food.projection.MealFoodItemFull;
 
 
 /**

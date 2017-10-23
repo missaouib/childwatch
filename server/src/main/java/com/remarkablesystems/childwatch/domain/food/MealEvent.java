@@ -1,5 +1,6 @@
 package com.remarkablesystems.childwatch.domain.food;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,10 +14,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.remarkablesystems.childwatch.domain.food.projection.MealEventFull;
+
 
 @Entity
 @Table(name="meal_event")
-public class MealEvent {
+public class MealEvent implements Serializable {
+
+	private static final long serialVersionUID = -5742620367800403437L;
 
 	@Id
 	private String id;

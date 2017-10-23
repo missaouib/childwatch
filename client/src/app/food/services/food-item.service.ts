@@ -26,8 +26,7 @@ export class FoodItemService {
 
     return this.http.get(this.URL, {search: params})
       .map(res => res.json())
-      .map(({_embedded: {foodItems}}) =>
-        this.store.dispatch(this.actions.foodItemsReceived(foodItems)));
+      .map(({_embedded: {foodItems}}) => this.store.dispatch(this.actions.foodItemsReceived(foodItems)));
   }
 
   update(foodItem: FoodItem) {

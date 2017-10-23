@@ -3,6 +3,8 @@ package com.remarkablesystems.childwatch.domain.food;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.remarkablesystems.childwatch.domain.food.projection.MealFull;
+
 
 
 /**

@@ -12,12 +12,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.remarkablesystems.childwatch.domain.food.projection.FoodItemFull;
 
 
 @Entity 
 @Table(name="food_item")
-public class FoodItem implements Serializable {
+public class FoodItem implements Serializable{
 
 	private static final long serialVersionUID = 3576833611221593267L;
 
@@ -38,7 +41,55 @@ public class FoodItem implements Serializable {
 	@Column(name="notes")
 	private String notes;
 	
+	@ManyToOne
+	@JoinColumn(name="parent_id")
+	private FoodItem parent;
 	
+	@OneToMany( mappedBy="parent" )
+	private List<FoodItem> components;
+	
+	@Column(name="serving_quantity")
+	private double servingQuantity;
+	
+	@Column(name="serving_type")
+	private String servingType;
+	
+	@Column(name="portion_size")
+	private double portionSize;
+	
+	
+	public double getServingQuantity() {
+		return servingQuantity;
+	}
+
+	public void setServingQuantity(double servingQuantity) {
+		this.servingQuantity = servingQuantity;
+	}
+
+	public String getServingType() {
+		return servingType;
+	}
+
+	public void setServingType(String servingType) {
+		this.servingType = servingType;
+	}
+
+	public double getPortionSize() {
+		return portionSize;
+	}
+
+	public void setPortionSize(double portionSize) {
+		this.portionSize = portionSize;
+	}
+
+	public FoodItem getParent() {
+		return parent;
+	}
+
+	public List<FoodItem> getComponents() {
+		return components;
+	}
+
 	@ElementCollection
 	@CollectionTable(
 			name="food_item_tag",

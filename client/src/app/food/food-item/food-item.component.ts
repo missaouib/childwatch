@@ -88,6 +88,31 @@ export class FoodItemComponent implements OnInit {
     return FoodItemUtils.isInfant(item);
   }
 
+  isMilk(item: FoodItem): boolean {
+    return FoodItemUtils.hasTag(item, 'MILK');
+  }
+
+
+  isMeat(item: FoodItem): boolean {
+    return FoodItemUtils.hasTag(item, 'MEAT') || FoodItemUtils.hasTag(item, 'MEATALT');
+  }
+
+  isVegetable(item: FoodItem): boolean {
+    return FoodItemUtils.hasTag(item, 'VEGETABLE');
+  }
+
+  isFruit(item: FoodItem): boolean {
+    return FoodItemUtils.hasTag(item, 'FRUIT');
+  }
+
+  isGrain(item: FoodItem): boolean {
+    return FoodItemUtils.hasTag(item, 'GRAIN');
+  }
+
+  isOther(item: FoodItem): boolean {
+    return this.category(item) === 'OTHER';
+  }
+
   isCN(item: FoodItem): boolean {
     return FoodItemUtils.isCN(item);
   }

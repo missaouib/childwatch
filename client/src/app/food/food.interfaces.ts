@@ -9,6 +9,11 @@ export interface FoodItem {
   servingUom: string;
   notes: string;
   tags: FoodItemTag[];
+  components: FoodItem[];
+  parent: FoodItem;
+  servingQuantity: number;
+  servingType: string;
+  portionSize: number;
 }
 
 export interface Meal {

@@ -43,7 +43,6 @@ public class InfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
-
 	
 	@Test
 	public void infant0_5Breakfast_SumQuantities() {
@@ -69,6 +68,17 @@ public class InfantRulesTest {
 		
 		assertFalse( violations.isEmpty() );
 	}	
+	
+	@Test
+	public void infant0_5Breakfast_MassQuantity() {
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( BREASTMILK, AgeGroup.AGE_0_5MO, 300, UnitOfMeasure.OUNCES, BREAKFAST ) 
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(BREAKFAST, AgeGroup.AGE_0_5MO, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
 	
 	
 	@Test
