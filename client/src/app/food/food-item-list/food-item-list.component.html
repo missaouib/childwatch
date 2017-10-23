@@ -53,7 +53,8 @@
 					<span class="hidden-sm hidden-md">{{foodItem.shortDescription}}</span>
 					<span class="hidden-lg">{{limit( foodItem.shortDescription )}}</span>
 				</strong><br />
-				<span class="hidden-sm hidden-xs"><em>{{tagstring(foodItem)}}</em></span>
+				<span *ngIf="!isCN(foodItem)" class="hidden-sm hidden-xs"><em>{{tagstring(foodItem)}}</em></span>
+				<span *ngIf="isCN(foodItem)" class="hidden-sm hidden-xs"><em>{{cnItemString(foodItem)}}</em></span>
 			</td>
 			<td class="col-sm-1">
 				<i *ngIf="false" (click)="foodItem.favorite = !foodItem.favorite" class="text-warning fa" [class.fa-star-o]="!foodItem.favorite" [class.fa-star]="foodItem.favorite"></i>

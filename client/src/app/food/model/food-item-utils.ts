@@ -4,7 +4,7 @@ export class FoodItemUtils {
   public static tagstring(foodItem: FoodItem): string {
     if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return "";
 
-    return foodItem.tags.map(tag => tag.value).filter(tag => !tag.startsWith('AGE_')).join();
+    return foodItem.tags.map(tag => tag.value).filter(tag => !tag.startsWith('AGE_') && tag !== 'CNITEM').join();
   }
 
   public static agetagstring(foodItem: FoodItem): string {
@@ -24,6 +24,8 @@ export class FoodItemUtils {
       return 'MEAT';
     else if (FoodItemUtils.tagContainsAll(foodItem, ['GRAIN']))
       return 'GRAIN';
+    else if (FoodItemUtils.tagContainsAll(foodItem, ['CNITEM']))
+      return 'CNITEM';
     else return 'OTHER';
   }
 
@@ -69,6 +71,18 @@ export class FoodItemUtils {
 
     const arr = foodItem.tags.map(tag => tag.value);
     return items.some(v => arr.indexOf(v) >= 0);
+  }
+
+  static cnItemString(foodItem: FoodItem) {
+    var str = "1 serving = ";
+    if (foodItem.servingType)
+      str = str + (foodItem.servingQuantity + " " + foodItem.servingType) + " ( " + (foodItem.portionSize + " oz") + " );";
+    else
+      str = str + (foodItem.portionSize + " oz;");
+
+    foodItem.components.forEach(component => str = str + " " + component.portionSize + " oz " + FoodItemUtils.tagstring(component));
+
+    return str;
   }
 
 }

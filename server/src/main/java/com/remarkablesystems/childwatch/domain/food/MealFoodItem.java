@@ -94,8 +94,5 @@ public class MealFoodItem implements Serializable {
 	public void setUnit(UnitOfMeasure unit) {
 		this.unit = unit;
 	}
-	
-	
-	
 
 }

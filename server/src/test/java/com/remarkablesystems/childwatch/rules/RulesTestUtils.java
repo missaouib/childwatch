@@ -23,6 +23,7 @@ public class RulesTestUtils {
 	public static FoodItem CHOCOLATEMILK = new FoodItem( "skim chocolate milk", "skim chocolate milk", Arrays.asList( "MILK" ) );	
 	public static FoodItem CEREAL = new FoodItem( "cereal", "cereal", Arrays.asList( "GRAIN", "CEREAL" ) );
 	public static FoodItem CORN = new FoodItem( "corn", "corn", Arrays.asList( "VEGETABLE" ) );	
+	public static FoodItem POTATOES = new FoodItem( "potatoes", "potatoes", Arrays.asList( "VEGETABLE" ) );	
 	public static FoodItem PEACHES = new FoodItem( "peaches", "peaches", Arrays.asList( "FRUIT" ) );
 	public static FoodItem MEAT = new FoodItem( "meat", "meat", Arrays.asList( "MEAT" ) );
 	public static FoodItem BREAD = new FoodItem( "bread", "bread", Arrays.asList( "GRAIN", "BREAD" ) );

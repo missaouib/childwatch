@@ -30,6 +30,9 @@ public class MealPredicate {
 	
 	static BiPredicate<Meal,List<MealFoodItem>> hasAtLeastCountItems( int count, Predicate<MealFoodItem> any) { return (meal,item) -> item.stream().filter( any ).count() >= count; }
 	
+	static BiPredicate<Meal,List<MealFoodItem>> hasAtLeastCountItemsDistinct( int count, Predicate<MealFoodItem> any) { return (meal,item) -> item.stream().filter( any ).map( mfi -> mfi.getFoodItem() ).distinct().count() >= count; }
+
+	
 	/**
 	 * Predicate for mustHave items; this predicate will fail if the item is not present or if the item is present but not in sufficient quantities
 	 * 

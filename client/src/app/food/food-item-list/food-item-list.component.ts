@@ -109,4 +109,9 @@ export class FoodItemListComponent implements OnInit {
   agetagstring(item: FoodItem): string {
     return FoodItemUtils.agetagstring(item);
   }
+
+  cnItemString(foodItem: FoodItem): string {
+    return FoodItemUtils.cnItemString(foodItem);
+  }
+
 }

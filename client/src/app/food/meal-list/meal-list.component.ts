@@ -27,6 +27,7 @@ export class MealListComponent implements OnInit {
   }
 
   filterMeals(filter: string) {
+
     this.filter = filter;
     this.search = undefined;
     const filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.Meals : this.Meals.filter(meal => meal.type === filter);

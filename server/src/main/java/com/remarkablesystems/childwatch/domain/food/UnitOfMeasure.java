@@ -10,9 +10,7 @@ public enum UnitOfMeasure {
 	GALLONS,
 	CUPS,
 	SERVINGS,
-	TABLESPOONS,
-	SLICE,
-	EACH;	
+	TABLESPOONS;	
 	
 	
 	public static boolean canConvert( UnitOfMeasure from, UnitOfMeasure to ) {
@@ -50,20 +48,10 @@ public enum UnitOfMeasure {
 	static DoubleFunction<Double> OUNCES_CUPS = (value) -> value / 8;
 	static DoubleFunction<Double> CUPS_OUNCES = (value) -> value * 8;
 	static DoubleFunction<Double> OUNCES_TABLESPOONS = (value) -> value * 2;
-	static DoubleFunction<Double> TABLESPOONS_OZ = (value) -> value / 2;
+	static DoubleFunction<Double> TABLESPOONS_OUNCES = (value) -> value / 2;
 
 	static DoubleFunction<Double> UNITS_SERVINGS = (value) -> value;
 	static DoubleFunction<Double> SERVINGS_UNITS = (value) -> value;
-	static DoubleFunction<Double> UNITS_EACH = (value) -> value;
-	static DoubleFunction<Double> EACH_UNITS = (value) -> value;
-	static DoubleFunction<Double> UNITS_SLICE = (value) -> value;
-	static DoubleFunction<Double> SLICE_UNITS = (value) -> value;
-	static DoubleFunction<Double> EACH_SLICE = (value) -> value;
-	static DoubleFunction<Double> SLICE_EACH = (value) -> value;
-	static DoubleFunction<Double> SERVINGS_EACH = (value) -> value;
-	static DoubleFunction<Double> EACH_SERVINGS = (value) -> value;
-	static DoubleFunction<Double> SERVINGS_SLICE = (value) -> value;
-	static DoubleFunction<Double> SLICE_SERVINGS = (value) -> value;
 
 	static DoubleFunction<Double> GALLONS_CUPS = (value) -> value * 16;
 	static DoubleFunction<Double> CUPS_GALLONS = (value) -> value / 16;

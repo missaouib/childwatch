@@ -24,9 +24,9 @@ public class MealFoodItemPredicate {
 			
 	static Predicate<MealFoodItem> isWholeMilkItem = isMilkItem.and( descriptionContains( "whole" ) ); 
 
-	static Predicate<MealFoodItem> isFlavoredMilkItem = isMilkItem.and( descriptionContains("chocolate" ) ); 
+	static Predicate<MealFoodItem> isFlavoredMilkItem = isMilkItem.and( descriptionContains("chocolate" ).or( descriptionContains("flavored").and(descriptionContains("unflavored").negate()) ) ); 
 			
-	static Predicate<MealFoodItem> isLowFatOrFatFreeMilkItem = isMilkItem.and( descriptionContains( Arrays.asList("lowfat", "1%", "1 %", "skim" ) ) ); 
+	static Predicate<MealFoodItem> isLowFatOrFatFreeMilkItem = isMilkItem.and( descriptionContains( Arrays.asList("lowfat", "1%", "1 %", "skim","low-fat" ) ) ); 
 						
 	static Predicate<MealFoodItem> isVegOrFruitItem = isVegItem.or( isFruitItem );
 			
@@ -52,7 +52,6 @@ public class MealFoodItemPredicate {
 	
 	static Predicate<MealFoodItem> hasTag(String type) { return ( mealFoodItem ) -> {			
 		FoodItem item = mealFoodItem.getFoodItem();
-		item.getTags().stream().forEach( t -> System.out.println(t.getValue()) );
 		return item != null && item.hasTag(type);
 	}; };
 	

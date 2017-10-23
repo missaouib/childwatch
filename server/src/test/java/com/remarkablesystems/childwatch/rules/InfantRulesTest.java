@@ -191,7 +191,7 @@ public class InfantRulesTest {
 	public void infant6_11Snack_Valid() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.OUNCES, SNACK ),
-			new MealFoodItem( INFANT_BREAD, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.EACH, SNACK )
+			new MealFoodItem( INFANT_BREAD, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.OUNCES, SNACK )
 		);	
 		
 		List<RuleViolation> violations = ctrl.doValidation(SNACK, AgeGroup.AGE_6_11MO, mealFoodItems);
@@ -203,7 +203,7 @@ public class InfantRulesTest {
 	public void infant6_11Snack_InvalidFruitJuice() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( INFANT_FRUITJUICE, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.OUNCES, SNACK ),
-			new MealFoodItem( INFANT_BREAD, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.EACH, SNACK )
+			new MealFoodItem( INFANT_BREAD, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.OUNCES, SNACK )
 		);	
 		
 		List<RuleViolation> violations = ctrl.doValidation(SNACK, AgeGroup.AGE_6_11MO, mealFoodItems);
@@ -215,7 +215,7 @@ public class InfantRulesTest {
 	public void infant6_11Snack_ValidCrackers() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.OUNCES, SNACK ),
-				new MealFoodItem( INFANT_CRACKER, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.EACH, SNACK )
+				new MealFoodItem( INFANT_CRACKER, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.OUNCES, SNACK )
 			);	
 		
 		List<RuleViolation> violations = ctrl.doValidation(SNACK, AgeGroup.AGE_6_11MO, mealFoodItems);
@@ -227,7 +227,7 @@ public class InfantRulesTest {
 	public void infant6_11Snack_InvalidQuantity() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( INFANT_PEACHES, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.OUNCES, SNACK ), 
-			new MealFoodItem( INFANT_BREAD, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.EACH, SNACK )
+			new MealFoodItem( INFANT_BREAD, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.OUNCES, SNACK )
 		);	
 		
 		List<RuleViolation> violations = ctrl.doValidation(SNACK, AgeGroup.AGE_6_11MO, mealFoodItems);
@@ -241,7 +241,7 @@ public class InfantRulesTest {
 	public void infant6_11Snack_ExtraItems() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.OUNCES, SNACK ),
-			new MealFoodItem( INFANT_CRACKER, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.EACH, SNACK ),
+			new MealFoodItem( INFANT_CRACKER, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.OUNCES, SNACK ),
 			new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 4, UnitOfMeasure.OUNCES, SNACK ) 			
 		);	
 		
@@ -355,7 +355,7 @@ public class InfantRulesTest {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 7, UnitOfMeasure.OUNCES, DINNER ), 
 				new MealFoodItem( INFANT_CEREAL, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.TABLESPOONS, DINNER ),
-				new MealFoodItem( INFANT_CRACKER, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.EACH, DINNER ),
+				new MealFoodItem( INFANT_CRACKER, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.OUNCES, DINNER ),
 				new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 4, UnitOfMeasure.TABLESPOONS, DINNER ) 							
 			);	
 		

@@ -316,6 +316,37 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
+	public void child1_2Snack_ValidVegVeg() {
+		Meal meal = SNACK;
+		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
+			new MealFoodItem( POTATOES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
+
+	@Test
+	public void child1_2Snack_InvalidVegVegSame() {
+		Meal meal = SNACK;
+		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
+			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertFalse( violations.isEmpty() );
+	}
+
+	
+	@Test
 	public void child1_2Snack_ValidVegGrain() {
 		Meal meal = SNACK;
 		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;

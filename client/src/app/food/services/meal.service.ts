@@ -60,16 +60,18 @@ export class MealService {
    */
   saveMealFoodItem(mealFoodItem: MealFoodItem): Observable<Response> {
 
-    console.log('Saving a mealFoodItem for ', mealFoodItem.meal);
-
-    return this.http.post('/api/mealFoodItem', {
+    const item: any = {
       id: mealFoodItem.id,
       ageGroup: mealFoodItem.ageGroup,
       quantity: mealFoodItem.quantity,
       unit: mealFoodItem.unit,
       meal: (mealFoodItem.meal) ? '/api/meal/' + mealFoodItem.meal.id : undefined,
       foodItem: (mealFoodItem.foodItem) ? '/api/foodItem/' + mealFoodItem.foodItem.id : undefined
-    }).map(res => res.json());
+    };
+
+    console.log('Saving a mealFoodItem ', item);
+
+    return this.http.post('/api/mealFoodItem', item).map(res => res.json());
   }
 
   /**

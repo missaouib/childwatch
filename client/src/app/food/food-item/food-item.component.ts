@@ -68,7 +68,6 @@ export class FoodItemComponent implements OnInit {
   }
 
   selectItem(foodItem: FoodItem) {
-    console.log('selected item ', foodItem);
     this.selectedItem.emit(foodItem);
     this.foodItemForm.reset();
   }
@@ -119,5 +118,9 @@ export class FoodItemComponent implements OnInit {
 
   tagstring(item: FoodItem): string {
     return FoodItemUtils.tagstring(item);
+  }
+
+  cnItemString(foodItem: FoodItem): string {
+    return FoodItemUtils.cnItemString(foodItem);
   }
 }

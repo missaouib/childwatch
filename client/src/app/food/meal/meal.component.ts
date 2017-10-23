@@ -193,7 +193,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       id: UUID.UUID(),
       ageGroup: this.activeTab,
       quantity: 1,
-      unit: foodItem.servingUom,
+      unit: FoodItemUtils.isCN(foodItem) ? 'SERVINGS' : foodItem.servingUom,
       meal: this.meal,
       foodItem: foodItem
     });

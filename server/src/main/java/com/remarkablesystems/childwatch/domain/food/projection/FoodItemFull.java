@@ -21,13 +21,12 @@ public interface FoodItemFull{
 	
 	Set<FoodItemTag> getTags();
 	
-	List<FoodItemFull> getComponents();
 	FoodItemFull getParent();
-	
+	List<FoodItem> getComponents();
+
 	double getServingQuantity();
 	public String getServingType();
 	double getPortionSize();
-
 
 	
 }
