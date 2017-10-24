@@ -5,10 +5,12 @@
   "main": "server.js",
   "dependencies": {
     "basic-auth-connect": "^1.0.0",
+    "dockerode": "^2.5.3",
     "express": "^4.16.2",
     "express-basic-auth": "^1.1.2",
     "forever-monitor": "^1.7.1",
     "http-proxy": "^1.16.2",
+    "pg": "^7.3.0",
     "request": "^2.83.0"
   },
   "devDependencies": {},
