@@ -103,7 +103,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     else if (this.mealFoodItems.length < 1)
       return 'UNKNOWN / NO ITEMS';
 
-    return (this.rulesViolations.filter(v => v.severity === 'FAIL').length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
+    return (this.rulesViolations.filter(v => v.severity === 'FAIL' && this.AGEGROUPS.includes(v.ageGroup)).length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
   }
 
   ageGroupCacfpStatus(ageGroup: string) {
@@ -187,11 +187,10 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     });
   }
 
-  addMealFoodItem(foodItem: FoodItem) {
-
+  addMealFoodItem(foodItem: FoodItem, ageGroup?: string) {
     this.mealFoodItems.push({
       id: UUID.UUID(),
-      ageGroup: this.activeTab,
+      ageGroup: ageGroup ? ageGroup : this.activeTab,
       quantity: 1,
       unit: FoodItemUtils.isCN(foodItem) ? 'SERVINGS' : foodItem.servingUom,
       meal: this.meal,
@@ -237,6 +236,19 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     if (foodItem)
       this.addMealFoodItem(foodItem);
     this.emptyShow = false;
+  }
+
+  copyTo(ageGroup: string) {
+    if (ageGroup === 'INFANTS') {
+      this.AGEGROUPS.filter(a => a === 'AGE_0_5MO' || a === 'AGE_6_11MO').forEach(ag => this.copyTo(ag));
+    }
+    else if (ageGroup === 'NON_INFANTS') {
+      this.AGEGROUPS.filter(a => a !== 'AGE_0_5MO' && a !== 'AGE_6_11MO').forEach(ag => this.copyTo(ag));
+    }
+    else if (ageGroup !== this.activeTab) {
+      this.mealFoodItemsFor(this.activeTab).forEach((item: MealFoodItem) => this.addMealFoodItem(item.foodItem, ageGroup));
+    }
+
   }
 
 }

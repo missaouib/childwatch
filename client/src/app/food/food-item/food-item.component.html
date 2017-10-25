@@ -2,12 +2,12 @@
 	<form novalidate [formGroup]="foodItemForm" class="row">
 			<span class="col-xs-1">
 					<img *ngIf="isCN(mealFoodItem?.foodItem)" class="small-img" src="/assets/img/food/cn.svg" />
-					<img class="small-img" *ngIf="isMilk(mealFoodItem?.foodItem)" src="/assets/img/food/milk.svg" />
-					<img class="small-img" *ngIf="isMeat(mealFoodItem?.foodItem)" src="/assets/img/food/meat.svg" />
-					<img class="small-img" *ngIf="isVegetable(mealFoodItem?.foodItem)" src="/assets/img/food/vegetable.svg" />
-					<img class="small-img" *ngIf="isFruit(mealFoodItem?.foodItem)" src="/assets/img/food/fruit.svg" />
-					<img class="small-img" *ngIf="isGrain(mealFoodItem?.foodItem)" src="/assets/img/food/grain.svg" />
-					<img class="small-img" *ngIf="!mealFoodItem || isOther(mealFoodItem?.foodItem)" src="/assets/img/food/other.svg" />
+					<img class="small-img" *ngIf="isMilk(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/milk.svg" />
+					<img class="small-img" *ngIf="isMeat(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/meat.svg" />
+					<img class="small-img" *ngIf="isVegetable(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/vegetable.svg" />
+					<img class="small-img" *ngIf="isFruit(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/fruit.svg" />
+					<img class="small-img" *ngIf="isGrain(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/grain.svg" />
+					<img class="small-img" *ngIf="!mealFoodItem || isOther(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/other.svg" />
 					<img *ngIf="isInfant(mealFoodItem?.foodItem)" class="small-img" src="/assets/img/food/infant.svg" />
 				
 			</span>					

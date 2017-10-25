@@ -6,7 +6,7 @@ var Docker = require('dockerode');
 
 const client = new Client({
 	user: 'cw-db',
-	host: 'postgres',
+	host: 'localhost', // 'postgres',
 	database: 'cw-gateway',
 	password: 'childwatch',
 	port: 5432
@@ -16,9 +16,9 @@ const docker = new Docker();
 
 const clientAdmin = new Client({
 	user: 'postgres',
-	host: 'postgres',
+	host: 'localhost', //'postgres',
 	database: 'postgres',
-	password: 'p0stgr3s!',
+	password: '35mussina', //'p0stgr3s!',
 	port: 5432
 });
 

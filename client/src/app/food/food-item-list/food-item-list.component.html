@@ -39,12 +39,12 @@
 	<table class="table table-condensed" >
 		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="true" [dragData]="foodItem" >
 			<td class="col=sm-1">
-					<img class="small-img" *ngIf="category(foodItem) === 'MILK'" src="/assets/img/food/milk.svg" />
-					<img class="small-img" *ngIf="category(foodItem) === 'MEAT'" src="/assets/img/food/meat.svg" />
-					<img class="small-img" *ngIf="category(foodItem) === 'VEGETABLE'" src="/assets/img/food/vegetable.svg" />
-					<img class="small-img" *ngIf="category(foodItem) === 'FRUIT'" src="/assets/img/food/fruit.svg" />
-					<img class="small-img" *ngIf="category(foodItem) === 'GRAIN'" src="/assets/img/food/grain.svg" />
-					<img class="small-img" *ngIf="category(foodItem) === 'OTHER'" src="/assets/img/food/other.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'VEGETABLE'" src="/assets/img/food/flaticon/vegetable.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'FRUIT'" src="/assets/img/food/flaticon/fruit.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'GRAIN'" src="/assets/img/food/flaticon/grain.svg" />
+					<img class="small-img" *ngIf="category(foodItem) === 'OTHER'" src="/assets/img/food/flaticon/other.svg" />
 					<img *ngIf="isInfant(foodItem)" class="small-img" src="/assets/img/food/infant.svg" />
 					<img *ngIf="isCN(foodItem)" class="small-img" src="/assets/img/food/cn.svg" />
 			</td>

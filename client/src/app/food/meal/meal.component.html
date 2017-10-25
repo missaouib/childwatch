@@ -130,6 +130,25 @@
 	 				<hr />
 			</tab>		     
 		</tabset>
+		<div class="btn-group" dropdown [isDisabled]="mealFoodItemsFor( activeTab ).length === 0">
+		  <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle" >
+		    Copy to... <span class="caret"></span>
+		  </button>
+		  <ul *dropdownMenu class="dropdown-menu" role="menu">
+		    <li *ngIf="activeTab !== 'AGE_0_5MO'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_0_5MO')">0-5MO</a></li>
+		    <li *ngIf="activeTab !== 'AGE_6_11MO'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_6_11MO')">6-11MO</a></li>
+		    <li class="divider dropdown-divider"></li>
+		    <li *ngIf="activeTab !== 'AGE_1_2YR'" role="menuitem"><a class="dropdown-item" (click)="copyTo('AGE_1_2YR')" >1-2YR</a></li>
+		    <li *ngIf="activeTab !== 'AGE_3_5YR'" role="menuitem"><a class="dropdown-item"  (click)="copyTo('AGE_3_5YR')">3-5YR</a></li>
+		    <li *ngIf="activeTab !== 'AGE_6_12YR'" role="menuitem"><a class="dropdown-item"  (click)="copyTo('AGE_6_12YR')">6-12YR</a></li>
+		    <li *ngIf="activeTab !== 'AGE_13_18YR'" role="menuitem"><a class="dropdown-item"  (click)="copyTo('AGE_13_18MO')">13-18YR</a></li>
+		    <li *ngIf="activeTab !== 'AGE_ADULT'" role="menuitem"><a class="dropdown-item"  (click)="copyTo('AGE_ADULT')">Adult</a></li>
+		    <li class="divider dropdown-divider"></li>
+		    <li role="menuitem"><a class="dropdown-item" (click)="copyTo('INFANTS')">All Infants</a>
+		    <li role="menuitem"><a class="dropdown-item" (click)="copyTo('NON_INFANTS')">All Non-Infants</a>
+		    </li>
+		  </ul>
+		</div>
 	</div>
 	
 	

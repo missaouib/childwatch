@@ -14,6 +14,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/catch';
 
 
 /**
@@ -78,7 +79,8 @@ export class MealService {
    * Delete the meal food item
    */
   deleteMealFoodItem(mealFoodItemId: string) {
-    return this.http.delete('/api/mealFoodItem/' + mealFoodItemId).map((res) => res.json());
+    return this.http.delete('/api/mealFoodItem/' + mealFoodItemId).map((res) => res.json())
+      .catch(() => Observable.of(mealFoodItemId));
   }
 
   /**
