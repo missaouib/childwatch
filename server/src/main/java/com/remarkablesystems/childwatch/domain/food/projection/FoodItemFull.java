@@ -21,7 +21,7 @@ public interface FoodItemFull{
 	
 	Set<FoodItemTag> getTags();
 	
-	FoodItemFull getParent();
+	FoodItem getParent();
 	List<FoodItem> getComponents();
 
 	double getServingQuantity();

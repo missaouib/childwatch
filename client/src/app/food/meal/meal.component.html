@@ -75,7 +75,7 @@
 	</accordion>
 	</div>
 	
-	<div class="row">
+	<div class="row" *ngIf="!mealCacfpStatus().startsWith( 'UNKNOWN' )">
 		<alert  [type]="'danger'" *ngIf="rulesViolationsForCurrentAgeGroup('FAIL').length">
 			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> CACFP Compliance Errors</h4>	
 			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup('FAIL')" >{{violation.message}}</li></ul>		

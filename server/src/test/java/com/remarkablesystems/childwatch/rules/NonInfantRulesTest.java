@@ -132,6 +132,45 @@ public class NonInfantRulesTest {
 	}
 	
 	@Test
+	public void child1_2LunchDinner_TwoVegValid() {
+		
+		Meal meal = LUNCH;
+		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( MEAT, ageGroup, 1, UnitOfMeasure.OUNCES, meal ),
+			new MealFoodItem( CORN, ageGroup, 0.145, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( POTATOES, ageGroup, 0.145, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( BREAD, ageGroup, 0.5, UnitOfMeasure.OUNCES, meal ) 
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
+	
+	@Test
+	public void adultDinner_TwoVegNoMilkValid() {
+		
+		Meal meal = DINNER;
+		AgeGroup ageGroup = AgeGroup.AGE_ADULT;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( MEAT, ageGroup, 2, UnitOfMeasure.OUNCES, meal ),
+			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( POTATOES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( BREAD, ageGroup, 2, UnitOfMeasure.OUNCES, meal ) 
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
+
+
+	
+	@Test
 	public void child1_2LunchDinner_SumQuantity() {
 		
 		Meal meal = DINNER;
@@ -316,7 +355,7 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidVegVeg() {
+	public void child1_2Snack_InvalidVegVeg() {
 		Meal meal = SNACK;
 		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
 		
@@ -327,7 +366,7 @@ public class NonInfantRulesTest {
 		
 		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
 		
-		assertTrue( violations.isEmpty() );
+		assertFalse( violations.isEmpty() );
 	}
 
 	@Test
