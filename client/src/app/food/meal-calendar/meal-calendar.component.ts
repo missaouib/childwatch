@@ -86,10 +86,6 @@ import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
     .my-container-winter:before {
       background-image: url( '/assets/img/season/winter.jpg' );
     }
-  
-  
-  
-  
   `]
 })
 export class MealCalendarComponent implements OnInit {

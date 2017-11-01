@@ -26,8 +26,10 @@ public class MealFoodItemPredicate {
 
 	static Predicate<MealFoodItem> isFlavoredMilkItem = isMilkItem.and( descriptionContains("chocolate" ).or( descriptionContains("flavored").and(descriptionContains("unflavored").negate()) ) ); 
 			
-	static Predicate<MealFoodItem> isLowFatOrFatFreeMilkItem = isMilkItem.and( descriptionContains( Arrays.asList("lowfat", "1%", "1 %", "skim","low-fat" ) ) ); 
-						
+	static Predicate<MealFoodItem> isLowFatOrFatFreeMilkItem = isMilkItem.and( descriptionContains( Arrays.asList("lowfat", "1%", "1 %", "skim","low-fat","fat-free" ) ) ); 
+
+	static Predicate<MealFoodItem> isFatFreeMilkItem = isMilkItem.and( descriptionContains( "fat-free" ) );
+	
 	static Predicate<MealFoodItem> isVegOrFruitItem = isVegItem.or( isFruitItem );
 			
 	static Predicate<MealFoodItem> isGrainOrBreadItem = hasTag( "GRAIN" );

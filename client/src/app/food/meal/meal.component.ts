@@ -45,9 +45,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   mealForm: FormGroup;
 
-  AGEGROUPS: string[] = []; // = ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT'];
+  AGEGROUPS: string[] = [];
 
-  _activeTab: string = undefined; // 'AGE_0_5MO';
+  _activeTab: string = undefined;
 
   set activeTab(tab: string) {
     this._activeTab = tab;

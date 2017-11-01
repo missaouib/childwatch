@@ -114,11 +114,13 @@ public class MealPredicate {
 
 	static BiPredicate<Meal,List<MealFoodItem>> hasLowFatOrFatFreeMilkComponent = hasAnyItem(isLowFatOrFatFreeMilkItem);
 
+	static BiPredicate<Meal,List<MealFoodItem>> hasFatFreeMilkComponent = hasAnyItem(isFatFreeMilkItem);
+
 	static BiPredicate<Meal,List<MealFoodItem>> hasFlavoredMilkComponent = hasAnyItem(isFlavoredMilkItem);
 			
 	static BiPredicate<Meal,List<MealFoodItem>> isAgeGroup( AgeGroup group ) { return hasAllItems( (i) -> i.getAgeGroup().equals(group) ); }
 	
-	static BiPredicate<Meal,List<MealFoodItem>> isUnder2YearsOld = isAgeGroup(AgeGroup.AGE_1_2YR).or( isAgeGroup( AgeGroup.AGE_0_5MO) ).or( isAgeGroup(AgeGroup.AGE_6_11MO ) );
+	static BiPredicate<Meal,List<MealFoodItem>> isUnder2YearsOld = isAgeGroup(AgeGroup.AGE_1YR).or( isAgeGroup( AgeGroup.AGE_0_5MO) ).or( isAgeGroup(AgeGroup.AGE_6_11MO ) );
 
 	static BiPredicate<Meal,List<MealFoodItem>> isUnder6YearsOld = isUnder2YearsOld.or( isAgeGroup(AgeGroup.AGE_3_5YR) );
 	

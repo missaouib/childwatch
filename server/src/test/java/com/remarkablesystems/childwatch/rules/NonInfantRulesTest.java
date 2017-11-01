@@ -17,14 +17,13 @@ import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 
 public class NonInfantRulesTest {
 	
-
 	RuleValidatorController ctrl = new RuleValidatorController();
 		
 	@Test
-	public void child1_2Breakfast_Valid() {
+	public void child1_Breakfast_Valid() {
 		
 		Meal meal = BREAKFAST;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -38,10 +37,10 @@ public class NonInfantRulesTest {
 	}
 	
 	@Test
-	public void child1_2Breakfast_SumQuantity() {
+	public void child1_Breakfast_SumQuantity() {
 		
 		Meal meal = BREAKFAST;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -56,10 +55,10 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Breakfast_SubstituteMeat() {
+	public void child1_Breakfast_SubstituteMeat() {
 		
 		Meal meal = BREAKFAST;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -79,7 +78,7 @@ public class NonInfantRulesTest {
 	public void NonInfant_InfantFoods() {
 		
 		Meal meal = BREAKFAST;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_2YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -92,12 +91,11 @@ public class NonInfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
-
 	@Test
-	public void child1_2Breakfast_InvalidQuantity() {
+	public void child1_Breakfast_InvalidQuantity() {
 		
 		Meal meal = BREAKFAST;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 3, UnitOfMeasure.OUNCES, meal ), 
@@ -111,12 +109,11 @@ public class NonInfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
-
 	@Test
-	public void child1_2LunchDinner_Valid() {
+	public void child1_LunchDinner_Valid() {
 		
 		Meal meal = LUNCH;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -132,10 +129,10 @@ public class NonInfantRulesTest {
 	}
 	
 	@Test
-	public void child1_2LunchDinner_TwoVegValid() {
+	public void child1_LunchDinner_TwoVegValid() {
 		
 		Meal meal = LUNCH;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -167,14 +164,12 @@ public class NonInfantRulesTest {
 		
 		assertTrue( violations.isEmpty() );
 	}
-
-
 	
 	@Test
-	public void child1_2LunchDinner_SumQuantity() {
+	public void child1_LunchDinner_SumQuantity() {
 		
 		Meal meal = DINNER;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -190,14 +185,11 @@ public class NonInfantRulesTest {
 		assertTrue( violations.isEmpty() );
 	}
 
-
-
-
 	@Test
-	public void child1_2LunchDinner_InvalidQuantity() {
+	public void child1_LunchDinner_InvalidQuantity() {
 		
 		Meal meal = LUNCH;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -211,13 +203,12 @@ public class NonInfantRulesTest {
 		
 		assertFalse( violations.isEmpty() );
 	}
-
 	
 	@Test
-	public void child1_2LunchDinner_SkimMilk() {
+	public void child1_LunchDinner_SkimMilk() {
 		
 		Meal meal = LUNCH;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( SKIMMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -233,10 +224,10 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidMilkMeat() {
+	public void child1_Snack_ValidMilkMeat() {
 		
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -249,9 +240,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidMilkVeg() {
+	public void child1_Snack_ValidMilkVeg() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -263,11 +254,10 @@ public class NonInfantRulesTest {
 		assertTrue( violations.isEmpty() );
 	}
 
-
 	@Test
-	public void child1_2Snack_ValidMilkFruit() {
+	public void child1_Snack_ValidMilkFruit() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -280,9 +270,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidMilkGrain() {
+	public void child1_Snack_ValidMilkGrain() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -295,9 +285,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidMeatVeg() {
+	public void child1_Snack_ValidMeatVeg() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( MEAT, ageGroup, 0.5, UnitOfMeasure.OUNCES, meal ),
@@ -310,9 +300,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidMeatFruit() {
+	public void child1_Snack_ValidMeatFruit() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( MEAT, ageGroup, 0.5, UnitOfMeasure.OUNCES, meal ),
@@ -325,9 +315,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidMeatGrain() {
+	public void child1_Snack_ValidMeatGrain() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 				new MealFoodItem( MEAT, ageGroup, 0.5, UnitOfMeasure.OUNCES, meal ),
@@ -340,9 +330,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidVegFruit() {
+	public void child1_Snack_ValidVegFruit() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
@@ -355,9 +345,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_InvalidVegVeg() {
+	public void child1_Snack_InvalidVegVeg() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
@@ -370,9 +360,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_InvalidVegVegSame() {
+	public void child1_Snack_InvalidVegVegSame() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
@@ -383,12 +373,11 @@ public class NonInfantRulesTest {
 		
 		assertFalse( violations.isEmpty() );
 	}
-
 	
 	@Test
-	public void child1_2Snack_ValidVegGrain() {
+	public void child1_Snack_ValidVegGrain() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
@@ -401,9 +390,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ValidFruitGrain() {
+	public void child1_Snack_ValidFruitGrain() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( PEACHES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
@@ -416,9 +405,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_MissingItem() {
+	public void child1_Snack_MissingItem() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( PEACHES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
@@ -430,9 +419,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_ExtraItem() {
+	public void child1_Snack_ExtraItem() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( CORN, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ),
@@ -446,9 +435,9 @@ public class NonInfantRulesTest {
 	}
 	
 	@Test
-	public void child1_2Snack_InvalidQuantitiesMilkFruit() {
+	public void child1_Snack_InvalidQuantitiesMilkFruit() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -496,8 +485,6 @@ public class NonInfantRulesTest {
 
 	}
 
-
-
 	@Test
 	public void adultDinner_ValidWithMilk() {
 		Meal meal = DINNER;
@@ -534,7 +521,6 @@ public class NonInfantRulesTest {
 
 	}
 	
-
 	@Test
 	public void adultDinner_ValidWithChocolateMilk() {
 		Meal meal = DINNER;
@@ -554,9 +540,9 @@ public class NonInfantRulesTest {
 	}
 
 	@Test
-	public void child1_2Snack_MilkFruitJuice() {
+	public void child1_Snack_MilkFruitJuice() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -568,9 +554,9 @@ public class NonInfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
-	public void child1_2Snack_MilkVegJuice() {
+	public void child1_Snack_MilkVegJuice() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -582,9 +568,9 @@ public class NonInfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
-	public void child1_2Snack_MilkFruitVegJuice() {
+	public void child1_Snack_MilkFruitVegJuice() {
 		Meal meal = SNACK;
-		AgeGroup ageGroup = AgeGroup.AGE_1_2YR;
+		AgeGroup ageGroup = AgeGroup.AGE_1YR;
 		
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( WHOLEMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
@@ -597,6 +583,5 @@ public class NonInfantRulesTest {
 		
 		assertTrue( violations.isEmpty() );
 	}
-
 
 }

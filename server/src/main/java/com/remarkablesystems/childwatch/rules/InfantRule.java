@@ -56,10 +56,8 @@ public class InfantRule extends MealRule {
 			.appliesTo( isBreakfast.and( isAgeGroup( AgeGroup.AGE_6_11MO ) ) )
 			.whenNot( hasAllItems( isFor6_11MO )
 					.and( sumHasQuantity( isFor6_11MO.and(isMilkItem), 6, UnitOfMeasure.OUNCES ) ) 
-					.and( sumHasQuantity( isFor6_11MO.and(isCereal), 2, UnitOfMeasure.TABLESPOONS ) )
-					.and( sumHasQuantity( isFor6_11MO.and(isFruitItem.or(isVegItem).and( isJuice.negate() ) ), 1, UnitOfMeasure.TABLESPOONS ) )
 					) 
-			.thenFail( "At least 6oz of Breast Milk and/or Iron Fortified Infant Formula, 2 tbsp of Cereal, and 1 tbsp of Fruit and/or Vegetables (no juice) must be served for infants 6-11MO" );
+			.thenFail( "At least 6oz of Breast Milk and/or Iron Fortified Infant Formula must be served for infants 6-11MO" );
 
 	public static InfantRule snack_0_5MO = (InfantRule)create( "snack_0_5MO" )
 			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_0_5MO ) ) )
@@ -86,10 +84,8 @@ public class InfantRule extends MealRule {
 			.appliesTo( isLunchOrDinner.and( isAgeGroup( AgeGroup.AGE_6_11MO ) ) )
 			.whenNot( hasAllItems( isFor6_11MO )
 					  .and( sumHasQuantity( isFor6_11MO.and(isMilkItem), 6, UnitOfMeasure.OUNCES ) )
-					  .and( sumHasQuantity( isFor6_11MO.and(isCereal), 2, UnitOfMeasure.TABLESPOONS ) )
-					  .and( sumHasQuantity( isFor6_11MO.and(isFruitItem.or(isVegItem).and( isJuice.negate() )), 1, UnitOfMeasure.TABLESPOONS ) )
 					)
-			.thenFail( "At least 6oz of Breast Milk and/or Iron Fortified Infant Formula, 2 tbsp of Cereal, and 1 tbsp of Fruit and/or Vegetables (no juice) must be served for infants 6-11MO" );
+			.thenFail( "At least 6oz of Breast Milk and/or Iron Fortified Infant Formula must be served for infants 6-11MO" );
 
 	
 	static List<MealRule> RULES = Arrays.asList(

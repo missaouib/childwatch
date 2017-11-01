@@ -8,7 +8,7 @@ export interface ConfigState {
 };
 
 export var INITIAL_ConfigState: ConfigState = {
-  supportedAges: ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT']
+  supportedAges: ['AGE_0_5MO', 'AGE_6_11MO', 'AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT']
 };
 
 @Injectable()

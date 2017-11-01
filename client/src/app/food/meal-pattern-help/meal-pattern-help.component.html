@@ -2,15 +2,26 @@
 					<span *ngIf="mealType === 'BREAKFAST'">
 					<h5>BREAKFAST {{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}</h5>
 					<ul *ngIf="ageGroup === 'AGE_0_5MO'">
-						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula <em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
+						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
+						<li><em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
 					</ul>
 					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
-						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
-						<li>2-4 tbsp. Iron Fortified Infant Cereal</li>
-						<li>1-4 tbsp. Fruit or Vegetable or both</li>	
+						<li>6-8 fl. oz. Breast Milk or Iron Fortified Infant Formula</li>
+						<li><em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
 					</ul>
-					
-					<ul *ngIf="ageGroup === 'AGE_1_2YR'">
+					<p *ngIf="ageGroup === 'AGE_6_11MO'"><strong>and</strong> one or more as developmentally appropriate</p>
+					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
+						<li>0-4 tbsp. Iron Fortified Infant Cereal; <strong>or</strong></li>
+						<li>0-4 tbsp. Meat, Fish, Poultry, Whole Egg, Cooked Dry Beans/Peas; <strong>or</strong></li>
+						<li>0-2 oz. Cheese; <strong>or</strong></li>
+						<li>0-4 oz. (volume) Cottage Cheese; <strong>or</strong></li>
+						<li>0-8 oz. Yogurt; <strong>or</strong></li>												
+					</ul>					
+					<p *ngIf="ageGroup === 'AGE_6_11MO'"><strong>and</strong></p>
+					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
+						<li>0-2 tbsp. Fruit or Vegetable or both</li>
+					</ul>					
+					<ul *ngIf="ageGroup === 'AGE_1YR' || ageGroup === 'AGE_2YR'">
 						<li>Milk - 1/2 Cup</li>
 						<li>Vegetables/Fruit - 1/4 Cup</li>
 						<li>Grains - 1/2 oz eq <em>Note: Meat/alternates may replace the grains component up to three times per week.</em></li>
@@ -39,15 +50,19 @@
 					</ul>
 					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
 						<li>6-8 fl. oz. Breast Milk or Iron Fortified Infant Formula <strong>and</strong></li>
-						<li>2-4 tbsp. Iron Fortified Infant Cereal <strong>and/or</strong></li>
-						<li>1-4 tbsp. Meat, Fish, Poultry, Egg Yolk, or Cooked Dry Beans or Peas; <strong>or</strong></li> 
-						<li>1/2 -2 oz. of Cheese; <strong>or</strong> </li>
-						<li>1-4 oz. (volume) Cottage Cheese; <strong>or</strong> 
-						<li>1-4 oz. (weight) of Cheese Food or Cheese Spread; <strong>and</strong>
-						<li>1-4 tbsp. Fruit or Vegetable or both</li>
+						<li><em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
+					</ul>
+					<p *ngIf="ageGroup === 'AGE_6_11MO'"><strong>and</strong> one or more as developmentally appropriate</p>
+					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
+						<li>0-4 tbsp. Iron Fortified Infant Cereal <strong>or</strong></li>
+						<li>0-4 tbsp. Meat, Fish, Poultry, Egg Yolk, or Cooked Dry Beans or Peas; <strong>or</strong></li> 
+						<li>0 -2 oz. of Cheese; <strong>or</strong> </li>
+						<li>0-4 oz. (volume) Cottage Cheese; <strong>or</strong> 
+						<li>0-8 oz Yogurt; <strong>and</strong>
+						<li>0-2 tbsp. Fruit or Vegetable or both</li>
 					</ul>
 					
-					<ul *ngIf="ageGroup === 'AGE_1_2YR'">
+					<ul *ngIf="ageGroup === 'AGE_1YR' || ageGroup ==='AGE_2YR'">
 						<li>Milk - 1/2 Cup</li>
 						<li>Meat/Alternative - 1 oz </li>
 						<li>Vegetables - 1/8 Cup</li>
@@ -69,6 +84,7 @@
 						<li>Grains - 1 oz eq</li>
 					</ul>
 					<ul *ngIf="ageGroup === 'AGE_ADULT'">
+						<li>Milk - 1 cup <em>Note: A serving of fluid milk is optional for dinners served to adult participants</em></li>
 						<li>Meat/Alternative - 2 oz</li>
 						<li>Vegetables - 1/2 Cup</li>
 						<li>Fruit - 1/2 Cup</li>
@@ -82,20 +98,26 @@
 						<li>4-6 fl. oz. Breast Milk or Iron Fortified Infant Formula <em>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</em></li>
 					</ul>
 					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
-						<li>2-4 fl. oz. Breast Milk or Iron Fortified Infant Formula or Fruit Juice <strong>and</strong></li>
+						<li>2-4 fl. oz. Breast Milk or Iron Fortified Infant Formula or Fruit Juice</li>
+					</ul>
+					<p *ngIf="ageGroup === 'AGE_6_11MO'"><strong>and</strong> one for more as developmentally appropriate</p>
+					<ul>
 						<li>0-1/2 Slice Bread <strong>or</strong></li>
-						<li>0-2 Crackers</li>
+						<li>0-2 Crackers <strong>or</strong></li>
+						<li>0-4 tbsp instant cereal or ready-to-eat cereal; <strong>and</strong></li>
+						<li>0-2 tbsp. vegetable, fruit, or both</li>
 					</ul>
 					
 					<div *ngIf="ageGroup !== 'AGE_0_5MO' && ageGroup !== 'AGE_6_11MO'">
 					Select at least 2 of the following:
 					</div>
-					<ul *ngIf="ageGroup === 'AGE_1_2YR' || ageGroup === 'AGE_3_5YR'">
+					<ul *ngIf="ageGroup === 'AGE_1YR' || ageGroup === 'AGE_2YR' || ageGroup === 'AGE_3_5YR'">
 						<li>Milk - 1/2 Cup</li>
 						<li>Meat/Alternative - 1/2 oz</li>
 						<li>Vegetables - 1/2 Cup</li>
 						<li>Fruit - 1/2 Cup</li>
 						<li>Grains - 1/2 oz eq</li>
+						<li>Only one of two components may be a beverage</li>
 					</ul>
 					<ul *ngIf="ageGroup === 'AGE_6_12YR' || ageGroup === 'AGE_13_18YR'">
 						<li>Milk - 1 Cup</li>
@@ -103,6 +125,7 @@
 						<li>Vegetables - 3/4 Cup</li>
 						<li>Fruit - 3/4 Cup</li>
 						<li>Grains - 1 oz eq</li>
+						<li>Only one of two components may be a beverage</li>
 					</ul>
 					<ul *ngIf="ageGroup === 'AGE_ADULT'">
 						<li>Milk - 1 Cup</li>
@@ -110,32 +133,363 @@
 						<li>Vegetables - 1/2 Cup</li>
 						<li>Fruit - 1/2 Cup</li>
 						<li>Grains - 1 oz eq</li>
+						<li>Only one of two components may be a beverage</li>
 					</ul>
 					</span>
 					
 					
 					
 					<h5>General</h5>
-					<ul>
-						<li *ngIf="ageGroup === 'AGE_6_11MO'">Vegetable or fruit, or both, required to be served at snack for infants 6 through 11 months old.</li>
-						<li *ngIf="ageGroup === 'AGE_0_5MO' || ageGroup === 'AGE_6_11MO'">Juice or cheese food or cheese spread are no longer allowed to be served.</li>
-						<li *ngIf="ageGroup === 'AGE_0_5MO' || ageGroup === 'AGE_6_11MO'">Allows ready-to-eat cereals at snack.</li>
-						<li *ngIf="ageGroup === 'AGE_0_5MO'">Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
-						<li>At least one serving of grains per day must be whole grain-rich.</li>
-						<li>Grain-based desserts no longer count towards the grain component (sweet crackers allowed).</li>
-						<li *ngIf="mealType === 'BREAKFAST'">Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+					
+					<ul *ngIf="ageGroup === 'AGE_0_5MO' && mealType === 'BREAKFAST'">
+						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
+						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
+						<li>Note:  Although solid foods re not a part of the 0-5 month age group, if a baby is developmentally ready for solid foods before 6 months of age, the child care provider must offer that infant a developmentally appropriate meal/snack.</li>
+						<li>Infant cereal must be iron-fortified and must be dry.</li>
 						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
-						<li *ngIf="ageGroup === 'AGE_1_2YR'">Unflavored whole milk must be served to 1 year olds;</li>
-						<li *ngIf="ageGroup === 'AGE_3_5YR'">Unflavored low-fat or fat-free milk must be served to children 2 through 5 years old;</li>
-						<li *ngIf="ageGroup === 'AGE_6_12YR' || ageGroup === '13_18YR' || ageGroup === 'AGE_ADULT'">Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
-						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
-						<li *ngIf="mealType === 'BREAKFAST'">Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
-						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>
+						<li>Whole eggs are now creditable as a meat/meat alternate.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Allows bread, crackers and ready-to-eat breakfast cereals at snack only.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
 						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
-						<li>Tofu counts as a meat alternate.</li>
-						<li>Juice is limited to once per day.</li>
+						<li>Tofu is not creditable for infants.</li>
+						<li>Fruit and vegetable juices and cheese food or cheese spread are no longer allowed to be served.</li>
 					</ul>
 					
+					<ul *ngIf="ageGroup === 'AGE_6_11MO' && mealType === 'BREAKFAST'">
+						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
+						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
+						<li>Infant cereal must be iron-fortified and must be dry.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>
+						<li>Whole eggs are now creditable as a meat/meat alternate.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Allows bread, crackers and ready-to-eat breakfast cereals at snack only.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Tofu is not creditable for infants.</li>
+						<li>Fruit and vegetable juices and cheese food or cheese spread are no longer allowed to be served.</li>
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_1YR' && mealType === 'BREAKFAST'">
+						<li>Unflavored whole milk must be served to 1 year olds;</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+						<li>One oz of meat/meat alternate is equal to 1 oz equivalent of grains (1 serving)</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_2YR' && mealType === 'BREAKFAST'">
+						<li>Unflavored low-fat or unflavored fat-free milk must be served to children age 2</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+						<li>One oz of meat/meat alternate is equal to 1 oz equivalent of grains (1 serving)</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>				
+					
+					<ul *ngIf="ageGroup === 'AGE_3_5YR' && mealType === 'BREAKFAST'">
+						<li>Unflavored low-fat or unflavored fat-free milk must be served to children 2 through 5 years old.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+						<li>One oz of meat/meat alternate is equal to 1 oz equivalent of grains (1 serving).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>					
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_6_12YR' && mealType === 'BREAKFAST'">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers allowed).</li>
+						<li>Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+						<li>One oz of meat/meat alternate is equal to 1 oz equivalent of grains (1 serving).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>						
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_13_18YR' && mealType === 'BREAKFAST'">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers allowed).</li>
+						<li>Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+						<li>One oz of meat/meat alternate is equal to 1 oz equivalent of grains (1 serving).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>						
+					</ul>
+					<ul *ngIf="ageGroup === 'AGE_ADULT' && mealType === 'BREAKFAST'">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Six oz (weight) or ¾ cup (volume) of yogurt may be used to meet the equivalent of 8 oz of fluid milk per day when yogurt is not served as a meat alternate in the same meal.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Meat and meat alternates may be served in place of the entire grains component at breakfast a maximum of three times per week.</li>
+						<li>One oz of meat/meat alternate is equal to 1 oz equivalent of grains (1 serving).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_0_5MO' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
+						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
+						<li>Note:  Although solid foods are not a part of the 0-5 month age group, if a baby is developmentally ready for solid foods before 6 months of age, the child care provider must offer that infant a developmentally appropriate meal/snack.</li>
+						<li>Infant cereal must be iron-fortified and must be dry.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>
+						<li>Whole eggs are now creditable as a meat/meat alternate.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Allows bread, crackers and ready-to-eat breakfast cereals at snack only.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Tofu is not creditable for infants.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>					
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_6_11MO' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
+						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
+						<li>Infant cereal must be iron-fortified and must be dry.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>
+						<li>Whole eggs are now creditable as a meat/meat alternate.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Allows bread, crackers and ready-to-eat breakfast cereals at snack only.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Vegetable or fruit, or both, required to be served at snack for infants 6 through 11 months old.</li>
+						<li>Juice or cheese food or cheese spread are no longer allowed to be served.</li>
+						<li>Tofu is not creditable for infants.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>					
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_1YR' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Unflavored whole milk must be served to 1 year olds.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>					
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_2YR' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Unflavored low-fat or unflavored fat-free milk must be served to 2 through 5 year olds.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>					
+					</ul>				
+					
+					<ul *ngIf="ageGroup === 'AGE_3_5YR' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Unflavored low-fat or unflavored fat-free milk must be served to 2 through 5 year olds.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>					
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_6_12YR' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>										
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_13_18YR' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>										
+					</ul>
+					<ul *ngIf="ageGroup === 'AGE_ADULT' && (mealType === 'AM_SNACK' || mealType === 'PM_SNACK')">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>										
+					</ul>
+
+
+					<ul *ngIf="ageGroup === 'AGE_0_5MO' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
+						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
+						<li>Note:  Although solid foods re not a part of the 0-5 month age group, if a baby is developmentally ready for solid foods before 6 months of age, the child care provider must offer that infant a developmentally appropriate meal/snack.</li>
+						<li>Infant cereal must be iron-fortified and must be dry.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>
+						<li>Whole eggs are now creditable as a meat/meat alternate.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Allows bread, crackers and ready-to-eat breakfast cereals at snack only.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Tofu is not creditable for infants.</li>
+						<li>Fruit and vegetable juices and cheese food or cheese spread are no longer allowed to be served.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>				
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_6_11MO' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
+						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
+						<li>Infant cereal must be iron-fortified and must be dry.</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>
+						<li>Whole eggs are now creditable as a meat/meat alternate.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Allows bread, crackers and ready-to-eat breakfast cereals at snack only.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>Tofu is not creditable for infants.</li>
+						<li>Fruit and vegetable juices and cheese food or cheese spread are no longer allowed to be served.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>				
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_1YR' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Unflavored whole milk must be served to 1 year olds.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed)</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>At lunch and dinner, one vegetable and one fruit or two different vegetables may be served to meet the vegetable/fruit requirement. Two fruits cannot be served to meet the requirements.</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_2YR' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>•	Unflavored low-fat or unflavored fat-free milk must be served to children age 2.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed)</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>At lunch and dinner, one vegetable and one fruit or two different vegetables may be served to meet the vegetable/fruit requirement. Two fruits cannot be served to meet the requirements.</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>				
+					
+					<ul *ngIf="ageGroup === 'AGE_3_5YR' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Unflavored low-fat or fat-free milk must be served to children 2 through 5 years old;</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>At lunch and dinner, one vegetable and one fruit or two different vegetables may be served to meet the vegetable/fruit requirement.  Two fruits cannot be served to meet the requirements.</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+					
+					<ul *ngIf="ageGroup === 'AGE_6_12YR' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>At lunch and dinner, one vegetable and one fruit or two different vegetables may be served to meet the vegetable/fruit requirement.  Two fruits cannot be served to meet the requirements.</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+
+					<ul *ngIf="ageGroup === 'AGE_13_18YR' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce.</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>At lunch and dinner, one vegetable and one fruit or two different vegetables may be served to meet the vegetable/fruit requirement.  Two fruits cannot be served to meet the requirements.</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+					<ul *ngIf="ageGroup === 'AGE_ADULT' && (mealType === 'LUNCH' || mealType === 'DINNER')">
+						<li>Unflavored low-fat, unflavored fat-free, or flavored fat-free milk must be served to children 6 years old and older and adults.</li>
+						<li>Non-dairy milk substitutes that are nutritionally equivalent to milk may be served in place of milk to children or adults with medical or special dietary needs.</li>
+						<li>Six oz (weight) or ¾ cup (volume) of yogurt may be used to meet the equivalent of 8 oz of fluid milk per day when yogurt is not served as a meat alternate in the same meal.</li>
+						<li>At least one serving of grains per day must be whole grain-rich.</li>
+						<li>Grain-based desserts no longer count towards the grain component (sweet crackers – plain animal crackers and plain graham crackers are allowed).</li>
+						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
+						<li>Breakfast cereals must contain no more than 6 grams of sugar per dry ounce</li>
+						<li>Ounce equivalents (oz eq) are used to determine the amount of creditable grains (starting October 1, 2019).</li>
+						<li>At lunch and dinner, one vegetable and one fruit or two different vegetables may be served to meet the vegetable/fruit requirement.  Two fruits cannot be served to meet the requirements.</li>
+						<li>Juice is limited to once per day.</li>
+						<li>Tofu counts as a meat alternate.</li>
+						<li>Frying is not allowed as a way of preparing foods on-site.</li>
+					</ul>
+
 				</span>
 				
 				<span *ngIf="!ageGroup || !mealType">
