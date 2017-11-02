@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {Meal, MealEvent, MealFoodItem, FoodItem} from '../food.interfaces';
-import {FoodActions} from '../food.actions';
+import * as FoodActions from '../food.actions';
 import {CalendarEvent} from 'angular-calendar';
 
 
@@ -11,8 +11,7 @@ import {CalendarEvent} from 'angular-calendar';
 export class FoodStateService {
 
   constructor(
-    private store: Store<AppState>,
-    private actions: FoodActions) {}
+    private store: Store<AppState>) {}
 
   get foodItems$(): Observable<FoodItem[]> {
     return this.store.select(s => s.food.foodItems);
@@ -35,7 +34,7 @@ export class FoodStateService {
   }
 
   adjustMenuTime(start: Date, end: Date) {
-    this.store.dispatch(this.actions.menuTimeAdjusted({start: start, end: end}));
+    this.store.dispatch(new FoodActions.MenuTimeAdjustedAction({start: start, end: end}));
   }
 
   get currentMeal$(): Observable<Meal> {
@@ -43,7 +42,7 @@ export class FoodStateService {
   }
 
   scheduleMealEvent(mealEvent: MealEvent) {
-    this.store.dispatch(this.actions.mealEventScheduled(mealEvent));
+    this.store.dispatch(new FoodActions.MealEventScheduledAction(mealEvent));
   }
 
   get mealRuleViolations$() {
@@ -53,24 +52,24 @@ export class FoodStateService {
 
   saveMeal(meal: Meal) {
     if (meal.id) {
-      this.store.dispatch(this.actions.saveMeal(meal));
+      this.store.dispatch(new FoodActions.SaveMealAction(meal));
     }
   }
 
   loadMealFoodItemsForMeal(meal: Meal) {
-    this.store.dispatch(this.actions.loadMealFoodItemsForMeal(meal));
+    this.store.dispatch(new FoodActions.LoadMealFoodItemsForMealAction(meal));
   }
 
   deleteMealFoodItem(mealFoodItem: MealFoodItem) {
-    this.store.dispatch(this.actions.deleteMealFoodItem(mealFoodItem));
+    this.store.dispatch(new FoodActions.DeleteMealFoodItemAction(mealFoodItem));
   }
 
   saveMealFoodItem(mealFoodItem: MealFoodItem) {
-    this.store.dispatch(this.actions.saveMealFoodItem(mealFoodItem));
+    this.store.dispatch(new FoodActions.SaveMealFoodItemAction(mealFoodItem));
   }
 
   removeEvent(event: CalendarEvent<MealEvent>) {
-    this.store.dispatch(this.actions.removeMealEvent(event));
+    this.store.dispatch(new FoodActions.RemoveMealEventAction(event.meta));
   }
 
   get canShowWeekends() {
@@ -78,7 +77,7 @@ export class FoodStateService {
   }
 
   showWeekends(show: boolean) {
-    this.store.dispatch(this.actions.showWeekends(show));
+    this.store.dispatch(new FoodActions.ShowWeekendsAction(show));
   }
 
   get canShowBackground() {
@@ -86,7 +85,7 @@ export class FoodStateService {
   }
 
   showBackground(show: boolean) {
-    this.store.dispatch(this.actions.showBackground(show));
+    this.store.dispatch(new FoodActions.ShowBackgroundAction(show));
   }
 
 }

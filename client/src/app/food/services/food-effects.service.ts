@@ -4,13 +4,12 @@
  * Copyright (c) 2017 Remarkable Systems, Incorporated.  
  * All Rights reserved
  */
-import {FoodActions} from '../food.actions';
+import * as FoodActions from '../food.actions';
 import {Meal, MealFoodItem, MealEvent} from '../food.interfaces';
 import {MealEventService} from './meal-event.service';
 import {MealService} from './meal.service';
 import {Injectable} from '@angular/core';
-import {Effect, Actions, toPayload} from '@ngrx/effects';
-import {CalendarEvent} from 'angular-calendar';
+import {Effect, Actions} from '@ngrx/effects';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
@@ -29,9 +28,8 @@ export class FoodEffectsService {
    * 
    * @redux-effect
    */
-  @Effect() adjustedMenuTime = this.actions$
-    .ofType(FoodActions.MENU_TIME_ADJUSTED)
-    .map(toPayload)
+  @Effect() adjustedMenuTime = this.actions$.ofType(FoodActions.MENU_TIME_ADJUSTED)
+    .map((action: FoodActions.MenuTimeAdjustedAction) => action.payload)
     .switchMap(payload => {
       this.mealEventSvc.queryBetween(payload.start, payload.end).subscribe();
       return Observable.of({type: 'MEALS_QUERY'});
@@ -42,47 +40,40 @@ export class FoodEffectsService {
    * 
    * @redux-effect
    */
-  @Effect() _onSaveMeal = this.actions$
-    .ofType(FoodActions.SAVE_MEAL)
-    .map(toPayload)
+  @Effect() _onSaveMeal = this.actions$.ofType(FoodActions.SAVE_MEAL)
+    .map((action: FoodActions.SaveMealAction) => action.payload)
     .switchMap((payload: Meal) => Observable.of(this.onSaveMeal(payload)));
 
 
-  @Effect() _onLoadMealFoodItemsForMeal = this.actions$
-    .ofType(FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL)
-    .map(toPayload)
+  @Effect() _onLoadMealFoodItemsForMeal = this.actions$.ofType(FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL)
+    .map((action: FoodActions.LoadMealFoodItemsForMealAction) => action.payload)
     .switchMap((payload: Meal) => this.onLoadMealFoodItemsForMeal(payload));
 
 
-  @Effect() _onMealFoodItemReceived = this.actions$
-    .ofType(FoodActions.MEALFOODITEMS_RECEIVED)
-    .map(toPayload)
+  @Effect() _onMealFoodItemReceived = this.actions$.ofType(FoodActions.MEALFOODITEMS_RECEIVED)
+    .map((action: FoodActions.MealFoodItemsReceivedAction) => action.payload)
     .switchMap((payload: MealFoodItem[]) => this.onMealFoodItemsReceived(payload));
 
   /**
    * Side effect of when a mealfooditem is requested to be saved; save to the database
    * @redux-effect
    */
-  @Effect() _onSaveMealFoodItem = this.actions$
-    .ofType(FoodActions.SAVE_MEALFOODITEM)
-    .map(toPayload)
+  @Effect() _onSaveMealFoodItem = this.actions$.ofType(FoodActions.SAVE_MEALFOODITEM)
+    .map((action: FoodActions.SaveMealFoodItemAction) => action.payload)
     .switchMap((payload: MealFoodItem) => this.onSaveMealFoodItem(payload));
 
-  @Effect() _onDeleteMealFoodItem = this.actions$
-    .ofType(FoodActions.DELETE_MEALFOODITEM)
-    .map(toPayload)
+  @Effect() _onDeleteMealFoodItem = this.actions$.ofType(FoodActions.DELETE_MEALFOODITEM)
+    .map((action: FoodActions.DeleteMealFoodItemAction) => action.payload)
     .switchMap((payload: MealFoodItem) => this.onDeleteMealFoodItem(payload));
 
 
-  @Effect() _onMealEventScheduled = this.actions$
-    .ofType(FoodActions.MEALEVENT_SCHEDULED)
-    .map(toPayload)
+  @Effect() _onMealEventScheduled = this.actions$.ofType(FoodActions.MEALEVENT_SCHEDULED)
+    .map((action: FoodActions.MealEventScheduledAction) => action.payload)
     .switchMap((payload: MealEvent) => this.onMealEventScheduled(payload));
 
-  @Effect() _onMealEventRemoved = this.actions$
-    .ofType(FoodActions.REMOVE_MEALEVENT)
-    .map(toPayload)
-    .switchMap((payload: CalendarEvent<MealEvent>) => this.onMealEventRemoved(payload));
+  @Effect() _onMealEventRemoved = this.actions$.ofType(FoodActions.REMOVE_MEALEVENT)
+    .map((action: FoodActions.RemoveMealEventAction) => action.payload)
+    .switchMap((payload: MealEvent) => this.onMealEventRemoved(payload));
 
 
   /**
@@ -97,8 +88,7 @@ export class FoodEffectsService {
   constructor(
     private actions$: Actions,
     private mealEventSvc: MealEventService,
-    private mealSvc: MealService,
-    private foodAction: FoodActions
+    private mealSvc: MealService
   ) {
   }
 
@@ -107,7 +97,7 @@ export class FoodEffectsService {
       console.log('Saving the meal ' + meal.id + ':' + meal.description);
       if (meal.description && meal.type) {this.mealSvc.save(meal).subscribe();}
       // this.mealSvc.validate(meal).delay( 3000 ).subscribe();
-      return this.foodAction.loadMealFoodItemsForMeal(meal);
+      return new FoodActions.LoadMealFoodItemsForMealAction(meal);
     } else {Observable.of({type: 'NOOP-MEALNOTREADYTOSAVE', payload: meal});}
   }
 
@@ -147,10 +137,10 @@ export class FoodEffectsService {
     return Observable.of({type: 'NOOP-MEALEVENTSAVED', payload: mealEvent});
   }
 
-  private onMealEventRemoved(calMealEvent: CalendarEvent<MealEvent>) {
-    console.log('Removing mealEvent ' + calMealEvent.meta.id + 'from database');
-    this.mealEventSvc.delete(calMealEvent.meta).first().subscribe();
-    return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: calMealEvent});
+  private onMealEventRemoved(mealEvent: MealEvent) {
+    console.log('Removing mealEvent ' + mealEvent.id + 'from database');
+    this.mealEventSvc.delete(mealEvent).first().subscribe();
+    return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: mealEvent});
   }
 
 }

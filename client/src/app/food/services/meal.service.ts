@@ -5,7 +5,7 @@
  * All Rights reserved
  */
 import {AppState} from '../../app.state';
-import {FoodActions} from '../food.actions';
+import * as FoodActions from '../food.actions';
 import {Meal, MealFoodItem} from '../food.interfaces';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -40,8 +40,7 @@ export class MealService {
    */
   constructor(
     private store: Store<AppState>,
-    private http: Http,
-    private actions: FoodActions
+    private http: Http
   ) {}
 
   /**
@@ -110,7 +109,7 @@ export class MealService {
 
     return this.http.get(this.URL, {search: params})
       .map(res => res.json())
-      .map(({_embedded: {meals}}) => this.store.dispatch(this.actions.mealsReceived(meals)));
+      .map(({_embedded: {meals}}) => this.store.dispatch(new FoodActions.MealsReceivedAction(meals)));
   }
 
   fetch(id: string) {

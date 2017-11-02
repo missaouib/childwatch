@@ -10,7 +10,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {appReducer} from './app.state';
 import {ChildDetailComponent} from './child/child-detail/child-detail.component';
-import {ConfigActions} from './config/config.actions';
 import {ConfigService} from './config/config.service';
 import {SecurityModule} from './security/security.module';
 
@@ -63,6 +62,6 @@ import {CookieService} from 'ngx-cookie-service';
     BsDropdownModule.forRoot()
   ],
   bootstrap: [AppComponent],
-  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, ConfigActions, CookieService]
+  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, CookieService]
 })
 export class AppModule {}

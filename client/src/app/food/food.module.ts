@@ -1,4 +1,3 @@
-import {ConfigActions} from '../config/config.actions';
 import {ConfigService} from '../config/config.service';
 import {MealService} from './services/meal.service';
 import {NgModule} from '@angular/core';
@@ -9,7 +8,6 @@ import {TabsModule} from 'ngx-bootstrap/tabs';
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 
-import {FoodActions} from './food.actions';
 import {FoodStateService} from './services/food-state.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
@@ -70,7 +68,7 @@ const routes: Routes = [
     MealCalendarComponent,
     FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent
   ],
-  providers: [FoodItemService, MealService, FoodStateService, FoodActions, MealEventService, PendingChangesGuard, ConfigService, ConfigActions]
+  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService]
 })
 export class FoodModule {
 

@@ -1,5 +1,5 @@
 import {AppState} from '../app.state';
-import {ConfigActions} from './config.actions';
+import * as ConfigActions from './config.actions';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
@@ -7,8 +7,7 @@ import {Store} from '@ngrx/store';
 export class ConfigService {
 
   constructor(
-    private store: Store<AppState>,
-    private actions: ConfigActions
+    private store: Store<AppState>
   ) {}
 
 
@@ -18,6 +17,6 @@ export class ConfigService {
   }
 
   public supportAgeGroup(ageGroup: string, support: boolean) {
-    this.store.dispatch(this.actions.supportedAgeGroup({ageGroup: ageGroup, supported: support}));
+    this.store.dispatch(new ConfigActions.SupportedAgeGroupAction({ageGroup: ageGroup, supported: support}));
   }
 }

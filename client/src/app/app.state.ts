@@ -4,9 +4,8 @@ import {storeFreeze} from 'ngrx-store-freeze';
 import {storeLogger} from 'ngrx-store-logger';
 
 import {environment} from '../environments/environment';
-import {ConfigState, INITIAL_ConfigState, ConfigActions} from './config/config.actions';
-import {FoodUIState, INITIAL_FoodUIState} from './food/food.interfaces';
-import {FoodActions} from './food/food.actions';
+import * as FoodState from './food/food.state';
+import * as ConfigState from './config/config.state'; 
 import {User} from './security/interfaces';
 
 export interface AppState {
@@ -14,15 +13,15 @@ export interface AppState {
   // rather than synchronously polling for it, we can consume it as an observable in the stroe
   currentTime: number;
   loggedInUser?: User;
-  food: FoodUIState;
-  config: ConfigState;
+  food: FoodState.FoodState;
+  config: ConfigState.ConfigState;
 }
 
 // Allow subreducers to initialize their own state
-export const INITIAL_APP_STATE: AppState = {
+const INITIAL: AppState = {
   currentTime: Date.now(),
-  food: INITIAL_FoodUIState,
-  config: INITIAL_ConfigState
+  food: FoodState.INITIAL,
+  config: ConfigState.INITIAL
 };
 
 export const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
@@ -58,12 +57,12 @@ function loggedInUser(state: User = undefined, action: Action): User {
 const productionReducer = compose(combineReducers)({
   currentTime,
   loggedInUser,
-  food: FoodActions.reducer,
-  config: ConfigActions.reducer
+  food: FoodState.reducer,
+  config: ConfigState.reducer
 });
 const developmentReducer = compose(storeLogger({filter: {blacklist: ['SET_CURRENT_TIME']}}), storeFreeze)(productionReducer);
 
-export function appReducer(previousAppState: AppState = INITIAL_APP_STATE, action: Action): ActionReducer<AppState> {
+export function appReducer(previousAppState: AppState = INITIAL, action: Action): ActionReducer<AppState> {
   if (environment.production) {
     return productionReducer(previousAppState, action);
   } else {
