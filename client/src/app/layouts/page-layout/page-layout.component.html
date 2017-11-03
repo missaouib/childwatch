@@ -1,0 +1,15 @@
+
+<ng-sidebar-container style="height: 100vh">
+      <ng-sidebar [(opened)]="_opened" mode="push" >
+		<cw-sidebar></cw-sidebar>
+      </ng-sidebar>
+
+	<div ng-sidebar-content> 
+		<cw-navbar (toggleSidebar)="toggleSidebar($event)"></cw-navbar>
+		<div style='padding-top: 70px;' class="container-fluid">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+
+</ng-sidebar-container>
+

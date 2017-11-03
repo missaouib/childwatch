@@ -1,0 +1,14 @@
+.logo {
+  padding: 10px 10px 0 10px;
+}
+
+.name {
+  font-size: 30px;
+}
+
+.sm-img {
+  min-height: 30px;
+  height: 30px;
+  min-width: 30px;
+  width: 30px;    
+  }

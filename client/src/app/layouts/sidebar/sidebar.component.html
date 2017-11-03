@@ -1,0 +1,40 @@
+  	<div class="fill" style="width: 300px" 
+   	     [class.bg-dark]="style.dark"
+   	     [class.text-white]="style.dark"
+   	     [class.bg-light]="!style.dark"
+   	     [class.text-black]="!style.dark"
+   	     [style.background-color]="style.primary">
+<div class="cover navbar"
+	 [class.navbar-dark]="style.dark"
+	 [class.navbar-light]="!style.dark" 
+	 [style.background-color]="style.secondary">			
+	<div class="navbar-brand text-center" style="height: 70px">
+		<img class="img-circle img-thumbnail" src='/assets/avatar/{{user.avatar}}' width="80" height="80" style="position: relative; bottom: -35px; left: 100px; z-index: 10" />
+	</div>
+</div>
+<div style="margin-top: 50px" >
+	<p class="text-center text-uppercase">{{user.fullName}}</p>
+	<hr />
+	<ul style="position: relative; left: -30px; list-style: none;">
+		<li style="margin: 0 0 30px 0;" *ngFor="let menuitem of ROUTES" [style.color]="style.secondary">
+			<h4 *ngIf="!menuitem.disabled && (!menuitem.restrict || user.isAdmin)"><i  ngClass="{{menuitem.icon}}"></i> <strong [class.text-white]="style.dark" [class.text-primary]="!style.dark">{{menuitem.title}}</strong></h4>
+              	<div *ngIf="!menuitem.disabled && menuitem.type === 'sub' && (!menuitem.restrict || user.isAdmin)">
+   	           	<ul style="list-style: none;">
+                       <li *ngFor="let childitem of menuitem.children">
+                           <h5 *ngIf="!childitem.disabled && (!childitem.restrict || user.isAdmin)">
+                           		<a [routerLink]="[childitem.path]"  routerLinkActive="true"><span [class.text-white]="style.dark" [class.text-primary]="!style.dark">{{childitem.title}}</span></a>
+                           </h5>
+                       </li>
+                   </ul>
+			</div>
+		</li>
+	</ul>
+</div>
+<div style="position: fixed; bottom: 0; margin: 0 0 30px 0;">
+<hr style="width: 280px" />
+<ul style="position: relative; left: -30px; list-style: none;">
+		<li><h4><i class="fa fa-cog" [class.text-white]="style.dark" [class.text-primary]="!style.dark"></i> Settings</h4></li>
+	</ul>
+	</div>
+</div>
+

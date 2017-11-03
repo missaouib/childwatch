@@ -99,7 +99,7 @@
 		<tabset>
 			<tab *ngFor="let ageGroup of AGEGROUPS"
 				 (select)="activeTab=ageGroup">
-				 	<template tabHeading>
+				 	<ng-template tabHeading>
 				 		<i class="fa"
 				 		   [class.fa-check]="ageGroupCacfpStatus(ageGroup)==='COMPLIANT'"
 				 		   [class.fa-close]="ageGroupCacfpStatus(ageGroup)==='NONCOMPLIANT'"
@@ -108,7 +108,7 @@
 				 		   [class.text-danger]="ageGroupCacfpStatus(ageGroup)==='NONCOMPLIANT'"
 				 		   [class.text-info]="ageGroupCacfpStatus(ageGroup)==='UNKNOWN'"></i>&nbsp;
 				 		   {{ageGroup.substring(4).replace('_','-').replace('MO',' MO').replace('YR',' YR')}}
-				 	</template>
+				 	</ng-template>
 				 	
 				 	
 				 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )" >
