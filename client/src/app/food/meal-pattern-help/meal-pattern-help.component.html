@@ -101,7 +101,7 @@
 						<li>2-4 fl. oz. Breast Milk or Iron Fortified Infant Formula or Fruit Juice</li>
 					</ul>
 					<p *ngIf="ageGroup === 'AGE_6_11MO'"><strong>and</strong> one for more as developmentally appropriate</p>
-					<ul>
+					<ul *ngIf="ageGroup === 'AGE_6_11MO'">
 						<li>0-1/2 Slice Bread <strong>or</strong></li>
 						<li>0-2 Crackers <strong>or</strong></li>
 						<li>0-4 tbsp instant cereal or ready-to-eat cereal; <strong>and</strong></li>
@@ -144,7 +144,7 @@
 					<ul *ngIf="ageGroup === 'AGE_0_5MO' && mealType === 'BREAKFAST'">
 						<li>Breastmilk or iron-fortified formula, or portions of both, must be served to infants through 11 months of age</li>
 						<li>Iron-Fortified Infant Formula and/or breastmilk substitutions must be supported by medical statement</li>
-						<li>Note:  Although solid foods re not a part of the 0-5 month age group, if a baby is developmentally ready for solid foods before 6 months of age, the child care provider must offer that infant a developmentally appropriate meal/snack.</li>
+						<li>Note:  Although solid foods are not a part of the 0-5 month age group, if a baby is developmentally ready for solid foods before 6 months of age, the child care provider must offer that infant a developmentally appropriate meal/snack.</li>
 						<li>Infant cereal must be iron-fortified and must be dry.</li>
 						<li>Yogurt must contain no more than 23 grams of sugar per 6 ounces.</li>
 						<li>Yogurt can be served at breakfast, lunch, and supper (not snacks).</li>

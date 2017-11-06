@@ -20,6 +20,7 @@ export interface Meal {
   description: string;
   'type': string;
   mealFoodItems?: MealFoodItem[];
+  inactive?: boolean;
 };
 
 

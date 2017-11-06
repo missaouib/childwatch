@@ -128,10 +128,4 @@ public class MealPredicate {
 
 	static BiPredicate<Meal,List<MealFoodItem>> isOver2YearsOld = is6OrOver.or( isAgeGroup( AgeGroup.AGE_3_5YR ) );
 
-	static BiPredicate<Meal,List<MealFoodItem>> hasHalfCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 0.5, UnitOfMeasure.CUPS ) ) );
-
-	static BiPredicate<Meal,List<MealFoodItem>> hasThreeQuartersCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 0.75, UnitOfMeasure.CUPS ) ) );
-
-	static BiPredicate<Meal,List<MealFoodItem>> hasCupMilk = hasAnyItem( isMilkItem.and( isQuantityItem( 1, UnitOfMeasure.CUPS ) ) );
-
 }

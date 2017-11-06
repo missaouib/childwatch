@@ -19,7 +19,6 @@ public class RequestAuthenticationFilter extends AbstractPreAuthenticatedProcess
 		Cookie[] cookies = request.getCookies();
 		
 		for( Cookie ck : cookies ) {
-			System.out.println( "Processing cookie " + ck.getName() );
 			if( ck.getName().equals("CW_ID") ) {
 				cwid = ck.getValue();
 			}

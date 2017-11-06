@@ -97,7 +97,6 @@ public class InfantRulesTest {
 	public void infant6_11Breakfast_Valid() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 7, UnitOfMeasure.OUNCES, BREAKFAST ),
-			new MealFoodItem( INFANT_CEREAL, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.TABLESPOONS, BREAKFAST ),
 			new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.TABLESPOONS, BREAKFAST ),
 			new MealFoodItem( INFANT_PEACHES, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.TABLESPOONS, BREAKFAST )
 		);	
@@ -110,8 +109,7 @@ public class InfantRulesTest {
 	@Test
 	public void infant6_11Breakfast_InvalidQuantities() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
-			new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 7, UnitOfMeasure.OUNCES, BREAKFAST ),
-			new MealFoodItem( INFANT_CEREAL, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.TABLESPOONS, BREAKFAST ),
+			new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.OUNCES, BREAKFAST ),
 			new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 0.5, UnitOfMeasure.TABLESPOONS, BREAKFAST ),
 			new MealFoodItem( INFANT_PEACHES, AgeGroup.AGE_6_11MO, 0.2, UnitOfMeasure.TABLESPOONS, BREAKFAST )
 		);	
@@ -307,7 +305,6 @@ public class InfantRulesTest {
 	public void infant6_11LunchDinner_Valid() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
 			new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 7, UnitOfMeasure.OUNCES, DINNER ), 
-			new MealFoodItem( INFANT_CEREAL, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.TABLESPOONS, DINNER ),
 			new MealFoodItem( INFANT_MEAT, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.TABLESPOONS, DINNER ),
 			new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 4, UnitOfMeasure.TABLESPOONS, DINNER ) 			
 			
@@ -337,17 +334,15 @@ public class InfantRulesTest {
 	@Test
 	public void infant6_11LunchDinner_InvalidQuantity() {
 		List<MealFoodItem> mealFoodItems = Arrays.asList(
-				new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 7, UnitOfMeasure.OUNCES, DINNER ), 
-				new MealFoodItem( INFANT_CEREAL, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.TABLESPOONS, DINNER ),
+				new MealFoodItem( BREASTMILK, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.OUNCES, DINNER ), 
 				new MealFoodItem( INFANT_MEAT, AgeGroup.AGE_6_11MO, 3, UnitOfMeasure.TABLESPOONS, DINNER ),
-				new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 4, UnitOfMeasure.TABLESPOONS, DINNER ) 			
+				new MealFoodItem( INFANT_CORN, AgeGroup.AGE_6_11MO, 1, UnitOfMeasure.TABLESPOONS, DINNER ) 			
 			);	
 		
 		List<RuleViolation> violations = ctrl.doValidation(DINNER, AgeGroup.AGE_6_11MO, mealFoodItems);
 		
 		assertFalse( violations.isEmpty() );
 	}
-
 	
 	
 	@Test

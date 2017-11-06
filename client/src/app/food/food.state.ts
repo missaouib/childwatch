@@ -70,6 +70,8 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setShowBackground(state, action as FoodActions.ShowBackgroundAction);
     case FoodActions.SHOW_WEEKENDS:
       return setShowWeekends(state, action as FoodActions.ShowWeekendsAction);
+    case FoodActions.INACTIVATE_MEAL:
+      return setInactivateMeal(state, action as FoodActions.InactivateMealAction);
 
   }
   return state;
@@ -304,4 +306,17 @@ function setShowWeekends(state: FoodState, action: FoodActions.ShowWeekendsActio
     ...state,
     showWeekends: action.payload
   }
+}
+
+function setInactivateMeal(state: FoodState, action: FoodActions.InactivateMealAction): FoodState {
+  const meal: Meal = {...action.payload};
+  meal.inactive = true;
+  const meals: Meal[] = state.meals.filter(m => m.id !== meal.id);
+
+  meals.push(meal);
+
+  return {
+    ...state,
+    meals: meals
+  };
 }

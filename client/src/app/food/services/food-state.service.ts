@@ -88,4 +88,10 @@ export class FoodStateService {
     this.store.dispatch(new FoodActions.ShowBackgroundAction(show));
   }
 
+  inactivateMeal(meal: Meal) {
+    var m = Object.assign({}, meal);
+    m.inactive = true;
+    this.store.dispatch(new FoodActions.InactivateMealAction(m)); 
+  }
+
 }

@@ -1,13 +1,15 @@
-import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {CalendarEvent, CalendarMonthViewDay} from 'angular-calendar';
 
 import {Meal, MealEvent} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
+import {MealEventService} from '../services/meal-event.service';
 import {MealService} from '../services/meal.service';
 import * as moment from 'moment';
 import {Router} from '@angular/router';
 import {UUID} from 'angular2-uuid';
+import {ToastsManager} from 'ng2-toastr';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 
@@ -91,6 +93,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
 export class MealCalendarComponent implements OnInit {
 
   @ViewChild('modalTemplate') modal: ElementRef;
+  @ViewChild('modalAlreadyScheduled') modalAlreadyScheduled: ElementRef;
 
   mealToDrop: Meal = undefined;
   whenToDrop: Date = undefined;
@@ -134,9 +137,14 @@ export class MealCalendarComponent implements OnInit {
   constructor(
     private state: FoodStateService,
     private mealSvc: MealService,
+    private mealEventSvc: MealEventService,
     private router: Router,
+    public toastr: ToastsManager,
+    vcr: ViewContainerRef,
     private modalSvc: BsModalService
-  ) {}
+  ) {
+    this.toastr.setRootViewContainerRef(vcr);
+  }
 
   ngOnInit() {
     this.mealSvc.query().subscribe();
@@ -145,7 +153,6 @@ export class MealCalendarComponent implements OnInit {
 
     this.state.adjustMenuTime(moment(today).startOf('month').toDate(), moment(today).endOf('month').toDate());
     this.state.mealEvents$.subscribe((events) => {
-      console.log('Events list was updated - now ' + events.length + ' events');
       this.eventList = events;
       this.refresh.next();
     });
@@ -214,6 +221,18 @@ export class MealCalendarComponent implements OnInit {
     this.router.navigate(['./meals/meal-builder']);
   }
 
+  deleteMeal(meal: Meal) {
+    this.mealEventSvc.queryForMeal(meal).subscribe((events: MealEvent[]) => {
+      if (events.length > 0) {
+        this.modalRef = this.modalSvc.show(this.modalAlreadyScheduled, {ignoreBackdropClick: true});
+      }
+      else {
+        this.state.inactivateMeal(meal);
+        this.toastr.success('Meal ' + meal.description + ' has been inactivated.  It is still valid for past schedules, but no longer editable or available for future schedules', 'Inactivate Meal')
+      }
+    });
+  }
+
   removeEvent(event: CalendarEvent<MealEvent>) {
     console.log('removing event ', event.meta.meal.id);
     // this.eventList = this.eventList.filter(e => e.meta.id !== event.meta.id);
@@ -261,8 +280,6 @@ export class MealCalendarComponent implements OnInit {
   mealDropped(meal: Meal, when?: Date) {
 
     const _when = moment(new Date(when) || new Date(this.viewDate)).toDate();
-
-    console.log('Dropping meal on ' + _when);
 
     if (this.mealTypeAlreadyPlanned(meal, _when)) {
       this.mealToDrop = meal;

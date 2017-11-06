@@ -21,6 +21,8 @@ public class Meal implements Serializable {
 	private String id;
 
 	private String description;
+	
+	private boolean inactive;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="meal_type")
@@ -35,6 +37,14 @@ public class Meal implements Serializable {
 		this.type = type;
 	}
 	
+
+	public boolean isInactive() {
+		return inactive;
+	}
+
+	public void setInactive(boolean inactive) {
+		this.inactive = inactive;
+	}
 
 	public String getDescription() {
 		return description;
@@ -56,5 +66,6 @@ public class Meal implements Serializable {
 		return id;
 	}
 
+	
 
 }

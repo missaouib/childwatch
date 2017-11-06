@@ -18,6 +18,7 @@ public class RulesTestUtils {
 	public static FoodItem INFANT_CRACKER = new FoodItem( "infant cracker", "infant cracker", Arrays.asList( "AGE_0_5MO", "AGE_6_11MO", "GRAIN", "CRACKER" ) );
 	public static FoodItem INFANT_FRUITJUICE = new FoodItem( "infant fruit juice", "infant fruit juice", Arrays.asList( "AGE_0_5MO", "AGE_6_11MO", "FRUIT", "JUICE" ) );
 
+	public static FoodItem LOWFATMILK = new FoodItem( "Milk, Fluid, Low-Fat or 1%", "Milk, Fluid, Low-Fat or 1%", Arrays.asList( "MILK" ) );
 	public static FoodItem SKIMMILK = new FoodItem( "skim milk", "skim milk", Arrays.asList( "MILK" ) );	
 	public static FoodItem WHOLEMILK = new FoodItem( "whole milk", "whole milk", Arrays.asList( "MILK" ) );	
 	public static FoodItem CHOCOLATEMILK = new FoodItem( "skim chocolate milk", "skim chocolate milk", Arrays.asList( "MILK" ) );	

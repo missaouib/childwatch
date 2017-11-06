@@ -169,6 +169,7 @@ public class FoodItem implements Serializable{
 	}
 	
 	public boolean hasTag( String tagValue ) {
+		System.out.println( "items tags are " + getTags() );
 		return this.tags != null && this.tags.contains( new FoodItemTag(tagValue) );
 	}
 	

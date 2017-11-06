@@ -18,7 +18,7 @@ import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 public class NonInfantRulesTest {
 	
 	RuleValidatorController ctrl = new RuleValidatorController();
-		
+/*		
 	@Test
 	public void child1_Breakfast_Valid() {
 		
@@ -554,6 +554,7 @@ public class NonInfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
+	@Test
 	public void child1_Snack_MilkVegJuice() {
 		Meal meal = SNACK;
 		AgeGroup ageGroup = AgeGroup.AGE_1YR;
@@ -568,6 +569,7 @@ public class NonInfantRulesTest {
 		assertFalse( violations.isEmpty() );
 	}
 
+	@Test
 	public void child1_Snack_MilkFruitVegJuice() {
 		Meal meal = SNACK;
 		AgeGroup ageGroup = AgeGroup.AGE_1YR;
@@ -583,5 +585,24 @@ public class NonInfantRulesTest {
 		
 		assertTrue( violations.isEmpty() );
 	}
-
+*/
+	
+	@Test
+	public void child2_BreakfastValid() {
+		Meal meal = BREAKFAST;
+		AgeGroup ageGroup = AgeGroup.AGE_2YR;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( LOWFATMILK, ageGroup, 0.5, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( BREAD, ageGroup, 0.5, UnitOfMeasure.OUNCES, meal ),
+			new MealFoodItem( PEACHES, ageGroup, 0.25, UnitOfMeasure.CUPS, meal )
+			
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
+	
+	
 }

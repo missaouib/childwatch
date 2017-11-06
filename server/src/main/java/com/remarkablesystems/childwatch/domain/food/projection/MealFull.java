@@ -13,4 +13,5 @@ public interface MealFull {
 	String getId();
 	String getDescription();
 	MealType getType();
+	boolean isInactive();
 }

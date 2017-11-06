@@ -1550,13 +1550,44 @@ INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('6f0fb114-15b9-4a50-
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('044fad40-4821-4128-838a-da8884145945', 'AGE_GT_6MO');
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('bd31b01b-4909-4efa-9ba0-185b0c05bbda', 'AGE_1YR');
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('23f75e9c-11de-4d29-b17f-6b90befced97', 'AGE_13_18YR');
-INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('85f34ad5-cda6-4ac0-9db7-e94b73da4780', 'AGE_GT_2YR');
-INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('b743fb0e-ee47-403f-a817-9b25b794c4b7', 'AGE_GT_2YR');
-INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4eacf541-7482-4999-b520-4b8ee98bb26f', 'AGE_GT_2YR');
-INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('5b22a6bd-0174-4ce1-9b4a-cbf2b66e2ead', 'AGE_GT_2YR');
-INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c9396d34-592f-4d82-bc80-648a23d0f3a6', 'AGE_GT_2YR');
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('46f9f05a-f253-4854-97c2-48b470174f0b', 'AGE_6_12YR');
-INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_GT_2YR');
+
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('85f34ad5-cda6-4ac0-9db7-e94b73da4780', 'AGE_2YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('85f34ad5-cda6-4ac0-9db7-e94b73da4780', 'AGE_3_5YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('85f34ad5-cda6-4ac0-9db7-e94b73da4780', 'AGE_6_12YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('85f34ad5-cda6-4ac0-9db7-e94b73da4780', 'AGE_13_18YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('85f34ad5-cda6-4ac0-9db7-e94b73da4780', 'AGE_ADULT');
+
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('b743fb0e-ee47-403f-a817-9b25b794c4b7', 'AGE_2YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('b743fb0e-ee47-403f-a817-9b25b794c4b7', 'AGE_3_5YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('b743fb0e-ee47-403f-a817-9b25b794c4b7', 'AGE_6_12YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('b743fb0e-ee47-403f-a817-9b25b794c4b7', 'AGE_13_18YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('b743fb0e-ee47-403f-a817-9b25b794c4b7', 'AGE_ADULT');
+
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4eacf541-7482-4999-b520-4b8ee98bb26f', 'AGE_2YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4eacf541-7482-4999-b520-4b8ee98bb26f', 'AGE_3_5YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4eacf541-7482-4999-b520-4b8ee98bb26f', 'AGE_6_12YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4eacf541-7482-4999-b520-4b8ee98bb26f', 'AGE_13_18YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4eacf541-7482-4999-b520-4b8ee98bb26f', 'AGE_ADULT');
+
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('5b22a6bd-0174-4ce1-9b4a-cbf2b66e2ead', 'AGE_2YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('5b22a6bd-0174-4ce1-9b4a-cbf2b66e2ead', 'AGE_3_5YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('5b22a6bd-0174-4ce1-9b4a-cbf2b66e2ead', 'AGE_6_12YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('5b22a6bd-0174-4ce1-9b4a-cbf2b66e2ead', 'AGE_13_18YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('5b22a6bd-0174-4ce1-9b4a-cbf2b66e2ead', 'AGE_ADULT');
+
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c9396d34-592f-4d82-bc80-648a23d0f3a6', 'AGE_2YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c9396d34-592f-4d82-bc80-648a23d0f3a6', 'AGE_3_5YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c9396d34-592f-4d82-bc80-648a23d0f3a6', 'AGE_6_12YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c9396d34-592f-4d82-bc80-648a23d0f3a6', 'AGE_13_18YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c9396d34-592f-4d82-bc80-648a23d0f3a6', 'AGE_ADULT');
+
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_2YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_3_5YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_6_12YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_13_18YR');
+INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_ADULT');
+
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('d65b0267-1fbf-45b2-ac80-77c4b049ee17', 'AGE_6_12YR');
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('c6cce5a8-14bb-464d-b188-669e9af9f7aa', 'WHOLEGRAIN');
 INSERT INTO food_item_tag (food_item_id, tag_value) VALUES ('4dbbbfe5-a5b0-4132-beae-54c1f91ab6ee', 'AGE_GT_6MO');

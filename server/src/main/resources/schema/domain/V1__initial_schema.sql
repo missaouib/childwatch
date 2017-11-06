@@ -16,6 +16,7 @@
     	id 				varchar(36) NOT NULL,
     	description 	varchar(128) NOT NULL,
     	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER' ) ),
+    	inactive		BOOLEAN NOT NULL DEFAULT false,
     	notes			varchar(4096)
     );
     

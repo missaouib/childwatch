@@ -31,13 +31,25 @@
 </ng-template>
 
 
+<ng-template #modalAlreadyScheduled>
+	  <div class="modal-header">
+	    <h4 class="modal-title pull-left">Meal already planned</h4>
+	  </div>
+	  <div class="modal-body">
+	    You cannot delete a meal that is planned in the future.  Please unschedule the meal before deleting. <br/><br/>
+	    <hr/>
+	    <div class="text-center"><button class="btn btn-default" (click)="modalRef.hide()">Ok</button></div>
+	  </div>
+</ng-template>
+
+
 <div class="container-fluid">
 
 	<div class="row">
 	
 		<!-- MENU -->
 		<div class="col-sm-3 hidden-xs">
-			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()"></cw-meal-list>
+			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()" (delete)="deleteMeal($event)"></cw-meal-list>
 		</div>
 		
 		<!-- CALENDAR -->

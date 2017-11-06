@@ -19,11 +19,12 @@ export class MealListComponent implements OnInit {
 
   @Output() edit: EventEmitter<Meal> = new EventEmitter<Meal>();
   @Output() add: EventEmitter<any> = new EventEmitter();
+  @Output() delete: EventEmitter<Meal> = new EventEmitter<Meal>();
 
   constructor(private state: FoodStateService) {}
 
   ngOnInit() {
-    this.state.meals$.share().subscribe(meals => this.Meals = meals);
+    this.state.meals$.share().subscribe(meals => this.Meals = meals.filter(meal => !meal.inactive));
   }
 
   filterMeals(filter: string) {
@@ -61,5 +62,9 @@ export class MealListComponent implements OnInit {
 
   addMeal() {
     this.add.emit();
+  }
+
+  deleteMeal(meal: Meal) {
+    this.delete.emit(meal);
   }
 }

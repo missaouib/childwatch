@@ -129,10 +129,10 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	// 2 Year olds
 	static MealRule breakfast_2YR = MealRule.create("breakfast_2YR")
 		.appliesTo( isBreakfast.and( isAgeGroup( AgeGroup.AGE_2YR ) ) )
-		.whenNot( hasAllItems( isForAgeGroup( AgeGroup.AGE_2YR ) )  
+		.whenNot( hasAllItems( isForAgeGroup( AgeGroup.AGE_2YR ) )
 				  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 0.5, UnitOfMeasure.CUPS ) )
 				  .and( sumHasQuantity( isVegOrFruitItem, 0.25, UnitOfMeasure.CUPS ) )
-				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 0.5, UnitOfMeasure.OUNCES ) )
+				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 0.5, UnitOfMeasure.OUNCES ) )				  
 				)
 		.thenFail( "2yr olds must have 1/2 cup low-fat/fat-free milk, 1/4 cup vegetables/fruit, and 1/2 ounce of grain or meat/alternative for breakfast");
 

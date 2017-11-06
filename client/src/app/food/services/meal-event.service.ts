@@ -1,6 +1,6 @@
 import {AppState} from '../../app.state';
 import * as FoodActions from '../food.actions';
-import {MealEvent} from '../food.interfaces';
+import {MealEvent, Meal} from '../food.interfaces';
 import {Injectable} from '@angular/core';
 import {Http, URLSearchParams} from '@angular/http';
 import {Store} from '@ngrx/store';
@@ -31,7 +31,17 @@ export class MealEventService {
     return this.http.get(MealEventService.URL + '/search/between', {search: params})
       .map(res => res.json())
       .map(({_embedded: {mealEvent}}) =>
-        this.store.dispatch(new FoodActions.MealEventsReceivedAction( mealEvent )));
+        this.store.dispatch(new FoodActions.MealEventsReceivedAction(mealEvent)));
+  }
+
+  queryForMeal(meal: Meal) {
+    const params = new URLSearchParams();
+    params.append('projection', 'mealEventFull');
+    params.append('mealId', meal.id);
+
+    return this.http.get(MealEventService.URL + '/search/findByMealId', {search: params})
+      .map(res => res.json())
+      .map(({_embedded: {mealEvent}}) => mealEvent);
   }
 
   save(mealEvent: MealEvent) {
