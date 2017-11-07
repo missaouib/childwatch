@@ -21,6 +21,7 @@ export interface Meal {
   'type': string;
   mealFoodItems?: MealFoodItem[];
   inactive?: boolean;
+  compliant?: boolean;
 };
 
 

@@ -72,6 +72,8 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setShowWeekends(state, action as FoodActions.ShowWeekendsAction);
     case FoodActions.INACTIVATE_MEAL:
       return setInactivateMeal(state, action as FoodActions.InactivateMealAction);
+    case FoodActions.MEAL_COMPLIANCE:
+      return setMealCompliance(state, action as FoodActions.MealComplianceAction);
 
   }
   return state;
@@ -313,6 +315,19 @@ function setInactivateMeal(state: FoodState, action: FoodActions.InactivateMealA
   meal.inactive = true;
   const meals: Meal[] = state.meals.filter(m => m.id !== meal.id);
 
+  meals.push(meal);
+
+  return {
+    ...state,
+    meals: meals
+  };
+}
+
+function setMealCompliance(state: FoodState, action: FoodActions.MealComplianceAction): FoodState {
+  const meal = {...action.payload.meal}, compliance = action.payload.compliance;
+  meal.compliant = compliance;
+
+  const meals: Meal[] = state.meals.filter(m => m.id !== meal.id);
   meals.push(meal);
 
   return {

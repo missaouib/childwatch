@@ -54,7 +54,7 @@ public class RuleValidatorController {
 	}
 	
 	
-	public List<RuleViolation> doValidation( Meal meal, AgeGroup ageGroup, List<MealFoodItem> mealFoodItems ){
+	List<RuleViolation> doValidation( Meal meal, AgeGroup ageGroup, List<MealFoodItem> mealFoodItems ){
 		List<RuleViolation> violations = new ArrayList<RuleViolation>();
 		
 		List<MealFoodItem> explodedList = explodeMealFoodItems( mealFoodItems );
@@ -82,11 +82,14 @@ public class RuleValidatorController {
 	
 		Meal meal = mealRepo.findOne(mealId);
 		
-		if( meal == null ) return Collections.emptyList();
+		return ( meal == null )? Collections.emptyList() : validate( meal );
 		
+	}
+	
+	
+	public List<RuleViolation> validate( Meal meal ){
 		List<RuleViolation> violations = new ArrayList<RuleViolation>();
-		AgeGroup.ALL.stream().forEachOrdered( (ageGroup) -> violations.addAll( doValidation( meal, ageGroup, mealFoodItemRepo.findByMealIdAndAgeGroup( mealId, ageGroup ) ) ) );
-		
-		return violations;
+		AgeGroup.ALL.stream().forEachOrdered( (ageGroup) -> violations.addAll( doValidation( meal, ageGroup, mealFoodItemRepo.findByMealIdAndAgeGroup( meal.getId(), ageGroup ) ) ) );		
+		return violations;		
 	}
 }

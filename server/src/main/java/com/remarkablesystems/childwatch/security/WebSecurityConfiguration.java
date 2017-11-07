@@ -54,7 +54,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
         	.addFilterAfter(headerFilter(), RequestAuthenticationFilter.class)
             .authorizeRequests()
-                .antMatchers("/", "/login", "/assets/**/*", "/**/*.svg", "/**/*.woff", "/**/*.woff2", "/**/*.ttf", "/**/*.ico", "/**/*.js", "/**/*.css", "/**/img/*", "/api", "/api/**/*", "/rules", "/rules/**/*").permitAll()
+                .antMatchers("/", "/login", "/assets/**/*", "/**/*.svg", "/**/*.woff", "/**/*.woff2", "/**/*.ttf", 
+                			 "/**/*.ico", "/**/*.js", "/**/*.css", "/**/img/*", "/api", "/api/**/*", 
+                			 "/rules", "/rules/**/*", "/generatemenu", "/generatemenu/**/*").permitAll()
                 .anyRequest().authenticated().and()
             .csrf().disable()
             .sessionManagement()

@@ -37,7 +37,7 @@ export class FoodItemUtils {
       return ageGroup !== 'AGE_0_5MO';
     else if (FoodItemUtils.tagContainsAny(foodItem, ['AGE_0_5MO', 'AGE_6_11MO']))
       return ageGroup === 'AGE_0_5MO' || ageGroup === 'AGE_6_11MO';
-    else if (FoodItemUtils.tagContainsAny(foodItem, ['AGE_1_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT']))
+    else if (FoodItemUtils.tagContainsAny(foodItem, ['AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT']))
       return false;
     else return ageGroup !== 'AGE_0_5MO' && ageGroup !== 'AGE_6_11MO';
   }

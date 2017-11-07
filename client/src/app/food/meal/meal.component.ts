@@ -233,6 +233,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   droppedFoodItem(foodItem: FoodItem) {
+    console.log('droppedFoodItem ', foodItem);
     if (foodItem)
       this.addMealFoodItem(foodItem);
     this.emptyShow = false;
@@ -246,6 +247,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       this.AGEGROUPS.filter(a => a !== 'AGE_0_5MO' && a !== 'AGE_6_11MO').forEach(ag => this.copyTo(ag));
     }
     else if (ageGroup !== this.activeTab) {
+      console.log('Copying ' + this.mealFoodItemsFor(this.activeTab).length + ' items; from ' + this.activeTab + ' to ' + ageGroup);
       this.mealFoodItemsFor(this.activeTab).forEach((item: MealFoodItem) => this.addMealFoodItem(item.foodItem, ageGroup));
     }
 

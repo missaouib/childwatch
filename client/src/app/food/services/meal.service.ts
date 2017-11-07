@@ -6,7 +6,7 @@
  */
 import {AppState} from '../../app.state';
 import * as FoodActions from '../food.actions';
-import {Meal, MealFoodItem} from '../food.interfaces';
+import {Meal, MealFoodItem, MealRulesViolation} from '../food.interfaces';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Http, URLSearchParams} from '@angular/http';
@@ -49,7 +49,11 @@ export class MealService {
    * @returns Observable<Response>
    */
   save(meal: Meal) {
-    return this.http.post(this.URL, meal);
+
+    var postMeal = {...meal};
+    delete postMeal.compliant;
+
+    return this.http.post(this.URL, postMeal);
     // .map( () => this.store.dispatch( this.actions.mealSaved( meal ) ) );
   }
 
@@ -129,7 +133,13 @@ export class MealService {
     params.set('mealId', meal.id);
 
     return this.http.get('/rules', {search: params})
-      .map(res => res.json());
+      .map(res => {
+        const violations: MealRulesViolation[] = res.json();
+        console.log('found ' + violations.length + ' violations for ' + meal.description);
+        const compliance = (violations.filter(v => v.severity === 'FAIL').length === 0);
+        this.store.dispatch(new FoodActions.MealComplianceAction({meal: meal, compliance: compliance}));
+        return violations;
+      });
   }
 
 }

@@ -24,7 +24,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
 
-version = '2.0.0-BETA.19'
+version = '2.0.0-BETA.20'
 sourceCompatibility = 1.8
 
 repositories {
@@ -40,6 +40,9 @@ dependencies {
     compile('org.hibernate:hibernate-java8')
     runtime('org.postgresql:postgresql')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.6.RELEASE'
+	compile group: 'org.xhtmlrenderer', name: 'flying-saucer-core', version: '9.1.6'
+	compile group: 'org.xhtmlrenderer', name: 'flying-saucer-pdf-itext5', version: '9.1.6'    
 }
 
 archivesBaseName = 'cw2'

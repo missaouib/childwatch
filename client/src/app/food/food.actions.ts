@@ -32,6 +32,7 @@ export const MEALRULESVIOLATIONS_RECEIVED: string = '[FOOD] MEALRULESVIOLATIONS 
 export const SHOW_BACKGROUND: string = '[FOOD] SHOW BACKGROUND';
 export const SHOW_WEEKENDS: string = '[FOOD] SHOW WEEKENDS';
 export const INACTIVATE_MEAL: string = '[FOOD] INACTIVATE MEAL';
+export const MEAL_COMPLIANCE: string = '[FOOD] MEAL COMPLIANCE'
 
 
 export class MealsReceivedAction implements Action {
@@ -134,6 +135,11 @@ export class InactivateMealAction implements Action {
   constructor(public payload: Meal) {};
 }
 
+export class MealComplianceAction implements Action {
+  readonly type = MEAL_COMPLIANCE;
+  constructor(public payload: {meal: Meal, compliance?: boolean}) {};
+}
+
 export type ACTIONS
   = MealsReceivedAction
   | MealEventsReceivedAction
@@ -154,4 +160,5 @@ export type ACTIONS
   | MealRulesViolationsReceivedAction
   | ShowBackgroundAction
   | ShowWeekendsAction
-  | InactivateMealAction;
+  | InactivateMealAction
+  | MealComplianceAction;

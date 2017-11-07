@@ -3,7 +3,11 @@ package com.remarkablesystems.childwatch.domain.food;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.remarkablesystems.childwatch.domain.Spring;
 import com.remarkablesystems.childwatch.domain.food.projection.MealFull;
+import com.remarkablesystems.childwatch.rules.RuleValidatorController;
 
 
 
@@ -27,8 +31,8 @@ public class Meal implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name="meal_type")
 	private MealType type;
-
-
+	
+	
 	public Meal() {}
 	
 	public Meal( String id, String description, MealType type ) {
@@ -65,7 +69,11 @@ public class Meal implements Serializable {
 	public String getId() {
 		return id;
 	}
-
 	
+	@Transient
+	public boolean isCompliant() {
+		RuleValidatorController validator = Spring.bean(RuleValidatorController.class);
+		return validator.validate(this).isEmpty();
+	}
 
 }

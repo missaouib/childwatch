@@ -1,5 +1,5 @@
 <div class="row">
-	<h3 class="text-primary">Meals </h3>	
+	<h3 class="text-primary">Meals <small *ngIf="showNoncompliant">(SHOWING NONCOMPLIANT)</small></h3>	
 	<div class="pull-right">
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
@@ -7,13 +7,16 @@
 		<span dropdown container="body">
 			<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">: <strong>{{filter}}</strong></span></a>
 			<ul *dropdownMenu class="dropdown-menu">
-				<li ><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL</a></li>
 				<li class="divider dropdown-divider"></li>
-				<li ><a class="dropdown-item" (click)="filterMeals( 'BREAKFAST' )">Breakfast</a></li>
-				<li ><a class="dropdown-item" (click)="filterMeals( 'AM_SNACK' )">AM Snack</a></li>
-				<li ><a class="dropdown-item" (click)="filterMeals( 'LUNCH' )">Lunch</a></li>
-				<li ><a class="dropdown-item" (click)="filterMeals( 'PM_SNACK' )">PM Snack</a></li>
-				<li ><a class="dropdown-item" (click)="filterMeals( 'DINNER' )">Dinner</a></li>
+				
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'BREAKFAST' )">Breakfast</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'AM_SNACK' )">AM Snack</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'LUNCH' )">Lunch</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'PM_SNACK' )">PM Snack</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'DINNER' )">Dinner</a></li>
+				<li class="divider dropdown-divider"></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );">{{showNoncompliant? 'Hide' : 'Show' }} Noncompliant</a></li>
 			</ul>
 		</span>
 	</div>		
@@ -22,7 +25,7 @@
 
 <div class="row">
 	<table class="table table-condensed" >
-		<tr *ngFor="let meal of pagedMeals()" dnd-draggable [dragEnabled]="true" [dragData]="meal" >
+		<tr *ngFor="let meal of pagedMeals()" dnd-draggable [dragEnabled]="meal.compliant" [dragData]="meal" [class.danger]="meal.compliant === false">
 			<td class="col=sm-1" [ngSwitch]="meal.type">
 				<img class="small-img" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />

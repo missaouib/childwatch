@@ -4,7 +4,7 @@
     <span class="cal-day-number"><strong>{{ day.date | calendarDate:'monthViewDayNumber' }}</strong></span>
   </div>
   <div class="call-events" *ngFor="let event of day.events" >
-  	<div class="chip" [ngSwitch]="event.meta.meal.type">
+  	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant">
 				<img *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 				<img  *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
 				<img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
@@ -72,10 +72,11 @@
 					<h3 class="text-center text-primary">
 						{{ viewDate | date:'MMMM yyyy' }} 
 					</h3>
-					<span class="pull-right checkbox" style="z-index: 10;">
+<!--  					<span class="pull-right checkbox" style="z-index: 10;">
 						<label><input [(ngModel)]="showWeekends" type="checkbox" (change)="flipWeekend($event)"> Show Weekends</label>
 						<label><input [(ngModel)]="showBackground" type="checkbox"> Show Background</label>
 					</span>
+-->					
 			</div>
 			<br />
 			<div class="hidden-xs" style="z-index: 10;">
