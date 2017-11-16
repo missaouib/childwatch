@@ -20,6 +20,8 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	static Predicate<MealFoodItem> isGrainItem = hasTag( "GRAIN" ).and( hasTag( "BAKED" ).negate() );
 	
 	static Predicate<MealFoodItem> isMeatOrAlt = hasTag( "MEAT").or( hasTag("MEATALT") );
+	
+	static Predicate<MealFoodItem> isYogurt = hasTag( "YOGURT" );
 
 	static BiPredicate<Meal,List<MealFoodItem>> isNonInfant = isAgeGroup( AgeGroup.AGE_1YR )
 															  .or( isAgeGroup( AgeGroup.AGE_2YR) )
@@ -33,6 +35,7 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 	static Predicate<MealFoodItem> isForAgeGroup( AgeGroup ageGroup ){ 
 		return ( ageGroup != AgeGroup.AGE_0_5MO )? hasTag( ageGroup.toString() ).or( hasTag( "AGE_GT_6MO" ) ).or(hasNoAgeTags) : hasTag( ageGroup.toString() );
 	}
+	
 	
 	String name;
 
@@ -120,7 +123,6 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ).and( hasAtLeastCountItems( 1, isVegItem.or(isFruitItem).and(isJuice.negate()))) )
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) ) )
-							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ).and( hasAtLeastCountItems( 1, isVegItem.and(isJuice.negate()))) ) 							
 						)
 					 )
 			.thenFail( "1Yr olds must have a snack consisting of at least 2 of 1/2 cup whole milk, 1/2 oz meat/alternative, 1/2 cup vegetable, 1/2 cup fruit or 1 cup total of two different vegetables, and 1/2 oz grain.  Only one of two components may be a beverage.");
@@ -160,7 +162,6 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ).and( hasAtLeastCountItems( 1, isVegItem.or(isFruitItem).and(isJuice.negate()))) )
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) ) )
-							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ).and( hasAtLeastCountItems( 1, isVegItem.and(isJuice.negate()))) ) 							
 						)
 					 )
 			.thenFail( "2yr olds must have a snack consisting of at least 2 of 1/2 cup low-fat/fat-free milk, 1/2 oz meat/alternative, 1/2 cup vegetable, 1/2 cup fruit or 1 cup total of two different vegetables, and 1/2 oz grain.  Only one of two components may be a beverage.");
@@ -203,7 +204,6 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ).and( hasAtLeastCountItems( 1, isVegItem.or(isFruitItem).and(isJuice.negate()))) )
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 0.5, UnitOfMeasure.OUNCES ) ) )
-							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ).and( hasAtLeastCountItems( 1, isVegItem.and(isJuice.negate()))) ) 
 						)
 					 )
 			.thenFail( "Ages 3-5 must have a snack consisting of at least 2 of 1/2 cup low-fat/fat-free milk, 1/2 oz meat/alternative, 1/2 cup vegetable, 1/2 cup fruit or 1 cup total of two different vegetables and 1/2 oz grain.  Only one of two components may be a beverage.");
@@ -243,7 +243,6 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 							.or( sumHasQuantity( isVegItem, 0.75, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.75, UnitOfMeasure.CUPS ) ).and( hasAtLeastCountItems( 1, isVegItem.or(isFruitItem).and(isJuice.negate()))) )
 							.or( sumHasQuantity( isVegItem, 0.75, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isFruitItem, 0.75, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
-							.or( sumHasQuantity( isVegItem, 1.5, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ).and( hasAtLeastCountItems( 1, isVegItem.and(isJuice.negate()))) ) 							
 						)
 					 )
 			.thenFail( "Ages 6-18 must have a snack consisting of at least 2 of 1 cup low-fat/fat-free milk, 1 oz meat/alternative, 3/4 cup vegetable, 3/4 cup fruit or 3/4 cups each of two different vegetables, 1 oz grain. Only one of two components may be a beverage.");
@@ -258,9 +257,16 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 				  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ) )
 				  .and( sumHasQuantity( isVegOrFruitItem, 0.5, UnitOfMeasure.CUPS ) )
 				  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt ), 2, UnitOfMeasure.OUNCES ) )
+				  .or(
+						  hasAllItems( isForAgeGroup( AgeGroup.AGE_ADULT ) ) 
+						  .and( sumHasQuantity( isYogurt, 1, UnitOfMeasure.CUPS ) )
+						  .and( sumHasQuantity( isVegOrFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+						  .and( sumHasQuantity( isGrainItem.or( isMeatOrAlt), 2, UnitOfMeasure.OUNCES ).and( hasAtLeastCountItemsDistinct(1,isGrainItem.or(isMeatOrAlt.and(isYogurt.negate())) ) ) )						  
+				   )
 				)
-		.thenFail( "Adults must have 1 cup fat-free/low-fat milk, 1/2 cup vegetables and/or fruit, and 2 oz of grains or meat alternative for breakfast");
+		.thenFail( "Adults must have 1 cup fat-free/low-fat milk (or yogurt), 1/2 cup vegetables and/or fruit, and 2 oz of grains or meat alternative for breakfast");
 
+	
 	static MealRule lunch_ADULT = MealRule.create("lunch_ADULT")
 			.appliesTo( isLunch.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
 			.whenNot( hasAllItems( isForAgeGroup( AgeGroup.AGE_ADULT ) ) 
@@ -268,9 +274,17 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 					  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ) )
 					  .and( sumHasQuantity( isGrainItem, 2, UnitOfMeasure.OUNCES ) )
 					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
-							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) )					  
+							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) )
+					  .or(
+							  hasAllItems( isForAgeGroup( AgeGroup.AGE_ADULT ) ) 
+							  .and( sumHasQuantity( isYogurt, 1, UnitOfMeasure.CUPS ) )
+							  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ).and( hasAtLeastCountItemsDistinct(1,isMeatOrAlt.and(isYogurt.negate())) ) )
+							  .and( sumHasQuantity( isGrainItem, 2, UnitOfMeasure.OUNCES ) )
+							  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+									.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) )							  
+					   )
 					)
-			.thenFail( "Adults must have 1 cup fat-free/low-fat milk, 2oz of meat/alternative, 1/2 cup vegetables, 1/2 cup fruit or 1 cup total of two different vegetables, and 2 oz of grains for lunch");
+			.thenFail( "Adults must have 1 cup fat-free/low-fat milk (or yogurt), 2oz of meat/alternative, 1/2 cup vegetables, 1/2 cup fruit or 1 cup total of two different vegetables, and 2 oz of grains for lunch");
 
 	static MealRule dinner_ADULT = MealRule.create("dinner_ADULT")
 			.appliesTo( isDinner.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
@@ -279,27 +293,35 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 					  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ) )
 					  .and( sumHasQuantity( isGrainItem, 2, UnitOfMeasure.OUNCES ) )
 					  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
-							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) )					  
+							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) )
+					  .or(
+							  hasAllItems( isForAgeGroup( AgeGroup.AGE_ADULT ) ) 
+							  .and( hasNoItems(isYogurt).or( sumHasQuantity( isYogurt, 1, UnitOfMeasure.CUPS ) ) )
+							  .and( sumHasQuantity( isMeatOrAlt, 2, UnitOfMeasure.OUNCES ).and( hasAtLeastCountItemsDistinct(1,isMeatOrAlt.and(isYogurt.negate()) ) ) )
+							  .and( sumHasQuantity( isGrainItem, 2, UnitOfMeasure.OUNCES ) )
+							  .and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) )
+									.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) ) 					
+					  )					  
 					)
 			.thenFail( "Adults must have 2oz of meat/alternative, 1/2 cup vegetables, 1/2 cup fruit or 1 cup total of two different vegetables, 2 oz of grains, and optionally 1 cup of fat-free/low-fat milk for dinner");
 
 	static MealRule snack_ADULT = MealRule.create("snack_ADULT")
 			.appliesTo( isSnack.and( isAgeGroup( AgeGroup.AGE_ADULT ) ) )
 			.whenNot( hasAllItems( isForAgeGroup( AgeGroup.AGE_ADULT ) ) 
-					  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )												
-							.or( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) ) )
-							.or( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ) )
-							.or( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
+					  .and( sumHasQuantity( isLowFatOrFatFreeMilkItem, 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ) )
+							  .or( sumHasQuantity( isYogurt, 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.CUPS ) ).and( hasAtLeastCountItemsDistinct(1,isMeatOrAlt.and(isYogurt.negate()))) )  
+							.or( sumHasQuantity( isLowFatOrFatFreeMilkItem.or( isYogurt ), 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) ) )
+							.or( sumHasQuantity( isLowFatOrFatFreeMilkItem.or( isYogurt ), 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ) )
+							.or( sumHasQuantity( isLowFatOrFatFreeMilkItem.or( isYogurt ), 1, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ).and( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ) ) )
 							.or( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ) )
 							.or( sumHasQuantity( isMeatOrAlt, 1, UnitOfMeasure.OUNCES ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ) ) )
 							.or( sumHasQuantity( isVegItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
 							.or( sumHasQuantity( isFruitItem, 0.5, UnitOfMeasure.CUPS ).and( sumHasQuantity( isGrainItem, 1, UnitOfMeasure.OUNCES ) ) )
-							.or( sumHasQuantity( isVegItem, 1, UnitOfMeasure.CUPS ).and( hasAtLeastCountItemsDistinct( 2, isVegItem ) ) ) 														
 						)
 					 )
-			.thenFail( "Adults must have a snack consisting of at least 2 of 1 cup low-fat/fat-free milk, 1 oz meat/alternative, 1/2 cup vegetable, 1/2 cup fruit, 1 oz grain");
+			.thenFail( "Adults must have a snack consisting of at least 2 of 1 cup low-fat/fat-free milk (or yogurt), 1 oz meat/alternative, 1/2 cup vegetable, 1/2 cup fruit, 1 oz grain");
 	
 	//----------------------------------------------------------------------------------------------------------------	
 	// OTHER RULES
@@ -309,19 +331,11 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 			.thenFail( "Infant items can only be served to ages < 1yr" );
 
 	
-	static MealRule warnOnlyMeatSubThreeTimePerWeek = MealRule.create("warnOnlyMeatSubThreeTimePerWeek")
-			.appliesTo( isNonInfant.and( isBreakfast ) )
-			.when( hasAnyItem( isMeatOrAlt).and( hasNoItems(isGrainItem) ) )
-			.thenWarn( "Meat can only be used as a substitute for grains/breads up to 3 times per week" );
-	
-
-	// TODO
 	static MealRule noFlavoredUnderSix = MealRule.create( "noFlavoredUnderSix" )
 			.appliesTo( isUnder6YearsOld.and( hasFluidMilkComponent) ) 
 			.when( hasFlavoredMilkComponent )
 			.thenFail( "Flavored milk is not allowed for children under age six" );
 
-	// TODO
 	static MealRule mustHaveFlavoredFatFree = MealRule.create( "mustHaveFlavoredFatFree" )
 			.appliesTo( is6OrOver.and( hasFlavoredMilkComponent) ) 
 			.whenNot( hasAtLeastCountItems( 1, isFatFreeMilkItem.negate() ) )
@@ -334,13 +348,9 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 				   .and( hasAtLeastCountItems( 1, hasTag("JUICE") ) )
 				)
 			.thenFail( "Cannot serve milk and juice for snacks" );
-			
-			
-
 	
 	static List<MealRule> RULES = Arrays.asList( 
 			noInfantFoods,
-			warnOnlyMeatSubThreeTimePerWeek,
 			noFlavoredUnderSix,
 			mustHaveFlavoredFatFree,
 			noMilkAndJuiceForSnack,

@@ -31,6 +31,9 @@ public class RulesTestUtils {
 	public static FoodItem CRACKER = new FoodItem( "cracker", "cracker", Arrays.asList( "GRAIN", "CRACKER" ) );
 	public static FoodItem FRUITJUICE = new FoodItem( "fruit juice", "fruit juice", Arrays.asList( "FRUIT" , "JUICE") );
 	public static FoodItem VEGJUICE = new FoodItem( "vegie juice", "vegie juice", Arrays.asList( "VEGETABLE" , "JUICE") );
+	
+	public static FoodItem MEATALT = new FoodItem( "meat alt", "meat alt", Arrays.asList( "MEATALT") );
+	public static FoodItem YOGURT = new FoodItem( "yogurt", "yogurt", Arrays.asList( "YOGURT") );
 
 	
 	public static Meal BREAKFAST = new Meal( "BREAKFAST", "BREAKFAST", MealType.BREAKFAST );

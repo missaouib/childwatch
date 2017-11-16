@@ -18,7 +18,7 @@ import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 public class NonInfantRulesTest {
 	
 	RuleValidatorController ctrl = new RuleValidatorController();
-/*		
+	
 	@Test
 	public void child1_Breakfast_Valid() {
 		
@@ -70,8 +70,7 @@ public class NonInfantRulesTest {
 		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
 		
 		
-		assertFalse( violations.isEmpty() );
-		assertTrue( violations.size() == 1 && violations.get(0).getSeverity() == RuleViolationSeverity.WARN );
+		assertTrue( violations.isEmpty() );
 	}
 
 	@Test
@@ -585,7 +584,7 @@ public class NonInfantRulesTest {
 		
 		assertTrue( violations.isEmpty() );
 	}
-*/
+
 	
 	@Test
 	public void child2_BreakfastValid() {
@@ -604,5 +603,55 @@ public class NonInfantRulesTest {
 		assertTrue( violations.isEmpty() );
 	}
 	
+	@Test
+	public void adult_BreakfastYogurtValid() {
+		Meal meal = BREAKFAST;
+		AgeGroup ageGroup = AgeGroup.AGE_ADULT;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( YOGURT, ageGroup, 1, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( BREAD, ageGroup, 2, UnitOfMeasure.OUNCES, meal ),
+			new MealFoodItem( PEACHES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+			
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );		
+	}
+
+	@Test
+	public void adult_BreakfastYogurtAltValid() {
+		Meal meal = BREAKFAST;
+		AgeGroup ageGroup = AgeGroup.AGE_ADULT;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( YOGURT, ageGroup, 1, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( MEATALT, ageGroup, 2, UnitOfMeasure.OUNCES, meal ),
+			new MealFoodItem( PEACHES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+			
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertTrue( violations.isEmpty() );
+	}
+
+	@Test
+	public void adult_BreakfastYogurtAltInvalid() {
+		Meal meal = BREAKFAST;
+		AgeGroup ageGroup = AgeGroup.AGE_ADULT;
+		
+		List<MealFoodItem> mealFoodItems = Arrays.asList(
+			new MealFoodItem( YOGURT, ageGroup, 3, UnitOfMeasure.CUPS, meal ), 
+			new MealFoodItem( PEACHES, ageGroup, 0.5, UnitOfMeasure.CUPS, meal )
+			
+		);	
+		
+		List<RuleViolation> violations = ctrl.doValidation(meal, ageGroup, mealFoodItems);
+		
+		assertFalse( violations.isEmpty() );
+	}
+
 	
 }

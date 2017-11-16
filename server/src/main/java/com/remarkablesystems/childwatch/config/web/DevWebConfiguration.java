@@ -1,6 +1,5 @@
 package com.remarkablesystems.childwatch.config.web;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -26,8 +25,7 @@ import javax.annotation.PostConstruct;
 public class DevWebConfiguration extends WebMvcConfigurerAdapter {
     private ConfigurableApplicationContext applicationContext;
     
-    @Value("${client.host}")
-    String clientHost;
+    public static final String clientHost = "localhost:4200";
     
     @PostConstruct
     public void print() {
