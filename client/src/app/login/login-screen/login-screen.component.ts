@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import {AuthenticationService} from '../../security/authentication.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 
 @Component({
   selector: 'cw-login-screen',
@@ -8,13 +9,27 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class LoginScreenComponent implements OnInit {
 
-    errors = false;
-  
-  constructor( private activeRoute: ActivatedRoute ) { }
+  errors = false;
+
+  username: string;
+  password: string;
+
+  constructor(
+    private activeRoute: ActivatedRoute,
+    private authSvc: AuthenticationService,
+    private router: Router
+  ) {}
 
 
   ngOnInit() {
-      this.activeRoute.queryParams.subscribe( ( params: Params ) =>  this.errors = params['error'] !== undefined );
+    this.activeRoute.queryParams.subscribe((params: Params) => this.errors = params['error'] !== undefined);
+  }
+
+  login() {
+
+    this.authSvc.login(this.username, this.password).subscribe(
+      () => this.router.navigate(['/meals'])
+    );
   }
 
 }

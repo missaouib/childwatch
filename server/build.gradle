@@ -34,7 +34,6 @@ repositories {
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.flywaydb:flyway-core')
     compile('org.hibernate:hibernate-java8')
@@ -62,7 +61,7 @@ springBoot {
 task buildDocker(type: Docker) {
   baseImage = 'develar/java:latest'
   push = project.hasProperty('push')
-  tag = 'bisonburger/childwatch'
+  tag = 'bisonburger/childwatch-server'
   addFile {
     from jar
     rename {'app.jar'}

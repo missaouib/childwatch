@@ -26,7 +26,6 @@ import {PageLayoutComponent} from './layouts/page-layout/page-layout.component';
 
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 
-import {CookieService} from 'ngx-cookie-service';
 import {NavbarComponent} from './layouts/navbar/navbar.component';
 import {SidebarComponent} from './layouts/sidebar/sidebar.component';
 import {RouterModule} from '@angular/router';
@@ -64,6 +63,6 @@ export class CustomOption extends ToastOptions {
     BsDropdownModule.forRoot(),
   ],
   bootstrap: [AppComponent],
-  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, CookieService]
+  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService]
 })
 export class AppModule {}

@@ -1,5 +1,6 @@
 import {FoodItem} from '../food.interfaces';
 import {FoodItemUtils} from '../model/food-item-utils';
+import {FoodItemService} from '../services/food-item.service';
 import {FoodStateService} from '../services/food-state.service';
 import {Component, OnInit, Input} from '@angular/core';
 
@@ -41,10 +42,14 @@ export class FoodItemListComponent implements OnInit {
   filteredList: FoodItem[] = [];
 
   constructor(
-    private state: FoodStateService
-  ) {}
+    private state: FoodStateService,
+    private foodItemSvc: FoodItemService
+  ) {
+    this.foodItemSvc.query(FoodItemService.FULL).subscribe();
+  }
 
   ngOnInit() {
+
     this.state.foodItems$.subscribe(foodItems => {
       this.FoodItems = foodItems.slice();
       this.FoodItems.sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase()));

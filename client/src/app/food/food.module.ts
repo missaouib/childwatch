@@ -73,11 +73,11 @@ const routes: Routes = [
 export class FoodModule {
 
   constructor(
-    private foodItemSvc: FoodItemService,
-    private mealSvc: MealService
+    //private foodItemSvc: FoodItemService,
+    //private mealSvc: MealService
   ) {
 
-    this.foodItemSvc.query(FoodItemService.FULL).subscribe();
-    this.mealSvc.query().subscribe();
+    //this.foodItemSvc.query(FoodItemService.FULL).subscribe();
+    //this.mealSvc.query().subscribe();
   }
 }

@@ -8,9 +8,20 @@ export interface Style {
 }
 
 export interface User {
+  id: string;
   fullName: string;
   isAdmin: boolean;
   avatar: string;
+  username: string;
+  authorities: string[];
+  deleteBy?: Date;
+  tenant: Tenant;
+}
+
+export interface Tenant {
+  id: string;
+  name: string;
+  active: boolean;
 }
 
 
@@ -28,17 +39,20 @@ export var INITIAL: ConfigState = {
     secondary: '#FFB300', // '#01579B',
     theme: 'readable'
   },
-  user: {
-    fullName: 'Admin User',
-    isAdmin: true,
-    avatar: 'boy.svg'
-  }
+  user: undefined
 };
 
 export function reducer(state: ConfigState = INITIAL, action: ConfigActions.ACTIONS): ConfigState {
   switch (action.type) {
     case ConfigActions.SUPPORTED_AGEGROUP:
       return setSupportedAgeGroup(state, action as ConfigActions.SupportedAgeGroupAction);
+
+    case ConfigActions.USER_LOGIN:
+      return setUserLogin(state, action as ConfigActions.UserLoginAction);
+
+    case ConfigActions.USER_LOGOUT:
+      return setUserLogout(state, action as ConfigActions.UserLoginAction);
+
   }
   return state;
 }
@@ -54,4 +68,23 @@ function setSupportedAgeGroup(state: ConfigState, action: ConfigActions.Supporte
     ...state,
     supportedAges: supportedAges
   }
+}
+
+function setUserLogin(state: ConfigState, action: ConfigActions.UserLoginAction) {
+
+  var user: User = Object.assign({}, action.payload);
+
+  //TODO: set deleteBy
+
+  return {
+    ...state,
+    user: user
+  };
+}
+
+function setUserLogout(state: ConfigState, action: ConfigActions.UserLogoutAction) {
+  return {
+    ...state,
+    user: undefined
+  };
 }

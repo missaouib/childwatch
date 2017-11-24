@@ -1,14 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Luckiest+Guy');
+
 .logo {
   padding: 10px 10px 0 10px;
 }
 
 .name {
-  font-size: 30px;
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 40px;
+  color: #FFB300;
+  text-shadow: 2px 2px #000000;
 }
 
 .sm-img {
-  min-height: 30px;
-  height: 30px;
-  min-width: 30px;
-  width: 30px;    
+  min-height: 40px;
+  height: 40px;
+  min-width: 40px;
+  width: 40px;    
   }

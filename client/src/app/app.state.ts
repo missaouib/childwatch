@@ -5,14 +5,12 @@ import {storeLogger} from 'ngrx-store-logger';
 
 import {environment} from '../environments/environment';
 import * as FoodState from './food/food.state';
-import * as ConfigState from './config/config.state'; 
-import {User} from './security/interfaces';
+import * as ConfigState from './config/config.state';
 
 export interface AppState {
   // Current time is combined into many displays across the application
   // rather than synchronously polling for it, we can consume it as an observable in the stroe
   currentTime: number;
-  loggedInUser?: User;
   food: FoodState.FoodState;
   config: ConfigState.ConfigState;
 }
@@ -29,10 +27,6 @@ export function setCurrentTime(time: number): Action {
   return {type: SET_CURRENT_TIME, payload: time};
 }
 
-export const LOGGED_IN_USER_DATA_ARRIVED = 'LOGGED_IN_USER_DATA_ARRIVED';
-export function loggedInUserDataArrived(data: User): Action {
-  return {type: LOGGED_IN_USER_DATA_ARRIVED, payload: data};
-}
 
 export function currentTime(state: number = Date.now(), action: Action): number {
   switch (action.type) {
@@ -42,13 +36,6 @@ export function currentTime(state: number = Date.now(), action: Action): number 
   return state;
 }
 
-function loggedInUser(state: User = undefined, action: Action): User {
-  switch (action.type) {
-    case LOGGED_IN_USER_DATA_ARRIVED:
-      return action.payload;
-  }
-  return state;
-}
 
 /*
   The following is used to setup the store based on environment and create a reducer for
@@ -56,7 +43,6 @@ function loggedInUser(state: User = undefined, action: Action): User {
 */
 const productionReducer = compose(combineReducers)({
   currentTime,
-  loggedInUser,
   food: FoodState.reducer,
   config: ConfigState.reducer
 });
