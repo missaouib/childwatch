@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.handler.MappedInterceptor;
 
-import com.remarkablesystems.childwatch.config.db.multitenant.TenantInterceptor;
+import com.remarkablesystems.childwatch.config.multitenant.TenantInterceptor;
 
 
 @SpringBootApplication(exclude = {FlywayAutoConfiguration.class})
@@ -18,7 +18,7 @@ public class ChildwatchApplication {
     
     @Bean
     public MappedInterceptor myMappedInterceptor() {
-        return new MappedInterceptor(new String[]{"/api/**", "/rules/**", "/generatemenu"}, new TenantInterceptor());
+        return new MappedInterceptor(new String[]{"/api/**", "/rules/**", "/menu/**"}, new TenantInterceptor());
     }
 
 }

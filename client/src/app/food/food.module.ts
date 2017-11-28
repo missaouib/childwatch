@@ -38,6 +38,8 @@ import {FoodItemListComponent} from './food-item-list/food-item-list.component';
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {MealListComponent} from './meal-list/meal-list.component';
 import {MealDayComponent} from './meal-day/meal-day.component';
+import {MenuPrintDialogComponent} from './meal-calendar/menu-print-dialog.component';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 
 
 const routes: Routes = [
@@ -62,13 +64,15 @@ const routes: Routes = [
     SidebarModule.forRoot(),
     ModalModule.forRoot(),
     PaginationModule.forRoot(),
-    DndModule.forRoot()
+    DndModule.forRoot(),
+    BsDatepickerModule.forRoot(),
   ],
   declarations: [
     MealCalendarComponent,
-    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent
+    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent
   ],
-  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService]
+  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService],
+  entryComponents: [MenuPrintDialogComponent]
 })
 export class FoodModule {
 

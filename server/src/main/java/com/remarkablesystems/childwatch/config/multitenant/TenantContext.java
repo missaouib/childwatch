@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.config.db.multitenant;
+package com.remarkablesystems.childwatch.config.multitenant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

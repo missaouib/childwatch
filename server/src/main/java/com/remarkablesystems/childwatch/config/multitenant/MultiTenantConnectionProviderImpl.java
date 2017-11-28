@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.config.db.multitenant;
+package com.remarkablesystems.childwatch.config.multitenant;
 
 import java.sql.Connection;
 import java.sql.SQLException;

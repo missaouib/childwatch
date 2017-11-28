@@ -10,29 +10,33 @@ const proxyConfig = require('./proxy.conf');
 
 const app = express();
 
-var key = fs.readFileSync('./encrypt/online.childwatch.com.server.key');
-var cert = fs.readFileSync( './encrypt/online.childwatch.com.crt' );
+var cwServer = process.env.CW_SERVER || 'localhost';
+var cwServerPort = process.env.CW_SERVER_PORT || '8080';
 
-var options = {
+// if the server is localhost - dont start the https server - just use http
+if( cwServer !== 'localhost' ){
+    var key = fs.readFileSync('./encrypt/online.childwatch.com.server.key');
+    var cert = fs.readFileSync( './encrypt/online.childwatch.com.crt' );
+
+    var options = {
         key: key,
         cert: cert,
         passphrase: process.env.PASSPHRASE
     };
 
-// redirect non-secure to the secure site 
-app.use(function(req, res, next) {
-    if (req.secure) {
-        next();
-    } else {
-        res.redirect('https://' + req.headers.host + req.url);
-    }
-});
+    // redirect non-secure to the secure site 
+    app.use(function(req, res, next) {
+        if (req.secure) {
+            next();
+        } else {
+            res.redirect('https://' + req.headers.host + req.url);
+        }
+    });
+}
 
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
-var cwServer = process.env.CW_SERVER || 'localhost';
-var cwServerPort = process.env.CW_SERVER_PORT || '8080';
 
 // proxy our api calls to the childwatch server
 proxyConfig[0].context.forEach( ctx => app.use( ctx, proxy({target: `http://${cwServer}:${cwServerPort}`, changeOrigin: true})) )
@@ -48,11 +52,16 @@ app.get('*', (req, res) => {
 /**
  * Create HTTP/HTTPS servers.
  */
-const https_server = https.createServer(options,app);
+const https_server = (cwServer !== 'localhost')? https.createServer(options,app) : undefined;
 const http_server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-https_server.listen(443, () => console.log(`CW2 client https started`));
-http_server.listen(80, () => console.log(`CW2 client http started => redirecting to https site`));
+if( cwServer !== 'localhost' ) { 
+    https_server.listen(443, () => console.log(`CW2 client https started`));
+    http_server.listen(80, () => console.log(`CW2 client http started => redirecting to https site`));
+}
+else{
+    http_server.listen(80, () => console.log(`CW2 client http started`));
+}

@@ -27,9 +27,12 @@ export class LoginScreenComponent implements OnInit {
 
   login() {
 
-    this.authSvc.login(this.username, this.password).subscribe(
-      () => this.router.navigate(['/meals'])
-    );
+    this.authSvc.login(this.username, this.password)
+      .subscribe(
+      () => this.router.navigate(['/meals']),
+      () => this.errors = true
+      );
+
   }
 
 }

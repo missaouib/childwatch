@@ -1,16 +1,11 @@
 
-<div class="wrapper wrapper-full-page">
-    <div class="full-page login-page" data-color="orange" >
-    <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
-    	<div class="full-page-background" style="background-image: url(../assets/img/daycare.jpg)"></div>
-        <div class="content">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
                     <img class="text-center" src="../assets/img/cw_text_logo.png" />
-                            <div class="card" data-background="color" data-color="blue">
+                            <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Login</h3>
+                                    <h4>Login</h4>
                                     <p *ngIf="errors" class="alert alert-danger" >There was an error in logging in.  Please try again.</p>
                                 </div>
                                 <div class="card-content">
@@ -24,25 +19,24 @@
                                     </div>
                                 </div>
                                 <div class="card-footer text-center">
-                                    <button (click)="login()" class="btn btn-fill btn-wd ">Log in</button>
+                                    <button (click)="login()" class="btn btn-primary"
+                                    [class.active]="username && password" 
+                                    [class.disabled]="!username || !password">Log in</button>
                                     <div class="forgot">
-                                        <a href="#" style="color: white">Forgot your password?</a>
+                                        <a href="#" >Forgot your password?</a>
                                     </div>
                                 </div>
                             </div>
                     </div>
                 </div>
             </div>
-        </div>
 
         <footer class="footer footer-transparent">
-            <div class="container">
+            <div class="text-center">
                 <div class="copyright">
-                    <a href="https://remarkable-systems.com">Remarkable Systems, Inc.</a>
+                    <a href="https://remarkable-systems.com">&copy; Remarkable Systems, Inc.</a>
                 </div>
             </div>
         </footer>
-    </div>
-</div>
 
 

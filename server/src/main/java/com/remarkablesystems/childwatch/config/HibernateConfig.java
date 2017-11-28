@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.config.db;
+package com.remarkablesystems.childwatch.config;
 
 import java.util.HashMap;
 import java.util.Map;

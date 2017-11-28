@@ -1,5 +1,6 @@
-package com.remarkablesystems.childwatch.config.db.multitenant;
+package com.remarkablesystems.childwatch.config.multitenant;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,10 +20,18 @@ public class TenantInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse res, Object handler) throws Exception {
     	String tenant = request.getHeader(TenantContext.TOKEN_HEADER);
+    	if( StringUtils.isEmpty(tenant) ) tenant = request.getParameter("tenant");
+    	if( StringUtils.isEmpty(tenant) ) {
+    		Cookie[] cookies = request.getCookies();
+    		if( cookies != null )
+    			for (Cookie cookie : cookies) 
+    				if( cookie.getName() == "childwatch-tenant" ) tenant = cookie.getValue();
+    	}
+    	
         boolean tenantSet = false;
 
         if(StringUtils.isEmpty(tenant)) {
-          res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+          res.setStatus(HttpServletResponse.SC_FORBIDDEN);
           res.setContentType(MediaType.APPLICATION_JSON_VALUE);
           res.getWriter().write("{\"error\": \"No tenant supplied\"}");
           res.getWriter().flush();

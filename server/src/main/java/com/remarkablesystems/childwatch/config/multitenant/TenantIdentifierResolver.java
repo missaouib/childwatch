@@ -1,4 +1,4 @@
-package com.remarkablesystems.childwatch.config.db.multitenant;
+package com.remarkablesystems.childwatch.config.multitenant;
 
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;

@@ -1,3 +1,5 @@
+import {ConfigService} from '../../config/config.service';
+import {User} from '../../config/config.state';
 import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {CalendarEvent, CalendarMonthViewDay} from 'angular-calendar';
@@ -6,6 +8,7 @@ import {Meal, MealEvent} from '../food.interfaces';
 import {FoodStateService} from '../services/food-state.service';
 import {MealEventService} from '../services/meal-event.service';
 import {MealService} from '../services/meal.service';
+import {MenuPrintDialogComponent} from './menu-print-dialog.component';
 import * as moment from 'moment';
 import {Router} from '@angular/router';
 import {UUID} from 'angular2-uuid';
@@ -134,16 +137,20 @@ export class MealCalendarComponent implements OnInit {
 
   modalRef: BsModalRef;
 
+  user: User;
+
   constructor(
     private state: FoodStateService,
     private mealSvc: MealService,
     private mealEventSvc: MealEventService,
+    private configSvc: ConfigService,
     private router: Router,
     public toastr: ToastsManager,
     vcr: ViewContainerRef,
     private modalSvc: BsModalService
   ) {
     this.toastr.setRootViewContainerRef(vcr);
+    this.configSvc.user$.subscribe(user => this.user = user);
   }
 
   ngOnInit() {
@@ -311,6 +318,11 @@ export class MealCalendarComponent implements OnInit {
     body.forEach(day => {
       if (day.isWeekend) day.cssClass = 'weekend-cell';
     });
+  }
+
+  printMenu() {
+    this.modalRef = this.modalSvc.show(MenuPrintDialogComponent);
+    this.modalRef.content.title = 'Print Menu';
   }
 
 }

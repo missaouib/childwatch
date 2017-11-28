@@ -1,6 +1,8 @@
 package com.remarkablesystems.childwatch.domain.food;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.remarkablesystems.childwatch.domain.food.projection.FoodItemFull;
 
@@ -102,6 +105,7 @@ public class FoodItem implements Serializable{
 	public FoodItem( String id, String description, List<String> tags ) {
 		this.id = id;
 		this.description = description;
+		this.shortDescription = description;
 		if( tags != null )
 			tags.stream().forEach( tag -> this.addTag( tag ) );
 		
@@ -176,5 +180,49 @@ public class FoodItem implements Serializable{
 	public boolean hasTag( FoodItemTag tag ) {
 		return this.tags != null && this.tags.contains(tag); 
 	}
+	
+	@Transient
+	static String bestTagValue( FoodItem item ) {
+		if( item == null ) return "OTHER";
+		if( item.hasTag("MILK") ) return "MILK";
+		if( item.hasTag("MEAT" ) || item.hasTag("MEATALT") ) return "MEAT";
+		if( item.hasTag("VEGETABLE") ) return "VEGETABLE";
+		if( item.hasTag("FRUIT") ) return "FRUIT";
+		if( item.hasTag("GRAIN") ) return "GRAIN";
+		return "OTHER";
+	}
+	
+	public static Comparator<FoodItem> byFoodItemCategory = ( item1, item2 ) -> {
+		List<String> tags = Arrays.asList( "MILK", "MEAT", "VEGETABLE", "FRUIT", "GRAIN", "OTHER" );		
+		return tags.indexOf( bestTagValue(item1) ) - tags.indexOf( bestTagValue(item2) );
+	};
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FoodItem other = (FoodItem) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	
 	
 }

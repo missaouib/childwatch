@@ -3,7 +3,7 @@ const PROXY_CONFIG = [
         context: [
             "/api",
             "/rules",
-            "/generatemenu",
+            "/menu",
             "/user"
         ],
         target: "http://localhost:8080",

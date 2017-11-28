@@ -11,8 +11,9 @@
     "serve": "ng serve --proxy-config proxy.conf.js",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
-  },
+    "e2e": "ng e2e",
+    "build-docker": "docker -t bisonburger/childwatch-client:latest --no-cache"
+ },
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.1.0",

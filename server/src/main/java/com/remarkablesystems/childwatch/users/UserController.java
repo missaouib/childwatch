@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.remarkablesystems.childwatch.config.db.multitenant.TenantContext;
-import com.remarkablesystems.childwatch.config.db.multitenant.UserFetcher;
+import com.remarkablesystems.childwatch.config.multitenant.TenantContext;
+import com.remarkablesystems.childwatch.config.multitenant.UserFetcher;
 
 @RestController
 public class UserController {
