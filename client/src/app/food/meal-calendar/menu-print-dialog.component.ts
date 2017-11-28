@@ -1,5 +1,7 @@
+import {User} from '../../config/config.state';
 import {Component, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
+import * as moment from 'moment';
 
 @Component({
   selector: 'cw-menuprintdialog',
@@ -9,20 +11,33 @@ import {BsModalRef} from 'ngx-bootstrap';
 export class MenuPrintDialogComponent implements OnInit {
 
   title: string;
-  list: any[] = [];
-  minDate = new Date(2017, 5, 10);
-  maxDate = new Date(2018, 9, 15);
   bsValue: Date = new Date();
-  bsRangeValue: any = [new Date(2017, 7, 4), new Date(2017, 7, 20)];
+  user: User;
+  showInfant = false;
 
-
-  constructor(public bsModalRef: BsModalRef) {}
+  constructor(
+    public bsModalRef: BsModalRef,
+  ) {}
 
   ngOnInit() {
-    this.list.push("an item");
+    this.roundToMonday();
   }
 
-  changed(dpr: any) {
-    console.log(dpr);
+  roundToMonday() {
+    let sub = moment(this.bsValue).isoWeekday() - 1;
+
+    if (sub == 6) {sub = -1;}
+
+    const monday = moment(this.bsValue).add(-sub, "days");
+    this.bsValue = monday.toDate();
+  }
+
+  getDateValue(): String {
+    let sub = moment(this.bsValue).isoWeekday() - 1;
+
+    if (sub == 6) {sub = -1;}
+
+    const monday = moment(this.bsValue).add(-sub, "days");
+    return monday.format('YYYY-MM-DD');
   }
 }

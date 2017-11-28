@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -143,7 +145,7 @@ public class MenuController {
 	}
 	
 	
-	void buildContext( List<MealEvent> events ){
+	void buildContext( List<MealEvent> events, boolean showInfant ){
 		
 		HashMap<String,HashMap<String,Meal>> hm = new HashMap<String,HashMap<String,Meal>>();
 		
@@ -155,7 +157,7 @@ public class MenuController {
 			LocalDateTime start = LocalDateTime.ofInstant(event.getStartDate().toInstant(), ZoneId.systemDefault());
 			logger.info( "putting meal of type " + event.getMeal().getType().toString() + " to " + start.getDayOfWeek().toString() ); 
 			hm.get(event.getMeal().getType().toString()).put( start.getDayOfWeek().toString(), event.getMeal() );
-			List<FoodItem> foodItems = buildMealFoodItems(event.getMeal() );
+			List<FoodItem> foodItems = buildMealFoodItems(event.getMeal(), showInfant );
 			meals.put( event.getMeal().getId(), foodItems );
 		});
 		context.setVariable("meals", hm );
@@ -163,7 +165,7 @@ public class MenuController {
 	}
 	
 		
-	List<FoodItem> buildMealFoodItems( Meal meal ) {
+	List<FoodItem> buildMealFoodItems( Meal meal, boolean showInfant ) {
 		ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
 		
 		List<MealFoodItem> mealFoodItems = mealFoodItemRepo.findByMealId(meal.getId());
@@ -172,7 +174,7 @@ public class MenuController {
 			FoodItem foodItem = (mealFoodItem.getFoodItem().hasTag("MILK") )? new FoodItem("AGEAPPROPRIATEMILK", "Age Appropriate Milk *", Arrays.asList("MILK")) : mealFoodItem.getFoodItem();
 			
 			
-			if( !foodItems.contains( foodItem ) && !mealFoodItem.getAgeGroup().isInfant()  ) {
+			if( !foodItems.contains( foodItem ) && ( showInfant || !mealFoodItem.getAgeGroup().isInfant() )  ) {
 				foodItems.add(foodItem);  
 			}
 		});				
@@ -186,17 +188,21 @@ public class MenuController {
 	
 	
 	@RequestMapping( URL_MAPPING )
-	ResponseEntity<byte[]> generateMenu() {
+	ResponseEntity<byte[]> generateMenu( @RequestParam( value="start", required=true ) String startDate, @RequestParam( value="showInfant", required=false ) Boolean showInfant) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		
-		LocalDate start = LocalDate.of( 2017,11,27 );
-		LocalDate end = LocalDate.of( 2017, 12, 2);
+			
+		if( showInfant == null )
+			showInfant = false;
+		LocalDate start = LocalDate.parse(startDate);
+		LocalDate end = start.plusDays(4);
 		List<MealEvent> events = mealEventRepo.findBetween(  Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()),  Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-		logger.info( "Found " + events.size() + " events between 11-27-2017 and 12-02-2017" );
+		logger.info( "Found " + events.size() + " events between " + start.format(DateTimeFormatter.ISO_DATE) + " and " +  end.format(DateTimeFormatter.ISO_DATE) );
 						
 		context.clearVariables();
-		buildContext(events);
+		context.setVariable("forDate", start.getMonth() + " " + start.getDayOfMonth() + " - " + ((start.getMonthValue() == end.getMonthValue() )? "" : end.getMonth()) + " " + end.getDayOfMonth() );
+		context.setVariable("showInfant", showInfant);
+		buildContext(events,showInfant);
 		
 		String inputHtml = renderTemplate( MENU_TEMPLATE );
 

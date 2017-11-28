@@ -1,5 +1,5 @@
  <div class="modal-header">
-      <h4 class="modal-title pull-left">{{title}}</h4>
+      <h4 class="modal-title pull-left">PDF Print Menu</h4>
       <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -7,16 +7,15 @@
     <div class="modal-body">
 		<div class="row">
 		  <div class="col-xs-12 col-12 col-md-4 form-group">
-		    <input class="form-control" #drp="bsDaterangepicker" bsDaterangepicker [(ngModel)]="bsRangeValue" (bsValueChange)="changed()">
+		    <label>Select week start:</label>
+		    <input class="form-control" #dp="bsDatepicker" bsDatepicker [(ngModel)]="bsValue" (onHidden)="roundToMonday()">
 		  </div>
-		  <div class="col-xs-12 col-12 col-md-3 form-group">
-		    <button class="btn btn-success" (click)="drp.toggle()">Date Range Picker</button>
+		  <div class="checkbox">
+  			<label><input type="checkbox" [(ngModel)]="showInfant"> Show Infant Food Items</label>
 		  </div>
 		</div>
-		
-		<input type="week">
     </div>    
     <div class="modal-footer">
-    	<button type="button" class="btn btn-primary" (click)="bsModalRef.hide()">OK</button>
-      <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+    	<a type="button" class="btn btn-primary" target="_blank" [attr.href]="'/menu?tenant='+user?.tenant.id+'&start='+getDateValue() + '&showInfant='+showInfant" (click)="bsModalRef.hide()"><i class="fa fa-file-pdf-o"></i> Download</a>
+       <a type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</a>
     </div>

@@ -1,0 +1,150 @@
+<div class="container-fluid">
+
+	<div class="row">
+	<h3 class="text-primary">Meal Production Record</h3>
+	 <div class="col-xs-12 col-12 col-md-4 form-group">
+    	<label>Meal Date<input type="text"
+           class="form-control"
+           #dp="bsDatepicker"
+           bsDatepicker [(ngModel)]="mprDate"></label>
+  	</div>
+  	<div class="pull-right">
+  		<button class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+  		<button class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Download</button>
+  	</div>
+  	
+</div>
+
+<div class="row">
+  <tabset>
+    <tab heading="Breakfast" id="tab1">
+    	<div class="row">
+    	
+      		<div class="col-xs-12 col-12 col-md-5 form-group">
+  				<h3 class="text-primary">Attendance <small>Breakfast Planned/Actuals</small></h3>
+  				<form novalidate class="row">
+  					<span class="col-xs-3">
+  					<label>Age Group</label>
+  					
+  					<p class="form-control-static">1 YR</p>
+  					</span>
+  					<span class="col-xs-offset-1 col-xs-2">
+  						<label>Planned</label>
+  						<input class="form-control" type="text" value="10" />  					
+  					</span>
+  					<span class="col-xs-2">
+  						<label>Actual</label>
+  						<input class="form-control" type="text" value="10" />  					
+  					</span>
+
+  				</form>
+  				<form novalidate class="row">
+  					<span class="col-xs-3"><p class="form-control-static">2 YR</p></span>
+  					<span class="col-xs-offset-1 col-xs-2"><input class="form-control" type="text" value="2" /></span>
+  					<span class="col-xs-2"><input class="form-control" type="text" value="" /></span>
+  				</form>
+  				<form novalidate class="row">
+  					<span class="col-xs-3"><p class="form-control-static">3-5 YR</p></span>
+  					<span class="col-xs-offset-1 col-xs-2"><input class="form-control" type="text" value="2" /></span>
+  					<span class="col-xs-2"><input class="form-control" type="text" value="" /></span>
+  				</form>
+  				<form novalidate class="row">
+  					<span class="col-xs-3"><p class="form-control-static">6-12 YR</p></span>
+  					<span class="col-xs-offset-1 col-xs-2"><input class="form-control" type="text" value="2" /></span>
+  					<span class="col-xs-2"><input class="form-control" type="text" value="" /></span>
+  				</form>
+  				<form novalidate class="row">
+  					<span class="col-xs-3"><p class="form-control-static">13-18 YR</p></span>
+  					<span class="col-xs-offset-1 col-xs-2"><input class="form-control" type="text" value="2" /></span>
+  					<span class="col-xs-2"><input class="form-control" type="text" value="" /></span>
+  				</form>
+  				<form novalidate class="row">
+  					<span class="col-xs-3"><p class="form-control-static">Adult</p></span>
+  					<span class="col-xs-offset-1 col-xs-2"><input class="form-control" type="text" value="2" /></span>
+  					<span class="col-xs-2"><input class="form-control" type="text" value="" /></span>
+  				</form>
+  				<form novalidate class="row">
+  					<span class="col-xs-3"><p class="form-control-static">Non-participants</p></span>
+  					<span class="col-xs-offset-1 col-xs-2"><input class="form-control" type="text" value="2" /></span>
+  					<span class="col-xs-2"><input class="form-control" type="text" value="" /></span>
+  				</form>  				
+  			</div>    	
+    	
+    		<div class="col-xs-12 col-12 col-md-7 form-group">
+    			<h3 class="text-primary">Food Items</h3>
+    			<div class="panel">
+	<form novalidate class="row">
+			<span class="col-xs-1">
+					<img class="small-img" src="/assets/img/food/milk.svg" />
+			</span>						    
+			<span class="col-xs-4">
+				<strong class="form-control-static text-primary">Milk, Fluid - Fat-Free (Skim), Lactose-Free Unflavored</strong>
+				<p><em>MILK</em></p>
+			</span>
+			<span class="col-xs-2 "> 
+				<label>Required</label> 
+				<p class="form-control-static">12</p>
+			</span> 
+			<span class="col-xs-2 "> 
+				<label>Prepared</label> 
+				<input class="form-control" type="text" value="12" />
+			</span> 
+			<span class="col-xs-3">
+				<label>Units</label>
+				<select class="form-control">
+					<option value="OUNCES">OUNCES</option>
+					<option value="CUPS">CUPS</option>
+					<option value="LBS">LBS</option>
+					<option value="GALLONS">GALLONS</option>
+					<option value="TABLESPOONS">TABLESPOONS</option>
+				</select>
+			</span>
+	</form>	
+	<form novalidate class="row">
+			<span class="col-xs-1">
+					<img class="small-img" src="/assets/img/food/meat.svg" />
+			</span>						    
+			<span class="col-xs-4">
+				<strong class="form-control-static text-primary">Beef Charbroiled Meatballs (0.50 oz)</strong>
+				<p><em>MEAT</em></p>
+			</span>
+			<span class="col-xs-2 "> 
+				<p class="form-control-static">100</p>
+			</span> 
+			<span class="col-xs-2 "> 
+				<input class="form-control" type="text" value="" />
+			</span> 
+			<span class="col-xs-3">
+				<select class="form-control">
+					<option value="OUNCES">OUNCES</option>
+					<option value="CUPS">CUPS</option>
+					<option value="LBS">LBS</option>
+					<option value="GALLONS">GALLONS</option>
+					<option value="TABLESPOONS">TABLESPOONS</option>
+				</select>
+			</span>
+	</form>	
+
+</div>
+    			
+    		</div>
+
+    
+    	
+    	</div>
+    	<div class="row">
+    	<form novalidate>
+    	<h3 class="text-primary">Notes/Substitutions</h3>
+    	<textarea class="col-xs-12" rows="4"></textarea>
+    	</form>
+    	</div>
+    
+    </tab>
+    <tab heading="AM Snack">AM Snack</tab>
+    <tab heading="Lunch">Lunch</tab>
+    <tab heading="PM Snack">PM Snack</tab>
+    <tab heading="Dinner">Dinner</tab>
+    <tab heading="Evening Snack">Evening Snack</tab>
+  </tabset>
+</div>
+</div>

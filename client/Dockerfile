@@ -4,5 +4,5 @@ COPY package.json .
 RUN npm install
 COPY server.js .
 COPY . .
-RUN npm run build-prod
+RUN npm run build
 CMD ["npm", "start"]

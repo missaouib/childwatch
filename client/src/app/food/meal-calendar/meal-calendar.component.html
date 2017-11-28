@@ -69,7 +69,8 @@
 						<button type="button" class="btn" (click)="gotoDate()">Today</button>
 						<button type="button" class="btn" (click)="gotoDate('next','month')"><i class="fa fa-chevron-right"></i></button>
 					</span>
-					<a class="pull-right" target="_blank" [attr.href]="'/menu?tenant='+user?.tenant.id"><i class="fa fa-print"></i> Print Menu...</a>
+					<!--  <a class="pull-right" target="_blank" [attr.href]="'/menu?tenant='+user?.tenant.id"><i class="fa fa-print"></i> Print Menu...</a> -->
+					<a class="pull-right" (click)="printMenu()"><i class="fa fa-print"></i> Print Menu...</a>
 					<h3 class="text-center text-primary">
 						{{ viewDate | date:'MMMM yyyy' }} 
 					</h3>

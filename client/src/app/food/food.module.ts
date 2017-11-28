@@ -40,11 +40,13 @@ import {MealListComponent} from './meal-list/meal-list.component';
 import {MealDayComponent} from './meal-day/meal-day.component';
 import {MenuPrintDialogComponent} from './meal-calendar/menu-print-dialog.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {MealProductionRecordComponent} from './meal-production-record/meal-production-record.component';
 
 
 const routes: Routes = [
   {path: '', component: MealCalendarComponent},
   {path: 'meal-builder', component: MealComponent, canDeactivate: [PendingChangesGuard]},
+  {path: 'mpr', component: MealProductionRecordComponent},
 ];
 
 @NgModule({
@@ -69,7 +71,7 @@ const routes: Routes = [
   ],
   declarations: [
     MealCalendarComponent,
-    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent
+    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent
   ],
   providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService],
   entryComponents: [MenuPrintDialogComponent]

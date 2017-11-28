@@ -30,20 +30,19 @@ td {
 
 td > ul > li {
 	overflow: hidden;
-	margin-right: -4px;
 }
+
 </style>
 </head>
 <body>
 	<img class="sm-img logo" src="childwatch.png" />
-	<span class="name"><strong>Menu for week of 13-17 NOV</strong></span>
+	<span class="name"><strong>Menu for week of <span th:text="${forDate}">DATE</span></strong></span>
 
-	<table class="table-condensed" style="font-size: 8px" width="100%"
-		border="1">
+	<table class="table table-condensed table-bordered" style="font-size: 8px" width="100%">
 		<tbody>
-			<tr >
+			<tr>
 				<th width="160" scope="col"></th>
-				<th width="245" scope="col" th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }" th:text="${day}">DAY</th>
+				<th width="245"  scope="col" th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }" th:text="${day}">DAY</th>
 			</tr>
 			<tr th:each="type : ${ {'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER' } }">
 				<th scope="row" th:switch="${type}">
@@ -57,8 +56,8 @@ td > ul > li {
 				<td th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }">
 					<span th:if="${meals.get(type).containsKey(day)}" >
 						<strong th:text="${ meals.get(type).get(day).getDescription() }">MEAL NAME</strong>
-						<ul style="padding-left:5px;list-style: none;" th:with="mealId = ${ meals.get(type).get(day).getId() }">
-							<li style="margin:0;padding-left:5px;padding-bottom:0;" th:each="item : ${foodItems[mealId]}" th:text="${item.getShortDescription()}">ITEM</li>
+						<ul style="margin:0px" th:with="mealId = ${ meals.get(type).get(day).getId() }">
+							<li style="margin:-5px;" th:each="item : ${foodItems[mealId]}" th:text="${item.getShortDescription()}">ITEM</li>
 						</ul>
 					</span>
 					<strong th:unless="${meals.get(type).containsKey(day)}" style="display: table-cell; vertical-align: middle;">No meals scheduled</strong>
@@ -70,7 +69,7 @@ td > ul > li {
 <footer>
 	<strong>*Age Appropriate Milk:</strong>
 	<ul>
-		<li>Breastmilk or iron-fortified formula for infants through 11 months.</li>
+		<li th:if="${showInfant}">Breastmilk or iron-fortified formula for infants through 11 months.</li>
 		<li>Whole milk for 1 YR olds</li>
 		<li>Otherwise, lowfat (1%) or fat-free (skim) milk</li>
 		<li>Adults may have yogurt instead of milk</li>

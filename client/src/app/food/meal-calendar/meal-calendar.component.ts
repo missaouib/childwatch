@@ -323,6 +323,7 @@ export class MealCalendarComponent implements OnInit {
   printMenu() {
     this.modalRef = this.modalSvc.show(MenuPrintDialogComponent);
     this.modalRef.content.title = 'Print Menu';
+    this.modalRef.content.user = this.user;
   }
 
 }

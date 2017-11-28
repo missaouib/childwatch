@@ -30,6 +30,8 @@ import {NavbarComponent} from './layouts/navbar/navbar.component';
 import {SidebarComponent} from './layouts/sidebar/sidebar.component';
 import {RouterModule} from '@angular/router';
 import {SidebarModule} from 'ng-sidebar';
+import {CookieService} from 'ngx-cookie-service';
+
 
 export class CustomOption extends ToastOptions {
   animate = 'fade';
@@ -63,6 +65,6 @@ export class CustomOption extends ToastOptions {
     BsDropdownModule.forRoot(),
   ],
   bootstrap: [AppComponent],
-  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService]
+  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, CookieService]
 })
 export class AppModule {}
