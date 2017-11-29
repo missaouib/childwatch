@@ -39,7 +39,7 @@
     "express": "^4.16.2",
     "http-proxy-middleware": "^0.17.4",
     "intl": "^1.2.5",
-    "moment": "^2.18.1",
+    "moment": "^2.19.3",
     "ng-sidebar": "^6.0.2",
     "ng2-dnd": "^4.2.0",
     "ng2-toastr": "^4.1.2",
@@ -51,7 +51,7 @@
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
-    "@angular/cli": "^1.5.0",
+    "@angular/cli": "^1.5.4",
     "@angular/compiler-cli": "^4.4.1",
     "@types/jasmine": "^2.5.38",
     "@types/node": "^6.0.88",

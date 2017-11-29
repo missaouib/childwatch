@@ -6,7 +6,9 @@ import {UserLogoutAction, UserLoginAction} from '../config/config.actions';
 import {User} from '../config/config.state';
 import {Http, URLSearchParams} from '@angular/http';
 import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {CookieService} from 'ngx-cookie-service';
 
 
 @Injectable()
@@ -17,13 +19,14 @@ export class AuthenticationService implements CanActivate {
   constructor(
     private store: Store<AppState>,
     private http: Http,
-    private router: Router
+    private router: Router,
+    private cookieSvc: CookieService
   ) {
     this.store.select(s => s.config.user).subscribe((user: User) => this.authUser = user);
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    console.log(route.queryParams.tenant);
+
+  hasUser() {
     if (!this.authUser) {
       this.router.navigate(['login']);
       return false;
@@ -31,16 +34,32 @@ export class AuthenticationService implements CanActivate {
     return true;
   }
 
-  preauth(tenant: string) {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+    if (route.queryParams.tenant) {
+      return this.preauth(route.queryParams.tenant);
+    }
+    else if (this.cookieSvc.get('childwatch-tenant')) {
+      return this.preauth(this.cookieSvc.get('childwatch-tenant'));
+    }
+    else
+      return this.hasUser();
+  }
+
+  preauth(tenant: string): Observable<boolean> {
+
+    if (!tenant) return Observable.of(false);
+
     const params = new URLSearchParams();
 
-    params.append('tenant', tenant);
+    params.append('tenant', btoa(`${tenant}:${Date.now()}`));
 
-    console.log(`preauth => tenant = ${tenant}`);
+    console.log(`preauth => tenant = ${tenant}:${Date.now()}`);
 
     return this.http.get('/user', {search: params})
       .map(res => res.json())
-      .map((user: User) => this.store.dispatch(new UserLoginAction(user)));
+      .map((user: User) => this.store.dispatch(new UserLoginAction(user)))
+      .map(() => true)
+      .catch(() => Observable.of(false));
   }
 
 

@@ -15,15 +15,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remarkablesystems.childwatch.config.multitenant.TenantContext;
+import com.remarkablesystems.childwatch.config.multitenant.TenantFetcher;
 import com.remarkablesystems.childwatch.config.multitenant.UserFetcher;
 
 @RestController
 public class UserController {
+	
+	static final String NO_LOGIN_PASSWORD = "===no-login-from-this-account==";
+	
+	static final int allowableDiff = 10000; // 10 seconds 
 
 	Logger logger = LoggerFactory.getLogger(UserController.class);
 	
+	boolean checkDiff = true;
+	
 	@Autowired
 	UserFetcher userFetcher;
+	
+	@Autowired
+	TenantFetcher tenantFetcher;
 		
 	
 	class Login {
@@ -40,9 +50,6 @@ public class UserController {
 	
 	Login decode( String token ) {
 		
-		
-		
-		
 		byte[] decodedBytes = Base64.getUrlDecoder().decode(token);
 		String decodedString = new String(decodedBytes);
 
@@ -56,18 +63,19 @@ public class UserController {
 		String username = splitToken[0];
 		String password = splitToken[1];
 		
+		if( password == null ) return null;
 
 		long timestamp =  Long.parseLong( splitToken[2] );
 		Date asDate = new Date( timestamp );
 		
 		long dif = Math.abs(timestamp -  new Date().getTime()); 
 		
-		/*
-		if( dif > 1000 ) {
+		
+		if( checkDiff && dif > allowableDiff) {
 			logger.info("rejecting - timestamp is off by " + dif + " milliseconds" );
 			return null;
 		}
-		*/
+		
 		
 		
 		logger.info("decoded u: " + username + "; p: " + password  + "; t: " + timestamp +"; d: " + asDate +"; dif: " + dif );
@@ -81,7 +89,7 @@ public class UserController {
 		Login login = decode( token );
 		User user = null;
 		
-		if( login != null  ) {
+		if( login != null && !login.password.equals( NO_LOGIN_PASSWORD ) ) {
 			try {
 				userFetcher.setUsernamePassword(login.username, login.password);
 				ExecutorService es = Executors.newSingleThreadExecutor();
@@ -102,21 +110,41 @@ public class UserController {
 	}
 	
 	User handlePreauth( String token ) {
+		
+		byte[] decodedBytes = Base64.getUrlDecoder().decode(token);
+		String decodedString = new String(decodedBytes);
+
+		String[] splitToken = decodedString.split(":");
+		
+		if( splitToken.length != 2 )
+			return null;
+		
+		String tenantId = splitToken[0];
+		long timestamp =  Long.parseLong( splitToken[1] );
+		Date asDate = new Date( timestamp );
+		
+		long dif = Math.abs(timestamp -  new Date().getTime()); 
+		
+		
+		if( checkDiff && dif > allowableDiff ) {
+			logger.info("rejecting - timestamp is off by " + dif + " milliseconds" );
+			return null;
+		}
+		
+		logger.info("decoded t: " + tenantId + "; d: " + asDate +"; dif: " + dif );
+		
 		User user = null;
-		/*
 		try {
-			tenantFetcher.setTenant(token);
+			tenantFetcher.setTenant(tenantId);
 			ExecutorService es = Executors.newSingleThreadExecutor();
 	        Future<Tenant> utrFuture = es.submit(tenantFetcher);
-	        Tenant tenant = utrFuture.get();				
-			
-			
+	        Tenant tenant = utrFuture.get();									
 			logger.info("tenant = " + tenant );
 					
 			if( tenant != null ) {
 				user = new User();
 				user.fullName = "Admin User";
-				user.password = "no-login-from-this-account";
+				user.password = NO_LOGIN_PASSWORD;
 				user.id = token;
 				user.avatar = "boy-1.svg";
 				user.username = "no-login";
@@ -127,7 +155,6 @@ public class UserController {
 		catch( Exception e ) {
 			e.printStackTrace();
 		}
-		*/
 		return user;		
 	}
 

@@ -19,7 +19,6 @@ public abstract class UnboundTenantTask<T> implements Callable<T> {
 
     @Override
     public T call() throws Exception {
-        //TenantContext.setCurrentTenant(TenantContext.DEFAULT_TENANT_ID);
         return callInternal();
     }
 

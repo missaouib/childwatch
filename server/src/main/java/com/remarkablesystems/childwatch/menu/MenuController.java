@@ -51,171 +51,204 @@ import com.remarkablesystems.childwatch.domain.food.repository.MealFoodItemRepos
 
 @RestController
 public class MenuController {
-	
-	static Logger logger = LoggerFactory.getLogger(MenuController.class.getName() );
-	
+
+	static Logger logger = LoggerFactory.getLogger(MenuController.class.getName());
+
 	public static final String URL_MAPPING = "/menu";
-	
+
 	public static final String MENU_TEMPLATE = "template";
 	public static final String SUFFIX = ".html";
 	public static final String TEMPLATE_MODE = "HTML";
-	
+
 	public static final String DEFAULT_RESOURCE = "/template.html";
-	
-	
+
 	@Autowired
 	MealEventRepository mealEventRepo;
-	
+
 	@Autowired
 	MealFoodItemRepository mealFoodItemRepo;
-	
+
 	static Context context = new Context();
-	
+
 	public static class UriResolver implements FSUriResolver {
 		/**
-		 * Resolves the URI; if absolute, leaves as is, if relative, returns an
-		 * absolute URI based on the baseUrl for the agent.
+		 * Resolves the URI; if absolute, leaves as is, if relative, returns an absolute
+		 * URI based on the baseUrl for the agent.
 		 *
 		 * @param uri
 		 *            A URI, possibly relative.
 		 *
-		 * @return A URI as String, resolved, or null if there was an exception
-		 *         (for example if the URI is malformed).
+		 * @return A URI as String, resolved, or null if there was an exception (for
+		 *         example if the URI is malformed).
 		 */
 		@Override
 		public String resolveURI(String baseUri, String uri) {
 			if (uri == null || uri.isEmpty())
 				return null;
-			
+
 			try {
 				URI possiblyRelative = new URI(uri);
-				
+
 				if (possiblyRelative.isAbsolute()) {
 					return possiblyRelative.toString();
 				} else {
-				    if(baseUri.startsWith("jar")) {
-				    	// Fix for OpenHTMLtoPDF issue-#125, URI class doesn't resolve jar: scheme urls and so returns only
-				    	// the relative part on calling base.resolve(relative) so we use the URL class instead which does
-				    	// understand jar: scheme urls.
-				    	URL base = new URL(baseUri);
-				        URL absolute = new URL(base, uri);
-				        return absolute.toString();
-				    } else {
+					if (baseUri.startsWith("jar")) {
+						// Fix for OpenHTMLtoPDF issue-#125, URI class doesn't resolve jar: scheme urls
+						// and so returns only
+						// the relative part on calling base.resolve(relative) so we use the URL class
+						// instead which does
+						// understand jar: scheme urls.
+						URL base = new URL(baseUri);
+						URL absolute = new URL(base, uri);
+						return absolute.toString();
+					} else {
 						URI base = new URI(baseUri);
 						URI absolute = base.resolve(uri);
-						return absolute.toString();				    	
-				    }
+						return absolute.toString();
+					}
 				}
 			} catch (URISyntaxException e) {
-				System.err.println("When trying to load uri(" + uri + ") with base URI(" + baseUri + "), one or both were invalid URIs." );
+				System.err.println("When trying to load uri(" + uri + ") with base URI(" + baseUri
+						+ "), one or both were invalid URIs.");
 				return null;
 			} catch (MalformedURLException e) {
-				System.err.println("When trying to load uri(" + uri + ") with base jar scheme URI(" + baseUri + "), one or both were invalid URIs." );
+				System.err.println("When trying to load uri(" + uri + ") with base jar scheme URI(" + baseUri
+						+ "), one or both were invalid URIs.");
 				return null;
 			}
 		}
 	}
-	
-	
-	String renderTemplate( String templateName ) {
+
+	/**
+	 * 
+	 * @param templateName
+	 * @return
+	 */
+	String renderTemplate(String templateName) {
 		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
 		templateResolver.setSuffix(SUFFIX);
 		templateResolver.setTemplateMode(TEMPLATE_MODE);
-		 
+
 		TemplateEngine templateEngine = new TemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver);
-		 
+
 		// Get the plain HTML with the resolved ${name} variable!
-		return templateEngine.process(templateName, context);		
+		return templateEngine.process(templateName, context);
 	}
-	
-	void generatePdf( String inputHtml, OutputStream outputStream ) {
+
+	/**
+	 * 
+	 * @param inputHtml
+	 * @param outputStream
+	 */
+	void generatePdf(String inputHtml, OutputStream outputStream) {
 		PdfRendererBuilder builder = new PdfRendererBuilder();
 
-		builder.withHtmlContent(inputHtml, MenuController.class.getResource(DEFAULT_RESOURCE).toExternalForm() );
-		
+		builder.withHtmlContent(inputHtml, MenuController.class.getResource(DEFAULT_RESOURCE).toExternalForm());
+
 		builder.toStream(outputStream);
-		builder.useUriResolver( new UriResolver() );
-		
+		builder.useUriResolver(new UriResolver());
+
 		try {
 			builder.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	void buildContext( List<MealEvent> events, boolean showInfant ){
-		
-		HashMap<String,HashMap<String,Meal>> hm = new HashMap<String,HashMap<String,Meal>>();
-		
-		HashMap<String,List<FoodItem>> meals = new HashMap<String,List<FoodItem>>();
-		
-		for( MealType mealType : MealType.values() ) hm.put( mealType.toString(), new HashMap<String,Meal>() );
-		
-		events.stream().forEach( event -> {
+
+	/**
+	 * 
+	 * @param events
+	 * @param showInfant
+	 */
+	void buildContext(List<MealEvent> events, boolean showInfant) {
+
+		HashMap<String, HashMap<String, Meal>> hm = new HashMap<String, HashMap<String, Meal>>();
+
+		HashMap<String, List<FoodItem>> meals = new HashMap<String, List<FoodItem>>();
+
+		for (MealType mealType : MealType.values())
+			hm.put(mealType.toString(), new HashMap<String, Meal>());
+
+		events.stream().forEach(event -> {
 			LocalDateTime start = LocalDateTime.ofInstant(event.getStartDate().toInstant(), ZoneId.systemDefault());
-			logger.info( "putting meal of type " + event.getMeal().getType().toString() + " to " + start.getDayOfWeek().toString() ); 
-			hm.get(event.getMeal().getType().toString()).put( start.getDayOfWeek().toString(), event.getMeal() );
-			List<FoodItem> foodItems = buildMealFoodItems(event.getMeal(), showInfant );
-			meals.put( event.getMeal().getId(), foodItems );
+			logger.info("putting meal of type " + event.getMeal().getType().toString() + " to "
+					+ start.getDayOfWeek().toString());
+			hm.get(event.getMeal().getType().toString()).put(start.getDayOfWeek().toString(), event.getMeal());
+			List<FoodItem> foodItems = buildMealFoodItems(event.getMeal(), showInfant);
+			meals.put(event.getMeal().getId(), foodItems);
 		});
-		context.setVariable("meals", hm );
+		context.setVariable("meals", hm);
 		context.setVariable("foodItems", meals);
 	}
-	
-		
-	List<FoodItem> buildMealFoodItems( Meal meal, boolean showInfant ) {
+
+	/**
+	 * 
+	 * @param meal
+	 * @param showInfant
+	 * @return
+	 */
+	List<FoodItem> buildMealFoodItems(Meal meal, boolean showInfant) {
 		ArrayList<FoodItem> foodItems = new ArrayList<FoodItem>();
-		
+
 		List<MealFoodItem> mealFoodItems = mealFoodItemRepo.findByMealId(meal.getId());
-		mealFoodItems.stream().forEach( mealFoodItem -> {
-			
-			FoodItem foodItem = (mealFoodItem.getFoodItem().hasTag("MILK") )? new FoodItem("AGEAPPROPRIATEMILK", "Age Appropriate Milk *", Arrays.asList("MILK")) : mealFoodItem.getFoodItem();
-			
-			
-			if( !foodItems.contains( foodItem ) && ( showInfant || !mealFoodItem.getAgeGroup().isInfant() )  ) {
-				foodItems.add(foodItem);  
+		mealFoodItems.stream().forEach(mealFoodItem -> {
+
+			FoodItem foodItem = (mealFoodItem.getFoodItem().hasTag("MILK"))
+					? new FoodItem("AGEAPPROPRIATEMILK", "Age Appropriate Milk *", Arrays.asList("MILK"))
+					: mealFoodItem.getFoodItem();
+
+			if (!foodItems.contains(foodItem) && (showInfant || !mealFoodItem.getAgeGroup().isInfant())) {
+				foodItems.add(foodItem);
 			}
-		});				
-		foodItems.sort( FoodItem.byFoodItemCategory );
-		
-		foodItems.stream().forEach( foodItem -> logger.info( foodItem.getShortDescription() ) );
-		
+		});
+		foodItems.sort(FoodItem.byFoodItemCategory);
+
+		foodItems.stream().forEach(foodItem -> logger.info(foodItem.getShortDescription()));
+
 		return foodItems;
 	}
-	
-	
-	
-	@RequestMapping( URL_MAPPING )
-	ResponseEntity<byte[]> generateMenu( @RequestParam( value="start", required=true ) String startDate, @RequestParam( value="showInfant", required=false ) Boolean showInfant) {
+
+	/**
+	 * 
+	 * @param startDate
+	 * @param showInfant
+	 * @return
+	 */
+	@RequestMapping(URL_MAPPING)
+	ResponseEntity<byte[]> generateMenu(@RequestParam(value = "start", required = true) String startDate,
+			@RequestParam(value = "showInfant", required = false) Boolean showInfant) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			
-		if( showInfant == null )
+
+		if (showInfant == null)
 			showInfant = false;
 		LocalDate start = LocalDate.parse(startDate);
 		LocalDate end = start.plusDays(4);
-		List<MealEvent> events = mealEventRepo.findBetween(  Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()),  Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		List<MealEvent> events = mealEventRepo.findBetween(
+				Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+				Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-		logger.info( "Found " + events.size() + " events between " + start.format(DateTimeFormatter.ISO_DATE) + " and " +  end.format(DateTimeFormatter.ISO_DATE) );
-						
+		logger.info("Found " + events.size() + " events between " + start.format(DateTimeFormatter.ISO_DATE) + " and "
+				+ end.format(DateTimeFormatter.ISO_DATE));
+
 		context.clearVariables();
-		context.setVariable("forDate", start.getMonth() + " " + start.getDayOfMonth() + " - " + ((start.getMonthValue() == end.getMonthValue() )? "" : end.getMonth()) + " " + end.getDayOfMonth() );
+		context.setVariable("forDate", start.getMonth() + " " + start.getDayOfMonth() + " - "
+				+ ((start.getMonthValue() == end.getMonthValue()) ? "" : end.getMonth()) + " " + end.getDayOfMonth());
 		context.setVariable("showInfant", showInfant);
-		buildContext(events,showInfant);
-		
-		String inputHtml = renderTemplate( MENU_TEMPLATE );
+		buildContext(events, showInfant);
 
-		generatePdf( inputHtml, outputStream );
-		
+		String inputHtml = renderTemplate(MENU_TEMPLATE);
+
+		generatePdf(inputHtml, outputStream);
+
 		HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.parseMediaType("application/pdf"));
-	    String filename = "output.pdf";
-	    headers.add("content-disposition", "inline;filename=" + filename);
-	    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-	    ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(), headers, HttpStatus.OK);
-	    return response;
-		
-		
+		headers.setContentType(MediaType.parseMediaType("application/pdf"));
+		String filename = "output.pdf";
+		headers.add("content-disposition", "inline;filename=" + filename);
+		headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+		ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(), headers,
+				HttpStatus.OK);
+		return response;
+
 	}
 }

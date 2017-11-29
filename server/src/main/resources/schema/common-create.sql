@@ -1984,7 +1984,7 @@ COMMIT;
 
 alter table common.food_item owner to "cw-db";
 alter table common.food_item_tag owner to "cw-db";
-alter table common.user owner to "cw-db";
+alter table common.cw_user owner to "cw-db";
 alter table common.tenant owner to "cw-db";
 alter table common.user_authority owner to "cw-db";
 
@@ -1993,24 +1993,24 @@ alter table common.food_item add constraint FK_food_item_parent_id foreign key (
 
 alter table common.food_item_tag add constraint FK_food_item_id foreign key (food_item_id) references common.food_item;
 
-alter table common.user_authority add constraint FK_user_user_id foreign key (user_id) references common.user;
-alter table common.user add constraint FK_tenant_tenant_id foreign key (tenant_id) references common.tenant;
+alter table common.user_authority add constraint FK_user_user_id foreign key (user_id) references common.cw_user;
+alter table common.cw_user add constraint FK_tenant_tenant_id foreign key (tenant_id) references common.tenant;
     
 COMMIT;
 
-CREATE OR REPLACE FUNCTION common.create_tenant(tenant character varying)
-RETURNS void AS $$
+CREATE OR REPLACE FUNCTION common.create_tenant()
+RETURNS trigger AS $$
 BEGIN
-EXECUTE FORMAT( 'create schema if not exists %I AUTHORIZATION "cw-db"', $1);
-EXECUTE FORMAT('SET search_path TO %I;', $1);
-EXECUTE FORMAT('INSERT INTO common.tenant(id,name,active) VALUES( %L, %L, true ) ON CONFLICT DO NOTHING', $1, $1);
+EXECUTE FORMAT( 'create schema if not exists %I AUTHORIZATION "cw-db"', NEW.id);
+EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 
     create table if not exists meal(
     	id 				varchar(36) NOT NULL,
     	description 	varchar(128) NOT NULL,
     	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER' ) ),
     	inactive		BOOLEAN NOT NULL DEFAULT false,
-    	notes			varchar(4096)
+    	notes			varchar(4096),
+    	PRIMARY KEY(id)
     );
     
     create table if not exists meal_food_item(
@@ -2019,7 +2019,8 @@ EXECUTE FORMAT('INSERT INTO common.tenant(id,name,active) VALUES( %L, %L, true )
     	food_item_id 	varchar(36),
     	age_group    	varchar(36) CHECK ( age_group IN ( 'AGE_0_5MO', 'AGE_6_11MO', 'AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT') ),
    	 	quantity        numeric DEFAULT 1,
-   		unit        	varchar(36) DEFAULT 'SERVINGS' CHECK( unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) )
+   		unit        	varchar(36) DEFAULT 'SERVINGS' CHECK( unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
+   		PRIMARY KEY(id)
     );
     
 	create table if not exists meal_event(
@@ -2027,30 +2028,32 @@ EXECUTE FORMAT('INSERT INTO common.tenant(id,name,active) VALUES( %L, %L, true )
 		meal_id 		varchar(36),
    		start_date      TIMESTAMP WITH TIME ZONE NOT NULL,
    		end_date        TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT DATE '12/31/3000',
-   		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) )
+   		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) ),
+   		PRIMARY KEY(id)
 	);
 
-create or replace view food_item as SELECT * FROM common.food_item;
-create or replace view food_item_tag as SELECT * FROM common.food_item_tag;
+	create or replace view food_item as SELECT * FROM common.food_item;
+	create or replace view food_item_tag as SELECT * FROM common.food_item_tag;
 
-alter table meal owner to "cw-db";
-alter table meal_food_item owner to "cw-db";
-alter table meal_event owner to "cw-db";
-alter table food_item owner to "cw-db";
-alter table food_item owner to "cw-db";
+	alter table meal owner to "cw-db";
+	alter table meal_food_item owner to "cw-db";
+	alter table meal_event owner to "cw-db";
+	alter table food_item owner to "cw-db";
+	alter table food_item owner to "cw-db";
 
-alter table meal add primary key (id);
-alter table meal_food_item add primary key (id);
-alter table meal_event add PRIMARY KEY (id);
-/* alter table meal_food_item add constraint FK_food_item__id foreign key (food_item_id) references food_item; */
-alter table meal_food_item add constraint FK_meal__id foreign key (meal_id) references meal;
-alter table meal_event add constraint FK_meal_event_id foreign key (meal_id) references meal;        
+	alter table meal_food_item add constraint FK_meal__id foreign key (meal_id) references meal;
+	alter table meal_event add constraint FK_meal_event_id foreign key (meal_id) references meal;        
 
+	RETURN NEW;
 END;
 $$
-LANGUAGE plpgsql
-VOLATILE
-COST 20;
+LANGUAGE plpgsql;
 
-alter function create_tenant owner to "cw-db";
+
+
+CREATE TRIGGER tenant_insert_trigger
+  AFTER INSERT
+  ON common.tenant
+  FOR EACH ROW
+  EXECUTE PROCEDURE common.create_tenant();
 
