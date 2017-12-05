@@ -13,8 +13,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("se.transmode.gradle:gradle-docker:${gradleDockerVersion}")
-		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')        
+		classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0")        
     }
 }
 
