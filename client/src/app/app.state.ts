@@ -4,7 +4,7 @@ import {storeFreeze} from 'ngrx-store-freeze';
 import {storeLogger} from 'ngrx-store-logger';
 
 import {environment} from '../environments/environment';
-import * as FoodState from './food/food.state';
+import * as FoodState from './food/store/food.state';
 import * as ConfigState from './config/config.state';
 
 export interface AppState {

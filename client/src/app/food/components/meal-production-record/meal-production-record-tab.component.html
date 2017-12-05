@@ -1,0 +1,80 @@
+<div>
+
+	<!-- Attendance -->
+	
+	<div class="col-xs-5" >
+		<form novalidate [formGroup]="attendanceForm">
+			<h3 class="text-primary">Attendance <small>{{type}} Planned/Actuals</small></h3>
+			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of ['AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT', 'NON_PARTICIPANT']; let idx = index;">
+				<span class="col-xs-3"> 
+					<label *ngIf="idx==0">Age Group</label>
+					<p class="form-control-static">{{name}}</p>
+				</span> 
+				<span class="col-xs-offset-1 col-xs-2"> 
+					<label *ngIf="idx==0">Planned</label> 
+					<input class="form-control" type="text" formControlName="planned"/>
+				</span> 
+				<span class="col-xs-2"> 
+					<label *ngIf="idx==0">Actual</label>
+					<input class="form-control" type="text" formControlName="actual" />
+				</span>
+			</div>
+		</form>
+	</div>
+	
+	<!-- Food items -->
+	<div class="col-xs-7 form-group" >
+		<h3 class="text-primary">Food Items</h3>
+		<div class="panel">
+			<div *ngIf="!foodItems"><strong>No items for {{type}}</strong></div>
+			<form novalidate [formGroup]="foodItemsForm">
+				<div class="row form-group" *ngFor="let pfi of foodItems; let i = index;" formGroupName="{{pfi.foodItem.id}}">
+					<span class="col-xs-1"> 
+						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
+						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />
+						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'VEGETABLE'" src="/assets/img/food/flaticon/vegetable.svg" />
+						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'FRUIT'" src="/assets/img/food/flaticon/fruit.svg" />
+						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'GRAIN'" src="/assets/img/food/flaticon/grain.svg" />
+						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'OTHER'" src="/assets/img/food/flaticon/other.svg" />
+						<img *ngIf="FoodItemUtils.isInfant(pfi.foodItem)" class="small-img" src="/assets/img/food/infant.svg" />
+						<img *ngIf="FoodItemUtils.isCN(pfi.foodItem)" class="small-img" src="/assets/img/food/cn.svg" />
+					</span> 
+					<span class="col-xs-4"> 
+						<strong class="form-control-static text-primary">{{pfi.foodItem.description}}</strong>
+						<p>
+							<span *ngIf="!FoodItemUtils.isCN(pfi.foodItem)" class="hidden-sm hidden-xs"><em>{{FoodItemUtils.tagstring(pfi.foodItem)}}</em></span>
+							<span *ngIf="FoodItemUtils.isCN(pfi.foodItem)" class="hidden-sm hidden-xs"><em>{{FoodItemUtils.cnItemString(pfi.foodItem)}}</em></span>
+						</p>
+					</span> 
+					<span class="col-xs-2 "> 
+						<label *ngIf="i==0">Required</label>
+						<p class="form-control-static">12</p>
+					</span> 
+					<span class="col-xs-2 "> 
+						<label *ngIf="i==0">Prepared</label> 
+							<input class="form-control" type="text" value="12" />
+					</span> 
+					<span class="col-xs-3"> 
+						<label *ngIf="i==0">Units</label> 
+						<select class="form-control">
+							<option value="OUNCES">OUNCES</option>
+							<option value="CUPS">CUPS</option>
+							<option value="LBS">LBS</option>
+							<option value="GALLONS">GALLONS</option>
+							<option value="TABLESPOONS">TABLESPOONS</option>
+						</select>
+					</span>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<!-- Notes -->
+	<div class="row">
+		<div class="form-group col-xs-12">
+			<h3 class="text-primary">{{type}} Notes/Substitutions</h3>
+			<textarea class="form-control col-xs-12" rows="4"></textarea>
+		</div>
+	</div>
+
+</div>

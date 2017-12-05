@@ -4,6 +4,8 @@
 
 @import '~ng2-toastr/bundles/ng2-toastr.min.css';
 
+@import '~ngx-bootstrap/datepicker/bs-datepicker.css';
+
 body {
   font-family: Roboto,"Helvetica Neue",sans-serif;
 }

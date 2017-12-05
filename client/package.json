@@ -12,7 +12,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-docker": "docker build -t bisonburger/childwatch-client:latest --no-cache ."
+    "build-docker": "docker -t bisonburger/childwatch-client:latest --no-cache ."
   },
   "private": true,
   "dependencies": {
@@ -39,23 +39,23 @@
     "express": "^4.16.2",
     "http-proxy-middleware": "^0.17.4",
     "intl": "^1.2.5",
-    "moment": "^2.19.3",
+    "moment": "^2.18.1",
     "ng-sidebar": "^6.0.2",
     "ng2-dnd": "^4.2.0",
     "ng2-toastr": "^4.1.2",
     "ngrx-store-logger": "^0.1.8",
     "ngx-bootstrap": "^1.9.1",
     "ngx-cookie-service": "^1.0.9",
-    "rxjs": "^5.1.0",
+    "rxjs": "5.5.2",
     "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
-    "@angular/cli": "^1.5.4",
+    "@angular/cli": "^1.5.0",
     "@angular/compiler-cli": "^4.4.1",
     "@types/jasmine": "^2.5.38",
     "@types/node": "^6.0.88",
-    "angular-ide": "^0.9.32",
+    "angular-ide": "^0.9.38",
     "jasmine-core": "^2.8.0",
     "jasmine-spec-reporter": "~3.2.0",
     "karma": "~1.4.1",

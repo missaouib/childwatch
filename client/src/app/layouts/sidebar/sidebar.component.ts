@@ -37,7 +37,7 @@ export class SidebarComponent implements OnInit {
       path: '/meals', title: 'Meals', type: 'sub', icon: 'fa fa-2x fa-cutlery',
       children: [
         {path: '', title: 'Planning Calendar'},
-        {path: 'mpr', title: 'Meal Production Record', disabled: true},
+        {path: 'mpr', title: 'Meal Production Record', disabled: false},
         {path: 'meal-builder', title: 'Meal Builder', disabled: true}
       ]
     },

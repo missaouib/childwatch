@@ -4,7 +4,7 @@ import {AuthenticationService} from './security/authentication.service';
 import {Routes} from '@angular/router';
 
 export const AppRoutes: Routes = [
-  {path: '', redirectTo: 'meals', pathMatch: 'full', canActivate: [AuthenticationService]},
+  {path: '', redirectTo: 'meals', canActivate: [AuthenticationService], pathMatch: 'full'},
   {
     path: '', component: PageLayoutComponent, canActivate: [AuthenticationService],
     children: [

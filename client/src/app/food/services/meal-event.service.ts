@@ -1,7 +1,8 @@
 import {AppState} from '../../app.state';
 import {User} from '../../config/config.state';
-import * as FoodActions from '../food.actions';
-import {MealEvent, Meal} from '../food.interfaces';
+import * as FoodActions from '../store/food.actions';
+import {Meal} from '../model/meal';
+import {MealEvent} from '../model/meal-event';
 import {Injectable} from '@angular/core';
 import {Http, URLSearchParams, Headers} from '@angular/http';
 import {Store} from '@ngrx/store';

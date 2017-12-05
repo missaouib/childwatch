@@ -2,8 +2,11 @@ import {AppState} from '../../app.state';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {Meal, MealEvent, MealFoodItem, FoodItem} from '../food.interfaces';
-import * as FoodActions from '../food.actions';
+import * as FoodActions from '../store/food.actions';
+import {FoodItem} from '../model/food-item';
+import {Meal} from '../model/meal';
+import {MealEvent} from '../model/meal-event';
+import {MealFoodItem} from '../model/meal-food-item';
 import {CalendarEvent} from 'angular-calendar';
 
 
@@ -91,7 +94,7 @@ export class FoodStateService {
   inactivateMeal(meal: Meal) {
     var m = Object.assign({}, meal);
     m.inactive = true;
-    this.store.dispatch(new FoodActions.InactivateMealAction(m)); 
+    this.store.dispatch(new FoodActions.InactivateMealAction(m));
   }
 
 }

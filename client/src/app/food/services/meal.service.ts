@@ -6,8 +6,10 @@
  */
 import {AppState} from '../../app.state';
 import {User} from '../../config/config.state';
-import * as FoodActions from '../food.actions';
-import {Meal, MealFoodItem, MealRulesViolation} from '../food.interfaces';
+import * as FoodActions from '../store/food.actions';
+import {Meal} from '../model/meal';
+import {MealFoodItem} from '../model/meal-food-item';
+import {MealRulesViolation} from '../model/mealrulesviolation';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Http, URLSearchParams, Headers} from '@angular/http';
