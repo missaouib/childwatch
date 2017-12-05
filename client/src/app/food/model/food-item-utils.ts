@@ -2,6 +2,8 @@ import {FoodItem} from './food-item';
 
 export class FoodItemUtils {
 
+  constructor() {}
+
   public tagstring(foodItem: FoodItem): string {
     if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return "";
 

@@ -141,9 +141,45 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.dirtyFoodItems = true;
   }
 
+  static category(foodItem: FoodItem): string {
+    if (this.tagContainsAll(foodItem, ['MILK']))
+      return 'MILK';
+    else if (this.tagContainsAll(foodItem, ['VEGETABLE']))
+      return 'VEGETABLE';
+    else if (this.tagContainsAll(foodItem, ['FRUIT']))
+      return 'FRUIT';
+    else if (this.tagContainsAny(foodItem, ['MEAT', 'MEATALT']))
+      return 'MEAT';
+    else if (this.tagContainsAll(foodItem, ['GRAIN']))
+      return 'GRAIN';
+    else if (this.tagContainsAll(foodItem, ['CNITEM']))
+      return 'CNITEM';
+    else return 'OTHER';
+  }
+
+  static tagContainsAny(foodItem: FoodItem, items: string[]) {
+    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return false;
+
+    const arr = foodItem.tags.map(tag => tag.value);
+    return items.some(v => arr.indexOf(v) >= 0);
+  }
+
+  static tagContainsAll(foodItem: FoodItem, items: string[]) {
+
+    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return false;
+
+    const arr = foodItem.tags.map(tag => tag.value);
+    for (var i = 0; i < items.length; i++) {
+      if (arr.indexOf(items[i]) === -1)
+        return false;
+    }
+    return true;
+  }
+
+
   compareMealFoodItems(a: MealFoodItem, b: MealFoodItem): number {
-    var catA = this.FoodItemUtils.category(a.foodItem);
-    var catB = this.FoodItemUtils.category(b.foodItem);
+    var catA = MealComponent.category(a.foodItem);
+    var catB = MealComponent.category(b.foodItem);
     const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
     return categories.indexOf(catA) - categories.indexOf(catB);
   }

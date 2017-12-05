@@ -21,7 +21,20 @@ export class MealProductionRecordService {
           notes: undefined,
           tags: [{value: 'MILK'}]
         },
-        required: undefined,
+        required: 0,
+        prepared: undefined,
+        units: undefined
+      }, {
+        foodItem: {
+          id: 'FOOD ITEM #2',
+          description: 'FOOD ITEM #2',
+          shortDescription: 'FOOD ITEM',
+          purchaseUom: 'LBS',
+          servingUom: 'OZ',
+          notes: undefined,
+          tags: [{value: 'MEAT'}]
+        },
+        required: 0,
         prepared: undefined,
         units: undefined
       }],

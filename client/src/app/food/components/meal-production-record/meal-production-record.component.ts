@@ -48,4 +48,19 @@ export class MealProductionRecordComponent implements OnInit {
     this.activeTab = tab;
   }
 
+  attendanceChanged(attendanceRecord: AttendanceRecordSet) {
+    console.log('Attendance changed');
+
+    this.mpr.breakfast.foodItems[0].required += 10;
+    this.mpr.breakfast.foodItems[1].required += 2.5;
+
+  }
+
+  foodItemUnitChanged(productionFoodItem: ProductionFoodItem) {
+    console.log('FoodItemUnitChanged');
+  }
+
+  foodItemPreparedChanged(productionFoodItem: ProductionFoodItem) {
+    console.log('FoodItemPreparedChanged');
+  }
 }

@@ -25,7 +25,7 @@ import {DndModule} from 'ng2-dnd';
 
 import {EffectsModule} from '@ngrx/effects';
 
-import {FoodEffectsService} from './store/food-effects.service';
+import {FoodEffectsService} from './store/food.effects.service';
 import {AlertModule} from 'ngx-bootstrap/alert';
 import {SidebarModule} from 'ng-sidebar';
 

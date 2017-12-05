@@ -92,4 +92,9 @@ export class FoodItemListComponent implements OnInit {
     this.PagedItems = filteredList;
   }
 
+  limit(text: string, len?: number) {
+    const _len = len || 25;
+    return text.slice(0, _len) + (text.length > _len ? "..." : "");
+  }
+
 }
