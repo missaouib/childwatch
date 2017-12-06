@@ -1,13 +1,19 @@
 buildscript {
     ext {
         springBootVersion = '1.5.7.RELEASE'
+        gradleDockerVersion   = '1.2'
     }
     repositories {
         mavenCentral()
         jcenter()
+        maven 
+        {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("se.transmode.gradle:gradle-docker:${gradleDockerVersion}")
     }
 }
 
@@ -16,8 +22,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
-
-
+apply plugin: 'docker'
 
 version = 'latest'
 sourceCompatibility = 1.8
@@ -52,4 +57,18 @@ springBoot {
     // "Executable" means it runs as ./cw2-1.0.jar, also required for systemd integration
     executable = true
 }
+
+task buildDocker(type: Docker) {
+  baseImage = 'develar/java:latest'
+  push = project.hasProperty('push')
+  tag = 'bisonburger/childwatch-server'
+  addFile {
+    from jar
+    rename {'app.jar'}
+  }
+  entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-Dspring.profiles.active=prod', '-jar', '/app.jar'])
+  // exposePort(8080)
+}
+
+buildDocker.dependsOn(assemble)
 
