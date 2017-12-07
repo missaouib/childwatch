@@ -2,7 +2,7 @@ import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
 import {FoodItemService} from '../../services/food-item.service';
 import {FoodStateService} from '../../services/food-state.service';
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'cw-food-item-list',
@@ -15,16 +15,18 @@ export class FoodItemListComponent implements OnInit {
   private _ageGroup: string = 'AGE_0_5MO';
   FoodItemUtils: FoodItemUtils;
 
+  @Output() select: EventEmitter<FoodItem> = new EventEmitter<FoodItem>();
   @Input() show: boolean;
 
   @Input()
   set ageGroup(ageGroup: string) {
 
-    this.AgeAppropriateItems = this.FoodItems.filter(item => this.FoodItemUtils.isAppropriateForAgeGroup(item, ageGroup));
+    this.AgeAppropriateItems = ageGroup ? this.FoodItems.filter(item => this.FoodItemUtils.isAppropriateForAgeGroup(item, ageGroup)) : this.FoodItems;
     if (this.filter === 'CUSTOM')
       this.searchList();
     else
       this.filterFoodItems(this.filter);
+    this._ageGroup = ageGroup;
   }
 
   get ageGroup() {return this._ageGroup;}
@@ -56,20 +58,26 @@ export class FoodItemListComponent implements OnInit {
       this.FoodItems = foodItems.slice();
       this.FoodItems.sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase()));
       this.totalItems = this.FoodItems.length;
-      this.AgeAppropriateItems = this.FoodItems.filter(item => this.FoodItemUtils.isAppropriateForAgeGroup(item, this._ageGroup))
+      this.AgeAppropriateItems = this._ageGroup ? this.FoodItems.filter(item => this.FoodItemUtils.isAppropriateForAgeGroup(item, this._ageGroup)) : this.FoodItems;
       this.PagedItems = this.AgeAppropriateItems;
-
+      if (this.PagedItems.length > 0)
+        this.selectFoodItem(this.PagedItems[0]);
     });
   }
 
   filterFoodItems(filter: string) {
     this.filter = filter;
     this.search = undefined;
-    const filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.AgeAppropriateItems : this.AgeAppropriateItems.filter(item => this.FoodItemUtils.category(item) === filter || this.FoodItemUtils.hasTag(item, filter));
+    const filteredList =
+      (filter === 'ALL' || filter === 'CUSTOM') ? this.AgeAppropriateItems :
+        (filter == 'INFANT') ? this.AgeAppropriateItems.filter(item => this.FoodItemUtils.isInfant(item)) :
+          this.AgeAppropriateItems.filter(item => this.FoodItemUtils.category(item) === filter || this.FoodItemUtils.hasTag(item, filter));
 
     this.currentPage = 1;
     this.totalItems = filteredList.length;
     this.PagedItems = filteredList;
+    if (this.PagedItems.length > 0)
+      this.selectFoodItem(this.PagedItems[0]);
   }
 
 
@@ -96,5 +104,10 @@ export class FoodItemListComponent implements OnInit {
     const _len = len || 25;
     return text.slice(0, _len) + (text.length > _len ? "..." : "");
   }
+
+  selectFoodItem(foodItem: FoodItem) {
+    this.select.emit(foodItem);
+  }
+
 
 }

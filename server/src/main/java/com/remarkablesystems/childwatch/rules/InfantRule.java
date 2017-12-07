@@ -73,15 +73,15 @@ public class InfantRule extends MealRule {
 					)
 			.thenFail( "At least 2oz of Breast Milk, Iron Fortified Infant Formula must be served for infants 6-11MO" );
 
-	public static InfantRule lunchdinner_0_5MO = (InfantRule)create( "lunchdinner_0_5MO" )
-			.appliesTo( isLunchOrDinner.and( isAgeGroup( AgeGroup.AGE_0_5MO ) ) )
+	public static InfantRule lunchsupper_0_5MO = (InfantRule)create( "lunchsupper_0_5MO" )
+			.appliesTo( isLunchOrSupper.and( isAgeGroup( AgeGroup.AGE_0_5MO ) ) )
 			.whenNot( hasAllItems( isFor0_5MO )
 					  .and( sumHasQuantity( isFor0_5MO.and( isMilkItem ), 4, UnitOfMeasure.OUNCES ) )  
 					 )
 			.thenFail( "At least 4oz of Breast Milk and/or Iron Fortified Infant Formula must be served for infants 0-5MO" );
 	
-	public static InfantRule lunchdinner_6_11MO = (InfantRule)create( "lunchdinner_6_11MO" )
-			.appliesTo( isLunchOrDinner.and( isAgeGroup( AgeGroup.AGE_6_11MO ) ) )
+	public static InfantRule lunchsupper_6_11MO = (InfantRule)create( "lunchsupper_6_11MO" )
+			.appliesTo( isLunchOrSupper.and( isAgeGroup( AgeGroup.AGE_6_11MO ) ) )
 			.whenNot( hasAllItems( isFor6_11MO )
 					  .and( sumHasQuantity( isFor6_11MO.and(isMilkItem), 6, UnitOfMeasure.OUNCES ) )
 					)
@@ -94,7 +94,7 @@ public class InfantRule extends MealRule {
 			breakfast_6_11MO,
 			snack_0_5MO,
 			snack_6_11MO,
-			lunchdinner_0_5MO,
-			lunchdinner_6_11MO
+			lunchsupper_0_5MO,
+			lunchsupper_6_11MO
 			);
 }

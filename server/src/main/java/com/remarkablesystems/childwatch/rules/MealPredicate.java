@@ -20,9 +20,9 @@ public class MealPredicate {
 			
 	static BiPredicate<Meal,List<MealFoodItem>> isBreakfast = (meal,mealFoodItems) -> meal.getType().equals( MealType.BREAKFAST );
 	static BiPredicate<Meal,List<MealFoodItem>> isLunch = (meal,mealFoodItems) -> meal.getType().equals( MealType.LUNCH );
-	static BiPredicate<Meal,List<MealFoodItem>> isSnack = (meal,mealFoodItems) -> meal.getType().equals( MealType.AM_SNACK ) || meal.getType().equals( MealType.PM_SNACK );
-	static BiPredicate<Meal,List<MealFoodItem>> isDinner = (meal,mealFoodItems) -> meal.getType().equals( MealType.DINNER );
-	static BiPredicate<Meal,List<MealFoodItem>> isLunchOrDinner = isDinner.or( isLunch );
+	static BiPredicate<Meal,List<MealFoodItem>> isSnack = (meal,mealFoodItems) -> meal.getType().equals( MealType.AM_SNACK ) || meal.getType().equals( MealType.PM_SNACK ) || meal.getType().equals( MealType.EV_SNACK );
+	static BiPredicate<Meal,List<MealFoodItem>> isSupper = (meal,mealFoodItems) -> meal.getType().equals( MealType.SUPPER );
+	static BiPredicate<Meal,List<MealFoodItem>> isLunchOrSupper = isSupper.or( isLunch );
 	
 	static BiPredicate<Meal,List<MealFoodItem>> hasAnyItem(Predicate<MealFoodItem> any) { return (meal,item) -> item.stream().anyMatch( any ); }
 	static BiPredicate<Meal,List<MealFoodItem>> hasAllItems(Predicate<MealFoodItem> all) { return (meal,item) -> item.stream().allMatch( all ); }

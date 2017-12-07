@@ -16,7 +16,7 @@
 
 	<div class="row">
 		<tabset> 
-			<tab *ngFor="let type of ['Breakfast', 'AM Snack', 'Lunch', 'PM Snack', 'Dinner']" (select)="activateTab(type)">			
+			<tab *ngFor="let type of ['Breakfast', 'AM Snack', 'Lunch', 'PM Snack', 'Supper', 'Evening Snack']" (select)="activateTab(type)">			
 				<!-- Tab heading -->
 				<ng-template tabHeading>
 					<span [ngSwitch]="type">
@@ -24,7 +24,8 @@
 						<img class="small-img" *ngSwitchCase="'AM Snack'" src="/assets/img/meal/ante-meridiem.svg" />
 						<img class="small-img" *ngSwitchCase="'Lunch'" src="/assets/img/meal/lunch.svg" />
 						<img class="small-img" *ngSwitchCase="'PM Snack'" src="/assets/img/meal/post-meridiem.svg" />
-						<img class="small-img" *ngSwitchCase="'Dinner'" src="/assets/img/food/turkey.svg" />
+						<img class="small-img" *ngSwitchCase="'Supper'" src="/assets/img/food/turkey.svg" />
+						<img class="small-img" *ngSwitchCase="'Evening Snack'" src="/assets/img/meal/night.svg" />
 					</span> {{type}} 
 				</ng-template>
 	

@@ -7543,6 +7543,13 @@ td {
 td > ul > li {
 	overflow: hidden;
 }
+#footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:60px;   /* Height of the footer */
+   background:#6cf;
+}
 
 </style>
 </head>
@@ -7556,13 +7563,14 @@ td > ul > li {
 				<th width="160" scope="col"></th>
 				<th width="245"  scope="col" th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }" th:text="${day}">DAY</th>
 			</tr>
-			<tr th:each="type : ${ {'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER' } }">
+			<tr th:each="type : ${ {'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' } }">
 				<th scope="row" th:switch="${type}">
 					<img th:case="'BREAKFAST'" class="sm-img" src="breakfast.png" />
 					<img th:case="'AM_SNACK'" class="sm-img" src="ante-meridiem.png" />
 					<img th:case="'LUNCH'" class="sm-img" src="lunch.png" />
 					<img th:case="'PM_SNACK'" class="sm-img" src="post-meridiem.png" />
-					<img th:case="'DINNER'" class="sm-img" src="turkey.png" />
+					<img th:case="'SUPPER'" class="sm-img" src="turkey.png" />
+					<img th:case="'EV_SNACK'" class="sm-img" src="night.png" />
 					<span th:text="${type}">TYPE</span>
 				</th>
 				<td th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }">

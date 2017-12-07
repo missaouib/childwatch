@@ -43,14 +43,17 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {MealProductionRecordComponent} from './components/meal-production-record/meal-production-record.component';
 import {MealProductionRecordService} from './services/meal-production-record.service';
 import {CollapseModule} from 'ngx-bootstrap/collapse';
-import { MealProductionRecordTabComponent } from './components/meal-production-record/meal-production-record-tab.component';
-
+import {MealProductionRecordTabComponent} from './components/meal-production-record/meal-production-record-tab.component';
+import {FoodItemEditListComponent} from './components/food-item-edit-list/food-item-edit-list.component';
+import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item.component';
+import {TagInputModule} from 'ngx-chips';
 
 
 const routes: Routes = [
   {path: '', component: MealCalendarComponent},
   {path: 'meal-builder', component: MealComponent, canDeactivate: [PendingChangesGuard]},
   {path: 'mpr', component: MealProductionRecordComponent},
+  {path: 'food-items', component: FoodItemEditListComponent},
 ];
 
 @NgModule({
@@ -73,10 +76,11 @@ const routes: Routes = [
     DndModule.forRoot(),
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
+    TagInputModule
   ],
   declarations: [
     MealCalendarComponent,
-    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent, MealProductionRecordTabComponent
+    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent, MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent
   ],
   providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService, MealProductionRecordService],
   entryComponents: [MenuPrintDialogComponent]

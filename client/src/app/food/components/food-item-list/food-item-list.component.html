@@ -1,5 +1,5 @@
 <div class="row">
-	<h3 class="text-primary">Food Items <small>Age appropriate</small></h3>	
+	<h3 class="text-primary">Food Items <small *ngIf="ageGroup">Age appropriate</small></h3>	
 	<div *ngIf="show" class="pull-right">
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
@@ -16,10 +16,11 @@
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'GRAIN' )">Grains</a></li>
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'OTHER' )">Other</a></li>
 				<li class="divider dropdown-divider"></li>
+				<li *ngIf="!ageGroup"><a class="dropdown-item" (click)="filterFoodItems( 'INFANT' )">Infant</a></li>				
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'CEREAL' )">Cereal</a></li>				
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'MEATALT' )">Meat Alternative</a></li>				
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'BREAD' )">Bread</a></li>				
-				<li ><a class="dropdown-item" (click)="filterFoodItems( 'CHEESE' )">Cheese</a></li>				
+				<li ><a class="dropdown-item" (click)="filterFoodItems( 'WHOLEGRAIN' )">Whole Grain</a></li>				
 				<li ><a class="dropdown-item" (click)="filterFoodItems( 'CRACKER' )">Cracker</a></li>				
 				<li class="divider dropdown-divider"></li>
 				<li><a class="dropdown-item" (click)="filterFoodItems( 'CNITEM' )">CN Item</a></li>								
@@ -37,7 +38,7 @@
 
 <div class="row" *ngIf="show">
 	<table class="table table-condensed" >
-		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="true" [dragData]="foodItem" >
+		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="_ageGroup !== undefined" [dragData]="foodItem"  (click)="selectFoodItem(foodItem)">
 			<td class="col=sm-1">
 					<img class="small-img" *ngIf="FoodItemUtils.category(foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
 					<img class="small-img" *ngIf="FoodItemUtils.category(foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />

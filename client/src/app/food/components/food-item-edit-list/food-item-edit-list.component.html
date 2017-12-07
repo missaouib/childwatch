@@ -1,0 +1,9 @@
+<div class="container-fluid">
+	<div class="col-sm-4">
+		<cw-food-item-list [show]="true" [ageGroup]="undefined" (select)="selected = $event"></cw-food-item-list>
+	</div>
+		
+	<div class="col-sm-7 col-sm-offset-1">
+		<cw-editable-food-item [foodItem]="selected"></cw-editable-food-item>
+	</div>
+</div>

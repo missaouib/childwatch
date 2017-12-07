@@ -16,6 +16,33 @@ export class FoodItemUtils {
     return foodItem.tags.map(tag => tag.value).filter(tag => tag.startsWith('AGE_')).join();
   }
 
+
+  public isMilk(item: FoodItem): boolean {
+    return this.hasTag(item, 'MILK');
+  }
+
+
+  public isMeat(item: FoodItem): boolean {
+    return this.hasTag(item, 'MEAT') || this.hasTag(item, 'MEATALT');
+  }
+
+  public isVegetable(item: FoodItem): boolean {
+    return this.hasTag(item, 'VEGETABLE');
+  }
+
+  public isFruit(item: FoodItem): boolean {
+    return this.hasTag(item, 'FRUIT');
+  }
+
+  public isGrain(item: FoodItem): boolean {
+    return this.hasTag(item, 'GRAIN');
+  }
+
+  public isOther(item: FoodItem): boolean {
+    return this.category(item) === 'OTHER';
+  }
+
+
   public category(foodItem: FoodItem): string {
     if (this.tagContainsAll(foodItem, ['MILK']))
       return 'MILK';

@@ -5,6 +5,7 @@ public enum MealType {
 	AM_SNACK,
 	LUNCH,
 	PM_SNACK,
-	DINNER,
+	SUPPER,
+	EV_SNACK,
 	OTHER	
 }

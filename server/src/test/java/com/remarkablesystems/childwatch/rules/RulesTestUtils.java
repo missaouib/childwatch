@@ -39,6 +39,6 @@ public class RulesTestUtils {
 	public static Meal BREAKFAST = new Meal( "BREAKFAST", "BREAKFAST", MealType.BREAKFAST );
 	public static Meal SNACK = new Meal( "SNACK", "SNACK", MealType.AM_SNACK );
 	public static Meal LUNCH = new Meal( "LUNCH", "DINNER", MealType.LUNCH );
-	public static Meal DINNER = new Meal( "DINNER", "DINNER", MealType.DINNER );
+	public static Meal DINNER = new Meal( "DINNER", "DINNER", MealType.SUPPER );
 
 }

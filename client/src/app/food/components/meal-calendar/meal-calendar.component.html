@@ -9,7 +9,8 @@
 				<img  *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
 				<img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
 				<img *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
-				<img *ngSwitchCase="'DINNER'" src="/assets/img/food/turkey.svg" />
+				<img *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
+				<img *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
   		<span tooltip="{{event.meta.meal.description}}"><strong>{{ limit( event.meta.meal.description, 10 )}}</strong></span>
   		<div class="pull-right">
   			<a><i class="text-danger fa fa-close" (click)="removeEvent(event)"></i></a>

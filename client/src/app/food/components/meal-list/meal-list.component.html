@@ -14,7 +14,8 @@
 				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'AM_SNACK' )">AM Snack</a></li>
 				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'LUNCH' )">Lunch</a></li>
 				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'PM_SNACK' )">PM Snack</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'DINNER' )">Dinner</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'SUPPER' )">Supper</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'EV_SNACK' )">Evening Snack</a></li>
 				<li class="divider dropdown-divider"></li>
 				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );">{{showNoncompliant? 'Hide' : 'Show' }} Noncompliant</a></li>
 			</ul>
@@ -31,7 +32,8 @@
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
 				<img class="small-img" *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
 				<img class="small-img" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
-				<img class="small-img" *ngSwitchCase="'DINNER'" src="/assets/img/food/turkey.svg" />
+				<img class="small-img" *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
+				<img class="small-img" *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
 			</td>
 			<td class="col-sm-10">
 				<strong class="text-primary">

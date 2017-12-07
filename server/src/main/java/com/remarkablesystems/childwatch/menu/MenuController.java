@@ -223,7 +223,7 @@ public class MenuController {
 		if (showInfant == null)
 			showInfant = false;
 		LocalDate start = LocalDate.parse(startDate);
-		LocalDate end = start.plusDays(4);
+		LocalDate end = start.plusDays(5);
 		List<MealEvent> events = mealEventRepo.findBetween(
 				Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()),
 				Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -233,7 +233,7 @@ public class MenuController {
 
 		context.clearVariables();
 		context.setVariable("forDate", start.getMonth() + " " + start.getDayOfMonth() + " - "
-				+ ((start.getMonthValue() == end.getMonthValue()) ? "" : end.getMonth()) + " " + end.getDayOfMonth());
+				+ ((start.getMonthValue() == end.getMonthValue()) ? "" : end.getMonth()) + " " + (end.getDayOfMonth()-1));
 		context.setVariable("showInfant", showInfant);
 		buildContext(events, showInfant);
 
@@ -243,7 +243,7 @@ public class MenuController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.parseMediaType("application/pdf"));
-		String filename = "output.pdf";
+		String filename = "menu-" + context.getVariable("forDate") + ".pdf";
 		headers.add("content-disposition", "inline;filename=" + filename);
 		headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 		ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(outputStream.toByteArray(), headers,

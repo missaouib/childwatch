@@ -4,7 +4,7 @@ set search_path to demo;
     create table if not exists meal(
     	id 				varchar(36) NOT NULL,
     	description 	varchar(128) NOT NULL,
-    	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER' ) ),
+    	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' ) ),
     	inactive		BOOLEAN NOT NULL DEFAULT false,
     	notes			varchar(4096)
     );
@@ -39,6 +39,5 @@ alter table food_item owner to "cw-db";
 alter table meal add primary key (id);
 alter table meal_food_item add primary key (id);
 alter table meal_event add PRIMARY KEY (id);
-/* alter table meal_food_item add constraint FK_food_item__id foreign key (food_item_id) references food_item; */
 alter table meal_food_item add constraint FK_meal__id foreign key (meal_id) references meal;
 alter table meal_event add constraint FK_meal_event_id foreign key (meal_id) references meal;        
