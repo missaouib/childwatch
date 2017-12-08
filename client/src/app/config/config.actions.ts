@@ -1,9 +1,11 @@
-import {User} from './config.state';
+import {User, ConfigState} from './config.state';
 import {Action} from '@ngrx/store';
 
 export const SUPPORTED_AGEGROUP: string = "[CONFIG] SUPPORTED AGEGROUP";
 export const USER_LOGIN: string = '[CONFIG] USER LOGIN';
 export const USER_LOGOUT: string = '[CONFIG] USER LOGOUT';
+export const CONFIG_CHANGED: string = '[CONFIG] CONFIG CHANGED'
+export const USER_UPDATE: string = '[CONFIG]'
 
 
 export class SupportedAgeGroupAction implements Action {
@@ -21,5 +23,10 @@ export class UserLogoutAction implements Action {
   constructor() {}
 }
 
+export class ConfigChangedAction implements Action {
+  readonly type = CONFIG_CHANGED;
+  constructor(public payload: ConfigState) {}
+}
 
-export type ACTIONS = SupportedAgeGroupAction | UserLoginAction | UserLogoutAction;
+
+export type ACTIONS = SupportedAgeGroupAction | UserLoginAction | UserLogoutAction | ConfigChangedAction;

@@ -67,11 +67,6 @@
 	<div class="form-group">
 		<label>Tags</label>
 		<p *ngIf="!editable" class="form-control-static">{{FoodItemUtils.tagstring( foodItem )}}</p>
-		<tag-input *ngIf="editable" [(ngModel)]="tags" [ngModelOptions]="{standalone: true}">
-			<tag-input-dropdown [showDropdownIfEmpty]="true"
-                        [autocompleteItems]="['MILK', 'MEAT', 'MEATALT', 'VEGETABLE', 'FRUIT', 'GRAIN', 'WHOLEGRAIN', 'CRACKER', 'BREAD']">
-    		</tag-input-dropdown>
-		</tag-input>
 	</div>
 </form>
 

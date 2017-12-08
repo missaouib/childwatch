@@ -31,6 +31,9 @@ import {SidebarComponent} from './layouts/sidebar/sidebar.component';
 import {RouterModule} from '@angular/router';
 import {SidebarModule} from 'ng-sidebar';
 import {CookieService} from 'ngx-cookie-service';
+import {SettingsComponent} from './config/settings/settings.component';
+import {CarouselModule} from 'ngx-bootstrap/carousel';
+import {AccordionModule} from 'ngx-bootstrap/accordion';
 
 
 export class CustomOption extends ToastOptions {
@@ -49,7 +52,8 @@ export class CustomOption extends ToastOptions {
     ChildDetailComponent,
     PageLayoutComponent,
     NavbarComponent,
-    SidebarComponent
+    SidebarComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -63,6 +67,8 @@ export class CustomOption extends ToastOptions {
     CollapseModule.forRoot(),
     ToastModule.forRoot(),
     BsDropdownModule.forRoot(),
+    CarouselModule.forRoot(),
+    AccordionModule.forRoot(),
   ],
   bootstrap: [AppComponent],
   providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, CookieService]
