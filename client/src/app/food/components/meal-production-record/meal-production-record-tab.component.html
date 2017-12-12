@@ -4,23 +4,25 @@
 	
 	<div class="col-xs-5" >
 		<form novalidate [formGroup]="attendanceForm">
-			<h3 class="text-primary">Attendance <small>{{type}} Planned/Actuals</small></h3>
-			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of ['AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT', 'NON_PARTICIPANT']; let idx = index;">
+			<h3 class="text-primary">Attendance <small>{{mealProductionRecord?.type}} Planned/Actuals</small></h3>
+			<!--
+			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of ['AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT']; let idx = index;">
 				<span class="col-xs-3"> 
 					<label *ngIf="idx==0">Age Group</label>
 					<p class="form-control-static text-primary">{{(name === "NON_PARTICIPANT")? 'NON-PARTICIPANT' : name.substring(4).replace("_","-")}}</p>
 				</span> 
 				<span class="col-xs-offset-1 col-xs-2"> 
 					<label *ngIf="idx==0">Planned</label>
-					<p *ngIf="locked" class="form-control-static">{{attendance && attendance[name]?.planned || 0 }}</p> 
-					<input *ngIf="!locked" class="form-control" type="text" formControlName="planned"/>
+					<p *ngIf="mealProductionRecord?.locked" class="form-control-static">LOCKED</p> 
+					<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="planned"/>
 				</span> 
 				<span class="col-xs-2"> 
 					<label *ngIf="idx==0">Actual</label>
-					<p *ngIf="locked" class="form-control-static">{{attendance && attendance[name]?.actual || 0}}</p> 				
-					<input *ngIf="!locked" class="form-control" type="text" formControlName="actual" />
+					<p *ngIf="mealProductionRecord?.locked" class="form-control-static">LOCKED</p> 				
+					<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="actual" />
 				</span>
 			</div>
+			-->
 		</form>
 	</div>
 	
@@ -28,9 +30,9 @@
 	<div class="col-xs-7 form-group" >
 		<h3 class="text-primary">Food Items</h3>
 		<div class="panel">
-			<div *ngIf="!foodItems"><strong>No items for {{type}}</strong></div>
+			<div *ngIf="!mealProductionRecord?.mealProductionFoodItems"><strong>No items for {{mealProductionRecord?.type}}</strong></div>
 			<form novalidate [formGroup]="foodItemsForm">
-				<div class="row form-group" *ngFor="let pfi of foodItems; let i = index;" formGroupName="{{pfi.foodItem.id}}">
+				<div class="row form-group" *ngFor="let pfi of mealProductionRecord?.mealProductionFoodItems; let i = index;" formGroupName="{{pfi.foodItem.id}}">
 					<span class="col-xs-1"> 
 						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
 						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />
@@ -54,13 +56,13 @@
 					</span> 
 					<span class="col-xs-2 "> 
 						<label *ngIf="i==0">Prepared</label>
-						<p *ngIf="locked" class="form-control-static">{{pfi.prepared || 0}}</p> 
-						<input *ngIf="!locked" class="form-control" type="text" formControlName="prepared" />
+						<p *ngIf="mealProductionRecord?.locked" class="form-control-static">{{pfi.prepared || 0}}</p> 
+						<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="prepared" />
 					</span> 
 					<span class="col-xs-3"> 
 						<label *ngIf="i==0">Units</label>
-						<p *ngIf="locked" class="form-control-static">{{pfi.units}}</p> 
-						<select *ngIf="!locked" class="form-control" formControlName="units">
+						<p *ngIf="mealProductionRecord?.locked" class="form-control-static">{{pfi.unit}}</p> 
+						<select *ngIf="!mealProductionRecord?.locked" class="form-control" formControlName="units">
 							<option value="OUNCES">OUNCES</option>
 							<option value="CUPS">CUPS</option>
 							<option value="LBS">LBS</option>
@@ -76,7 +78,7 @@
 	<!-- Notes -->
 	<div class="row">
 		<div class="form-group col-xs-12">
-			<h3 class="text-primary">{{type}} Notes/Substitutions</h3>
+			<h3 class="text-primary">{{mealProductionRecord?.type}} Notes/Substitutions</h3>
 			<textarea class="form-control col-xs-12" rows="4"></textarea>
 		</div>
 	</div>

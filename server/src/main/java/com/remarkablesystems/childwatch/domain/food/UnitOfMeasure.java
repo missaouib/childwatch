@@ -1,6 +1,8 @@
 package com.remarkablesystems.childwatch.domain.food;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.DoubleFunction;
 
 public enum UnitOfMeasure {
@@ -28,7 +30,6 @@ public enum UnitOfMeasure {
 	
 	@SuppressWarnings("unchecked")
 	public static Double convert( double value, UnitOfMeasure from, UnitOfMeasure to ) {
-		System.out.println("Converting " + value +" from:" + from + " to:" + to );
 		Double retValue = Double.NaN;
 		
 		if( from.equals(to) ) return value;
@@ -62,6 +63,7 @@ public enum UnitOfMeasure {
 	static DoubleFunction<Double> TABLESPOONS_CUPS = (value) -> value / 16;
 	
 
+	public static List<UnitOfMeasure> ALL = Arrays.asList( UnitOfMeasure.OUNCES, UnitOfMeasure.LBS, UnitOfMeasure.GALLONS, UnitOfMeasure.CUPS, UnitOfMeasure.TABLESPOONS, UnitOfMeasure.UNITS, UnitOfMeasure.SERVINGS );
 
 
 }

@@ -32,6 +32,8 @@ export class MealEventService {
 
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+
     const params = new URLSearchParams();
     params.append('projection', 'mealEventFull');
     params.append('start', moment(start).format('MM/DD/YYYY'));
@@ -46,6 +48,7 @@ export class MealEventService {
   queryForMeal(meal: Meal) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     const params = new URLSearchParams();
     params.append('projection', 'mealEventFull');
     params.append('mealId', meal.id);
@@ -58,6 +61,7 @@ export class MealEventService {
   save(mealEvent: MealEvent) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     return this.http.post(MealEventService.URL,
       {
         id: mealEvent.id,
@@ -71,6 +75,7 @@ export class MealEventService {
   delete(mealEvent: MealEvent) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     return this.http.delete(MealEventService.URL + '/' + mealEvent.id, {headers: headers});
   }
 

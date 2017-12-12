@@ -58,6 +58,8 @@ export class MealService {
   save(meal: Meal) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+
     var postMeal = {...meal};
     delete postMeal.compliant;
 
@@ -73,6 +75,7 @@ export class MealService {
   saveMealFoodItem(mealFoodItem: MealFoodItem): Observable<Response> {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     const item: any = {
       id: mealFoodItem.id,
       ageGroup: mealFoodItem.ageGroup,
@@ -93,6 +96,7 @@ export class MealService {
   deleteMealFoodItem(mealFoodItemId: string) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
 
     return this.http.delete('/api/mealFoodItem/' + mealFoodItemId, {headers: headers}).map((res) => res.json())
       .catch(() => Observable.of(mealFoodItemId));
@@ -107,6 +111,7 @@ export class MealService {
   queryMealFoodItemsFor(meal: Meal) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     const params = new URLSearchParams();
     params.set('mealId', meal.id);
     params.set('projection', 'mealFoodItemFull');
@@ -125,6 +130,7 @@ export class MealService {
     console.log(`meal.query() => tenant = ${this.user.tenant.id}`);
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
 
     const params = new URLSearchParams();
     params.set('projection', MealService.FULL);
@@ -144,6 +150,7 @@ export class MealService {
 
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
 
 
     const params = new URLSearchParams();
@@ -160,6 +167,7 @@ export class MealService {
   validate(meal: Meal) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
 
     const params = new URLSearchParams();
     params.set('mealId', meal.id);

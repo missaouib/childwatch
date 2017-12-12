@@ -5,10 +5,22 @@ import org.slf4j.LoggerFactory;
 
 public class TenantContext {
 	
+	public static final String DEFAULT_USER_ID = null;
 	public static final String DEFAULT_TENANT_ID = "common";
-	public static final String TOKEN_HEADER = "X-CHILDWATCH-TENANT";
+	public static final String TENANT_HEADER = "X-CHILDWATCH-TENANT";
+	public static final String USER_HEADER = "X-CHILDWATCH-USER";
+	
 
-    private static Logger logger = LoggerFactory.getLogger(TenantContext.class.getName());
+    @SuppressWarnings("unused")
+	private static Logger logger = LoggerFactory.getLogger(TenantContext.class.getName());
+
+    private static ThreadLocal<String> currentUser = new ThreadLocal<String>() {
+        @Override
+        protected String initialValue() {
+          return DEFAULT_USER_ID;
+        }    	
+    };
+    
     private static ThreadLocal<String> currentTenant = new ThreadLocal<String>(){
         @Override
         protected String initialValue() {
@@ -16,16 +28,25 @@ public class TenantContext {
         }
       };
       
+    public static void setCurrentUser( String user ) {
+    	currentUser.set( user );
+    }
+      
     public static void setCurrentTenant(String tenant) {
-        logger.info("TC::Setting tenant to " + tenant);
         currentTenant.set(tenant);
     }
+    
+    public static String getCurrentUser() {
+    	return currentUser.get();
+    }
+    
     public static String getCurrentTenant() {
         return currentTenant.get();
     }
+    
     public static void clear() {
-    	logger.info("TC::clearing tenant (was " + getCurrentTenant() + " )");
         currentTenant.remove();
+        currentUser.remove();
     }
 
 }

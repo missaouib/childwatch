@@ -22,45 +22,6 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
 	
 	@Autowired
     private DataSource dataSource;
-
-	/*
-	void createTenant( String tenantIdentifier ) {
-		try {
-
-			Connection conn = commonDataSource.getConnection();
-			PreparedStatement sql = conn.prepareStatement("SELECT common.create_tenant( ? )" );
-			sql.setString(1, tenantIdentifier);
-			sql.closeOnCompletion();
-			sql.execute();						
-		}
-		catch( SQLException e ) {
-			logger.info(e.getMessage());
-		}
-
-		
-	}
-	
-	boolean tenantExists( String tenantIdentifier ) {
-		
-		try {
-
-			Connection conn = commonDataSource.getConnection();
-			PreparedStatement sql = conn.prepareStatement("SELECT * from common.tenant where id = ?" );
-			sql.closeOnCompletion();
-			sql.setString( 1, tenantIdentifier );
-			ResultSet rs = sql.executeQuery();
-			if( !rs.next() ) {
-				logger.info("tenant " + tenantIdentifier + " does not exist" );
-				return false;
-			}
-			return true;
-		}
-		catch( SQLException e ) {
-			logger.info(e.getMessage());
-			return true;
-		}
-	}
-	*/
 	
 	
     @Override
@@ -77,7 +38,6 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
     public Connection getConnection(String tenantIdentifier ) throws SQLException {
     	final Connection connection = getAnyConnection();
     	try {
-    		logger.info("getConnection:: SET search_path TO '" + tenantIdentifier + "'");
     		connection.createStatement().execute("SET search_path TO '" + tenantIdentifier + "'" );
     	}
     	catch( SQLException e ) {

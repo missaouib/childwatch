@@ -14,12 +14,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.remarkablesystems.childwatch.domain.AuditedUser;
 import com.remarkablesystems.childwatch.domain.food.projection.MealEventFull;
+
+import lombok.ToString;
 
 
 @Entity
 @Table(name="meal_event")
-public class MealEvent implements Serializable {
+@ToString(callSuper=true)
+public class MealEvent extends AuditedUser implements Serializable {
 
 	private static final long serialVersionUID = -5742620367800403437L;
 

@@ -224,9 +224,12 @@ public class MenuController {
 			showInfant = false;
 		LocalDate start = LocalDate.parse(startDate);
 		LocalDate end = start.plusDays(5);
-		List<MealEvent> events = mealEventRepo.findBetween(
-				Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()),
-				Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		
+		Date begin = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date ending = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		logger.info( "Fetching meal events between " + begin + " and " + ending );
+		List<MealEvent> events = mealEventRepo.findBetween( begin, ending );
 
 		logger.info("Found " + events.size() + " events between " + start.format(DateTimeFormatter.ISO_DATE) + " and "
 				+ end.format(DateTimeFormatter.ISO_DATE));

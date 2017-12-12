@@ -71,10 +71,8 @@ public class MealPredicate {
 			Double sum = items.stream().filter( itemFilter )		
 				.mapToDouble( item -> { 
 					Double convert = UnitOfMeasure.convert(item.getQuantity(), item.getUnit(), units );
-					System.out.println( "Convert = " + convert );
 					return convert.isNaN() ? 0 : convert;
 				} ).sum();
-			System.out.println( "SUM = " + sum );
 			return sum >= quantity;
 		};
 	}
@@ -84,10 +82,8 @@ public class MealPredicate {
 				Double sum = items.stream().filter( itemFilter )
 				.mapToDouble( item -> { 
 					Double convert = UnitOfMeasure.convert(item.getQuantity(), item.getUnit(), units );
-					System.out.println( "Convert = " + convert );
 					return convert.isNaN() ? 0 : convert;
 				} ).sum();
-				System.out.println( "SUM = " + sum + " low = " + low + " high = " + high );
 				return sum >= low && sum <= high;
 		};
 	}

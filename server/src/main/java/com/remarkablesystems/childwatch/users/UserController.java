@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class UserController {
 	
 	static final int allowableDiff = 10000; // 10 seconds 
 
-	Logger logger = LoggerFactory.getLogger(UserController.class);
+	static Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	boolean checkDiff = true;
 	
@@ -46,6 +47,31 @@ public class UserController {
 		}
 		
 	};
+	
+	String decodeToken( String token ) {
+		byte[] decodedBytes = Base64.getUrlDecoder().decode(token);
+		String decodedString = new String(decodedBytes);
+
+		String[] splitToken = decodedString.split(":");
+
+		
+		
+		if( splitToken.length != 2 )
+			return null;
+		
+		String userid = splitToken[0];
+		
+		long timestamp =  Long.parseLong( splitToken[1] );
+		long dif = Math.abs(timestamp -  new Date().getTime()); 
+		
+		
+		if( checkDiff && dif > allowableDiff) {
+			logger.info("rejecting - timestamp is off by " + dif + " milliseconds" );
+			return null;
+		}
+		
+		return userid;		
+	}
 	
 	
 	Login decode( String token ) {
@@ -76,14 +102,33 @@ public class UserController {
 			return null;
 		}
 		
-		
-		
-		logger.info("decoded u: " + username + "; p: " + password  + "; t: " + timestamp +"; d: " + asDate +"; dif: " + dif );
-		
-		
 		return new Login( username, password );
 	}
 	
+	
+	User handleUserToken( String token ) {
+		String userId = decodeToken( token );
+		User user = null;
+		
+		if( userId != null  ) {
+			try {
+				userFetcher.byUserId = true;
+				userFetcher.setUserId(userId);
+				ExecutorService es = Executors.newSingleThreadExecutor();
+	            Future<User> utrFuture = es.submit(userFetcher);
+	            user = utrFuture.get();				
+				if( user != null ) {
+					TenantContext.setCurrentTenant(user.tenant.id);
+				}
+			}
+			catch( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
+		
+	}
 	
 	User handleLogin( String token ) {
 		Login login = decode( token );
@@ -96,9 +141,8 @@ public class UserController {
 	            Future<User> utrFuture = es.submit(userFetcher);
 	            user = utrFuture.get();				
 				if( user != null ) {
-					logger.info( "found user = " + user.id + " tenant = " + user.tenant.id );
 					TenantContext.setCurrentTenant(user.tenant.id);
-					logger.info( "userCtrl set tenant to " + user.tenant.id );
+					//TODO : Log 
 				}
 			}
 			catch( Exception e ) {
@@ -121,8 +165,6 @@ public class UserController {
 		
 		String tenantId = splitToken[0];
 		long timestamp =  Long.parseLong( splitToken[1] );
-		Date asDate = new Date( timestamp );
-		
 		long dif = Math.abs(timestamp -  new Date().getTime()); 
 		
 		
@@ -131,15 +173,12 @@ public class UserController {
 			return null;
 		}
 		
-		logger.info("decoded t: " + tenantId + "; d: " + asDate +"; dif: " + dif );
-		
 		User user = null;
 		try {
 			tenantFetcher.setTenant(tenantId);
 			ExecutorService es = Executors.newSingleThreadExecutor();
 	        Future<Tenant> utrFuture = es.submit(tenantFetcher);
 	        Tenant tenant = utrFuture.get();									
-			logger.info("tenant = " + tenant );
 					
 			if( tenant != null ) {
 				user = new User();
@@ -150,6 +189,7 @@ public class UserController {
 				user.username = "no-login";
 				user.authorities.add( "ADMIN" );	
 				user.tenant = tenant;
+				//TODO : Log 
 			}	
 		}
 		catch( Exception e ) {
@@ -162,9 +202,10 @@ public class UserController {
 	@RequestMapping( "/user" )
 	public ResponseEntity<?> login( 
 			@RequestParam(value="token", required=false) String loginToken, 
-			@RequestParam(value="tenant",required=false) String tenantToken ) {
+			@RequestParam(value="tenant",required=false) String tenantToken,
+			@RequestParam(value="user", required=false) String userToken ) {
 
-		User user = null;
+		User user = StringUtils.isEmpty(userToken)? null : handleUserToken( userToken );
 		if( loginToken != null ) user = handleLogin( loginToken ); 
 		else if( tenantToken != null ) user = handlePreauth( tenantToken );
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);

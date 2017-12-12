@@ -18,86 +18,72 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.remarkablesystems.childwatch.domain.food.projection.FoodItemFull;
+import com.remarkablesystems.childwatch.domain.AuditedTenantUser;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity 
 @Table(name="food_item")
-public class FoodItem implements Serializable{
+@ToString(callSuper=true)
+@EqualsAndHashCode(callSuper=true)
+public class FoodItem extends AuditedTenantUser implements Serializable{
 
 	private static final long serialVersionUID = 3576833611221593267L;
 
-	@Id
+	@Id @Getter
 	private String id;
 
+	@Getter @Setter
 	private String description;
 
 	@Column(name="short_description")
+	@Getter @Setter
 	private String shortDescription;
 	
 	@Column(name="purchase_unit")
+	@Getter @Setter
 	private String purchaseUom;
 
 	@Column(name="serving_unit")
+	@Getter @Setter
 	private String servingUom;
 	
 	@Column(name="notes")
+	@Getter @Setter
 	private String notes;
 	
 	@ManyToOne
 	@JoinColumn(name="parent_id")
+	@Getter
 	private FoodItem parent;
 	
 	@OneToMany( mappedBy="parent" )
+	@Getter
 	private List<FoodItem> components;
 	
 	@Column(name="serving_quantity")
+	@Getter @Setter
 	private double servingQuantity;
 	
 	@Column(name="serving_type")
+	@Getter @Setter
 	private String servingType;
 	
 	@Column(name="portion_size")
+	@Getter @Setter
 	private double portionSize;
 	
-	
-	public double getServingQuantity() {
-		return servingQuantity;
-	}
-
-	public void setServingQuantity(double servingQuantity) {
-		this.servingQuantity = servingQuantity;
-	}
-
-	public String getServingType() {
-		return servingType;
-	}
-
-	public void setServingType(String servingType) {
-		this.servingType = servingType;
-	}
-
-	public double getPortionSize() {
-		return portionSize;
-	}
-
-	public void setPortionSize(double portionSize) {
-		this.portionSize = portionSize;
-	}
-
-	public FoodItem getParent() {
-		return parent;
-	}
-
-	public List<FoodItem> getComponents() {
-		return components;
-	}
 
 	@ElementCollection
 	@CollectionTable(
 			name="food_item_tag",
 			joinColumns=@JoinColumn( name="food_item_id" )
 	)
+	@Getter
 	private Set<FoodItemTag> tags;
 	
 	public FoodItem() {}
@@ -110,55 +96,7 @@ public class FoodItem implements Serializable{
 			tags.stream().forEach( tag -> this.addTag( tag ) );
 		
 	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getShortDescription() {
-		return shortDescription;
-	}
-
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
-
-	public String getPurchaseUom() {
-		return purchaseUom;
-	}
-
-	public void setPurchaseUom(String purchaseUom) {
-		this.purchaseUom = purchaseUom;
-	}
-
-	public String getServingUom() {
-		return servingUom;
-	}
-
-	public void setServingUom(String servingUom) {
-		this.servingUom = servingUom;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-	
-	public Set<FoodItemTag> getTags() {
-		return this.tags;
-	}
-	
+		
 	public void clearTags() {
 		if( this.tags != null ) this.tags.clear();
 	}
@@ -173,7 +111,6 @@ public class FoodItem implements Serializable{
 	}
 	
 	public boolean hasTag( String tagValue ) {
-		System.out.println( "items tags are " + getTags() );
 		return this.tags != null && this.tags.contains( new FoodItemTag(tagValue) );
 	}
 	
@@ -192,37 +129,10 @@ public class FoodItem implements Serializable{
 		return "OTHER";
 	}
 	
+	@Transient
 	public static Comparator<FoodItem> byFoodItemCategory = ( item1, item2 ) -> {
 		List<String> tags = Arrays.asList( "MILK", "MEAT", "VEGETABLE", "FRUIT", "GRAIN", "OTHER" );		
 		return tags.indexOf( bestTagValue(item1) ) - tags.indexOf( bestTagValue(item2) );
 	};
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		FoodItem other = (FoodItem) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-	
-	
 	
 }

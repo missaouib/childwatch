@@ -5,6 +5,8 @@ import javax.persistence.*;
 
 import com.remarkablesystems.childwatch.domain.food.projection.MealFoodItemFull;
 
+import lombok.ToString;
+
 
 /**
  * The persistent class for the meal_food_item database table.
@@ -12,6 +14,7 @@ import com.remarkablesystems.childwatch.domain.food.projection.MealFoodItemFull;
  */
 @Entity
 @Table(name="meal_food_item")
+@ToString(callSuper=true)
 public class MealFoodItem implements Serializable {
 	
 	private static final long serialVersionUID = 7341397807008242827L;

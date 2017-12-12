@@ -1,7 +1,9 @@
+import {AppState} from '../../../app.state';
 import {FoodItemUtils} from '../../model/food-item-utils';
-import {ProductionFoodItem, AttendanceRecordSet} from '../../model/meal-production-record';
+import {MealProductionRecord, MealAttendanceRecord, MealProductionFoodItem} from '../../model/meal-production-record';
 import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'cw-meal-production-record-tab',
@@ -12,64 +14,48 @@ export class MealProductionRecordTabComponent implements OnInit {
   attendanceForm: FormGroup;
   foodItemsForm: FormGroup;
   FoodItemUtils: FoodItemUtils;
-
-  @Input() type: string;
-  @Input() foodItems: ProductionFoodItem[];
-  @Input() attendance: AttendanceRecordSet;
-  @Output() attendanceChanged: EventEmitter<AttendanceRecordSet> = new EventEmitter();
-  @Output() foodItemUnitChanged: EventEmitter<ProductionFoodItem> = new EventEmitter();
-  @Output() foodItemPreparedChanged: EventEmitter<ProductionFoodItem> = new EventEmitter();
-  @Input() locked: boolean;
+  mealProductionRecord: MealProductionRecord;
 
 
-  constructor(private formBuilder: FormBuilder) {
+  @Input() tab: string;
+  @Output() attendanceChanged: EventEmitter<MealAttendanceRecord> = new EventEmitter();
+  @Output() foodItemUnitChanged: EventEmitter<MealProductionFoodItem> = new EventEmitter();
+  @Output() foodItemPreparedChanged: EventEmitter<MealProductionFoodItem> = new EventEmitter();
+
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private store: Store<AppState>) {
+    this.store.select(s => s.food.mealProductionRecords).subscribe(mprs => {
+      console.log('I found ' + mprs.length + ' mprs ');
+      console.log('tab = ' + this.tab);
+      mprs.length > 0 && console.log('mpr = ', mprs[0]);
+      this.mealProductionRecord = mprs.find(mpr => mpr.type === this.tab);
+      console.log('setting mpr to ', this.mealProductionRecord);
+    });
     this.FoodItemUtils = new FoodItemUtils();
   }
 
   ngOnInit() {
 
-    this.attendanceForm = this.formBuilder.group({
-      AGE_1YR: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.AGE_1YR) ? this.attendance.AGE_1YR.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.AGE_1YR) ? this.attendance.AGE_1YR.actual : 0, Validators.required]
-      }),
-      AGE_2YR: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.AGE_2YR) ? this.attendance.AGE_2YR.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.AGE_2YR) ? this.attendance.AGE_2YR.actual : 0, Validators.required]
-      }),
-      AGE_3_5YR: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.AGE_3_5YR) ? this.attendance.AGE_3_5YR.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.AGE_3_5YR) ? this.attendance.AGE_3_5YR.actual : 0, Validators.required]
-      }),
-      AGE_6_12YR: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.AGE_6_12YR) ? this.attendance.AGE_6_12YR.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.AGE_6_12YR) ? this.attendance.AGE_6_12YR.actual : 0, Validators.required]
-      }),
-      AGE_13_18YR: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.AGE_13_18YR) ? this.attendance.AGE_13_18YR.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.AGE_13_18YR) ? this.attendance.AGE_13_18YR.actual : 0, Validators.required]
-      }),
-      AGE_ADULT: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.AGE_ADULT) ? this.attendance.AGE_ADULT.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.AGE_ADULT) ? this.attendance.AGE_ADULT.actual : 0, Validators.required]
-      }),
-      NON_PARTICIPANT: this.formBuilder.group({
-        planned: [(this.attendance && this.attendance.NON_PARTICIPANT) ? this.attendance.NON_PARTICIPANT.planned : 0, Validators.required],
-        actual: [(this.attendance && this.attendance.NON_PARTICIPANT) ? this.attendance.NON_PARTICIPANT.actual : 0, Validators.required]
-      })
-    });
+    this.attendanceForm = this.formBuilder.group({});
+    if (this.mealProductionRecord && this.mealProductionRecord.mealAttendanceRecords)
+      this.mealProductionRecord.mealAttendanceRecords.forEach(mar => {
+        this.attendanceForm.addControl(mar.ageGroup, this.formBuilder.group({
+          projected: [mar.projected, Validators.required],
+          actual: [mar.actual, Validators.required]
+        }));
+      });
 
-    this.attendanceForm.valueChanges.debounceTime(500).subscribe(() => this.attendanceChanged.emit(this.attendance));
 
     this.foodItemsForm = this.formBuilder.group({});
-    if (this.foodItems) {
-      this.foodItems.forEach(pfi => {
-        this.foodItemsForm.addControl(pfi.foodItem.id, this.formBuilder.group({
+    if (this.mealProductionRecord && this.mealProductionRecord.mealProductionFoodItems) {
+      this.mealProductionRecord.mealProductionFoodItems.forEach(mpfi => {
+        this.foodItemsForm.addControl(mpfi.foodItem.id, this.formBuilder.group({
           required: [undefined, Validators.required],
           prepared: [undefined, Validators.required],
           units: ["GALLONS", Validators.required]
         }))
-        this.foodItemsForm.get(pfi.foodItem.id).valueChanges.debounceTime(500).subscribe(() => this.foodItemUnitChanged.emit(this.foodItems[0]));
       });
     }
   }

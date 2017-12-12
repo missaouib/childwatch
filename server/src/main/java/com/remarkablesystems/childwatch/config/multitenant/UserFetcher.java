@@ -9,12 +9,14 @@ import com.remarkablesystems.childwatch.users.UserRepository;
 @Component
 public class UserFetcher extends UnboundTenantTask<User>{
 
+	public boolean byUserId = false;
+	
     @Autowired
     private UserRepository userRepo;
 
     @Override
     protected User callInternal() {
-        User user = userRepo.findByUsernameAndPassword(this.username,this.password);
+        User user = (byUserId) ? userRepo.findOne(this.userId) : userRepo.findByUsernameAndPassword(this.username,this.password);
         return user;
     }
 	

@@ -21,7 +21,6 @@ public class TenantFetcher extends UnboundTenantTask<Tenant>{
     protected Tenant callInternal() {
         Tenant tenant = tenantRepo.findOne(tenantId);
         if( tenant == null ) {
-        	logger.info( "Tenant " + tenantId + " not found; creating " );
         	tenant = new Tenant( tenantId, tenantId );
         	tenantRepo.save(tenant);
         }

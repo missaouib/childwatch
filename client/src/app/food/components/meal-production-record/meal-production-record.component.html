@@ -3,37 +3,34 @@
 	<div class="row">
 		<h3 class="text-primary">Meal Production Record</h3>
 		<div class="col-xs-12 col-12 col-md-4 form-group">
-			<label>Meal Date<input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [(ngModel)]="mpr.mealDate"></label>
-			<span *ngIf="mpr.locked" class="label label-danger"><i class="fa fa-lock"></i> Locked</span>
+			<label>Meal Date<input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker ></label>
+			<span *ngIf="false" class="label label-danger"><i class="fa fa-lock"></i> Locked</span>
 		</div>
 		<div class="pull-right">
-			<button *ngIf="!mpr.locked" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
-			<button *ngIf="!mpr.locked" class="btn btn-info"><i class="fa fa-lock"></i> Lock</button>
-			<button *ngIf="mpr.locked" class="btn btn-info"><i class="fa fa-unlock"></i> Unlock</button>
+			<button *ngIf="true" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+			<button *ngIf="true" class="btn btn-info"><i class="fa fa-lock"></i> Lock</button>
+			<button *ngIf="false" class="btn btn-info"><i class="fa fa-unlock"></i> Unlock</button>
 			<button class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Download</button>
 		</div>
 	</div>
 
 	<div class="row">
 		<tabset> 
-			<tab *ngFor="let type of ['Breakfast', 'AM Snack', 'Lunch', 'PM Snack', 'Supper', 'Evening Snack']" (select)="activateTab(type)">			
+			<tab *ngFor="let type of ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK']" (select)="activateTab(type)">			
 				<!-- Tab heading -->
 				<ng-template tabHeading>
 					<span [ngSwitch]="type">
-						<img class="small-img" *ngSwitchCase="'Breakfast'" src="/assets/img/meal/breakfast.svg" />
-						<img class="small-img" *ngSwitchCase="'AM Snack'" src="/assets/img/meal/ante-meridiem.svg" />
-						<img class="small-img" *ngSwitchCase="'Lunch'" src="/assets/img/meal/lunch.svg" />
-						<img class="small-img" *ngSwitchCase="'PM Snack'" src="/assets/img/meal/post-meridiem.svg" />
-						<img class="small-img" *ngSwitchCase="'Supper'" src="/assets/img/food/turkey.svg" />
-						<img class="small-img" *ngSwitchCase="'Evening Snack'" src="/assets/img/meal/night.svg" />
+						<img class="small-img" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
+						<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
+						<img class="small-img" *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
+						<img class="small-img" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
+						<img class="small-img" *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
+						<img class="small-img" *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
 					</span> {{type}} 
 				</ng-template>
 	
-				<cw-meal-production-record-tab 
-					[type]="type" 
-					[attendance]="attendanceForTab(type)" 
-					[foodItems]="foodItemsForTab(type)"
-					[locked]="mpr.locked"
+				<cw-meal-production-record-tab
+					[tab]="type" 
 					(attendanceChanged)="attendanceChanged($event)"
 					(foodItemUnitChanged)="foodItemUnitChanged($event)"
 					(foodItemPreparedChanged)="foodItemPreparedChanged($event)">

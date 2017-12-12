@@ -1,86 +1,58 @@
-import {MealProductionRecord} from '../model/meal-production-record';
+import {AppState} from '../../app.state';
+import {User} from '../../config/config.state';
+import {AgeGroup} from '../model/age-group';
+import {MealProductionRecord, MealAttendanceRecord} from '../model/meal-production-record';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Http, URLSearchParams, Headers} from '@angular/http';
+import {Store} from '@ngrx/store';
+import * as moment from 'moment';
+import * as FoodActions from '../store/food.actions';
 
 @Injectable()
 export class MealProductionRecordService {
 
-  constructor() {}
+  static URL = '/api/mealProductionRecord';
 
-  newMPR: MealProductionRecord = {
-    mealDate: new Date(),
-    locked: false,
-    breakfast: {
-      foodItems: [{
-        foodItem: {
-          id: 'FOOD ITEM',
-          description: 'A FOOD ITEM',
-          shortDescription: 'FOOD',
-          purchaseUom: 'GALLONS',
-          servingUom: 'CUPS',
-          notes: undefined,
-          tags: [{value: 'MILK'}]
-        },
-        required: 0,
-        prepared: undefined,
-        units: undefined
-      }, {
-        foodItem: {
-          id: 'FOOD ITEM #2',
-          description: 'FOOD ITEM #2',
-          shortDescription: 'FOOD ITEM',
-          purchaseUom: 'LBS',
-          servingUom: 'OZ',
-          notes: undefined,
-          tags: [{value: 'MEAT'}]
-        },
-        required: 0,
-        prepared: undefined,
-        units: undefined
-      }],
-      attendance: {
-        AGE_0_5MO: {planned: 0, actual: undefined},
-        AGE_6_11MO: {planned: 0, actual: undefined},
-        AGE_1YR: {planned: 0, actual: undefined},
-        AGE_2YR: {planned: 0, actual: undefined},
-        AGE_3_5YR: {planned: 0, actual: undefined},
-        AGE_6_12YR: {planned: 0, actual: undefined},
-        AGE_13_18YR: {planned: 0, actual: undefined},
-        AGE_ADULT: {planned: 0, actual: undefined},
-        NON_PARTICIPANT: {planned: 0, actual: undefined}
-      }
-    },
-    am_snack: {
-      foodItems: undefined,
-      attendance: undefined
-    },
-    lunch: {
-      foodItems: undefined,
-      attendance: undefined
-    },
-    pm_snack: {
-      foodItems: undefined,
-      attendance: undefined
-    },
-    dinner: {
-      foodItems: undefined,
-      attendance: undefined
-    }
-  };
+  user: User;
 
-
-
-  /**
-   * Create new new MealProductionRecord for a given date
-   */
-  build(date?: Date): MealProductionRecord {
-    let newMPR = Object.assign({}, this.newMPR);
-    newMPR.mealDate = date || new Date();
-    return newMPR;
+  constructor(
+    private store: Store<AppState>,
+    private http: Http
+  ) {
+    this.store.select(s => s.config.user).subscribe(user => this.user = user);
   }
 
-  queryByDate(date: Date): Observable<MealProductionRecord> {
-    return Observable.of(this.build(date));
+  createMealAttendenceRecords(): MealAttendanceRecord[] {
+    return AgeGroup.ALL.map(ageGroup => ({id: 'mar', ageGroup: ageGroup, projected: 0, actual: 0}));
+  }
+
+  createEmptyMPR(date: Date, type: string): MealProductionRecord {
+    return {
+      id: 'new record',
+      mealDate: date,
+      type: type,
+      locked: false,
+      lockDate: undefined,
+      meal: undefined,
+      notes: undefined,
+      mealAttendanceRecords: this.createMealAttendenceRecords(),
+      mealProductionFoodItems: undefined
+    }
+  }
+
+
+  queryByDate(date: Date) {
+    let headers = new Headers();
+    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+
+    const params = new URLSearchParams();
+    params.append('date', moment(date).format('MM/DD/YYYY'));
+
+    return this.http.get(MealProductionRecordService.URL + '/search/byDate', {search: params, headers: headers})
+      .map(res => res.json())
+      .map(({_embedded: {mealProductionRecords}}) =>
+        this.store.dispatch(new FoodActions.MealProductionRecordsReceivedAction(mealProductionRecords)));
   }
 
 

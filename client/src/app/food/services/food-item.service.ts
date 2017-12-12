@@ -28,6 +28,7 @@ export class FoodItemService {
   query(projection = FoodItemService.FULL) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     const params = new URLSearchParams();
     params.append('projection', projection);
 
@@ -40,6 +41,7 @@ export class FoodItemService {
   update(foodItem: FoodItem) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     return this.http.put('/api/foodItem/' + foodItem.id, foodItem, {headers: headers})
       .subscribe(
       () => this.store.dispatch(new FoodActions.FoodItemUpdatedAction(foodItem)),
@@ -49,6 +51,7 @@ export class FoodItemService {
   delete(foodItem: FoodItem) {
     let headers = new Headers();
     this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
     return this.http.delete(this.URL + '/' + foodItem.id, {headers: headers})
       .subscribe(
       () => this.store.dispatch(new FoodActions.FoodItemDeletedAction(foodItem)),

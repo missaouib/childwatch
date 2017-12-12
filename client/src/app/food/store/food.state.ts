@@ -3,6 +3,7 @@ import {FoodItem} from '../model/food-item';
 import {Meal} from '../model/meal';
 import {MealEvent} from '../model/meal-event';
 import {MealFoodItem} from '../model/meal-food-item';
+import {MealProductionRecord} from '../model/meal-production-record';
 import {MealRulesViolation} from '../model/mealrulesviolation';
 import {CalendarEvent} from 'angular-calendar';
 import {UUID} from 'angular2-uuid';
@@ -18,6 +19,7 @@ export interface FoodState {
   mealRulesViolations: MealRulesViolation[];
   showWeekends: boolean;
   showBackground: boolean;
+  mealProductionRecords: MealProductionRecord[];
 };
 
 export const INITIAL: FoodState = {
@@ -34,7 +36,8 @@ export const INITIAL: FoodState = {
   currentAgeGroup: 'AGE_0-5MO',
   mealRulesViolations: [],
   showWeekends: false,
-  showBackground: false
+  showBackground: false,
+  mealProductionRecords: []
 };
 
 
@@ -78,6 +81,8 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setInactivateMeal(state, action as FoodActions.InactivateMealAction);
     case FoodActions.MEAL_COMPLIANCE:
       return setMealCompliance(state, action as FoodActions.MealComplianceAction);
+    case FoodActions.MEALPRODUCTIONRECORDS_RECEIVED:
+      return setMealProductionRecordsReceived(state, action as FoodActions.MealProductionRecordsReceivedAction);
 
   }
   return state;
@@ -337,5 +342,12 @@ function setMealCompliance(state: FoodState, action: FoodActions.MealComplianceA
   return {
     ...state,
     meals: meals
+  };
+}
+
+function setMealProductionRecordsReceived(state: FoodState, action: FoodActions.MealProductionRecordsReceivedAction): FoodState {
+  return {
+    ...state,
+    mealProductionRecords: action.payload
   };
 }

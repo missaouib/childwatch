@@ -9,6 +9,7 @@ import {FoodItem} from '../model/food-item';
 import {Meal} from '../model/meal';
 import {MealEvent} from '../model/meal-event';
 import {MealFoodItem} from '../model/meal-food-item';
+import {MealProductionRecord, MealProductionFoodItem, MealAttendanceRecord} from '../model/meal-production-record';
 import {MealRulesViolation} from '../model/mealrulesviolation';
 import {Action} from '@ngrx/store';
 
@@ -36,8 +37,11 @@ export const MEALRULESVIOLATIONS_RECEIVED: string = '[FOOD] MEALRULESVIOLATIONS 
 export const SHOW_BACKGROUND: string = '[FOOD] SHOW BACKGROUND';
 export const SHOW_WEEKENDS: string = '[FOOD] SHOW WEEKENDS';
 export const INACTIVATE_MEAL: string = '[FOOD] INACTIVATE MEAL';
-export const MEAL_COMPLIANCE: string = '[FOOD] MEAL COMPLIANCE'
+export const MEAL_COMPLIANCE: string = '[FOOD] MEAL COMPLIANCE';
 
+export const MEALPRODUCTIONRECORDS_RECEIVED: string = '[FOOD] MEALPRODUCTIONRECORD RECEIVED';
+export const MEALPRODUCTIONFOODITEMS_RECEIVED: string = '[FOOD] MEALPRODUCTIONFOODITEMS RECEIVED';
+export const MEALATTENDANCERECORDS_RECEIVED: string = '[FOOD] MEALATTENDANCERECORDS RECEIVED';
 
 export class MealsReceivedAction implements Action {
   readonly type = MEALS_RECEIVED;
@@ -144,6 +148,22 @@ export class MealComplianceAction implements Action {
   constructor(public payload: {meal: Meal, compliance?: boolean}) {};
 }
 
+export class MealProductionRecordsReceivedAction implements Action {
+  readonly type = MEALPRODUCTIONRECORDS_RECEIVED;
+  constructor(public payload: MealProductionRecord[]) {};
+}
+
+export class MealProductionFoodItemsReceivedAction implements Action {
+  readonly type = MEALPRODUCTIONFOODITEMS_RECEIVED;
+  constructor(public payload: MealProductionFoodItem[]) {};
+}
+
+export class MealAttendanceRecordsReceivedAction implements Action {
+  readonly type = MEALATTENDANCERECORDS_RECEIVED;
+  constructor(public payload: MealAttendanceRecord[]) {};
+}
+
+
 export type ACTIONS
   = MealsReceivedAction
   | MealEventsReceivedAction
@@ -165,4 +185,7 @@ export type ACTIONS
   | ShowBackgroundAction
   | ShowWeekendsAction
   | InactivateMealAction
-  | MealComplianceAction;
+  | MealComplianceAction
+  | MealProductionRecordsReceivedAction
+  | MealProductionFoodItemsReceivedAction
+  | MealAttendanceRecordsReceivedAction;

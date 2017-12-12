@@ -36,24 +36,24 @@ export class AuthenticationService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
     if (route.queryParams.tenant) {
-      return this.preauth(route.queryParams.tenant);
+      return this.preauth(route.queryParams.tenant, route.queryParams.user);
     }
     else if (this.cookieSvc.get('childwatch-tenant')) {
-      return this.preauth(this.cookieSvc.get('childwatch-tenant'));
+      return this.preauth(this.cookieSvc.get('childwatch-tenant'), this.cookieSvc.get('childwatch-user'));
     }
     else
       return this.hasUser();
   }
 
-  preauth(tenant: string): Observable<boolean> {
+  preauth(tenant: string, user: string): Observable<boolean> {
 
     if (!tenant) return Observable.of(false);
 
     const params = new URLSearchParams();
 
     params.append('tenant', btoa(`${tenant}:${Date.now()}`));
-
-    console.log(`preauth => tenant = ${tenant}:${Date.now()}`);
+    if (user)
+      params.append('user', btoa(`${tenant}:${Date.now()}`));
 
     return this.http.get('/user', {search: params})
       .map(res => res.json())
@@ -67,8 +67,6 @@ export class AuthenticationService implements CanActivate {
     const params = new URLSearchParams();
 
     params.append('token', btoa(`${username}:${password}:${Date.now()}`));
-
-    console.log(`login => token = ${username}:${password}:${Date.now()}`);
 
     return this.http.get('/user', {search: params})
       .map(res => res.json())
