@@ -20,6 +20,8 @@ public interface MealEventRepository extends CrudRepository<MealEvent, String> {
 	@RestResource(path="between", rel="between" )
 	@Query( "select m from MealEvent m where (:start <= m.endDate) and (:end >= m.startDate)" ) 
 	List<MealEvent> findBetween( @Param("start") Date start,  @Param("end") Date end);
+	
+	List<MealEvent> findByStartDate( Date start );
 
 	
 	List<MealEvent> findByMealId( @Param("mealId") String mealId );

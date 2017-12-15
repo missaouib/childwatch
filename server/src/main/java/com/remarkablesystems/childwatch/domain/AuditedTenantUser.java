@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 @MappedSuperclass
-@ToString()
+@ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
 public abstract class AuditedTenantUser extends AuditedUser {
 

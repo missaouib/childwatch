@@ -43,7 +43,7 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {MealProductionRecordComponent} from './components/meal-production-record/meal-production-record.component';
 import {MealProductionRecordService} from './services/meal-production-record.service';
 import {CollapseModule} from 'ngx-bootstrap/collapse';
-import {MealProductionRecordTabComponent} from './components/meal-production-record/meal-production-record-tab.component';
+import {MealProductionRecordTabComponent} from './components/meal-production-record/meal-production-record-tab/meal-production-record-tab.component';
 import {FoodItemEditListComponent} from './components/food-item-edit-list/food-item-edit-list.component';
 import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item.component';
 

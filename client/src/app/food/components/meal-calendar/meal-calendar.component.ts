@@ -163,6 +163,7 @@ export class MealCalendarComponent implements OnInit {
     this.state.mealEvents$.subscribe((events) => {
       this.eventList = events;
       this.refresh.next();
+      console.log(events);
     });
 
     this.state.canShowBackground.subscribe(show => {this._showBackground = show; this.refresh.next();});
@@ -280,6 +281,7 @@ export class MealCalendarComponent implements OnInit {
       title: meal.description,
       color: {primary: 'red', secondary: 'yellow'}
     }
+    console.log      (`dropped meal on ${mealEvent.start}`); 
     this.viewDate = moment(new Date(when)).toDate();
     this.activeDayIsOpen = true;
     this.state.scheduleMealEvent(mealEvent.meta);

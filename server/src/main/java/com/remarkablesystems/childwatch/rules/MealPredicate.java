@@ -65,6 +65,7 @@ public class MealPredicate {
 	static BiPredicate<Meal,List<MealFoodItem>> ifHas( Predicate<MealFoodItem> itemRequired, double quantity, UnitOfMeasure units ){
 		return hasAnyItem( itemRequired.and( isQuantityItem( quantity, units ).negate() ) );
 	}
+
 	
 	public static BiPredicate<Meal,List<MealFoodItem>> sumHasQuantity( Predicate<MealFoodItem> itemFilter, double quantity, UnitOfMeasure units ){
 		return (meal,items) -> { 

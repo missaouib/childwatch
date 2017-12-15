@@ -3,7 +3,7 @@
 	<div class="row">
 		<h3 class="text-primary">Meal Production Record</h3>
 		<div class="col-xs-12 col-12 col-md-4 form-group">
-			<label>Meal Date<input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker ></label>
+			<label>Meal Date<input type="text" class="form-control" #dp="bsDatepicker" [(ngModel)]="mealDate" bsDatepicker ></label>
 			<span *ngIf="false" class="label label-danger"><i class="fa fa-lock"></i> Locked</span>
 		</div>
 		<div class="pull-right">
@@ -15,8 +15,9 @@
 	</div>
 
 	<div class="row">
-		<tabset> 
-			<tab *ngFor="let type of ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK']" (select)="activateTab(type)">			
+		<p *ngIf="hasRecordsFor().length === 0"><strong>No Records found for {{mealDate}}</strong></p>
+		<tabset *ngIf="hasRecordsFor().length > 0 "> 
+			<tab *ngFor="let type of hasRecordsFor()" (select)="activateTab(type)">			
 				<!-- Tab heading -->
 				<ng-template tabHeading>
 					<span [ngSwitch]="type">
@@ -26,7 +27,7 @@
 						<img class="small-img" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
 						<img class="small-img" *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
 						<img class="small-img" *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
-					</span> {{type}} 
+					</span> {{MealType.toDisplay(type)}} 
 				</ng-template>
 	
 				<cw-meal-production-record-tab

@@ -4,7 +4,8 @@ const PROXY_CONFIG = [
             "/api",
             "/rules",
             "/menu",
-            "/user"
+            "/user",
+            "/mpr"
         ],
         target: "http://localhost:8080",
         secure: false,

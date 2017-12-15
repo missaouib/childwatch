@@ -11,6 +11,8 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -45,12 +47,14 @@ public class FoodItem extends AuditedTenantUser implements Serializable{
 	private String shortDescription;
 	
 	@Column(name="purchase_unit")
+	@Enumerated(EnumType.STRING)	
 	@Getter @Setter
-	private String purchaseUom;
+	private UnitOfMeasure purchaseUom;
 
 	@Column(name="serving_unit")
+	@Enumerated(EnumType.STRING)
 	@Getter @Setter
-	private String servingUom;
+	private UnitOfMeasure servingUom;
 	
 	@Column(name="notes")
 	@Getter @Setter
@@ -79,10 +83,7 @@ public class FoodItem extends AuditedTenantUser implements Serializable{
 	
 
 	@ElementCollection
-	@CollectionTable(
-			name="food_item_tag",
-			joinColumns=@JoinColumn( name="food_item_id" )
-	)
+	@CollectionTable( name="food_item_tag", joinColumns=@JoinColumn( name="food_item_id" ) )
 	@Getter
 	private Set<FoodItemTag> tags;
 	

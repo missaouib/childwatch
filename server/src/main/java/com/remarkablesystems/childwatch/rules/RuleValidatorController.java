@@ -38,8 +38,8 @@ public class RuleValidatorController {
 			if( mealFoodItem.getFoodItem().hasTag("CNITEM") ) {
 				List<FoodItem> components = mealFoodItem.getFoodItem().getComponents();
 				components.forEach( (foodItem) -> {
-					System.out.println( "adding " + foodItem.getPortionSize() * mealFoodItem.getQuantity() + " " + UnitOfMeasure.valueOf(foodItem.getServingUom()) + " of " + foodItem.getDescription() );
-					MealFoodItem mfi = new MealFoodItem(foodItem, mealFoodItem.getAgeGroup(), mealFoodItem.getQuantity() * foodItem.getPortionSize(), UnitOfMeasure.valueOf(foodItem.getServingUom()), mealFoodItem.getMeal() );
+					System.out.println( "adding " + foodItem.getPortionSize() * mealFoodItem.getQuantity() + " " + foodItem.getServingUom()+ " of " + foodItem.getDescription() );
+					MealFoodItem mfi = new MealFoodItem(foodItem, mealFoodItem.getAgeGroup(), mealFoodItem.getQuantity() * foodItem.getPortionSize(), foodItem.getServingUom(), mealFoodItem.getMeal() );
 					explodedList.add( mfi );
 				});
 				

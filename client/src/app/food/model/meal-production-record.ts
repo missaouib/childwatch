@@ -1,5 +1,5 @@
 import {FoodItem} from './food-item';
-import {Meal} from './meal';
+import {MealEvent} from './meal-event';
 
 export interface MealProductionFoodItem {
   id: string,
@@ -24,8 +24,8 @@ export interface MealProductionRecord {
   type: string,
   locked?: boolean,
   lockDate?: Date,
-  meal?: Meal,
+  mealEvent?: MealEvent,
   notes: string,
-  mealAttendanceRecords?: MealAttendanceRecord[],
-  mealProductionFoodItems?: MealProductionFoodItem[]
+  attendanceRecords?: MealAttendanceRecord[],
+  productionFoodItems?: MealProductionFoodItem[]
 }

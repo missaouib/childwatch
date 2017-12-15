@@ -58,7 +58,6 @@ export class FoodEffectsService {
     .map((action: FoodActions.RemoveMealEventAction) => action.payload)
     .switchMap((payload: MealEvent) => this.onMealEventRemoved(payload));
 
-
   /**
    * Constructor for the FoodEffectsService
    * 

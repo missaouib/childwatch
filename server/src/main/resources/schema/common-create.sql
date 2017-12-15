@@ -13,7 +13,7 @@ create table if not exists common.food_item(
     	description 		varchar(256) NOT NULL,
     	short_description 	varchar(128),
     	serving_unit 		varchar(36) NOT NULL DEFAULT 'OUNCES' CHECK( serving_unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
-    	purchase_unit 		varchar(36) DEFAULT 'OUNCES' CHECK( purchase_unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
+    	purchase_unit 		varchar(36) NOT NULL DEFAULT 'OUNCES' CHECK( purchase_unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
     	serving_quantity	numeric DEFAULT 1,
     	serving_type		varchar(128),
     	portion_size		numeric DEFAULT 1,
@@ -2055,8 +2055,8 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	create table if not exists meal_event(
 		id 				varchar( 36 ) NOT NULL,
 		meal_id 		varchar(36),
-   		start_date      date NOT NULL,
-   		end_date        date  NOT NULL DEFAULT DATE '12/31/3000',
+   		start_date      TIMESTAMP WITH TIME ZONE NOT NULL,
+   		end_date        TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT DATE '12/31/3000',
    		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) ),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,   		
@@ -2065,11 +2065,11 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	
 	create table if not exists meal_production_record(
 		id 				varchar( 36 ) NOT NULL,
-        meal_date		date NOT NULL,
+        meal_date		TIMESTAMP WITH TIME ZONE NOT NULL,
     	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' ) ) NOT NULL,
         locked			boolean NOT NULL DEFAULT false,
-        lock_date		date,
-		meal_id 		varchar(36),
+        lock_date		TIMESTAMP WITH TIME ZONE,
+		meal_event_id 		varchar(36),
         notes 				varchar(4096),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,   		
@@ -2080,8 +2080,8 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
         id				varchar( 36 ) NOT NULL,
         mpr_id			varchar(36) NOT NULL,
         age_group    	varchar(36) CHECK ( age_group IN ( 'AGE_0_5MO', 'AGE_6_11MO', 'AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT') ) NOT NULL,
-        projected		numeric,
-        actual			numeric,	
+        projected		numeric NOT NULL DEFAULT 0,
+        actual			numeric NOT NULL DEFAULT 0,	
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,
         PRIMARY KEY( id ),
@@ -2092,8 +2092,8 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
         id				varchar(36) NOT NULL,
         mpr_id			varchar(36) NOT NULL,
 		food_item_id	varchar(36) NOT NULL,
-        required		numeric,
-        prepared		numeric,
+        required		numeric DEFAULT 0 NOT NULL,
+        prepared		numeric DEFAULT 0 NOT NULL,
         unit			varchar(36) DEFAULT 'SERVINGS' CHECK( unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,
@@ -2123,6 +2123,7 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	alter table meal add constraint FK_tenant__id foreign key (updated_by_tenant_id) references common.tenant;
 
 	alter table meal_production_record add constraint FK_mpr__update_user_id foreign key (updated_by_user_id) references common.cw_user;
+	alter table meal_production_record add constraint FK_mpr__meal_event_id foreign key (meal_event_id) references meal_event;
 
 	alter table meal_attendance_record add constraint FK_mar__mpr_id foreign key (mpr_id) references meal_production_record;
 	alter table meal_attendance_record add constraint FK_mar__update_user_id foreign key (updated_by_user_id) references common.cw_user;

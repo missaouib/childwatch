@@ -1,10 +1,20 @@
 package com.remarkablesystems.childwatch.domain.food;
 
 import java.io.Serializable;
+import java.util.Arrays;
+
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.SimpleObjectIdResolver;
 import com.remarkablesystems.childwatch.domain.food.projection.MealFoodItemFull;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 
@@ -15,28 +25,35 @@ import lombok.ToString;
 @Entity
 @Table(name="meal_food_item")
 @ToString(callSuper=true)
+@EqualsAndHashCode()
 public class MealFoodItem implements Serializable {
 	
 	private static final long serialVersionUID = 7341397807008242827L;
 
 	@Id
+	@Getter
 	private String id;
 
 	@Column(name="age_group") @Enumerated( EnumType.STRING )
+	@Getter @Setter
 	private AgeGroup ageGroup;
 	
+	@Getter @Setter
 	private double quantity;
 	
 	@Enumerated(EnumType.STRING)
+	@Getter @Setter
 	private UnitOfMeasure unit;
 
 
 	@ManyToOne
 	@PrimaryKeyJoinColumn( name="food_item_id", referencedColumnName="id")
+	@Getter @Setter
 	private FoodItem foodItem;
 
 	@ManyToOne
 	@PrimaryKeyJoinColumn(name="meal_id", referencedColumnName="id")
+	@Getter @Setter
 	private Meal meal;
 	
 	public MealFoodItem() {}
@@ -54,48 +71,19 @@ public class MealFoodItem implements Serializable {
 		this.meal = meal;
 	}
 	
-	public AgeGroup getAgeGroup() {
-		return ageGroup;
+	@Transient
+	public Double convertTo(UnitOfMeasure uom) {
+		return (uom!=null)? UnitOfMeasure.convert(this.quantity, this.getUnit(), uom) : this.quantity;
+	}
+	
+	@Transient
+	public Double add( UnitOfMeasure commonUoM, MealFoodItem mealFoodItem ) {
+		return mealFoodItem.convertTo( this.getUnit() ) + this.convertTo(commonUoM);
 	}
 
-	public void setAgeGroup(AgeGroup ageGroup) {
-		this.ageGroup = ageGroup;
-	}
-
-	public double getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(double quantity) {
-		this.quantity = quantity;
-	}
-
-	public FoodItem getFoodItem() {
-		return foodItem;
-	}
-
-	public void setFoodItem(FoodItem foodItem) {
-		this.foodItem = foodItem;
-	}
-
-	public Meal getMeal() {
-		return meal;
-	}
-
-	public void setMeal(Meal meal) {
-		this.meal = meal;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public UnitOfMeasure getUnit() {
-		return unit;
-	}
-
-	public void setUnit(UnitOfMeasure unit) {
-		this.unit = unit;
+	@Transient
+	public static Double add( UnitOfMeasure commonUoM, MealFoodItem ...mealFoodItems ) {
+		return Arrays.stream(mealFoodItems).mapToDouble( mfi -> mfi.convertTo(commonUoM) ).sum();
 	}
 
 }

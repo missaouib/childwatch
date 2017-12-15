@@ -52,12 +52,12 @@ public abstract class AuditedUser {
 	
 	@PostPersist
 	private void postPersist() {
-		logger.info("persisted: " + this.toString() );
+		//logger.info("persisted: " + this.toString() );
 	}
 	
 	@PostUpdate
 	private void postUpdate() {
-		logger.info("updated: " + this.toString() );
+		//logger.info("updated: " + this.toString() );
 	}
 	
 	

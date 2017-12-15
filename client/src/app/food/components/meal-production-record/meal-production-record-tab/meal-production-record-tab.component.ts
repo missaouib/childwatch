@@ -1,6 +1,6 @@
-import {AppState} from '../../../app.state';
-import {FoodItemUtils} from '../../model/food-item-utils';
-import {MealProductionRecord, MealAttendanceRecord, MealProductionFoodItem} from '../../model/meal-production-record';
+import {AppState} from '../../../../app.state';
+import {FoodItemUtils} from '../../../model/food-item-utils';
+import {MealProductionRecord, MealAttendanceRecord, MealProductionFoodItem} from '../../../model/meal-production-record';
 import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
@@ -39,8 +39,8 @@ export class MealProductionRecordTabComponent implements OnInit {
   ngOnInit() {
 
     this.attendanceForm = this.formBuilder.group({});
-    if (this.mealProductionRecord && this.mealProductionRecord.mealAttendanceRecords)
-      this.mealProductionRecord.mealAttendanceRecords.forEach(mar => {
+    if (this.mealProductionRecord && this.mealProductionRecord.attendanceRecords)
+      this.mealProductionRecord.attendanceRecords.forEach(mar => {
         this.attendanceForm.addControl(mar.ageGroup, this.formBuilder.group({
           projected: [mar.projected, Validators.required],
           actual: [mar.actual, Validators.required]
@@ -49,8 +49,8 @@ export class MealProductionRecordTabComponent implements OnInit {
 
 
     this.foodItemsForm = this.formBuilder.group({});
-    if (this.mealProductionRecord && this.mealProductionRecord.mealProductionFoodItems) {
-      this.mealProductionRecord.mealProductionFoodItems.forEach(mpfi => {
+    if (this.mealProductionRecord && this.mealProductionRecord.productionFoodItems) {
+      this.mealProductionRecord.productionFoodItems.forEach(mpfi => {
         this.foodItemsForm.addControl(mpfi.foodItem.id, this.formBuilder.group({
           required: [undefined, Validators.required],
           prepared: [undefined, Validators.required],

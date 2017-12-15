@@ -15,71 +15,43 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.remarkablesystems.childwatch.domain.AuditedUser;
-import com.remarkablesystems.childwatch.domain.food.projection.MealEventFull;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 
 @Entity
 @Table(name="meal_event")
 @ToString(callSuper=true)
+@EqualsAndHashCode(callSuper=true)
 public class MealEvent extends AuditedUser implements Serializable {
 
 	private static final long serialVersionUID = -5742620367800403437L;
 
 	@Id
+	@Getter
 	private String id;
 	
 	@ManyToOne
 	@JoinColumn(name="meal_id")
+	@Getter @Setter
 	Meal meal;
 	
 	@Column( name="start_date" )
-	java.sql.Timestamp startDate;
+	@Temporal( TemporalType.TIMESTAMP )
+	@Getter @Setter
+	Date startDate;
 
 	@Column( name="end_date" )
-	java.sql.Timestamp endDate;
+	@Temporal( TemporalType.TIMESTAMP )
+	@Getter @Setter
+	Date endDate;
 	
 	@Enumerated(EnumType.STRING) @Column( name="recurrence" )
+	@Getter @Setter
 	Recurrence recurrence;
-
-	public Meal getMeal() {
-		return meal;
-	}
-
-	public void setMeal(Meal meal) {
-		this.meal = meal;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(java.sql.Timestamp startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(java.sql.Timestamp endDate) {
-		this.endDate = endDate;
-	}
-
-	public Recurrence getRecurrence() {
-		return recurrence;
-	}
-
-	public void setRecurrence(Recurrence recurrence) {
-		this.recurrence = recurrence;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	
 	
 	
 }
