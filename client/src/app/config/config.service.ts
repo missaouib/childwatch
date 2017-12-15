@@ -2,13 +2,15 @@ import {AppState} from '../app.state';
 import * as ConfigActions from './config.actions';
 import {ConfigState} from './config.state';
 import {Injectable} from '@angular/core';
+//import { Http } from '@angular/http';
 import {Store} from '@ngrx/store';
 
 @Injectable()
 export class ConfigService {
 
   constructor(
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    //private http: Http
   ) {}
 
 
@@ -37,4 +39,10 @@ export class ConfigService {
     this.store.dispatch(new ConfigActions.ConfigChangedAction(config));
   }
 
+  public query() {
+  }
+
+  public update() {
+
+  }
 }

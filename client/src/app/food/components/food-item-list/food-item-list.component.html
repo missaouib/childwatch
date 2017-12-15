@@ -38,7 +38,7 @@
 
 <div class="row" *ngIf="show">
 	<table class="table table-condensed" >
-		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="_ageGroup !== undefined" [dragData]="foodItem"  (click)="selectFoodItem(foodItem)">
+		<tr *ngFor="let foodItem of pagedFoodItems()" dnd-draggable [dragEnabled]="_ageGroup !== undefined" [dragData]="foodItem"  (click)="selectFoodItem(foodItem)" >
 			<td class="col=sm-1">
 					<img class="small-img" *ngIf="FoodItemUtils.category(foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
 					<img class="small-img" *ngIf="FoodItemUtils.category(foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />
@@ -51,8 +51,8 @@
 			</td>
 			<td class="col-sm-10">
 				<strong class="text-primary">
-					<span class="hidden-sm hidden-md">{{foodItem.shortDescription}}</span>
-					<span class="hidden-lg">{{limit( foodItem.shortDescription )}}</span>
+					<span class="hidden-sm hidden-md">{{foodItem.description}}</span>
+					<span class="hidden-lg">{{limit( foodItem.description )}}</span>
 				</strong><br />
 				<span *ngIf="!FoodItemUtils.isCN(foodItem)" class="hidden-sm hidden-xs"><em>{{FoodItemUtils.tagstring(foodItem)}}</em></span>
 				<span *ngIf="FoodItemUtils.isCN(foodItem)" class="hidden-sm hidden-xs"><em>{{FoodItemUtils.cnItemString(foodItem)}}</em></span>

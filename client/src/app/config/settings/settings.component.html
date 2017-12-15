@@ -1,6 +1,8 @@
 <div class="container-fluid">
 	<h3 class="text-primary">Settings</h3>	
 
+	<
+	<!--
 	<h4 style="width:100%; border-bottom: 1px solid #000">General</h4>
 	<div class="form-group">
 		<label>Age Groups</label>
@@ -31,20 +33,21 @@
 		</div>
 
 	</div>
-
+	-->
+	
 	<div class="row">
 	<h4 style="width:100%; border-bottom: 1px solid #000">User</h4>
 	<div class="form-group">
 		<label for="displayname">Display Name</label>
-		<input class="form-control" id="displayname" value="{{config?.user?.fullName}}">
+		<input class="form-control" id="displayname" value="{{config?.user?.fullName}}" disabled>
 	</div>	
 	<div class="form-group">
 		<label for="username">Username</label>
-		<input class="form-control" id="username" value="{{config?.user.username}}"/>
+		<input class="form-control" id="username" value="{{config?.user.username}}" disabled/>
 	</div>
 	<div class="form-group">
 		<label for="password">Password</label>
-		<input class="form-control" type="password" id="password" value="NOT SET" />
+		<input class="form-control" type="password" id="password" value="NOT SET" disabled/>
 	</div>
 	<div class="form-group">
 		<div><label>Avatar</label></div>
