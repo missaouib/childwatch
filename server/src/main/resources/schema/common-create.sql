@@ -559,8 +559,6 @@ INSERT INTO common.food_item (id, description, short_description, serving_unit, 
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'Milk, Fluid - Fat Free (Skim), Reduced-Lactose, Unflavored', 'Milk, Skim, Reduced-Lactose, Unflavored', 'OUNCES', 'GALLONS', 1, NULL, 1, NULL, NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('d65b0267-1fbf-45b2-ac80-77c4b049ee17', 'Milk, Fluid - Fat-Free (Skim), Reduced-Lactose, Flavored', 'Milk, Skim, Reduced-Lactose, Flavored', 'OUNCES', 'GALLONS', 1, NULL, 1, NULL, NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('c6cce5a8-14bb-464d-b188-669e9af9f7aa', 'Millet, Cooked', 'Millet', 'CUPS', 'LBS', 1, NULL, 1, NULL, NULL);
-INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('4dbbbfe5-a5b0-4132-beae-54c1f91ab6ee', 'Mixed Fruit, Fresh', 'Mixed Fruit, Fresh', 'CUPS', 'OUNCES', 1, NULL, 1, NULL, NULL);
-INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('c73b275b-be15-487c-b44c-57386b818684', 'Mixed Fruit, Frozen', 'Mixed Fruit', 'CUPS', 'OUNCES', 1, NULL, 1, NULL, NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('8c3f1b0a-df22-4c59-9b3d-7a6a1b664c61', 'Muffins, Banana Nut, Commercially Prepared', 'Muffins, Banana Nut', 'OUNCES', 'OUNCES', 1, NULL, 1, NULL, NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('1108b419-7003-4850-9720-35a882cb68b7', 'Muffins, Banana Nut, Prepared from Recipe', 'Muffins, Banana Nut, Homemade', 'OUNCES', 'OUNCES', 1, NULL, 1, NULL, NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('2ae32f1e-14d5-4f40-a7dc-e8431667985c', 'Muffins, Blueberry, Commercially Prepared', 'Muffins, Blueberry', 'OUNCES', 'OUNCES', 1, NULL, 1, NULL, NULL);
@@ -1081,8 +1079,6 @@ INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('46f9f05a-f25
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'MILK');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('d65b0267-1fbf-45b2-ac80-77c4b049ee17', 'MILK');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('c6cce5a8-14bb-464d-b188-669e9af9f7aa', 'GRAIN');
-INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('4dbbbfe5-a5b0-4132-beae-54c1f91ab6ee', 'FRUIT');
-INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('c73b275b-be15-487c-b44c-57386b818684', 'FRUIT');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('8c3f1b0a-df22-4c59-9b3d-7a6a1b664c61', 'GRAIN');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('1108b419-7003-4850-9720-35a882cb68b7', 'GRAIN');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('2ae32f1e-14d5-4f40-a7dc-e8431667985c', 'GRAIN');
@@ -1656,8 +1652,6 @@ INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('3fa056c2-a1c0-4cd7-937f-1b9753cb3a6a', 'AGE_ADULT');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('d65b0267-1fbf-45b2-ac80-77c4b049ee17', 'AGE_6_12YR');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('c6cce5a8-14bb-464d-b188-669e9af9f7aa', 'WHOLEGRAIN');
-INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('4dbbbfe5-a5b0-4132-beae-54c1f91ab6ee', 'AGE_GT_6MO');
-INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('c73b275b-be15-487c-b44c-57386b818684', 'AGE_GT_6MO');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('8c3f1b0a-df22-4c59-9b3d-7a6a1b664c61', 'BREAD');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('1108b419-7003-4850-9720-35a882cb68b7', 'BREAD');
 INSERT INTO common.food_item_tag (food_item_id, tag_value) VALUES ('2ae32f1e-14d5-4f40-a7dc-e8431667985c', 'BREAD');
