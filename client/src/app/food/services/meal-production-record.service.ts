@@ -1,5 +1,6 @@
 import {AppState} from '../../app.state';
 import {User} from '../../config/config.state';
+import {MealAttendanceRecord, MealProductionRecord} from '../model/meal-production-record';
 import {MealType} from '../model/meal-type';
 import {Injectable} from '@angular/core';
 import {Http, URLSearchParams, Headers} from '@angular/http';
@@ -56,6 +57,38 @@ export class MealProductionRecordService {
       });
   }
 
+
+  lockMPR(mpr: MealProductionRecord, locked: boolean) {
+    let headers = new Headers();
+    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+
+    return this.http.patch(MealProductionRecordService.URL + '/' + mpr.id, {id: mpr.id, locked: locked}, {headers: headers})
+      .map(() => this.store.dispatch(new FoodActions.MealProductionRecordLockedAction({mprId: mpr.id, locked: locked})));
+  }
+
+  updateAttendance(record: MealAttendanceRecord) {
+    let headers = new Headers();
+    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+
+    return this.http.put('/api/mealAttendanceRecord/' + record.id, record, {headers: headers})
+      .map(() => this.store.dispatch(new FoodActions.MealAttendanceRecordUpdatedAction(record)));
+  }
+
+  fetchFoodItemsForMPR(mpr: MealProductionRecord) {
+    let headers = new Headers();
+    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
+    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+
+    const params = new URLSearchParams();
+    params.append('id', mpr.id);
+    params.append('projection', 'mpfiFull');
+
+    return this.http.get('/api/mealProductionFoodItem/search/byMPRId', {search: params, headers: headers})
+      .map(res => res.json())
+      .map(({_embedded: {mealProductionFoodItems}}) => this.store.dispatch(new FoodActions.MealProductionFoodItemsReceivedAction(mealProductionFoodItems)));
+  }
 
 
 }

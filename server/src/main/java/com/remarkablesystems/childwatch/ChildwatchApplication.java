@@ -18,7 +18,7 @@ public class ChildwatchApplication {
     
     @Bean
     public MappedInterceptor myMappedInterceptor() {
-        return new MappedInterceptor(new String[]{"/api/**", "/rules/**", "/menu/**"}, new TenantInterceptor());
+        return new MappedInterceptor(new String[]{"/api/**", "/rules/**", "/menu/**", "/mpr/**"}, new TenantInterceptor());
     }
 
 }

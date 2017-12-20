@@ -1,28 +1,30 @@
-<div>
+<div *ngIf="!mealProductionRecord?.productionFoodItems || mealProductionRecord?.productionFoodItems.length == 0">
+	<br/><strong>No scheduled food items for {{MealType.toDisplay(mealProductionRecord?.type)}} - Unable to create MPR</strong>
+</div>
+
+<div *ngIf="mealProductionRecord && mealProductionRecord.productionFoodItems.length > 0">
 
 	<!-- Attendance -->
 	
 	<div class="col-xs-5" >
 		<form novalidate [formGroup]="attendanceForm">
 			<h3 class="text-primary">Attendance <small>{{mealProductionRecord?.type}} Planned/Actuals</small></h3>
-			<!--
-			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of ['AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT']; let idx = index;">
+			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of AgeGroup._ALL; let idx = index;">
 				<span class="col-xs-3"> 
 					<label *ngIf="idx==0">Age Group</label>
-					<p class="form-control-static text-primary">{{(name === "NON_PARTICIPANT")? 'NON-PARTICIPANT' : name.substring(4).replace("_","-")}}</p>
+					<p class="form-control-static text-primary">{{AgeGroup._toDisplay(name)}}</p>
 				</span> 
 				<span class="col-xs-offset-1 col-xs-2"> 
-					<label *ngIf="idx==0">Planned</label>
-					<p *ngIf="mealProductionRecord?.locked" class="form-control-static">LOCKED</p> 
-					<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="planned"/>
+					<label *ngIf="idx==0">Projected</label>
+					<p *ngIf="mealProductionRecord?.locked" class="form-control-static">{{attendanceRecordFor(name)?.projected}}</p> 
+					<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="projected"/>
 				</span> 
 				<span class="col-xs-2"> 
 					<label *ngIf="idx==0">Actual</label>
-					<p *ngIf="mealProductionRecord?.locked" class="form-control-static">LOCKED</p> 				
+					<p *ngIf="mealProductionRecord?.locked" class="form-control-static">{{attendanceRecordFor(name)?.actual}}</p> 				
 					<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="actual" />
 				</span>
 			</div>
-			-->
 		</form>
 	</div>
 	
@@ -30,9 +32,9 @@
 	<div class="col-xs-7 form-group" >
 		<h3 class="text-primary">Food Items</h3>
 		<div class="panel">
-			<div *ngIf="!mealProductionRecord?.mealProductionFoodItems"><strong>No items for {{mealProductionRecord?.type}}</strong></div>
+			<div *ngIf="!mealProductionRecord?.productionFoodItems || mealProductionRecord?.productionFoodItems.length == 0"><strong>No items for {{MealType.toDisplay(mealProductionRecord?.type)}}</strong></div>
 			<form novalidate [formGroup]="foodItemsForm">
-				<div class="row form-group" *ngFor="let pfi of mealProductionRecord?.mealProductionFoodItems; let i = index;" formGroupName="{{pfi.foodItem.id}}">
+				<div class="row form-group" *ngFor="let pfi of mealProductionRecord?.productionFoodItems; let i = index;" formGroupName="{{pfi.foodItem.id}}">
 					<span class="col-xs-1"> 
 						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
 						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />
@@ -52,7 +54,7 @@
 					</span> 
 					<span class="col-xs-2 "> 
 						<label *ngIf="i==0">Required</label>
-						<p class="form-control-static">{{pfi.required || 0 }}</p>
+						<p class="form-control-static">{{pfi.calcRequired || 0 }}</p>
 					</span> 
 					<span class="col-xs-2 "> 
 						<label *ngIf="i==0">Prepared</label>
@@ -78,8 +80,9 @@
 	<!-- Notes -->
 	<div class="row">
 		<div class="form-group col-xs-12">
-			<h3 class="text-primary">{{mealProductionRecord?.type}} Notes/Substitutions</h3>
-			<textarea class="form-control col-xs-12" rows="4"></textarea>
+			<h3 class="text-primary">{{MealType.toDisplay(mealProductionRecord?.type)}} Notes/Substitutions</h3>
+			<p *ngIf="mealProductionRecord?.locked">{{mealProductionRecord?.notes}}</p>
+			<textarea *ngIf="!mealProductionRecord?.locked" class="form-control col-xs-12" rows="4" ></textarea>
 		</div>
 	</div>
 

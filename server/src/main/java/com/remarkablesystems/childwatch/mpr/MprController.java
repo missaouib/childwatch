@@ -1,5 +1,14 @@
 package com.remarkablesystems.childwatch.mpr;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,15 +23,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import com.openhtmltopdf.extend.FSUriResolver;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.FoodItem;
 import com.remarkablesystems.childwatch.domain.food.Meal;
@@ -37,6 +54,8 @@ import com.remarkablesystems.childwatch.domain.food.repository.MealEventReposito
 import com.remarkablesystems.childwatch.domain.food.repository.MealFoodItemRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealProductionFoodItemRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealProductionRecordRepository;
+import com.remarkablesystems.childwatch.menu.MenuController;
+import com.remarkablesystems.childwatch.menu.MenuController.UriResolver;
 
 @RepositoryRestController
 public class MprController {
@@ -44,6 +63,10 @@ public class MprController {
 	Logger logger = LoggerFactory.getLogger(getClass().getName());
 	
 	public static final String URL_MAPPING = "/mealProductionRecord/create";
+	
+
+
+
 	
 	@Autowired
 	MealProductionRecordRepository mprRepo;
@@ -60,6 +83,7 @@ public class MprController {
 	@Autowired
 	MealFoodItemRepository mealFoodItemRepo;
 	
+
 	
 	Set<MealProductionFoodItem> createProductionSet( MealProductionRecord mpr, List<MealFoodItem> items ){
 		HashSet<FoodItem> productionSet = new HashSet<FoodItem>();
@@ -167,4 +191,5 @@ public class MprController {
 		
 	}
 	
+
 }

@@ -131,6 +131,11 @@ public class FoodItem extends AuditedTenantUser implements Serializable{
 	}
 	
 	@Transient
+	public String bestTag() {
+		return FoodItem.bestTagValue(this);
+	}
+	
+	@Transient
 	public static Comparator<FoodItem> byFoodItemCategory = ( item1, item2 ) -> {
 		List<String> tags = Arrays.asList( "MILK", "MEAT", "VEGETABLE", "FRUIT", "GRAIN", "OTHER" );		
 		return tags.indexOf( bestTagValue(item1) ) - tags.indexOf( bestTagValue(item2) );

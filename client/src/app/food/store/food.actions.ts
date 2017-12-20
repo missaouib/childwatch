@@ -43,6 +43,10 @@ export const MEALPRODUCTIONRECORDS_RECEIVED: string = '[FOOD] MEALPRODUCTIONRECO
 export const MEALPRODUCTIONFOODITEMS_RECEIVED: string = '[FOOD] MEALPRODUCTIONFOODITEMS RECEIVED';
 export const MEALATTENDANCERECORDS_RECEIVED: string = '[FOOD] MEALATTENDANCERECORDS RECEIVED';
 
+export const ACTIVATE_MEALPRODUCTIONRECORD: string = '[FOOD] ACTIVATE MEALPRODUCTIONRECORD';
+export const MEALATTENDANCERECORD_UPDATED: string = '[FOOD] MEALATTENDANCERECORD UPDATED';
+export const MEALPRODUCTIONRECORD_LOCKED: string = '[FOOD] MEALPRODUCTIONRECORD LOCKED';
+
 export class MealsReceivedAction implements Action {
   readonly type = MEALS_RECEIVED;
   constructor(public payload: Meal[]) {};
@@ -163,6 +167,20 @@ export class MealAttendanceRecordsReceivedAction implements Action {
   constructor(public payload: MealAttendanceRecord[]) {};
 }
 
+export class ActivateMealProductionRecordAction implements Action {
+  readonly type = ACTIVATE_MEALPRODUCTIONRECORD;
+  constructor(public payload: MealProductionRecord) {};
+}
+
+export class MealAttendanceRecordUpdatedAction implements Action {
+  readonly type = MEALATTENDANCERECORD_UPDATED;
+  constructor(public payload: MealAttendanceRecord) {};
+}
+
+export class MealProductionRecordLockedAction implements Action {
+  readonly type = MEALPRODUCTIONRECORD_LOCKED;
+  constructor(public payload: {mprId: string, locked: boolean}) {};
+}
 
 export type ACTIONS
   = MealsReceivedAction
@@ -188,4 +206,7 @@ export type ACTIONS
   | MealComplianceAction
   | MealProductionRecordsReceivedAction
   | MealProductionFoodItemsReceivedAction
-  | MealAttendanceRecordsReceivedAction;
+  | MealAttendanceRecordsReceivedAction
+  | ActivateMealProductionRecordAction
+  | MealAttendanceRecordUpdatedAction
+  | MealProductionRecordLockedAction;

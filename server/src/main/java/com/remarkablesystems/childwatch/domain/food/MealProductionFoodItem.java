@@ -13,7 +13,9 @@ import javax.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.remarkablesystems.childwatch.domain.AuditedUser;
 import com.remarkablesystems.childwatch.domain.Spring;
 import com.remarkablesystems.childwatch.mpr.MprController;
@@ -40,9 +42,11 @@ public class MealProductionFoodItem extends AuditedUser {
 		this.foodItem = foodItem;
 		required = 0;
 		prepared = 0;
+		this.unit = foodItem.getPurchaseUom();
 	}
 	
 	@Id
+	@Getter
 	String id;
 	
 	@ManyToOne

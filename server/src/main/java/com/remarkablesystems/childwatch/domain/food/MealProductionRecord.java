@@ -24,6 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.remarkablesystems.childwatch.domain.AuditedTenantUser;
@@ -42,8 +43,6 @@ public class MealProductionRecord extends AuditedUser {
 
 	public MealProductionRecord() {
 		super();
-		this.attendanceRecords = new HashSet<MealAttendanceRecord>();
-		this.productionFoodItems = new HashSet<MealProductionFoodItem>();
 	}
 	
 	public MealProductionRecord( String id, MealEvent event ) {
@@ -52,8 +51,6 @@ public class MealProductionRecord extends AuditedUser {
 		this.mealEvent = event;
 		this.mealDate = event.getStartDate();
 		this.type = event.getMeal().getType();
-		this.attendanceRecords = new HashSet<MealAttendanceRecord>();
-		this.productionFoodItems = new HashSet<MealProductionFoodItem>();		
 	}
 	
 	public MealProductionRecord( String id, Date mealDate, MealType type ) {
@@ -61,13 +58,12 @@ public class MealProductionRecord extends AuditedUser {
 		this.id = id;
 		this.mealDate = mealDate;
 		this.type = type;
-		this.attendanceRecords = new HashSet<MealAttendanceRecord>();
-		this.productionFoodItems = new HashSet<MealProductionFoodItem>();
 	}
 	
 	@Id
 	@Getter
 	String id;
+	
 		
 	@Column(name="meal_date")
 	@Getter
@@ -99,12 +95,10 @@ public class MealProductionRecord extends AuditedUser {
 	
 	@OneToMany(mappedBy="mpr")
 	@Getter
-	@JsonManagedReference
-	Set<MealAttendanceRecord> attendanceRecords;		
+	Set<MealAttendanceRecord> attendanceRecords = new HashSet<MealAttendanceRecord>();	
 
 	@OneToMany(mappedBy="mpr")
 	@Getter
-	@JsonManagedReference
-	Set<MealProductionFoodItem> productionFoodItems;		
+	Set<MealProductionFoodItem> productionFoodItems = new HashSet<MealProductionFoodItem>();		
 
 }

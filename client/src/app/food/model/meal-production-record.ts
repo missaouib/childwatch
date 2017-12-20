@@ -6,6 +6,7 @@ export interface MealProductionFoodItem {
   mpr?: MealProductionRecord,
   foodItem: FoodItem,
   required: number,
+  calcRequired?: number,
   prepared: number,
   unit: string
 }

@@ -20,6 +20,7 @@ export interface FoodState {
   showWeekends: boolean;
   showBackground: boolean;
   mealProductionRecords: MealProductionRecord[];
+  activeMPR: MealProductionRecord;
 };
 
 export const INITIAL: FoodState = {
@@ -37,7 +38,8 @@ export const INITIAL: FoodState = {
   mealRulesViolations: [],
   showWeekends: false,
   showBackground: false,
-  mealProductionRecords: []
+  mealProductionRecords: [],
+  activeMPR: undefined
 };
 
 
@@ -83,6 +85,14 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setMealCompliance(state, action as FoodActions.MealComplianceAction);
     case FoodActions.MEALPRODUCTIONRECORDS_RECEIVED:
       return setMealProductionRecordsReceived(state, action as FoodActions.MealProductionRecordsReceivedAction);
+    case FoodActions.MEALPRODUCTIONFOODITEMS_RECEIVED:
+      return setMealProductionFoodItemsReceived(state, action as FoodActions.MealProductionFoodItemsReceivedAction);
+    case FoodActions.ACTIVATE_MEALPRODUCTIONRECORD:
+      return setActivateMealProductionRecord(state, action as FoodActions.ActivateMealProductionRecordAction);
+    case FoodActions.MEALATTENDANCERECORD_UPDATED:
+      return setMealAttendanceRecordUpdated(state, action as FoodActions.MealAttendanceRecordUpdatedAction);
+    case FoodActions.MEALPRODUCTIONRECORD_LOCKED:
+      return setMealProductionRecordLocked(state, action as FoodActions.MealProductionRecordLockedAction);
 
   }
   return state;
@@ -351,3 +361,77 @@ function setMealProductionRecordsReceived(state: FoodState, action: FoodActions.
     mealProductionRecords: action.payload
   };
 }
+
+function setMealProductionFoodItemsReceived(state: FoodState, action: FoodActions.MealProductionFoodItemsReceivedAction): FoodState {
+
+
+  console.log(`there are ${action.payload.length} MPR Food Items`);
+
+  const mprs = state.mealProductionRecords.filter(mpr => mpr.id != state.activeMPR.id);
+
+  const copyActiveMpr = {
+    ...state.activeMPR,
+    productionFoodItems: action.payload
+  };
+
+  mprs.push(copyActiveMpr);
+
+  return {
+    ...state,
+    activeMPR: copyActiveMpr,
+    mealProductionRecords: mprs
+  };
+}
+
+function setActivateMealProductionRecord(state: FoodState, action: FoodActions.ActivateMealProductionRecordAction): FoodState {
+  return {
+    ...state,
+    activeMPR: action.payload
+  };
+}
+
+
+function setMealAttendanceRecordUpdated(state, action: FoodActions.MealAttendanceRecordUpdatedAction): FoodState {
+
+  console.log('Updating MAR');
+
+  const attendanceRecords = state.activeMPR.attendanceRecords.filter(mar => mar.id != action.payload.id);
+  attendanceRecords.push(action.payload);
+
+  const copyActiveMpr = {
+    ...state.activeMPR,
+    attendanceRecords: attendanceRecords
+  };
+
+  const mprs = state.mealProductionRecords.filter(mpr => mpr.id != state.activeMPR.id);
+  mprs.push(copyActiveMpr);
+
+  return {
+    ...state,
+    activeMPR: copyActiveMpr,
+    mealProductionRecords: mprs
+  };
+
+}
+
+function setMealProductionRecordLocked(state, action: FoodActions.MealProductionRecordLockedAction): FoodState {
+
+  const mpr = state.mealProductionRecords.find(mpr => mpr.id == action.payload.mprId);
+
+  if (mpr) {
+    const copyMpr = {...mpr, locked: action.payload.locked};
+
+    const mprs = state.mealProductionRecords.filter(mpr => mpr.id != state.activeMPR.id);
+    mprs.push(copyMpr);
+
+    const copyActiveMPR = (state.activeMPR && mpr.id == state.activeMPR.id) ? mpr : state.activeMPR;
+
+    return {
+      ...state,
+      activeMPR: copyActiveMPR,
+      mealProductionRecords: mprs
+    };
+  }
+  return state;
+}
+
