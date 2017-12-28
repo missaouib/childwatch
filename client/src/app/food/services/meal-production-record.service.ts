@@ -1,12 +1,20 @@
 import {AppState} from '../../app.state';
 import {User} from '../../config/config.state';
-import {MealAttendanceRecord, MealProductionRecord} from '../model/meal-production-record';
+import {MealAttendanceRecord, MealProductionRecord, MealProductionFoodItem} from '../model/meal-production-record';
 import {MealType} from '../model/meal-type';
 import {Injectable} from '@angular/core';
-import {Http, URLSearchParams, Headers} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import * as moment from 'moment';
 import * as FoodActions from '../store/food.actions';
+
+interface Response {
+  _embedded: {mealProductionRecords: MealProductionRecord[]}
+}
+
+interface ResponseMPFI {
+  _embedded: {mealProductionFoodItems: MealProductionFoodItem[]}
+}
 
 @Injectable()
 export class MealProductionRecordService {
@@ -19,7 +27,7 @@ export class MealProductionRecordService {
 
   constructor(
     private store: Store<AppState>,
-    private http: Http
+    private http: HttpClient
   ) {
     this.store.select(s => s.config.user).subscribe(user => this.user = user);
   }
@@ -29,24 +37,25 @@ export class MealProductionRecordService {
    * 
    */
   queryByDate(date: Date, dontCreate?: boolean) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
-    const params = new URLSearchParams();
-    params.append('date', moment(date).format('MM/DD/YYYY'));
-    params.append('projection', MealProductionRecordService.FULL);
 
-    return this.http.get(MealProductionRecordService.URL + '/search/byDate', {search: params, headers: headers})
-      .map(res => res.json())
+    const params = {
+      date: moment(date).format('MM/DD/YYYY'),
+      projection: MealProductionRecordService.FULL
+    };
+
+    return this.http.get<Response>(MealProductionRecordService.URL + '/search/byDate', {params: params, headers: headers})
       .map(({_embedded: {mealProductionRecords}}) => {
         if (!dontCreate && (!mealProductionRecords || mealProductionRecords.length === 0)) {
           console.log('Didn\'t find any - creating');
-          this.http.get(MealProductionRecordService.URL + '/create', {search: params, headers: headers})
+          this.http.get(MealProductionRecordService.URL + '/create', {params: params, headers: headers})
             .map(res => {
               console.log('Now loading what we created');
-              return this.http.get(MealProductionRecordService.URL + '/search/byDate', {search: params, headers: headers})
-                .map(res => res.json())
+              return this.http.get<Response>(MealProductionRecordService.URL + '/search/byDate', {params: params, headers: headers})
                 .map(({_embedded: {mealProductionRecords}}) => {
                   this.store.dispatch(new FoodActions.MealProductionRecordsReceivedAction(mealProductionRecords))
                 }).subscribe();
@@ -59,34 +68,40 @@ export class MealProductionRecordService {
 
 
   lockMPR(mpr: MealProductionRecord, locked: boolean) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
 
     return this.http.patch(MealProductionRecordService.URL + '/' + mpr.id, {id: mpr.id, locked: locked}, {headers: headers})
       .map(() => this.store.dispatch(new FoodActions.MealProductionRecordLockedAction({mprId: mpr.id, locked: locked})));
   }
 
   updateAttendance(record: MealAttendanceRecord) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
 
     return this.http.put('/api/mealAttendanceRecord/' + record.id, record, {headers: headers})
       .map(() => this.store.dispatch(new FoodActions.MealAttendanceRecordUpdatedAction(record)));
   }
 
   fetchFoodItemsForMPR(mpr: MealProductionRecord) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
-    const params = new URLSearchParams();
-    params.append('id', mpr.id);
-    params.append('projection', 'mpfiFull');
 
-    return this.http.get('/api/mealProductionFoodItem/search/byMPRId', {search: params, headers: headers})
-      .map(res => res.json())
+    const params = {
+      id: mpr.id,
+      projection: 'mpfiFull'
+    };
+
+    return this.http.get<ResponseMPFI>('/api/mealProductionFoodItem/search/byMPRId', {params: params, headers: headers})
       .map(({_embedded: {mealProductionFoodItems}}) => this.store.dispatch(new FoodActions.MealProductionFoodItemsReceivedAction(mealProductionFoodItems)));
   }
 

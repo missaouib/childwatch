@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {UserLogoutAction, UserLoginAction} from '../config/config.actions';
 import {User} from '../config/config.state';
-import {Http, URLSearchParams} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -18,7 +18,7 @@ export class AuthenticationService implements CanActivate {
 
   constructor(
     private store: Store<AppState>,
-    private http: Http,
+    private http: HttpClient,
     private router: Router,
     private cookieSvc: CookieService
   ) {
@@ -28,7 +28,7 @@ export class AuthenticationService implements CanActivate {
 
   hasUser() {
     if (!this.authUser) {
-      this.router.navigate(['login']);
+      this.router.navigate(['/login']);
       return false;
     }
     return true;
@@ -49,14 +49,14 @@ export class AuthenticationService implements CanActivate {
 
     if (!tenant) return Observable.of(false);
 
-    const params = new URLSearchParams();
+    let params = {
+      'tenant': btoa(`${tenant}:${Date.now()}`)
+    };
 
-    params.append('tenant', btoa(`${tenant}:${Date.now()}`));
-    if (user)
-      params.append('user', btoa(`${tenant}:${Date.now()}`));
 
-    return this.http.get('/user', {search: params})
-      .map(res => res.json())
+    if (user) params['user'] = btoa(`${tenant}:${Date.now()}`);
+
+    return this.http.get<User>('/user', {params: params})
       .map((user: User) => this.store.dispatch(new UserLoginAction(user)))
       .map(() => true)
       .catch(() => Observable.of(false));
@@ -64,12 +64,11 @@ export class AuthenticationService implements CanActivate {
 
 
   login(username: string, password: string) {
-    const params = new URLSearchParams();
-
-    params.append('token', btoa(`${username}:${password}:${Date.now()}`));
-
-    return this.http.get('/user', {search: params})
-      .map(res => res.json())
+    return this.http.get<User>('/user', {
+      params: {
+        token: btoa(`${username}:${password}:${Date.now()}`)
+      }
+    })
       .map((user: User) => this.store.dispatch(new UserLoginAction(user)));
   }
 

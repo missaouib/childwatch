@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -142,7 +145,10 @@ public class UserController {
 	            user = utrFuture.get();				
 				if( user != null ) {
 					TenantContext.setCurrentTenant(user.tenant.id);
-					//TODO : Log 
+					logger.info("User id:{} logged in", user.id );
+				}
+				else {
+					logger.info( "rejected a login attempt for {}", login  != null ? login.username : null );
 				}
 			}
 			catch( Exception e ) {
@@ -197,18 +203,21 @@ public class UserController {
 		}
 		return user;		
 	}
+	
 
 	
-	@RequestMapping( "/user" )
+	@GetMapping( "/user" )
 	public ResponseEntity<?> login( 
 			@RequestParam(value="token", required=false) String loginToken, 
 			@RequestParam(value="tenant",required=false) String tenantToken,
 			@RequestParam(value="user", required=false) String userToken ) {
 
+		
 		User user = StringUtils.isEmpty(userToken)? null : handleUserToken( userToken );
 		if( loginToken != null ) user = handleLogin( loginToken ); 
 		else if( tenantToken != null ) user = handlePreauth( tenantToken );
+		
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}
-
+	
 }

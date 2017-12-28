@@ -25,8 +25,6 @@ public interface MealProductionRecordFull {
 	
 	Date getLockDate();
 	
-	MealEvent getMealEvent();
-
 	String getNotes();
 	
 	Set<MealAttendanceRecordFull> getAttendanceRecords();		

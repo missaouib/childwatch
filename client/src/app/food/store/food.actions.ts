@@ -34,8 +34,6 @@ export const MEALFOODITEM_SAVED: string = '[FOOD] MEALFOODITEM SAVED';
 export const DELETE_MEALFOODITEM: string = '[FOOD] DELETE MEALFOODITEM';
 export const VALIDATE_MEAL: string = '[FOOD] VALIDATE MEAL';
 export const MEALRULESVIOLATIONS_RECEIVED: string = '[FOOD] MEALRULESVIOLATIONS RECIEVED';
-export const SHOW_BACKGROUND: string = '[FOOD] SHOW BACKGROUND';
-export const SHOW_WEEKENDS: string = '[FOOD] SHOW WEEKENDS';
 export const INACTIVATE_MEAL: string = '[FOOD] INACTIVATE MEAL';
 export const MEAL_COMPLIANCE: string = '[FOOD] MEAL COMPLIANCE';
 
@@ -132,15 +130,6 @@ export class MealRulesViolationsReceivedAction implements Action {
   constructor(public payload: MealRulesViolation[]) {};
 }
 
-export class ShowBackgroundAction implements Action {
-  readonly type = SHOW_BACKGROUND;
-  constructor(public payload: boolean) {};
-}
-
-export class ShowWeekendsAction implements Action {
-  readonly type = SHOW_WEEKENDS;
-  constructor(public payload: boolean) {};
-}
 
 export class InactivateMealAction implements Action {
   readonly type = INACTIVATE_MEAL;
@@ -200,8 +189,6 @@ export type ACTIONS
   | DeleteMealFoodItemAction
   | ValidateMealAction
   | MealRulesViolationsReceivedAction
-  | ShowBackgroundAction
-  | ShowWeekendsAction
   | InactivateMealAction
   | MealComplianceAction
   | MealProductionRecordsReceivedAction

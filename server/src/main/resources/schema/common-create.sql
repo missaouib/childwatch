@@ -22,7 +22,8 @@ create table if not exists common.food_item(
 		tenant_id			varchar(36) DEFAULT NULL,
     	updated_by_tenant_id	varchar(36) DEFAULT NULL,
     	updated_by_user_id	varchar(36) DEFAULT NULL,
-    	updated_date  TIMESTAMP WITH TIME ZONE DEFAULT NULL		
+    	updated_date  TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    	primary key (id)
     );
 
 create table if not exists common.food_item_tag(
@@ -30,7 +31,8 @@ create table if not exists common.food_item_tag(
 		tag_value       varchar(128) NOT NULL,
 		tenant_id		varchar(36) DEFAULT NULL,
     	updated_by_user_id	varchar(36) DEFAULT NULL,
-    	updated_date  TIMESTAMP WITH TIME ZONE DEFAULT NULL		
+    	updated_date  TIMESTAMP WITH TIME ZONE DEFAULT null,
+    	unique (food_item_id, tag_value)
 	);
 
 commit;
@@ -42,22 +44,41 @@ create table if not exists common.cw_user(
 	fullName varchar(128) NOT NULL,
 	avatar varchar(128) NOT NULL DEFAULT 'boy.svg',
 	active boolean NOT NULL DEFAULT true,
+	weekends_showing boolean not null default false,
+	dark boolean not null default false,
+	primary_color varchar(7) not null default '#F8F5F0',
+  	secondary_color varchar(7) not null default '#FFB300', 
+  	theme varchar(64) not null default 'readable',
 	tenant_id varchar(36) NOT NULL,
 
-	CONSTRAINT cw_user_pk PRIMARY KEY (id)
+	PRIMARY KEY (id)
 );
 
-create table if not exists common.tenant (
+create table if not exists common.cw_tenant (
 	id 	varchar(36) NOT NULL,
 	name	varchar(128) NOT NULL,
 	active boolean NOT NULL DEFAULT true,
-
-	CONSTRAINT tenant_pk PRIMARY KEY (id)
+	supports_AGE_0_5MO boolean not null default true,
+	supports_AGE_6_11MO boolean not null default true,
+	supports_AGE_1YR boolean not null default true,
+	supports_AGE_2YR boolean not null default true,
+	supports_AGE_3_5YR boolean not null default true,
+	supports_AGE_6_12YR boolean not null default true,
+	supports_AGE_13_18YR boolean not null default true,
+	supports_AGE_ADULT boolean not null default true,		
+	supports_BREAKFAST boolean not null default true,
+	supports_AM_SNACK boolean not null default true,
+	supports_LUNCH boolean not null default true,
+	supports_PM_SNACK boolean not null default true,
+	supports_SUPPER boolean not null default true,
+	supports_EV_SNACK boolean not null default true,
+	PRIMARY KEY (id)
 );
 
-create table if not exists common.user_authority (
+create table if not exists common.cw_authority (
 	user_id varchar(36) NOT NULL,
-	authority varchar(128) NOT NULL CHECK ( authority IN ('ADMIN', 'SCHEDULE_MANAGE', 'SCHEDULE_VIEW' ) )
+	authority varchar(128) NOT NULL CHECK ( authority IN ('ADMIN', 'TENANT_MANAGE', 'FOOD_ITEM_ADMIN', 'SCHEDULE_MANAGE', 'SCHEDULE_VIEW' ) ),
+	unique (user_id, authority )
 );
 
 commit;
@@ -1995,23 +2016,22 @@ COMMIT;
 alter table common.food_item owner to "cw-db";
 alter table common.food_item_tag owner to "cw-db";
 alter table common.cw_user owner to "cw-db";
-alter table common.tenant owner to "cw-db";
-alter table common.user_authority owner to "cw-db";
+alter table common.cw_tenant owner to "cw-db";
+alter table common.cw_authority owner to "cw-db";
 
-alter table common.food_item add primary key (id);
 alter table common.food_item add constraint FK_food_item_parent_id foreign key (parent_id) references common.food_item;
 
 alter table common.food_item_tag add constraint FK_food_item_id foreign key (food_item_id) references common.food_item;
 
-alter table common.user_authority add constraint FK_user_user_id foreign key (user_id) references common.cw_user;
-alter table common.cw_user add constraint FK_tenant_tenant_id foreign key (tenant_id) references common.tenant;
+alter table common.cw_authority add constraint FK_user_user_id foreign key (user_id) references common.cw_user;
+alter table common.cw_user add constraint FK_tenant_tenant_id foreign key (tenant_id) references common.cw_tenant;
 
-alter table common.food_item add constraint FK_food_item__tenant_id foreign key (tenant_id) references common.tenant;
-alter table common.food_item_tag add constraint FK_food_item_tag__tenant_id foreign key (tenant_id) references common.tenant;
+alter table common.food_item add constraint FK_food_item__tenant_id foreign key (tenant_id) references common.cw_tenant;
+alter table common.food_item_tag add constraint FK_food_item_tag__tenant_id foreign key (tenant_id) references common.cw_tenant;
 
 alter table common.food_item add constraint FK_food_item__update_user_id foreign key (updated_by_user_id) references common.cw_user;
 alter table common.food_item_tag add constraint FK_food_item_tag__update_user_id foreign key (updated_by_user_id) references common.cw_user;
-alter table common.food_item add constraint FK_food_item__update_tenant_id foreign key (updated_by_tenant_id) references common.tenant;
+alter table common.food_item add constraint FK_food_item__update_tenant_id foreign key (updated_by_tenant_id) references common.cw_tenant;
 
     
 COMMIT;
@@ -2028,7 +2048,6 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
     	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' ) ),
     	inactive		BOOLEAN NOT NULL DEFAULT false,
     	notes			varchar(4096),
-    	updated_by_tenant_id	varchar(36),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,
     	PRIMARY KEY(id)
@@ -2050,7 +2069,7 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 		id 				varchar( 36 ) NOT NULL,
 		meal_id 		varchar(36),
    		start_date      TIMESTAMP WITH TIME ZONE NOT NULL,
-   		end_date        TIMESTAMP WITH TIME ZONE  NOT NULL DEFAULT DATE '12/31/3000',
+   		end_date        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT DATE '12/31/3000',
    		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) ),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,   		
@@ -2063,7 +2082,6 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
     	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' ) ) NOT NULL,
         locked			boolean NOT NULL DEFAULT false,
         lock_date		TIMESTAMP WITH TIME ZONE,
-		meal_event_id 		varchar(36),
         notes 				varchar(4096),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,   		
@@ -2096,15 +2114,23 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
     );
 
 
-	EXECUTE FORMAT('create or replace view food_item as SELECT * FROM common.food_item WHERE tenant_id is null OR tenant_id = %L;', NEW.id);
-	EXECUTE FORMAT('create or replace view food_item_tag as SELECT * FROM common.food_item_tag WHERE tenant_id is null OR tenant_id = %L;', NEW.id);
-	
+	EXECUTE FORMAT('create or replace view food_item as SELECT * FROM common.food_item WHERE tenant_id is null OR tenant_id = %L WITH CASCADED CHECK OPTION;', NEW.id);
+	EXECUTE FORMAT('create or replace view food_item_tag as SELECT * FROM common.food_item_tag WHERE tenant_id is null OR tenant_id = %L WITH CASCADED CHECK OPTION;', NEW.id);
+	EXECUTE FORMAT('create or replace view cw_user as SELECT * FROM common.cw_user WHERE tenant_id = %L WITH CASCADED CHECK OPTION;', NEW.id);
+	EXECUTE FORMAT('create or replace view cw_tenant as SELECT * FROM common.cw_tenant WHERE id  = %L WITH CASCADED CHECK OPTION;', NEW.id);
+	create or replace view cw_authority as SELECT * FROM common.cw_authority WHERE user_id in (select id from cw_user) WITH CASCADED CHECK OPTION;
+
+
+
 	
 	alter table meal owner to "cw-db";
 	alter table meal_food_item owner to "cw-db";
 	alter table meal_event owner to "cw-db";
 	alter view food_item owner to "cw-db";
 	alter view food_item_tag owner to "cw-db";
+	alter view cw_user owner to "cw-db";
+	alter view cw_tenant owner to "cw-db";
+	alter view cw_authority owner to "cw-db";
 
 	alter table meal_food_item add constraint FK_meal__id foreign key (meal_id) references meal;
 	alter table meal_food_item add constraint FK_mfi__food_item_id foreign key (food_item_id) references common.food_item;
@@ -2114,10 +2140,8 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	alter table meal_event add constraint FK_cw_user__id foreign key (updated_by_user_id) references common.cw_user;
 
 	alter table meal add constraint FK_cw_user__id foreign key (updated_by_user_id) references common.cw_user;
-	alter table meal add constraint FK_tenant__id foreign key (updated_by_tenant_id) references common.tenant;
 
 	alter table meal_production_record add constraint FK_mpr__update_user_id foreign key (updated_by_user_id) references common.cw_user;
-	alter table meal_production_record add constraint FK_mpr__meal_event_id foreign key (meal_event_id) references meal_event;
 
 	alter table meal_attendance_record add constraint FK_mar__mpr_id foreign key (mpr_id) references meal_production_record;
 	alter table meal_attendance_record add constraint FK_mar__update_user_id foreign key (updated_by_user_id) references common.cw_user;
@@ -2135,7 +2159,7 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER tenant_insert_trigger
   AFTER INSERT
-  ON common.tenant
+  ON common.cw_tenant
   FOR EACH ROW
   EXECUTE PROCEDURE common.create_tenant();
 

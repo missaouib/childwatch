@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.DoubleFunction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum UnitOfMeasure {
 	OUNCES,
 	LBS,
@@ -31,7 +34,7 @@ public enum UnitOfMeasure {
 	@SuppressWarnings("unchecked")
 	public static Double convert( double value, UnitOfMeasure from, UnitOfMeasure to ) {
 		Double retValue = Double.NaN;
-		
+
 		if( from.equals(to) ) return value;
 		
 		try {
@@ -61,6 +64,9 @@ public enum UnitOfMeasure {
 	
 	static DoubleFunction<Double> CUPS_TABLESPOONS = (value) -> value * 16;
 	static DoubleFunction<Double> TABLESPOONS_CUPS = (value) -> value / 16;
+	
+	static DoubleFunction<Double> CUPS_LBS = (value) -> value / 2;
+	static DoubleFunction<Double> LBS_CUPS = (value) -> value * 2;
 	
 
 	public static List<UnitOfMeasure> ALL = Arrays.asList( UnitOfMeasure.OUNCES, UnitOfMeasure.LBS, UnitOfMeasure.GALLONS, UnitOfMeasure.CUPS, UnitOfMeasure.TABLESPOONS, UnitOfMeasure.UNITS, UnitOfMeasure.SERVINGS );

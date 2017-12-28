@@ -19,7 +19,6 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "cw",
       "styles": [
-		"../node_modules/ng2-dnd/style.css",
         "styles.css"
       ],
       "scripts": [],

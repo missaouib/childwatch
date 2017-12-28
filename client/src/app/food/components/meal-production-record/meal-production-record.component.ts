@@ -16,7 +16,7 @@ export class MealProductionRecordComponent implements OnInit {
 
   _mealDate = new Date();
   records: MealProductionRecord[] = [];
-  activeTab: string = 'BREAKFAST';
+  activeTab: string;
   MealType: MealType = new MealType();
   set mealDate(md: Date) {
     this._mealDate = md;
@@ -36,6 +36,9 @@ export class MealProductionRecordComponent implements OnInit {
   ngOnInit() {
     this.mealDate = new Date();
     this.store.select(s => this.records = s.food.mealProductionRecords).subscribe(records => this.records = records);
+    if (this.records.length > 0) {
+      this.activeTab = this.records[0].type;
+    }
   }
 
   hasRecordsFor(): string[] {

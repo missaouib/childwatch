@@ -78,6 +78,7 @@ public class MealFoodItem implements Serializable {
 	
 	@Transient
 	public Double add( UnitOfMeasure commonUoM, MealFoodItem mealFoodItem ) {
+		
 		return mealFoodItem.convertTo( this.getUnit() ) + this.convertTo(commonUoM);
 	}
 

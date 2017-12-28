@@ -10,7 +10,7 @@ import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 
 import {FoodStateService} from './services/food-state.service';
 import {ReactiveFormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {MealEventService} from './services/meal-event.service';
@@ -25,7 +25,7 @@ import {DndModule} from 'ng2-dnd';
 
 import {EffectsModule} from '@ngrx/effects';
 
-import {FoodEffectsService} from './store/food.effects.service';
+import {FoodEffects} from './store/food.effects';
 import {AlertModule} from 'ngx-bootstrap/alert';
 import {SidebarModule} from 'ng-sidebar';
 
@@ -66,8 +66,8 @@ const routes: Routes = [
     AccordionModule.forRoot(),
     TooltipModule.forRoot(),
     ReactiveFormsModule, FormsModule,
-    HttpModule,
-    EffectsModule.run(FoodEffectsService),
+    HttpClientModule,
+    EffectsModule.forFeature([FoodEffects]),
     AlertModule.forRoot(),
     SidebarModule.forRoot(),
     ModalModule.forRoot(),

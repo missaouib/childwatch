@@ -75,21 +75,6 @@ export class FoodStateService {
     this.store.dispatch(new FoodActions.RemoveMealEventAction(event.meta));
   }
 
-  get canShowWeekends() {
-    return this.store.select(s => s.food.showWeekends);
-  }
-
-  showWeekends(show: boolean) {
-    this.store.dispatch(new FoodActions.ShowWeekendsAction(show));
-  }
-
-  get canShowBackground() {
-    return this.store.select(s => s.food.showBackground);
-  }
-
-  showBackground(show: boolean) {
-    this.store.dispatch(new FoodActions.ShowBackgroundAction(show));
-  }
 
   inactivateMeal(meal: Meal) {
     var m = Object.assign({}, meal);

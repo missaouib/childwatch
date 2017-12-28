@@ -1,14 +1,13 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {StoreModule} from '@ngrx/store';
 
 
 import * as AppRouting from './app.routes';
 import {AppComponent} from './app.component';
-import {appReducer} from './app.state';
 import {ChildDetailComponent} from './child/child-detail/child-detail.component';
 import {ConfigService} from './config/config.service';
 import {SecurityModule} from './security/security.module';
@@ -34,6 +33,16 @@ import {CookieService} from 'ngx-cookie-service';
 import {SettingsComponent} from './config/settings/settings.component';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
+import {EffectsModule} from '@ngrx/effects';
+import {FoodEffects} from './food/store/food.effects';
+
+import {reducers, metaReducers} from './app.state';
+import {PendingChangesGuard} from "./food/components/meal/pending-changes-guard";
+import {FoodItemService} from "./food/services/food-item.service";
+import {FoodStateService} from "./food/services/food-state.service";
+import {MealEventService} from "./food/services/meal-event.service";
+import {MealProductionRecordService} from "./food/services/meal-production-record.service";
+import {MealService} from "./food/services/meal.service";
 
 
 export class CustomOption extends ToastOptions {
@@ -58,10 +67,10 @@ export class CustomOption extends ToastOptions {
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     SecurityModule,
     RouterModule.forRoot(AppRouting.AppRoutes, {enableTracing: true}),
-    StoreModule.provideStore(appReducer),
+    StoreModule.forRoot(reducers, {metaReducers}),
     BrowserAnimationsModule,
     SidebarModule.forRoot(),
     CollapseModule.forRoot(),
@@ -69,8 +78,9 @@ export class CustomOption extends ToastOptions {
     BsDropdownModule.forRoot(),
     CarouselModule.forRoot(),
     AccordionModule.forRoot(),
+    EffectsModule.forRoot([FoodEffects])
   ],
   bootstrap: [AppComponent],
-  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, CookieService]
+  providers: [{provide: ToastOptions, useClass: CustomOption}, ConfigService, CookieService, FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService, MealProductionRecordService]
 })
 export class AppModule {}

@@ -16,12 +16,10 @@ import {MealEvent} from '../model/meal-event';
 import {MealFoodItem} from '../model/meal-food-item';
 
 /**
- * FoodEffectsService
- * 
- * @service
+ * FoodEffects
  */
 @Injectable()
-export class FoodEffectsService {
+export class FoodEffects {
 
   @Effect({dispatch: false}) adjustedMenuTime = this.actions$.ofType(FoodActions.MENU_TIME_ADJUSTED)
     .map((action: FoodActions.MenuTimeAdjustedAction) => action.payload)

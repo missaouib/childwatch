@@ -3,6 +3,8 @@ package com.remarkablesystems.childwatch.domain.food.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Temporal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -18,8 +20,7 @@ import com.remarkablesystems.childwatch.domain.food.MealEvent;
 public interface MealEventRepository extends CrudRepository<MealEvent, String> {
 	
 	@RestResource(path="between", rel="between" )
-	@Query( "select m from MealEvent m where (:start <= m.endDate) and (:end >= m.startDate)" ) 
-	List<MealEvent> findBetween( @Param("start") Date start,  @Param("end") Date end);
+	List<MealEvent> findByStartDateGreaterThanEqualAndStartDateLessThanEqual( @Param("start") Date start,  @Param("end") Date end);
 	
 	List<MealEvent> findByStartDate( Date start );
 

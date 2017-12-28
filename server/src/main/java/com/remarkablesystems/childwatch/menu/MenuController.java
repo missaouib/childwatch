@@ -229,7 +229,7 @@ public class MenuController {
 		Date ending = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		
 		logger.info( "Fetching meal events between " + begin + " and " + ending );
-		List<MealEvent> events = mealEventRepo.findBetween( begin, ending );
+		List<MealEvent> events = mealEventRepo.findByStartDateGreaterThanEqualAndStartDateLessThanEqual( begin, ending );
 
 		logger.info("Found " + events.size() + " events between " + start.format(DateTimeFormatter.ISO_DATE) + " and "
 				+ end.format(DateTimeFormatter.ISO_DATE));

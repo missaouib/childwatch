@@ -19,111 +19,75 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.remarkablesystems.childwatch.domain.food.FoodItemTag;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 
 @Entity
 @Table(name="cw_user")
+@ToString()
+@EqualsAndHashCode()
 public class User {
 	
 	@Id 
 	@Column(name="id")
+	@Getter
 	String id;
 	
 	@Column(name="username")
+	@Getter @Setter
 	String username;
 	
 	@Column(name="fullname")
+	@Getter @Setter
 	String fullName;	
 	
 	@Column(name="avatar")
+	@Getter @Setter
 	String avatar;
 	
 	@Column(name="password")
+	@Getter @Setter
 	String password;
+
 	
-	public String getPassword() {
-		return password;
-	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	@Column(name="weekendsShowing")
+	@Getter @Setter
+	boolean weekendsShowing;
 
 	@ElementCollection( fetch=FetchType.EAGER )
-	@CollectionTable( name="user_authority", joinColumns=@JoinColumn( name="user_id", nullable=false ) )
+	@CollectionTable( name="cw_authority", joinColumns=@JoinColumn( name="user_id", nullable=false ) )
 	@Column( name="authority", nullable=false )
+	@Getter
 	Set<String> authorities = new HashSet<String>();
+	
+	@Column(name="dark")
+	@Getter @Setter
+	boolean dark;
+	
+	@Column(name="primary_color")
+	@Getter @Setter
+	String primary;
+	
+	@Column(name="secondary_color")
+	@Getter @Setter
+	String secondary;
+	
+	@Column(name="theme")
+	@Getter @Setter
+	String theme;
+
 	
 	@ManyToOne
 	@JoinColumn(name="tenant_id")
+	@Getter @Setter
 	Tenant tenant;
 	
-	public Tenant getTenant() {
-		return tenant;
-	}
-	
-	public void setTenant( Tenant tenant ) {
-		this.tenant = tenant;
-	}
-
 
 	public User() {}
-	
-	
-	public String getUsername() {
-		return username;
-	}
 
-
-
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-
-
-
-	public String getFullName() {
-		return fullName;
-	}
-
-
-
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-
-
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-
-
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
-
-
-
-	public String getId() {
-		return id;
-	}
-
-
-
-
-	public Set<String> getAuthorities() {
-		return authorities;
-	}
-	
 	public void addAuthority( String authority ) {
 		this.authorities.add(authority);
 	}

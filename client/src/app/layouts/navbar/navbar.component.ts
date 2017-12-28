@@ -1,4 +1,4 @@
-import {Style, User} from '../../config/config.state';
+import {User} from '../../config/config.state';
 import {Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input} from '@angular/core';
 
 @Component({
@@ -11,7 +11,6 @@ export class NavbarComponent implements OnInit {
 
   _sidebarOpen = true;
 
-  @Input() style: Style;
   @Input() user: User;
   @Output() toggleSidebar: EventEmitter<boolean> = new EventEmitter<boolean>();
 

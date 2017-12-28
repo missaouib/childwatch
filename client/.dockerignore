@@ -3,4 +3,5 @@ node_modules
 .project
 npm-debug.log
 .idea
+e2e
 

@@ -87,9 +87,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   ngOnInit() {
-    this.configSvc.AGEGROUPS$.subscribe(ag => {
-      this.AGEGROUPS = ag;
-      if (ag.length > 0) this.activeTab = this.AGEGROUPS[0];
+    this.configSvc.user$.subscribe(user => {
+      this.AGEGROUPS = user.tenant.ageGroups;
+      if (this.AGEGROUPS.length > 0) this.activeTab = this.AGEGROUPS[0];
     });
     this.mealForm = this.formBuilder.group({
       description: [this.meal.description, Validators.required],
@@ -252,7 +252,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   loadMeal(mealId: string) {
     if (mealId) {
-      this.mealSvc.fetch(mealId).subscribe((meal) => {
+      this.mealSvc.fetch(mealId).subscribe((meal: Meal) => {
         this.meal = (meal) ? meal : this.createNewMeal();
         this.mealForm.patchValue({description: this.meal.description, type: this.meal.type});
         this.editing = (meal === undefined);

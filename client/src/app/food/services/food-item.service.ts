@@ -3,8 +3,12 @@ import {User} from '../../config/config.state';
 import * as FoodActions from '../store/food.actions';
 import {FoodItem} from '../model/food-item';
 import {Injectable} from '@angular/core';
-import {Http, URLSearchParams, Headers} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
+
+interface Response {
+  _embedded: {foodItems: FoodItem[]}
+}
 
 @Injectable()
 export class FoodItemService {
@@ -18,30 +22,31 @@ export class FoodItemService {
 
   constructor(
     private store: Store<AppState>,
-    private http: Http
+    private http: HttpClient
   ) {
     this.store.select(s => s.config.user).subscribe(user => this.user = user);
-
   }
 
 
   query(projection = FoodItemService.FULL) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
-    const params = new URLSearchParams();
-    params.append('projection', projection);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
-    return this.http.get(this.URL, {search: params, headers: headers})
-      .map(res => res.json())
+    const params = {projection: projection};
+
+    return this.http.get<Response>(this.URL, {params: params, headers: headers})
       .map(({_embedded: {foodItems}}) => foodItems.filter((item: FoodItem) => !item.parent))
       .map(items => this.store.dispatch(new FoodActions.FoodItemsReceivedAction(items)));
   }
 
   update(foodItem: FoodItem) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
     return this.http.put('/api/foodItem/' + foodItem.id, foodItem, {headers: headers})
       .subscribe(
       () => this.store.dispatch(new FoodActions.FoodItemUpdatedAction(foodItem)),
@@ -49,9 +54,11 @@ export class FoodItemService {
   }
 
   delete(foodItem: FoodItem) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
     return this.http.delete(this.URL + '/' + foodItem.id, {headers: headers})
       .subscribe(
       () => this.store.dispatch(new FoodActions.FoodItemDeletedAction(foodItem)),

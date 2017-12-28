@@ -17,8 +17,6 @@ export interface FoodState {
   currentMealFoodItems: MealFoodItem[];
   currentAgeGroup: string;
   mealRulesViolations: MealRulesViolation[];
-  showWeekends: boolean;
-  showBackground: boolean;
   mealProductionRecords: MealProductionRecord[];
   activeMPR: MealProductionRecord;
 };
@@ -36,8 +34,6 @@ export const INITIAL: FoodState = {
   currentMealFoodItems: [],
   currentAgeGroup: 'AGE_0-5MO',
   mealRulesViolations: [],
-  showWeekends: false,
-  showBackground: false,
   mealProductionRecords: [],
   activeMPR: undefined
 };
@@ -75,10 +71,6 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setSaveMealFoodItem(state, action as FoodActions.SaveMealFoodItemAction);
     case FoodActions.DELETE_MEALFOODITEM:
       return setDeleteMealFoodItem(state, action as FoodActions.DeleteMealFoodItemAction);
-    case FoodActions.SHOW_BACKGROUND:
-      return setShowBackground(state, action as FoodActions.ShowBackgroundAction);
-    case FoodActions.SHOW_WEEKENDS:
-      return setShowWeekends(state, action as FoodActions.ShowWeekendsAction);
     case FoodActions.INACTIVATE_MEAL:
       return setInactivateMeal(state, action as FoodActions.InactivateMealAction);
     case FoodActions.MEAL_COMPLIANCE:
@@ -315,19 +307,6 @@ function setMealRulesViolationsReceived(state: FoodState, action: FoodActions.Me
   };
 }
 
-function setShowBackground(state: FoodState, action: FoodActions.ShowBackgroundAction): FoodState {
-  return {
-    ...state,
-    showBackground: action.payload
-  }
-}
-
-function setShowWeekends(state: FoodState, action: FoodActions.ShowWeekendsAction): FoodState {
-  return {
-    ...state,
-    showWeekends: action.payload
-  }
-}
 
 function setInactivateMeal(state: FoodState, action: FoodActions.InactivateMealAction): FoodState {
   const meal: Meal = {...action.payload};

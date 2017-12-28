@@ -13,6 +13,7 @@ public class UserFetcher extends UnboundTenantTask<User>{
 	
     @Autowired
     private UserRepository userRepo;
+   
 
     @Override
     protected User callInternal() {

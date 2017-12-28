@@ -40,7 +40,7 @@ public class MealEvent extends AuditedUser implements Serializable {
 	Meal meal;
 	
 	@Column( name="start_date" )
-	@Temporal( TemporalType.TIMESTAMP )
+	@Temporal( TemporalType.TIMESTAMP)
 	@Getter @Setter
 	Date startDate;
 

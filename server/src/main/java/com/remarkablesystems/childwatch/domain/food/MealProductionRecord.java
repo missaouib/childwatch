@@ -48,7 +48,6 @@ public class MealProductionRecord extends AuditedUser {
 	public MealProductionRecord( String id, MealEvent event ) {
 		super();
 		this.id = id;
-		this.mealEvent = event;
 		this.mealDate = event.getStartDate();
 		this.type = event.getMeal().getType();
 	}
@@ -63,8 +62,7 @@ public class MealProductionRecord extends AuditedUser {
 	@Id
 	@Getter
 	String id;
-	
-		
+			
 	@Column(name="meal_date")
 	@Getter
 	@Temporal( TemporalType.TIMESTAMP )
@@ -81,13 +79,8 @@ public class MealProductionRecord extends AuditedUser {
 	
 	@Column(name="lock_date")
 	@Getter @Setter
-	@Temporal( TemporalType.DATE )
-	Date lockDate;
-	
-	@ManyToOne
-	@JoinColumn(name="meal_event_id")
-	@Getter
-	MealEvent mealEvent;
+	@Temporal( TemporalType.TIMESTAMP )
+	Date lockDate;	
 
 	@Column(name="notes")
 	@Getter @Setter

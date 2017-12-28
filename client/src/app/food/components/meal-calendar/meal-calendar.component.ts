@@ -15,7 +15,7 @@ import {Router} from '@angular/router';
 import {UUID} from 'angular2-uuid';
 import {ToastsManager} from 'ng2-toastr';
 import {BsModalService} from 'ngx-bootstrap/modal';
-import {BsModalRef} from 'ngx-bootstrap/modal/modal-options.class';
+import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
   selector: 'cw-meal-calendar',
@@ -110,21 +110,6 @@ export class MealCalendarComponent implements OnInit {
   _showWeekends = false;
   _showBackground = false;
 
-  get showWeekends() {
-    return this._showWeekends;
-  }
-
-  set showWeekends(show: boolean) {
-    this.state.showWeekends(show);
-  }
-
-  get showBackground() {
-    return this._showBackground;
-  }
-
-  set showBackground(show: boolean) {
-    this.state.showBackground(show);
-  }
 
   eventList: Array<CalendarEvent<MealEvent>> = [];
 
@@ -151,7 +136,7 @@ export class MealCalendarComponent implements OnInit {
     private modalSvc: BsModalService
   ) {
     this.toastr.setRootViewContainerRef(vcr);
-    this.configSvc.user$.subscribe(user => this.user = user);
+    this.configSvc.user$.subscribe(user => {this.user = user; this.showHideWeekends = this.user.weekendsShowing ? [] : [0, 6]});
   }
 
   ngOnInit() {
@@ -165,9 +150,6 @@ export class MealCalendarComponent implements OnInit {
       this.refresh.next();
       console.log(events);
     });
-
-    this.state.canShowBackground.subscribe(show => {this._showBackground = show; this.refresh.next();});
-    this.state.canShowWeekends.subscribe(show => {this._showWeekends = show; this.flipWeekend(); this.refresh.next();});
 
   }
 
@@ -281,7 +263,7 @@ export class MealCalendarComponent implements OnInit {
       title: meal.description,
       color: {primary: 'red', secondary: 'yellow'}
     }
-    console.log      (`dropped meal on ${mealEvent.start}`); 
+    console.log(`dropped meal on ${mealEvent.start}`);
     this.viewDate = moment(new Date(when)).toDate();
     this.activeDayIsOpen = true;
     this.state.scheduleMealEvent(mealEvent.meta);
@@ -303,9 +285,6 @@ export class MealCalendarComponent implements OnInit {
 
   }
 
-  flipWeekend() {
-    this.showHideWeekends = this.showWeekends ? [] : [0, 6];
-  }
 
   limit(text: string, len?: number) {
     const _len = len || 25;

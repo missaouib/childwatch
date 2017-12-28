@@ -106,6 +106,7 @@ public class MprController {
 	MealEvent getMealEventFor( Date forDate, MealType type ) {
 		List<MealEvent> mealEvents = mealEventRepo.findByStartDate(forDate);
 		mealEvents.removeIf( event -> event.getMeal().getType() != type );
+		logger.info("getMealEventFor( {}, {} ) = found {}", forDate, type, mealEvents.size() );
 		return mealEvents.size() > 0 ? mealEvents.get(0) : null;
 	}
 
@@ -126,10 +127,17 @@ public class MprController {
 		UUID uuid = UUID.randomUUID();			
 		MealEvent event = getMealEventFor( forDate, type );
 		logger.info("event forDate={} type={} ={}", forDate, type, event != null );
-		MealProductionRecord mpr = (event != null) ? new MealProductionRecord( uuid.toString(), event ) : new MealProductionRecord( uuid.toString(), forDate, type );		
-		mprRepo.save(mpr);		
-		createAttendanceRecords( mpr );
-		createFoodItemRecords( mpr );
+		
+		if( event != null ) {
+			MealProductionRecord mpr = (event != null) ? new MealProductionRecord( uuid.toString(), event ) : new MealProductionRecord( uuid.toString(), forDate, type );		
+			mprRepo.save(mpr);		
+			logger.info("Created MPR id={} for {}", mpr.getId(), type );
+			createAttendanceRecords( mpr );
+			createFoodItemRecords( mpr );
+		}
+		else {
+			logger.info( "No events found for date = {}", forDate );
+		}
 	}
 
 	
@@ -181,11 +189,10 @@ public class MprController {
 	}
 
 	private List<MealFoodItem> getMealFoodItems(MealProductionFoodItem mealProductionFoodItem) {
-		if( mealProductionFoodItem == null ) logger.info( "mealProductionFoodItem is null");
-		if( mealProductionFoodItem.getMpr() == null ) logger.info( "mealProductionFoodItem.mpr is null");
-		if( mealProductionFoodItem.getMpr().getMealEvent() == null ) logger.info( "mealProductionFoodItem.mpr.mealEvent is null");
-
-		Meal meal = ( mealProductionFoodItem == null || mealProductionFoodItem.getMpr() == null || mealProductionFoodItem.getMpr().getMealEvent() == null )? null : mealProductionFoodItem.getMpr().getMealEvent().getMeal();
+		
+		MealEvent event = ( mealProductionFoodItem != null && mealProductionFoodItem.getMpr() != null) ? getMealEventFor( mealProductionFoodItem.getMpr() ) : null;
+		
+		Meal meal = ( event == null )? null : event.getMeal();
 		
 		return (meal != null)? mealFoodItemRepo.findByMealId(meal.getId()) : new ArrayList<MealFoodItem>(); 
 		

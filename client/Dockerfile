@@ -1,8 +1,9 @@
-FROM node:alpine
+FROM node:latest
 WORKDIR /usr/src/childwatch-client
 COPY package.json .
 RUN npm install
 COPY server.js .
 COPY . .
-RUN npm run build
+RUN npm run build-prod
+RUN rm -rf /usr/src/childwatch-client/src
 CMD ["npm", "start"]

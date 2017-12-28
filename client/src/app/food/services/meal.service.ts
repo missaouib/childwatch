@@ -12,12 +12,20 @@ import {MealFoodItem} from '../model/meal-food-item';
 import {MealRulesViolation} from '../model/mealrulesviolation';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Http, URLSearchParams, Headers} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
+
+interface Response {
+  _embedded: {mealFoodItems: MealFoodItem[]}
+}
+
+interface ResponseMeals {
+  _embedded: {meals: Meal[]}
+}
 
 
 /**
@@ -45,7 +53,7 @@ export class MealService {
    */
   constructor(
     private store: Store<AppState>,
-    private http: Http
+    private http: HttpClient
   ) {
     this.store.select(s => s.config.user).subscribe(user => this.user = user);
   }
@@ -55,16 +63,17 @@ export class MealService {
    * 
    * @returns Observable<Response>
    */
-  save(meal: Meal) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+  save(meal: Meal): Observable<any> {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
 
     var postMeal = {...meal};
     delete postMeal.compliant;
 
     return this.http.post(this.URL, postMeal, {headers: headers});
-    // .map( () => this.store.dispatch( this.actions.mealSaved( meal ) ) );
   }
 
   /**
@@ -72,10 +81,12 @@ export class MealService {
    * 
    * @returns Observable<Response>
    */
-  saveMealFoodItem(mealFoodItem: MealFoodItem): Observable<Response> {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+  saveMealFoodItem(mealFoodItem: MealFoodItem): Observable<any> {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
     const item: any = {
       id: mealFoodItem.id,
       ageGroup: mealFoodItem.ageGroup,
@@ -87,18 +98,20 @@ export class MealService {
 
     console.log('Saving a mealFoodItem ', item);
 
-    return this.http.post('/api/mealFoodItem', item, {headers: headers}).map(res => res.json());
+    return this.http.post('/api/mealFoodItem', item, {headers: headers});
   }
 
   /**
    * Delete the meal food item
    */
-  deleteMealFoodItem(mealFoodItemId: string) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+  deleteMealFoodItem(mealFoodItemId: string): Observable<any> {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
-    return this.http.delete('/api/mealFoodItem/' + mealFoodItemId, {headers: headers}).map((res) => res.json())
+
+    return this.http.delete('/api/mealFoodItem/' + mealFoodItemId, {headers: headers})
       .catch(() => Observable.of(mealFoodItemId));
   }
 
@@ -108,15 +121,17 @@ export class MealService {
    * @param id Meal id
    * 
    */
-  queryMealFoodItemsFor(meal: Meal) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
-    const params = new URLSearchParams();
-    params.set('mealId', meal.id);
-    params.set('projection', 'mealFoodItemFull');
-    return this.http.get('/api/mealFoodItem/search/findByMealId', {search: params, headers: headers})
-      .map(res => res.json())
+  queryMealFoodItemsFor(meal: Meal): Observable<any[]> {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
+    const params = {
+      mealId: meal.id,
+      projection: 'mealFoodItemFull'
+    };
+    return this.http.get<Response>('/api/mealFoodItem/search/findByMealId', {params: params, headers: headers})
       .map(({_embedded: {mealFoodItems}}) => mealFoodItems);
   }
 
@@ -126,17 +141,19 @@ export class MealService {
    * 
    * @returns Observable<Response>
    */
-  query() {
+  query(): Observable<any> {
     console.log(`meal.query() => tenant = ${this.user.tenant.id}`);
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
-    const params = new URLSearchParams();
-    params.set('projection', MealService.FULL);
 
-    return this.http.get(this.URL, {search: params, headers: headers})
-      .map(res => res.json())
+    const params = {
+      projection: MealService.FULL
+    };
+
+    return this.http.get<ResponseMeals>(this.URL, {params: params, headers: headers})
       .map(({_embedded: {meals}}) => this.store.dispatch(new FoodActions.MealsReceivedAction(meals)));
   }
 
@@ -145,36 +162,39 @@ export class MealService {
    * 
    * @returns Observable<Response>
    */
-  fetch(id: string) {
+  fetch(id: string): Observable<any> {
     console.log(`meal.fetch() => tenant = ${this.user.tenant.id}`);
 
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
 
-    const params = new URLSearchParams();
-    params.set('projection', MealService.FULL);
+    const params = {
+      projection: MealService.FULL
+    };
 
-    return this.http.get(this.URL + '/' + id, {search: params, headers: headers})
-      .map(res => res.json());
+    return this.http.get<Meal>(this.URL + '/' + id, {params: params, headers: headers});
 
   }
 
   /**
    * Validate the meal
    */
-  validate(meal: Meal) {
-    let headers = new Headers();
-    this.user && headers.append('X-CHILDWATCH-TENANT', this.user.tenant.id);
-    this.user && headers.append('X-CHILDWATCH-USER', this.user.id);
+  validate(meal: Meal): Observable<any[]> {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
 
-    const params = new URLSearchParams();
-    params.set('mealId', meal.id);
 
-    return this.http.get('/rules', {search: params, headers: headers})
-      .map(res => {
-        const violations: MealRulesViolation[] = res.json();
+    const params = {
+      mealId: meal.id
+    };
+
+    return this.http.get<MealRulesViolation[]>('/rules', {params: params, headers: headers})
+      .map(violations => {
         console.log('found ' + violations.length + ' violations for ' + meal.description);
         const compliance = (violations.filter(v => v.severity === 'FAIL').length === 0);
         this.store.dispatch(new FoodActions.MealComplianceAction({meal: meal, compliance: compliance}));

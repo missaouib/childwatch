@@ -1,4 +1,4 @@
-import {Style, User} from '../../config/config.state';
+import {User} from '../../config/config.state';
 import {Component, OnInit, Input} from '@angular/core';
 
 export interface ChildRouteInfo {
@@ -27,7 +27,6 @@ export interface RouteInfo {
 export class SidebarComponent implements OnInit {
 
 
-  @Input() style: Style;
   @Input() user: User;
 
 
