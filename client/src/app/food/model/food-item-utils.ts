@@ -1,4 +1,5 @@
 import {FoodItem} from './food-item';
+import {FoodItemTag} from "./food-item-tag";
 
 export class FoodItemUtils {
 
@@ -113,6 +114,12 @@ export class FoodItemUtils {
     foodItem.components.forEach(component => str = str + " " + component.portionSize + " oz " + this.tagstring(component));
 
     return str;
+  }
+
+  allTags(): FoodItemTag[] {
+    var tags: FoodItemTag[] = [];
+    tags.push({value: 'WHOLEGRAIN'}, {value: 'FRUIT'}, {value: 'CRACKER'}, {value: 'MILK'}, {value: 'OTHER'}, {value: 'JUICE'}, {value: 'BREAD'}, {value: 'VEGETABLE'}, {value: 'MEATALT'}, {value: 'YOGURT'}, {value: 'CEREAL'}, {value: 'MEAT'}, {value: 'GRAIN'}, {value: 'CNITEM'})
+    return tags;
   }
 
 }

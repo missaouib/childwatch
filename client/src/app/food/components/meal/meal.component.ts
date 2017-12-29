@@ -1,4 +1,4 @@
-import {ConfigService} from '../../../config/config.service';
+import {UserService} from '../../../user/user.service';
 import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
 import {Meal} from '../../model/meal';
@@ -78,7 +78,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     private activeRoute: ActivatedRoute,
     private mealSvc: MealService,
     public toastr: ToastsManager,
-    private configSvc: ConfigService,
+    private userSvc: UserService,
     vcr: ViewContainerRef,
   ) {
     this.FoodItemUtils = new FoodItemUtils();
@@ -87,7 +87,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   ngOnInit() {
-    this.configSvc.user$.subscribe(user => {
+    this.userSvc.user$.subscribe(user => {
+      console.log("tenant = ", user.tenant);
+
       this.AGEGROUPS = user.tenant.ageGroups;
       if (this.AGEGROUPS.length > 0) this.activeTab = this.AGEGROUPS[0];
     });
@@ -99,7 +101,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   showFoodList() {
-    return !this.mealForm.invalid;
+    return this.mealForm ? !this.mealForm.invalid : false;
   }
 
   mealCacfpStatus(): string {

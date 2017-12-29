@@ -1,4 +1,4 @@
-import {AuthenticationService} from '../authentication.service';
+import {UserService} from '../user.service';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 
@@ -16,7 +16,7 @@ export class LoginScreenComponent implements OnInit {
 
   constructor(
     private activeRoute: ActivatedRoute,
-    private authSvc: AuthenticationService,
+    private authSvc: UserService,
     private router: Router
   ) {}
 

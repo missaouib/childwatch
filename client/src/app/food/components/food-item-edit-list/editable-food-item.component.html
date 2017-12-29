@@ -11,7 +11,7 @@
 		</span>
 	{{foodItem?.description}}</h3>
 	
-	<button class="btn btn-primary pull-right">Save</button>
+	<button class="btn btn-primary pull-right" (click)="update()">Save</button>
 </div>
 
 <br /><br />
@@ -52,21 +52,24 @@
 	<div class="form-group">
 		<label>Appropriate for Ages</label>
 		<div>
-			<label><input type="checkbox" [class.disabled]="!editable" > 0-5 MO</label>
-			<label><input type="checkbox" [class.disabled]="!editable" > 6-11 MO</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age05mo"> 0-5 MO</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age611mo"> 6-11 MO</label>
 		</div>
 		<div>
-			<label><input type="checkbox" [class.disabled]="!editable" > 1 YR</label>
-			<label><input type="checkbox" [class.disabled]="!editable" > 2 YR</label>
-			<label><input type="checkbox" [class.disabled]="!editable" > 3-5 YR</label>
-			<label><input type="checkbox" [class.disabled]="!editable" > 6-12 YR</label>
-			<label><input type="checkbox" [class.disabled]="!editable"> 13-18 YR</label>
-			<label><input type="checkbox" [class.disabled]="!editable" > ADULT</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age1yr"> 1 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age2yr"> 2 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age35yr"> 3-5 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age612yr"> 6-12 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age1318yr"> 13-18 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="ageAdult"> ADULT</label>
 		</div>
 	</div>
 	<div class="form-group">
 		<label>Tags</label>
 		<p *ngIf="!editable" class="form-control-static">{{FoodItemUtils.tagstring( foodItem )}}</p>
+		<tag-input formControlName="tags" [identifyBy]="'value'" [displayBy]="'value'" [onlyFromAutocomplete]="true">
+			<tag-input-dropdown [autocompleteItems]="fetchAllTags()" [showDropdownIfEmpty]="true" [identifyBy]="'value'" [displayBy]="'value'"></tag-input-dropdown>
+		</tag-input>
 	</div>
 </form>
 

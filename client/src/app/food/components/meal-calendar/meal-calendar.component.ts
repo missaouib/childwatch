@@ -1,5 +1,5 @@
-import {ConfigService} from '../../../config/config.service';
-import {User} from '../../../config/config.state';
+import {UserService} from '../../../user/user.service';
+import {User} from '../../../user/config.state';
 import {Meal} from '../../model/meal';
 import {MealEvent} from '../../model/meal-event';
 import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
@@ -129,14 +129,14 @@ export class MealCalendarComponent implements OnInit {
     private state: FoodStateService,
     private mealSvc: MealService,
     private mealEventSvc: MealEventService,
-    private configSvc: ConfigService,
+    private userSvc: UserService,
     private router: Router,
     public toastr: ToastsManager,
     vcr: ViewContainerRef,
     private modalSvc: BsModalService
   ) {
     this.toastr.setRootViewContainerRef(vcr);
-    this.configSvc.user$.subscribe(user => {this.user = user; this.showHideWeekends = this.user.weekendsShowing ? [] : [0, 6]});
+    this.userSvc.user$.subscribe(user => {this.user = user; this.showHideWeekends = this.user.weekendsShowing ? [] : [0, 6]});
   }
 
   ngOnInit() {
@@ -163,25 +163,6 @@ export class MealCalendarComponent implements OnInit {
     return !moment(this.viewDate).isSame(new Date(), 'year');
   }
 
-  isSpring() {
-    const month = this.viewDate.getMonth();
-    return month === 2 || month === 3 || month === 4;
-  }
-
-  isSummer() {
-    const month = this.viewDate.getMonth();
-    return month === 5 || month === 6 || month === 7;
-  }
-
-  isFall() {
-    const month = this.viewDate.getMonth();
-    return month === 8 || month === 9 || month === 10;
-  }
-
-  isWinter() {
-    const month = this.viewDate.getMonth();
-    return month === 11 || month === 0 || month === 1;
-  }
 
   createMealEvent(meal: Meal, start?: Date): MealEvent {
     const mealEvent: MealEvent = {

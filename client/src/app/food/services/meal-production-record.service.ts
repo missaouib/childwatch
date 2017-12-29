@@ -1,5 +1,5 @@
 import {AppState} from '../../app.state';
-import {User} from '../../config/config.state';
+import {User} from '../../user/config.state';
 import {MealAttendanceRecord, MealProductionRecord, MealProductionFoodItem} from '../model/meal-production-record';
 import {MealType} from '../model/meal-type';
 import {Injectable} from '@angular/core';

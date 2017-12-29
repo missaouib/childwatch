@@ -1,4 +1,4 @@
-import {User} from '../../config/config.state';
+import {User} from '../../user/config.state';
 import {Component, OnInit, Input} from '@angular/core';
 
 export interface ChildRouteInfo {

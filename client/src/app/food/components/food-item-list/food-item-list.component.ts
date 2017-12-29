@@ -60,8 +60,8 @@ export class FoodItemListComponent implements OnInit {
       this.totalItems = this.FoodItems.length;
       this.AgeAppropriateItems = this._ageGroup ? this.FoodItems.filter(item => this.FoodItemUtils.isAppropriateForAgeGroup(item, this._ageGroup)) : this.FoodItems;
       this.PagedItems = this.AgeAppropriateItems;
-      if (this.PagedItems.length > 0)
-        this.selectFoodItem(this.PagedItems[0]);
+      if (this.pagedFoodItems().length > 0)
+        this.selectFoodItem(this.pagedFoodItems()[0]);
     });
   }
 

@@ -1,5 +1,8 @@
+import {User} from "../../../user/config.state";
+import {UserService} from "../../../user/user.service";
 import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
+import {FoodStateService} from "../../services/food-state.service";
 import {Component, OnInit, Input} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
@@ -16,6 +19,7 @@ export class EditableFoodItemComponent implements OnInit {
   foodItemForm: FormGroup;
 
   FoodItemUtils: FoodItemUtils;
+
   @Input()
   set foodItem(foodItem: FoodItem) {
     this._foodItem = foodItem;
@@ -25,33 +29,59 @@ export class EditableFoodItemComponent implements OnInit {
         description: foodItem.description,
         shortDescription: foodItem.shortDescription,
         purchaseUom: foodItem.purchaseUom,
-        servingUom: foodItem.servingUom
+        servingUom: foodItem.servingUom,
+        age05mo: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_0_5MO'),
+        age611mo: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_6_11MO'),
+        age1yr: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_1YR'),
+        age2yr: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_2YR'),
+        age35yr: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_3_5YR'),
+        age612yr: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_6_12YR'),
+        age1318yr: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_13_18YR'),
+        ageAdult: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_ADULT'),
+        tags: foodItem ? foodItem.tags.map((tag) => tag.value).filter(tag => !tag.startsWith('AGE_')) : []
       });
     }
   }
 
   get foodItem(): FoodItem {return this._foodItem;}
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    userSvc: UserService,
+    private foodState: FoodStateService
+  ) {
     this.FoodItemUtils = new FoodItemUtils();
-    /*var ageGroup = this.formBuilder.group({
-      AGE_0_5MO: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_0_5MO') : false],
-      AGE_6_11MO: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_6_11MO') : false],
-      AGE_1YR: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_1YR') : false],
-      AGE_2YR: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_2YR') : false],
-      AGE_3_5YR: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_3_5YR') : false],
-      AGE_6_12YR: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_6_12YR') : false],
-      AGE_13_18YR: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_13_18YR') : false],
-      AGE_ADULT: [this.foodItem ? this.FoodItemUtils.isAppropriateForAgeGroup(this.foodItem, 'AGE_ADULT') : false],
-    });
-     */
     this.foodItemForm = this.formBuilder.group({
       description: [this.foodItem ? this.foodItem.description : undefined, Validators.required],
       shortDescription: [this.foodItem ? this.foodItem.shortDescription : undefined, Validators.required],
       purchaseUom: [this.foodItem ? this.foodItem.purchaseUom : undefined, Validators.required],
       servingUom: [this.foodItem ? this.foodItem.servingUom : undefined, Validators.required],
+      age05mo: [false, Validators.required],
+      age611mo: [false, Validators.required],
+      age1yr: [false, Validators.required],
+      age2yr: [false, Validators.required],
+      age35yr: [false, Validators.required],
+      age612yr: [false, Validators.required],
+      age1318yr: [false, Validators.required],
+      ageAdult: [false, Validators.required],
+      tags: [[], Validators.required]
+
     });
-    //this.foodItemForm.addControl('age', ageGroup);
+
+    userSvc.user$.subscribe((user: User) => this.editable = user.authorities.includes('ADMIN'));
+  }
+
+  update() {
+    console.log('Saving food item');
+    this.foodItemForm.markAsPristine();
+
+    var foodItemCpy = Object.assign({}, this.foodItem, this.foodItemForm.value);
+
+    this.foodState.updateFoodItem(foodItemCpy);
+  }
+
+  fetchAllTags() {
+    return this.FoodItemUtils.allTags();
   }
 
   ngOnInit() {

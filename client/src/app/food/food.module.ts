@@ -1,4 +1,4 @@
-import {ConfigService} from '../config/config.service';
+import {UserService} from '../user/user.service';
 import {MealService} from './services/meal.service';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -46,6 +46,7 @@ import {CollapseModule} from 'ngx-bootstrap/collapse';
 import {MealProductionRecordTabComponent} from './components/meal-production-record/meal-production-record-tab/meal-production-record-tab.component';
 import {FoodItemEditListComponent} from './components/food-item-edit-list/food-item-edit-list.component';
 import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item.component';
+import {TagInputModule} from 'ngx-chips';
 
 
 const routes: Routes = [
@@ -75,22 +76,16 @@ const routes: Routes = [
     DndModule.forRoot(),
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
+    TagInputModule,
   ],
   declarations: [
     MealCalendarComponent,
     FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent, MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent
   ],
-  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, ConfigService, MealProductionRecordService],
+  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, UserService, MealProductionRecordService],
   entryComponents: [MenuPrintDialogComponent]
 })
 export class FoodModule {
 
-  constructor(
-    //private foodItemSvc: FoodItemService,
-    //private mealSvc: MealService
-  ) {
-
-    //this.foodItemSvc.query(FoodItemService.FULL).subscribe();
-    //this.mealSvc.query().subscribe();
-  }
+  constructor() {}
 }

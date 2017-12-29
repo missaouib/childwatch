@@ -1,4 +1,4 @@
-import * as ConfigActions from './config.actions';
+import * as ConfigActions from './user.actions';
 
 
 export interface User {
@@ -72,9 +72,13 @@ function setSupportedAgeGroup(state: ConfigState, action: ConfigActions.Supporte
   return state;
 }
 
+
+
 function setUserLogin(state: ConfigState, action: ConfigActions.UserLoginAction) {
 
   var user: User = Object.assign({}, action.payload);
+
+  //user.tenant.ageGroups = buildAgeGroups(user);
 
   return {
     ...state,

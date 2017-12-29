@@ -82,4 +82,9 @@ export class FoodStateService {
     this.store.dispatch(new FoodActions.InactivateMealAction(m));
   }
 
+  updateFoodItem(foodItem: FoodItem) {
+    if (foodItem)
+      this.store.dispatch(new FoodActions.FoodItemUpdatedAction(foodItem));
+  }
+
 }

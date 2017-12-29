@@ -1,5 +1,5 @@
-import {ConfigService} from '../../config/config.service';
-import {User} from '../../config/config.state';
+import {UserService} from '../../user/user.service';
+import {User} from '../../user/config.state';
 import {Component, OnInit, Inject} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
 
@@ -15,9 +15,9 @@ export class PageLayoutComponent implements OnInit {
 
   constructor(
     @Inject(DOCUMENT) private document: any,
-    private configSvc: ConfigService
+    private userSvc: UserService
   ) {
-    this.configSvc.user$.subscribe(user => this.user = user);
+    this.userSvc.user$.subscribe(user => this.user = user);
 
     this.setTheme();
   }

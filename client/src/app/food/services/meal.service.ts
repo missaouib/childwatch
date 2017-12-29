@@ -5,7 +5,7 @@
  * All Rights reserved
  */
 import {AppState} from '../../app.state';
-import {User} from '../../config/config.state';
+import {User} from '../../user/config.state';
 import * as FoodActions from '../store/food.actions';
 import {Meal} from '../model/meal';
 import {MealFoodItem} from '../model/meal-food-item';

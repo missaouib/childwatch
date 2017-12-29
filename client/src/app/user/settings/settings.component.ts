@@ -1,4 +1,4 @@
-import {ConfigService} from '../config.service';
+import {UserService} from '../user.service';
 import {ConfigState, INITIAL} from '../config.state';
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
@@ -9,6 +9,11 @@ import {FormGroup, FormBuilder, Validators} from "@angular/forms";
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+
+  DEFAULT_PASSWORD = '--**password**--';
+
+  theme: string = undefined;
+  themes: string[] = ['cerulean', 'cosmo', 'cyborg', 'carkly', 'clatly', 'journal', 'lumen', 'paper', 'readable', 'sandstone', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
 
   _config: ConfigState = INITIAL;
   showConfirmPassword = false;
@@ -24,26 +29,29 @@ export class SettingsComponent implements OnInit {
 
   activeSlideIdx = 0;
   constructor(
-    private configSvc: ConfigService,
+    private userSvc: UserService,
     private formBuilder: FormBuilder
   ) {
-    this.configSvc.config$.subscribe(config => this.config = config);
+    this.userSvc.config$.subscribe(config => this.config = config);
     this.settingsForm = this.formBuilder.group({
       displayName: [this.config.user.fullName, Validators.required],
       username: [this.config.user.username, Validators.required],
-      password: ['---password---'],
+      password: [this.DEFAULT_PASSWORD],
       confirmPassword: [null],
-      showWeekends: [this.config.user.weekendsShowing, Validators.required]
+      showWeekends: [this.config.user.weekendsShowing, Validators.required],
+      dark: [this.config.user.dark],
+      theme: [this.config.user.theme]
     });
-    this.settingsForm.controls['password'].valueChanges.subscribe(() => {console.log('password changed'); this.showConfirmPassword = true;});
 
-    this.settingsForm.valueChanges.subscribe(() => this.updateConfig());
+    this.settingsForm.controls['password'].valueChanges.subscribe(() => {if (this.settingsForm.controls['password'].value !== this.DEFAULT_PASSWORD) {console.log('password changed'); this.showConfirmPassword = true;} });
+
+    this.settingsForm.valueChanges.subscribe(() => {this.updateConfig(); this.settingsForm.markAsPristine()});
   }
 
   ngOnInit() {}
 
-  updateConfig() {
-    if (this.passwordConfirmed()) {
+  updateConfig(avatar?: string) {
+    if (avatar || !this.settingsForm.pristine && this.passwordConfirmed()) {
       console.log('Updating config', this.settingsForm.value);
 
       const formValues = this.settingsForm.value;
@@ -53,12 +61,14 @@ export class SettingsComponent implements OnInit {
         user: {
           ...this.config.user,
           username: formValues.username,
-          fullName: formValues.displayName
+          fullName: formValues.displayName,
+          weekendsShowing: formValues.showWeekends,
+          avatar: avatar ? avatar : this.config.user.avatar
         },
       }
 
-      this.configSvc.updateConfig(newConfig);
-
+      this.userSvc.updateConfig(newConfig);
+      this.settingsForm.markAsPristine();
     }
   }
 
@@ -67,9 +77,11 @@ export class SettingsComponent implements OnInit {
       this.settingsForm.setValue({
         displayName: this.config.user.fullName,
         username: this.config.user.username,
-        password: '---password---',
+        password: this.DEFAULT_PASSWORD,
         confirmPassword: null,
-        showWeekends: this.config.user.weekendsShowing
+        showWeekends: this.config.user.weekendsShowing,
+        dark: this.config.user.dark,
+        theme: this.config.user.theme
       });
   }
 
@@ -77,13 +89,4 @@ export class SettingsComponent implements OnInit {
     return !this.showConfirmPassword || this.settingsForm.controls['confirmPassword'] !== null && this.settingsForm.controls['password'].value === this.settingsForm.controls['confirmPassword'].value;
   }
 
-  selectAvatar(avatar: string) {
-    this.configSvc.updateConfig({
-      ...this.config,
-      user: {
-        ...this.config.user,
-        avatar: avatar
-      }
-    });
-  }
 }
