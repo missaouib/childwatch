@@ -116,6 +116,10 @@ export class FoodItemUtils {
     return str;
   }
 
+  tagOrder(): string[] {
+    return ['MILK', 'MEAT', 'MEATALT', 'YOGURT', 'VEGETABLE', 'FRUIT', 'JUICE', 'GRAIN', 'WHOLEGRAIN', 'BREAD', 'CEREAL', 'CRACKER', 'CNITEM', 'OTHER'];
+  }
+
   allTags(): FoodItemTag[] {
     var tags: FoodItemTag[] = [];
     tags.push({value: 'WHOLEGRAIN'}, {value: 'FRUIT'}, {value: 'CRACKER'}, {value: 'MILK'}, {value: 'OTHER'}, {value: 'JUICE'}, {value: 'BREAD'}, {value: 'VEGETABLE'}, {value: 'MEATALT'}, {value: 'YOGURT'}, {value: 'CEREAL'}, {value: 'MEAT'}, {value: 'GRAIN'}, {value: 'CNITEM'})

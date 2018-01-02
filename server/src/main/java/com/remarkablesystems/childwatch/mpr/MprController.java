@@ -1,7 +1,5 @@
 package com.remarkablesystems.childwatch.mpr;
 
-import static org.assertj.core.api.Assertions.setMaxElementsForPrinting;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;

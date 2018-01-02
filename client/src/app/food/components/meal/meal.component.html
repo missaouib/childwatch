@@ -177,7 +177,7 @@
 			<hr />
 		 	<div class="panel" dnd-droppable (onDropSuccess)="droppedFoodItem( $event.dragData )" >
 				 	
-			 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( activeTab )"
+			 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( activeTab ).sort( compareMealFoodItems )"
 	   	 					  [mealFoodItem]="mealFoodItem" 
 		 					  (changed)="changed($event)" 
 		 					  (deleted)="deleted($event)"></cw-food-item>	

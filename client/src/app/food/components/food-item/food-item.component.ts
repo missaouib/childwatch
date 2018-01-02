@@ -22,22 +22,16 @@ export class FoodItemComponent implements OnInit {
   @Output() changed: EventEmitter<MealFoodItem> = new EventEmitter<MealFoodItem>();
   @Output() selectedItem: EventEmitter<FoodItem> = new EventEmitter<FoodItem>();
 
-
   FoodItemUtils: FoodItemUtils;
   FoodItems: any[] = [];
   foodItemForm: FormGroup;
   favorite = false;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private state: FoodStateService,
-  ) {
+  constructor(private formBuilder: FormBuilder, private state: FoodStateService) {
     this.FoodItemUtils = new FoodItemUtils();
-
   }
 
   ngOnInit() {
-
     if (!this.mealFoodItem) {
       this.state.foodItems$.subscribe(foodItems => this.FoodItems = foodItems);
     }
