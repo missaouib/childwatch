@@ -1,4 +1,5 @@
 import {AppState} from '../../../app.state';
+import {User} from "../../../user/config.state";
 import {MealProductionRecord, MealAttendanceRecord, MealProductionFoodItem} from '../../model/meal-production-record';
 import {MealType} from '../../model/meal-type';
 import {MealProductionRecordService} from '../../services/meal-production-record.service';
@@ -17,6 +18,7 @@ export class MealProductionRecordComponent implements OnInit {
   _mealDate = new Date();
   records: MealProductionRecord[] = [];
   activeTab: string;
+  activeMpr: MealProductionRecord = undefined;
   MealType: MealType = new MealType();
   set mealDate(md: Date) {
     this._mealDate = md;
@@ -27,17 +29,22 @@ export class MealProductionRecordComponent implements OnInit {
   }
 
   refresh: Subject<any> = new Subject();
+  user: User;
 
 
   constructor(
     private store: Store<AppState>,
-    private mprSvc: MealProductionRecordService) {}
+    private mprSvc: MealProductionRecordService) {
+    this.store.select(s => s.config.user).subscribe(user => this.user = user);
+    this.store.select(s => s.food.mealProductionRecords).subscribe(records => {this.records = records; if (records.length > 0) this.tabChanged(records[0].type);});
+    this.store.select(s => s.food.activeMPR).subscribe(activeMPR => this.activeMpr = activeMPR);
+  }
 
   ngOnInit() {
     this.mealDate = new Date();
-    this.store.select(s => this.records = s.food.mealProductionRecords).subscribe(records => this.records = records);
     if (this.records.length > 0) {
-      this.activeTab = this.records[0].type;
+      console.log('Setting active tab to ' + this.records[0].type);
+      this.tabChanged(this.records[0].type);
     }
   }
 

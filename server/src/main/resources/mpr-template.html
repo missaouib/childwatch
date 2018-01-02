@@ -7554,11 +7554,11 @@ td > ul > li {
     <tr>
       <th width="33%" scope="col">	<span>
 		<h3>Meal Production Report</h3>
-		<h4><span th:text="${mpr.mealEvent.meal.description}">NAME</span> - <span th:text="${mpr.type}">TYPE</span></h4>
+		<h4><span th:text="${mpr.type}">TYPE</span></h4>
 		<h5 th:text="${#dates.format(mpr.mealDate, 'dd-MMM-yyyy')}">DATE</h5>
 	</span>
 </th>
-      <th width="67%" scope="col"><table class="table table-condensed">
+      <th width="67%" scope="col"><table class="table table-condensed" style="font-size: 8px">
  		<thead>
  			<tr>
  				<th colspan="9" class="text-center">Attendance</th>
@@ -7578,25 +7578,25 @@ td > ul > li {
  		<tbody>
  			<tr>
  				<th>Planned</th>
- 				<th>0</th>
- 				<th>0</th>
- 				<th>0</th>
+ 				<th th:text="${AGE_1YR_PROJECTED}"></th>
+ 				<th th:text="${AGE_2YR_PROJECTED}">0</th>
+ 				<th th:text="${AGE_3_5YR_PROJECTED}">0</th>
+ 				<th th:text="${AGE_6_12YR_PROJECTED}">0</th> 				
+ 				<th th:text="${AGE_13_18YR_PROJECTED}">0</th>
+ 				<th th:text="${AGE_ADULT_PROJECTED}">0</th> 				
  				<th>0</th> 				
- 				<th>0</th>
- 				<th>0</th> 				
- 				<th>0</th> 				
- 				<th>0</th> 				 				 				
+ 				<th  th:text="${TOTAL_PROJECTED}">0</th> 				 				 				
  			</tr> 			
  			<tr>
  				<th>Actual</th>
- 				<th>0</th>
- 				<th>0</th>
- 				<th>0</th>
+ 				<th th:text="${AGE_1YR_ACTUAL}"></th>
+ 				<th th:text="${AGE_2YR_ACTUAL}">0</th>
+ 				<th th:text="${AGE_3_5YR_ACTUAL}">0</th>
+ 				<th th:text="${AGE_6_12YR_ACTUAL}">0</th> 				
+ 				<th th:text="${AGE_13_18YR_ACTUAL}">0</th>
+ 				<th th:text="${AGE_ADULT_ACTUAL}">0</th> 				
  				<th>0</th> 				
- 				<th>0</th>
- 				<th>0</th> 				
- 				<th>0</th> 				
- 				<th>0</th> 				 				 				
+ 				<th th:text="${TOTAL_ACTUAL}">0</th> 				 				 				
  			</tr> 			 		
  		</tbody>			
 		</table></th>

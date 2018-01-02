@@ -35,6 +35,9 @@ public class MprPrinterController {
 	
 	static Context context = new Context();
 	
+	long actualTotal = 0, projectedTotal = 0;
+
+	
 	
 	@Autowired
 	MealProductionRecordRepository repo;
@@ -96,6 +99,19 @@ public class MprPrinterController {
 		MealProductionRecord mpr = repo.findOne(mprId);
 		context.clearVariables();
 		context.setVariable("mpr", mpr);
+		
+		actualTotal = 0;
+		projectedTotal = 0;
+		
+		mpr.getAttendanceRecords().stream().forEach( mar -> {
+			actualTotal += mar.getActual();
+			projectedTotal += mar.getProjected();
+			context.setVariable(mar.getAgeGroup().toString() + "_ACTUAL", Math.round(mar.getActual()) );
+			context.setVariable(mar.getAgeGroup().toString() + "_PROJECTED", Math.round(mar.getProjected()) );
+		}); 
+		
+		context.setVariable("TOTAL_ACTUAL", actualTotal);
+		context.setVariable("TOTAL_PROJECTED", projectedTotal);
 
 		String inputHtml = renderTemplate(MPR_TEMPLATE);
 

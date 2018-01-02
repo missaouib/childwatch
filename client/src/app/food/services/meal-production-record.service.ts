@@ -50,8 +50,8 @@ export class MealProductionRecordService {
 
     return this.http.get<Response>(MealProductionRecordService.URL + '/search/byDate', {params: params, headers: headers})
       .map(({_embedded: {mealProductionRecords}}) => {
-        if (!dontCreate && (!mealProductionRecords || mealProductionRecords.length === 0)) {
-          console.log('Didn\'t find any - creating');
+        if (!dontCreate) {
+          console.log('creating any necessary records');
           this.http.get(MealProductionRecordService.URL + '/create', {params: params, headers: headers})
             .map(res => {
               console.log('Now loading what we created');
@@ -89,20 +89,35 @@ export class MealProductionRecordService {
       .map(() => this.store.dispatch(new FoodActions.MealAttendanceRecordUpdatedAction(record)));
   }
 
-  fetchFoodItemsForMPR(mpr: MealProductionRecord) {
+  fetchFoodItemsForMPR(mpr: MealProductionRecord, mprId?: string) {
     const headers = {
       'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
       'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
     };
 
 
+
     const params = {
-      id: mpr.id,
+      id: mprId ? mprId : mpr.id,
       projection: 'mpfiFull'
     };
 
     return this.http.get<ResponseMPFI>('/api/mealProductionFoodItem/search/byMPRId', {params: params, headers: headers})
       .map(({_embedded: {mealProductionFoodItems}}) => this.store.dispatch(new FoodActions.MealProductionFoodItemsReceivedAction(mealProductionFoodItems)));
+  }
+
+  refreshMpr(mprId: string) {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
+    const params = {
+      mpr: mprId
+    };
+    return this.http.get(MealProductionRecordService.URL + '/refresh', {headers: headers, params: params})
+      .map(() => this.fetchFoodItemsForMPR(null, mprId).subscribe())
+      .subscribe();
   }
 
 

@@ -1,14 +1,7 @@
 package com.remarkablesystems.childwatch.mpr;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import static org.assertj.core.api.Assertions.setMaxElementsForPrinting;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,23 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import com.openhtmltopdf.extend.FSUriResolver;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.FoodItem;
 import com.remarkablesystems.childwatch.domain.food.Meal;
@@ -54,55 +35,71 @@ import com.remarkablesystems.childwatch.domain.food.repository.MealEventReposito
 import com.remarkablesystems.childwatch.domain.food.repository.MealFoodItemRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealProductionFoodItemRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealProductionRecordRepository;
-import com.remarkablesystems.childwatch.menu.MenuController;
-import com.remarkablesystems.childwatch.menu.MenuController.UriResolver;
 
+/**
+ * Meal production controller 
+ * 
+ * @author Matt Young
+ *
+ */
 @RepositoryRestController
 public class MprController {
 
 	Logger logger = LoggerFactory.getLogger(getClass().getName());
 	
-	public static final String URL_MAPPING = "/mealProductionRecord/create";
-	
-
-
-
-	
-	@Autowired
-	MealProductionRecordRepository mprRepo;
-	
-	@Autowired
-	MealProductionFoodItemRepository mpfiRepo;
-	
-	@Autowired
-	MealAttendanceRecordRepository marRepo; 
-	
-	@Autowired
-	MealEventRepository mealEventRepo;
-	
-	@Autowired
-	MealFoodItemRepository mealFoodItemRepo;
-	
+	public static final String URL_MAPPING = "/mealProductionRecord";	
+	public static final String CREATE_MAPPING = URL_MAPPING + "/create";
+	public static final String REFRESH_MAPPING = URL_MAPPING + "/refresh";
 
 	
+	/** Repositories */	
+	@Autowired MealProductionRecordRepository mprRepo;	
+	@Autowired MealProductionFoodItemRepository mpfiRepo;	
+	@Autowired MealAttendanceRecordRepository marRepo; 	
+	@Autowired MealEventRepository mealEventRepo;	
+	@Autowired MealFoodItemRepository mealFoodItemRepo;
+	
+
+	/**
+	 * Create the meal production food items for the given record and food items
+	 *  
+	 * @param mpr
+	 * @param items
+	 * @return
+	 */
 	Set<MealProductionFoodItem> createProductionSet( MealProductionRecord mpr, List<MealFoodItem> items ){
-		HashSet<FoodItem> productionSet = new HashSet<FoodItem>();
-		
+		HashSet<FoodItem> productionSet = new HashSet<FoodItem>();		
 		items.stream().forEach( mealFoodItem -> productionSet.add( mealFoodItem.getFoodItem() ) );
-		
-		
 		return productionSet.stream().map( foodItem -> new MealProductionFoodItem( UUID.randomUUID().toString(), mpr, foodItem ) ).collect( Collectors.toSet() );
 	}
 	
+	/**
+	 * Create new attendance records for the given record
+	 * 
+	 * @param mpr
+	 */
 	void createAttendanceRecords( MealProductionRecord mpr ) {
 		marRepo.save( AgeGroup.ALL.stream().map( ageGroup -> new MealAttendanceRecord( UUID.randomUUID().toString(), mpr, ageGroup ) ).collect( Collectors.toList()) );
 	}
 	
 	
+	/**
+	 * Get the meal events for the particular record
+	 * 
+	 * @param mpr
+	 * @return
+	 */
 	MealEvent getMealEventFor( MealProductionRecord mpr ) {
 		return getMealEventFor( mpr.getMealDate(), mpr.getType() );
 	}
 
+	/**
+	 * Get the meal events for the date and meal type
+	 * 
+	 * @param forDate
+	 * @param type
+	 * @return
+	 */
 	MealEvent getMealEventFor( Date forDate, MealType type ) {
 		List<MealEvent> mealEvents = mealEventRepo.findByStartDate(forDate);
 		mealEvents.removeIf( event -> event.getMeal().getType() != type );
@@ -111,6 +108,10 @@ public class MprController {
 	}
 
 	
+	/**
+	 * Create food item records for the meal production record
+	 * @param mpr
+	 */
 	void createFoodItemRecords( MealProductionRecord mpr ) {
 		MealEvent event = getMealEventFor( mpr );
 
@@ -123,43 +124,119 @@ public class MprController {
 		
 	}
 	
-	void createMpr( Date forDate, MealType type ){
+	/**
+	 * Create the meal production record for the date/type
+	 * 
+	 * @param forDate ISO Date for the meal production record to create
+	 * @param type Meal type for the meal production record to create
+	 * 
+	 * @return true if an mpr was created; false otherwise
+	 */
+	boolean buildMpr( Date forDate, MealType type ){
+		
 		UUID uuid = UUID.randomUUID();			
 		MealEvent event = getMealEventFor( forDate, type );
-		logger.info("event forDate={} type={} ={}", forDate, type, event != null );
+		
+		boolean created = false;
 		
 		if( event != null ) {
 			MealProductionRecord mpr = (event != null) ? new MealProductionRecord( uuid.toString(), event ) : new MealProductionRecord( uuid.toString(), forDate, type );		
 			mprRepo.save(mpr);		
-			logger.info("Created MPR id={} for {}", mpr.getId(), type );
+			logger.info("Created MPR id={} forDate={} type={}", mpr.getId(), forDate, type );
 			createAttendanceRecords( mpr );
 			createFoodItemRecords( mpr );
+			created = true;
 		}
 		else {
-			logger.info( "No events found for date = {}", forDate );
+			logger.info( "No MPR create forDate={} type={}, no events were found", forDate, type );
 		}
+		
+		return created;
 	}
-
 	
-	@GetMapping(URL_MAPPING)
-	@ResponseBody ResponseEntity<?> postMpr(@RequestParam(value = "date", required = true) Date forDate ) {
-			
-		// delete the old ones...
-		Set<MealProductionRecord> oldSet = mprRepo.findByMealDate(forDate);		
+	/**
+	 * Remove old records for the date (if they arent locked)
+	 * 
+	 * @param forDate
+	 */
+	void removeOldRecords( Date forDate ) {
+		Set<MealProductionRecord> oldSet = mprRepo.findByMealDate(forDate);
+		
+		// delete the old ones...		
+		// only if they arent locked
+		oldSet.removeIf( mpr -> mpr.isLocked() );
 		oldSet.stream().forEach( mpr -> { 
 			marRepo.delete(marRepo.findByMprId(mpr.getId()));
 			mpfiRepo.delete(mpfiRepo.findByMprId(mpr.getId()));
 		});
-		
+	
 		logger.info( "Removing {} old records", oldSet.size() );
+	
+		mprRepo.delete(oldSet);		
 		
-		mprRepo.delete(oldSet);
+	}
+	
+	/**
+	 * MVC entry point for refreshing a meal production record by:
+	 *   - Updating the food items (if not locked) - currently disabled
+	 *   - Recalculating the required amounts (in case the units have changed)
+	 *   
+	 * @param mprId  GUID for the Meal Production Record
+	 * 
+	 * @return OK
+	 */
+	@GetMapping(REFRESH_MAPPING)
+	@ResponseBody ResponseEntity<?> refreshMpr( @RequestParam(value="mpr", required = true) String mprId ){
 		
-		MealType.ALL.stream().forEach( mealType -> createMpr( forDate, mealType ) );
+		MealProductionRecord mpr = mprRepo.findOne(mprId);
+		if( mpr != null ) {
+			Set<MealProductionFoodItem> mpfi = mpfiRepo.findByMprId(mprId);
+	
+			/*
+			if( !mpr.isLocked() ) {
+				logger.info("Refreshing mpr {}", mprId );
+				mpfiRepo.delete(mpfi);
+				createFoodItemRecords( mpr );
+			}
+			*/
+					
+			mpfi.stream().forEach( item -> item.setRequired(calcRequired( item ) ) ); 
+			
+			mpfiRepo.save(mpfi);
+		}
+		return ResponseEntity.ok("OK");
+	}
+	
+	/**
+	 * MVC entry point for creating a meal production record
+	 * 
+	 * @param forDate ISO date for the meal production record(s) to be created
+	 * 
+	 * @return OK
+	 */
+	@GetMapping(CREATE_MAPPING)
+	@ResponseBody ResponseEntity<?> createMpr(@RequestParam(value = "date", required = true) Date forDate) {
+
+		Set<MealProductionRecord> oldSet = mprRepo.findByMealDate(forDate);
+
+		Set<MealType> types = oldSet.stream().filter( mpr -> mpr.isLocked() ).map( mpr -> mpr.getType() ).collect( Collectors.toSet() );
+		
+		removeOldRecords( forDate );		
+		
+		
+		MealType.ALL.stream()
+			.filter( type -> !types.contains(type))
+			.forEach( mealType -> buildMpr( forDate, mealType ) );
 				
 		return ResponseEntity.ok("OK");
 	}
 
+	/**
+	 * Calculate the required amount for a meal production food item
+	 * 
+	 * @param mealProductionFoodItem
+	 * @return 
+	 */
 	public double calcRequired(MealProductionFoodItem mealProductionFoodItem) {
 		
 		Double sum = 0.0;
@@ -171,11 +248,15 @@ public class MprController {
 			List<MealFoodItem> foodItems = mealFoodItems.stream().filter( mfi -> mfi.getFoodItem().getId() == mealProductionFoodItem.getFoodItem().getId() ).collect(Collectors.toList());		
 			Map<AgeGroup,MealAttendanceRecord> marMap = new ConcurrentHashMap<AgeGroup,MealAttendanceRecord>();
 			
+			boolean locked = mealProductionFoodItem.getMpr().isLocked();
+			
 			getAttendanceRecords(mealProductionFoodItem).forEach( r -> marMap.put(r.getAgeGroup(), r) );		
 					
 			sum = foodItems.stream().mapToDouble( mfi -> { 
 				MealAttendanceRecord mar = marMap.get(mfi.getAgeGroup());
-				Double attendance = (mar != null)?mar.getActual():0;
+				Double attendance = (mar == null)?  0 :
+									(locked || mar.getActual() > 0 )? mar.getActual() : 
+									Math.max( mar.getActual(), mar.getProjected() );
 				Double fiQuantity = attendance * mfi.convertTo( mealProductionFoodItem.getUnit() );
 				logger.info( "for foodItem {}: attendance = {}; quantity = {}", mfi.getFoodItem().getDescription(), attendance, fiQuantity );
 				return fiQuantity;
@@ -184,6 +265,12 @@ public class MprController {
 		return sum;
 	}
 
+	/**
+	 * Get the attendance records associated with the meal production food item's mpr record
+	 * 
+	 * @param mealProductionFoodItem
+	 * @return
+	 */
 	private Set<MealAttendanceRecord> getAttendanceRecords(MealProductionFoodItem mealProductionFoodItem) {
 		return ( mealProductionFoodItem != null && mealProductionFoodItem.getMpr() != null )? mealProductionFoodItem.getMpr().getAttendanceRecords() : new HashSet<MealAttendanceRecord>();
 	}

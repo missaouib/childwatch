@@ -14,6 +14,7 @@ import '../../rxjs-imports';
 import {Meal} from '../model/meal';
 import {MealEvent} from '../model/meal-event';
 import {MealFoodItem} from '../model/meal-food-item';
+import {MealProductionRecordService} from "../services/meal-production-record.service";
 
 /**
  * FoodEffects
@@ -56,6 +57,10 @@ export class FoodEffects {
     .map((action: FoodActions.RemoveMealEventAction) => action.payload)
     .switchMap((payload: MealEvent) => this.onMealEventRemoved(payload));
 
+  @Effect({dispatch: false}) _onMealProductionRecordLocked = this.actions$.ofType(FoodActions.MEALPRODUCTIONRECORD_LOCKED)
+    .map((action: FoodActions.MealProductionRecordLockedAction) => action.payload)
+    .do(payload => this.onMealProductionRecordLocked(payload));
+
   /**
    * Constructor for the FoodEffectsService
    * 
@@ -68,7 +73,8 @@ export class FoodEffects {
   constructor(
     private actions$: Actions,
     private mealEventSvc: MealEventService,
-    private mealSvc: MealService
+    private mealSvc: MealService,
+    private mprSvc: MealProductionRecordService
   ) {
   }
 
@@ -107,6 +113,10 @@ export class FoodEffects {
   private onMealEventRemoved(mealEvent: MealEvent) {
     this.mealEventSvc.delete(mealEvent).first().subscribe();
     return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: mealEvent});
+  }
+
+  private onMealProductionRecordLocked(payload: {mprId: string, locked: boolean;}) {
+    this.mprSvc.refreshMpr(payload.mprId)
   }
 
 }

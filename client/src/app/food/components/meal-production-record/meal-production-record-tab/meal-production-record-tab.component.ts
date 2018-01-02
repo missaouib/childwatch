@@ -28,6 +28,8 @@ export class MealProductionRecordTabComponent implements OnInit {
 
     this._mpr = mpr;
 
+    console.log('The mpr is ' + (mpr.locked ? 'locked' : 'not locked'));
+
     this.attendanceForm = this.formBuilder.group({});
     if (this.mealProductionRecord && this.mealProductionRecord.attendanceRecords) {
       console.log(`There are ${this.mealProductionRecord.attendanceRecords.length} attendance records for ${this.mealProductionRecord.type}`);
@@ -37,7 +39,7 @@ export class MealProductionRecordTabComponent implements OnInit {
           projected: [mar.projected, Validators.required],
           actual: [mar.actual, Validators.required]
         }));
-        this.attendanceForm.controls[mar.ageGroup].valueChanges.debounceTime(2000).subscribe(() => this.changedAttendance(mar));
+        this.attendanceForm.controls[mar.ageGroup].valueChanges.debounceTime(500).subscribe(() => this.changedAttendance(mar));
       });
     }
 
@@ -46,13 +48,13 @@ export class MealProductionRecordTabComponent implements OnInit {
     if (this.mealProductionRecord && this.mealProductionRecord.productionFoodItems) {
       console.log(`There are ${this.mealProductionRecord.productionFoodItems.length} productionFoodItems for ${this.mealProductionRecord.type}`);
       this.mealProductionRecord.productionFoodItems.forEach(mpfi => {
-        console.log(`creating component ${mpfi.foodItem.id}`);
+        console.log(`creating component ${mpfi.foodItem.id} calc=${mpfi.calcRequired}; required=${mpfi.required}`);
         this.foodItemsForm.addControl(mpfi.foodItem.id, this.formBuilder.group({
           required: [mpfi.calcRequired, Validators.required],
           prepared: [mpfi.prepared, Validators.required],
           units: [mpfi.unit, Validators.required]
         }))
-        this.foodItemsForm.controls[mpfi.foodItem.id].valueChanges.debounceTime(2000).subscribe(() => this.changedFoodItem(mpfi));
+        this.foodItemsForm.controls[mpfi.foodItem.id].valueChanges.debounceTime(500).subscribe(() => this.changedFoodItem(mpfi));
       });
     }
 
@@ -87,7 +89,7 @@ export class MealProductionRecordTabComponent implements OnInit {
     copy.actual = this.attendanceForm.controls[record.ageGroup].value.actual;
     copy.projected = this.attendanceForm.controls[record.ageGroup].value.projected;
 
-    console.log(`actual = ${copy.actual}; projected = ${copy.projected}`)
+    console.log(`actual = ${copy.actual}; projected = ${copy.projected} `)
     this.attendanceChanged.emit(copy);
   }
 
