@@ -21,6 +21,7 @@
 					<label for="name">Name</label>
 					<input #name class="form-control" placeholder="Meal Name" formControlName="description" /> 
 					<small class="text-danger" *ngIf="mealForm.get('description').hasError('required')">Meal name is required</small>
+					<small class="text-danger" *ngIf="mealForm.get('description').hasError('mealunique')">Meal name must be unique</small>				
 				</div>		
 
 				<div class="form-group col-xs-2">
@@ -42,14 +43,14 @@
 					class="btn btn-lg" 
 					(click)="save()"
 					[class.btn-primary]="!canDeactivate() && mealForm.get('description').value && mealForm.get('type').value"
-					[class.disabled]="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined || emptyShow">
+					[class.disabled]="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined || mealForm.get('description').hasError('mealunique') || emptyShow">
 					<i class="fa fa-save"></i> Save</button>
 		</span>				
 	</div>
 	<div class="row">
 		<alert [type]="'warning'" *ngIf="!this.mealForm.valid">
 			<h4 class="alert-heading"><i class="fa fa-exclamation-circle"></i> MEAL PLAN NAME/TYPE</h4>
-			You must have a meal plan name and type before you can add food items.  Please set the name and type above
+			You must have a unique meal plan name and type before you can add food items.  Please set the name and type above
 		</alert>	
 	</div>						
 	

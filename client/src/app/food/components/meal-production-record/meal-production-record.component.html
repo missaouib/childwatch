@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="row">
-		<p *ngIf="hasRecordsFor().length === 0"><strong>No Records found for {{mealDate | date: 'shortDate' }}</strong></p>
+		<p *ngIf="hasRecordsFor().length === 0"><strong>No scheduled meals found for {{mealDate | date: 'shortDate' }}</strong></p>
 		<tabset *ngIf="hasRecordsFor().length > 0 "> 
 			<tab *ngFor="let type of hasRecordsFor()" (select)="tabChanged(type)">			
 				<!-- Tab heading -->

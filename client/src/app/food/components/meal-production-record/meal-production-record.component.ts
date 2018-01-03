@@ -32,6 +32,9 @@ export class MealProductionRecordComponent implements OnInit {
   user: User;
 
 
+  /**
+   * @constructor
+   */
   constructor(
     private store: Store<AppState>,
     private mprSvc: MealProductionRecordService) {
@@ -40,6 +43,9 @@ export class MealProductionRecordComponent implements OnInit {
     this.store.select(s => s.food.activeMPR).subscribe(activeMPR => this.activeMpr = activeMPR);
   }
 
+  /**
+   * @onInit
+   */
   ngOnInit() {
     this.mealDate = new Date();
     if (this.records.length > 0) {
@@ -48,15 +54,27 @@ export class MealProductionRecordComponent implements OnInit {
     }
   }
 
+  /**
+   * Determines the meal types that have records for the current date
+   * 
+   * @returns list of meal types; empty list if none 
+   */
   hasRecordsFor(): string[] {
     return this.MealType.ALL.filter(type => this.records.map(r => r.type).find(rt => rt === type));
   }
 
+  /**
+   * Retrieves the locally stored mpr for the given type
+   * 
+   * @returns mpr for the given type; undefined if not exists
+   */
   mprFor(type: string): MealProductionRecord {
     return this.records.find(r => r.type == type);
   }
 
-
+  /**
+   * Callback when the attendanceRecord changes
+   */
   attendanceChanged(attendanceRecord: MealAttendanceRecord) {
     console.log('Attendance changed');
     this.mprSvc.updateAttendance(attendanceRecord)
@@ -64,15 +82,30 @@ export class MealProductionRecordComponent implements OnInit {
         .subscribe(() => this.refresh.next()));
   }
 
+  /**
+   * Callback when a food item changes
+   */
   foodItemChanged(productionFoodItem: MealProductionFoodItem) {
     console.log('FoodItemChanged');
+    this.mprSvc.updateMealProductionFoodItem(productionFoodItem).subscribe();
+
   }
 
+  /**
+   * Callback when a tab changes
+   * 
+   * @param type food type assocaited with the tab
+   */
   tabChanged(type: string) {
     this.activeTab = type;
     this.store.dispatch(new FoodActions.ActivateMealProductionRecordAction(this.mprFor(type)));
   }
 
+  /**
+   * Sets the lock state of the current viewed MPR
+   *
+   * @param isLocked locked state of the MPR
+   */
   setMprLock(isLocked: boolean) {
     this.mprSvc.lockMPR(this.mprFor(this.activeTab), isLocked).subscribe();
   }

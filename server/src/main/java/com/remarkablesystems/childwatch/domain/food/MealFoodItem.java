@@ -5,6 +5,9 @@ import java.util.Arrays;
 
 import javax.persistence.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -24,11 +27,14 @@ import lombok.ToString;
  */
 @Entity
 @Table(name="meal_food_item")
-@ToString(callSuper=true)
+@ToString(callSuper=true,exclude="logger")
 @EqualsAndHashCode()
 public class MealFoodItem implements Serializable {
 	
 	private static final long serialVersionUID = 7341397807008242827L;
+	
+	@Transient
+	Logger logger = LoggerFactory.getLogger(getClass().getName());
 
 	@Id
 	@Getter
@@ -72,7 +78,7 @@ public class MealFoodItem implements Serializable {
 	}
 	
 	@Transient
-	public Double convertTo(UnitOfMeasure uom) {
+	public Double convertTo(UnitOfMeasure uom) {		
 		return (uom!=null)? UnitOfMeasure.convert(this.quantity, this.getUnit(), uom) : this.quantity;
 	}
 	

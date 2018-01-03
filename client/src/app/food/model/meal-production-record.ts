@@ -8,7 +8,7 @@ export interface MealProductionFoodItem {
   required: number,
   calcRequired?: number,
   prepared: number,
-  unit: string
+  uom: string
 }
 
 export interface MealAttendanceRecord {

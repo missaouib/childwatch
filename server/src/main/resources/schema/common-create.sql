@@ -2059,7 +2059,7 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
     	food_item_id 	varchar(36),
     	age_group    	varchar(36) CHECK ( age_group IN ( 'AGE_0_5MO', 'AGE_6_11MO', 'AGE_1YR', 'AGE_2YR', 'AGE_3_5YR', 'AGE_6_12YR', 'AGE_13_18YR', 'AGE_ADULT') ),
    	 	quantity        numeric DEFAULT 1,
-   		unit        	varchar(36) DEFAULT 'SERVINGS' CHECK( unit IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
+   		uom        		varchar(36) not null DEFAULT 'SERVINGS' CHECK( uom IN ('OUNCES', 'LBS', 'GALLONS', 'CUPS', 'TABLESPOONS', 'UNITS', 'SERVINGS' ) ),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,   		
    		PRIMARY KEY(id)

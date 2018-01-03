@@ -25,6 +25,9 @@ export class MealProductionRecordService {
   user: User;
   MealType: MealType = new MealType();
 
+  /**
+   * @constructor
+   */
   constructor(
     private store: Store<AppState>,
     private http: HttpClient
@@ -67,6 +70,12 @@ export class MealProductionRecordService {
   }
 
 
+  /**
+   * Lock/Unlock the mpr
+   * 
+   * @param mpr meal production record to effect
+   * @param locked new lock state for the mpr
+   */
   lockMPR(mpr: MealProductionRecord, locked: boolean) {
     const headers = {
       'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
@@ -78,6 +87,11 @@ export class MealProductionRecordService {
       .map(() => this.store.dispatch(new FoodActions.MealProductionRecordLockedAction({mprId: mpr.id, locked: locked})));
   }
 
+  /**
+   * Update the attendance record for an MPR
+   * 
+   * @param record meal attendance record to update
+   */
   updateAttendance(record: MealAttendanceRecord) {
     const headers = {
       'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
@@ -89,13 +103,17 @@ export class MealProductionRecordService {
       .map(() => this.store.dispatch(new FoodActions.MealAttendanceRecordUpdatedAction(record)));
   }
 
+  /**
+   * Retrieve the MealProductionFoodItems associated with the MPR
+   * 
+   * @param mpr
+   * @param mprId
+   */
   fetchFoodItemsForMPR(mpr: MealProductionRecord, mprId?: string) {
     const headers = {
       'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
       'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
     };
-
-
 
     const params = {
       id: mprId ? mprId : mpr.id,
@@ -106,6 +124,11 @@ export class MealProductionRecordService {
       .map(({_embedded: {mealProductionFoodItems}}) => this.store.dispatch(new FoodActions.MealProductionFoodItemsReceivedAction(mealProductionFoodItems)));
   }
 
+  /**
+   * Refresh the values for an MPR
+   * 
+   * @param mprID
+   */
   refreshMpr(mprId: string) {
     const headers = {
       'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
@@ -118,6 +141,29 @@ export class MealProductionRecordService {
     return this.http.get(MealProductionRecordService.URL + '/refresh', {headers: headers, params: params})
       .map(() => this.fetchFoodItemsForMPR(null, mprId).subscribe())
       .subscribe();
+  }
+
+  /**
+   * Update the meal production food item
+   * 
+   * @param productionFoodItem
+   */
+  updateMealProductionFoodItem(productionFoodItem: MealProductionFoodItem) {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+
+    console.log('saving mpfi', productionFoodItem);
+
+    let copy = {
+      id: productionFoodItem.id,
+      prepared: productionFoodItem.prepared,
+      uom: productionFoodItem.uom
+    };
+
+    return this.http.put('/api/mealProductionFoodItem/' + productionFoodItem.id, copy, {headers: headers})
+      .map(() => this.store.dispatch(new FoodActions.MealProductionFoodItemUpdatedAction(productionFoodItem)));
   }
 
 

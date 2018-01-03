@@ -4,8 +4,9 @@ import {FoodItemUtils} from '../../model/food-item-utils';
 import {Meal} from '../../model/meal';
 import {MealFoodItem} from '../../model/meal-food-item';
 import {MealRulesViolation} from '../../model/mealrulesviolation';
+import {FoodStateService} from "../../services/food-state.service";
 import {Component, OnInit, HostListener} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/forms';
 import {UUID} from 'angular2-uuid';
 import {ActivatedRoute} from '@angular/router';
 import {ComponentCanDeactivate} from './pending-changes-guard';
@@ -73,31 +74,37 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   deletedList: string[] = [];
 
+  meals: Meal[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     private activeRoute: ActivatedRoute,
     private mealSvc: MealService,
     public toastr: ToastsManager,
     private userSvc: UserService,
+    private foodSvc: FoodStateService,
     vcr: ViewContainerRef,
   ) {
     this.FoodItemUtils = new FoodItemUtils();
     this.toastr.setRootViewContainerRef(vcr);
     this.activeRoute.queryParams.subscribe((params: any) => this.loadMeal(params['id']));
+    this.foodSvc.meals$.subscribe((meals) => this.meals = meals);
   }
 
   ngOnInit() {
     this.userSvc.user$.subscribe(user => {
-      console.log("tenant = ", user.tenant);
-
       this.AGEGROUPS = user.tenant.ageGroups;
       if (this.AGEGROUPS.length > 0) this.activeTab = this.AGEGROUPS[0];
     });
     this.mealForm = this.formBuilder.group({
-      description: [this.meal.description, Validators.required],
+      description: [this.meal.description, [Validators.required, this.validateMealNameUnique.bind(this)]],
       type: [this.meal.type, Validators.required]
     });
 
+  }
+
+  validateMealNameUnique(control: AbstractControl) {
+    return this.meals.find(meal => meal.description === control.value) ? {mealunique: true} : null;
   }
 
   showFoodList() {

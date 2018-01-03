@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.DoubleFunction;
 
+import javax.persistence.Transient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,8 @@ public enum UnitOfMeasure {
 	SERVINGS,
 	TABLESPOONS;	
 	
+	@Transient
+	static Logger logger = LoggerFactory.getLogger("UnitOfMeasure");
 	
 	public static boolean canConvert( UnitOfMeasure from, UnitOfMeasure to ) {
 		
@@ -35,13 +39,16 @@ public enum UnitOfMeasure {
 	public static Double convert( double value, UnitOfMeasure from, UnitOfMeasure to ) {
 		Double retValue = Double.NaN;
 
-		if( from.equals(to) ) return value;
+		if( from.equals(to) ) { 
+			return value;
+		}
 		
 		try {
 			Field field = UnitOfMeasure.class.getDeclaredField(from.toString()+"_"+to.toString() );
 			DoubleFunction<Double> fn = (DoubleFunction<Double>) field.get(null);
 			retValue = fn.apply(value);
 		} catch (Exception e) {}
+		
 		return retValue;
 	}
 		

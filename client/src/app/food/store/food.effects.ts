@@ -14,6 +14,7 @@ import '../../rxjs-imports';
 import {Meal} from '../model/meal';
 import {MealEvent} from '../model/meal-event';
 import {MealFoodItem} from '../model/meal-food-item';
+import {MealProductionFoodItem} from "../model/meal-production-record";
 import {MealProductionRecordService} from "../services/meal-production-record.service";
 
 /**
@@ -60,6 +61,10 @@ export class FoodEffects {
   @Effect({dispatch: false}) _onMealProductionRecordLocked = this.actions$.ofType(FoodActions.MEALPRODUCTIONRECORD_LOCKED)
     .map((action: FoodActions.MealProductionRecordLockedAction) => action.payload)
     .do(payload => this.onMealProductionRecordLocked(payload));
+
+  @Effect({dispatch: false}) _onMealProductionFoodItemUpdated = this.actions$.ofType(FoodActions.MEALPRODUCTIONFOODITEM_UPDATED)
+    .map((action: FoodActions.MealProductionFoodItemUpdatedAction) => action.payload)
+    .do(payload => this.onMealProductionFoodItemUpdated(payload));
 
   /**
    * Constructor for the FoodEffectsService
@@ -117,6 +122,10 @@ export class FoodEffects {
 
   private onMealProductionRecordLocked(payload: {mprId: string, locked: boolean;}) {
     this.mprSvc.refreshMpr(payload.mprId)
+  }
+
+  private onMealProductionFoodItemUpdated(payload: MealProductionFoodItem) {
+    this.mprSvc.refreshMpr(payload.mpr.id);
   }
 
 }

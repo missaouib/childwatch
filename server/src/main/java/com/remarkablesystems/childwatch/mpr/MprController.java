@@ -28,6 +28,7 @@ import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 import com.remarkablesystems.childwatch.domain.food.MealProductionFoodItem;
 import com.remarkablesystems.childwatch.domain.food.MealProductionRecord;
 import com.remarkablesystems.childwatch.domain.food.MealType;
+import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
 import com.remarkablesystems.childwatch.domain.food.repository.MealAttendanceRecordRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealEventRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealFoodItemRepository;
@@ -101,7 +102,6 @@ public class MprController {
 	MealEvent getMealEventFor( Date forDate, MealType type ) {
 		List<MealEvent> mealEvents = mealEventRepo.findByStartDate(forDate);
 		mealEvents.removeIf( event -> event.getMeal().getType() != type );
-		logger.info("getMealEventFor( {}, {} ) = found {}", forDate, type, mealEvents.size() );
 		return mealEvents.size() > 0 ? mealEvents.get(0) : null;
 	}
 
@@ -116,7 +116,6 @@ public class MprController {
 		if( event != null ) {
 			List<MealFoodItem> foodItems = mealFoodItemRepo.findByMealId(event.getMeal().getId() );
 			Set<MealProductionFoodItem> productionSet = createProductionSet( mpr, foodItems );
-			logger.info( "Production food set contains {} item(s)", productionSet.size() );
 			if( productionSet.size() > 0 ) mpfiRepo.save( productionSet );			
 		}
 		
@@ -140,13 +139,9 @@ public class MprController {
 		if( event != null ) {
 			MealProductionRecord mpr = (event != null) ? new MealProductionRecord( uuid.toString(), event ) : new MealProductionRecord( uuid.toString(), forDate, type );		
 			mprRepo.save(mpr);		
-			logger.info("Created MPR id={} forDate={} type={}", mpr.getId(), forDate, type );
 			createAttendanceRecords( mpr );
 			createFoodItemRecords( mpr );
 			created = true;
-		}
-		else {
-			logger.info( "No MPR create forDate={} type={}, no events were found", forDate, type );
 		}
 		
 		return created;
@@ -168,8 +163,6 @@ public class MprController {
 			mpfiRepo.delete(mpfiRepo.findByMprId(mpr.getId()));
 		});
 	
-		logger.info( "Removing {} old records", oldSet.size() );
-	
 		mprRepo.delete(oldSet);		
 		
 	}
@@ -190,13 +183,6 @@ public class MprController {
 		if( mpr != null ) {
 			Set<MealProductionFoodItem> mpfi = mpfiRepo.findByMprId(mprId);
 	
-			/*
-			if( !mpr.isLocked() ) {
-				logger.info("Refreshing mpr {}", mprId );
-				mpfiRepo.delete(mpfi);
-				createFoodItemRecords( mpr );
-			}
-			*/
 					
 			mpfi.stream().forEach( item -> item.setRequired(calcRequired( item ) ) ); 
 			
@@ -239,9 +225,7 @@ public class MprController {
 		
 		Double sum = 0.0;
 		List<MealFoodItem> mealFoodItems = getMealFoodItems( mealProductionFoodItem );
-		
-		logger.info( "mealFoodItems has {} items", mealFoodItems.size() );
-		
+				
 		if( mealFoodItems != null ) {
 			List<MealFoodItem> foodItems = mealFoodItems.stream().filter( mfi -> mfi.getFoodItem().getId() == mealProductionFoodItem.getFoodItem().getId() ).collect(Collectors.toList());		
 			Map<AgeGroup,MealAttendanceRecord> marMap = new ConcurrentHashMap<AgeGroup,MealAttendanceRecord>();
@@ -255,8 +239,7 @@ public class MprController {
 				Double attendance = (mar == null)?  0 :
 									(locked || mar.getActual() > 0 )? mar.getActual() : 
 									Math.max( mar.getActual(), mar.getProjected() );
-				Double fiQuantity = attendance * mfi.convertTo( mealProductionFoodItem.getUnit() );
-				logger.info( "for foodItem {}: attendance = {}; quantity = {}", mfi.getFoodItem().getDescription(), attendance, fiQuantity );
+				Double fiQuantity = attendance * mfi.convertTo( mealProductionFoodItem.getUom() );
 				return fiQuantity;
 				} ).sum();
 		}
@@ -272,7 +255,14 @@ public class MprController {
 	private Set<MealAttendanceRecord> getAttendanceRecords(MealProductionFoodItem mealProductionFoodItem) {
 		return ( mealProductionFoodItem != null && mealProductionFoodItem.getMpr() != null )? mealProductionFoodItem.getMpr().getAttendanceRecords() : new HashSet<MealAttendanceRecord>();
 	}
-
+	
+	
+	/**
+	 * Get the meal food items associated with the meal production food item
+	 * 
+	 * @param mealProductionFoodItem
+	 * @return
+	 */
 	private List<MealFoodItem> getMealFoodItems(MealProductionFoodItem mealProductionFoodItem) {
 		
 		MealEvent event = ( mealProductionFoodItem != null && mealProductionFoodItem.getMpr() != null) ? getMealEventFor( mealProductionFoodItem.getMpr() ) : null;

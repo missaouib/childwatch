@@ -31,9 +31,6 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=true)
 public class MealProductionFoodItem extends AuditedUser {
 	
-	@Transient
-	Logger logger = LoggerFactory.getLogger( getClass().getName() );
-	
 	public MealProductionFoodItem(){ super(); }
 	
 	public MealProductionFoodItem( String id, MealProductionRecord mpr, FoodItem foodItem ) {
@@ -42,7 +39,7 @@ public class MealProductionFoodItem extends AuditedUser {
 		this.foodItem = foodItem;
 		required = 0;
 		prepared = 0;
-		this.unit = foodItem.getPurchaseUom();
+		this.uom = foodItem.getPurchaseUom();
 	}
 	
 	@Id
@@ -69,10 +66,10 @@ public class MealProductionFoodItem extends AuditedUser {
 	@Getter @Setter
 	double prepared;
 	
-	@Column(name="unit")
+	@Column(name="uom")
 	@Enumerated(EnumType.STRING)
 	@Getter @Setter
-	UnitOfMeasure unit;
+	UnitOfMeasure uom;
 	
 	@Transient
 	public double getCalcRequired() {

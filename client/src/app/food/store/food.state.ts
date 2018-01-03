@@ -86,6 +86,8 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setMealAttendanceRecordUpdated(state, action as FoodActions.MealAttendanceRecordUpdatedAction);
     case FoodActions.MEALPRODUCTIONRECORD_LOCKED:
       return setMealProductionRecordLocked(state, action as FoodActions.MealProductionRecordLockedAction);
+    case FoodActions.MEALPRODUCTIONFOODITEM_UPDATED:
+      return setMealProductionFoodItemUpdate(state, action as FoodActions.MealProductionFoodItemUpdatedAction);
 
   }
   return state;
@@ -298,7 +300,14 @@ function setMealEventScheduled(state: FoodState, action: FoodActions.MealEventSc
   };
 }
 
-
+/**
+ * Set store data when a meal rules violation is received; in response to the MEALRULESVIOLATIONS_RECEIVED action
+ * 
+ * @param state {FoodState}
+ * @param action {MealRulesViolationsReceivedAction}
+ * 
+ * @return {FoodState} next state
+ */
 function setMealRulesViolationsReceived(state: FoodState, action: FoodActions.MealRulesViolationsReceivedAction): FoodState {
   const mealRulesViolations = action.payload;
 
@@ -413,5 +422,22 @@ function setMealProductionRecordLocked(state, action: FoodActions.MealProduction
     };
   }
   return state;
+}
+
+function setMealProductionFoodItemUpdate(state, action: FoodActions.MealProductionFoodItemUpdatedAction): FoodState {
+
+
+  const copyActiveMpr = {
+    ...state.activeMPR,
+    productionFoodItems: state.activeMPR.productionFoodItems.filter(mpfi => mpfi.id != action.payload.id).concat(action.payload)
+  };
+
+  const mprs = state.mealProductionRecords.filter(mpr => mpr.id != state.activeMPR.id).concat(copyActiveMpr);
+
+  return {
+    ...state,
+    activeMPR: copyActiveMpr,
+    mealProductionRecords: mprs
+  };
 }
 

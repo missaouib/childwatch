@@ -13,7 +13,7 @@ public interface MealProductionFoodItemFull {
 	String getId();
 	double getRequired();
 	double getPrepared();
-	UnitOfMeasure getUnit();
+	UnitOfMeasure getUom();
 	
 	FoodItemFull getFoodItem();
 	

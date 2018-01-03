@@ -45,6 +45,8 @@ export const ACTIVATE_MEALPRODUCTIONRECORD: string = '[FOOD] ACTIVATE MEALPRODUC
 export const MEALATTENDANCERECORD_UPDATED: string = '[FOOD] MEALATTENDANCERECORD UPDATED';
 export const MEALPRODUCTIONRECORD_LOCKED: string = '[FOOD] MEALPRODUCTIONRECORD LOCKED';
 
+export const MEALPRODUCTIONFOODITEM_UPDATED: string = '[FOOD] MEALPRODUCTIONFOODITEM UPDATED';
+
 export class MealsReceivedAction implements Action {
   readonly type = MEALS_RECEIVED;
   constructor(public payload: Meal[]) {};
@@ -171,6 +173,11 @@ export class MealProductionRecordLockedAction implements Action {
   constructor(public payload: {mprId: string, locked: boolean}) {};
 }
 
+export class MealProductionFoodItemUpdatedAction implements Action {
+  readonly type = MEALPRODUCTIONFOODITEM_UPDATED;
+  constructor(public payload: MealProductionFoodItem) {};
+}
+
 export type ACTIONS
   = MealsReceivedAction
   | MealEventsReceivedAction
@@ -196,4 +203,5 @@ export type ACTIONS
   | MealAttendanceRecordsReceivedAction
   | ActivateMealProductionRecordAction
   | MealAttendanceRecordUpdatedAction
-  | MealProductionRecordLockedAction;
+  | MealProductionRecordLockedAction
+  | MealProductionFoodItemUpdatedAction;
