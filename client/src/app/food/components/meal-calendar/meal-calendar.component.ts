@@ -11,6 +11,7 @@ import {MealEventService} from '../../services/meal-event.service';
 import {MealService} from '../../services/meal.service';
 import {MenuPrintDialogComponent} from './menu-print-dialog.component';
 import * as moment from 'moment';
+import {Moment} from 'moment';
 import {Router} from '@angular/router';
 import {UUID} from 'angular2-uuid';
 import {ToastsManager} from 'ng2-toastr';
@@ -22,77 +23,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: './meal-calendar.component.html',
-  styles: [`
-    .weekend-cell {
-      background-color: rgba(255, 228, 179, 0.7) !important;
-    }    
-
-    .chip {
-        padding: 0 10px;
-        height: 25px;
-        font-size: 12px;
-        line-height: 25px;
-        border-radius: 25px;   
-        border-style: solid;
-        border-width: 0px; 
-    }
-    
-    .chip img {
-      min-height: 16px;
-      height: 16px;
-      min-width: 16px;
-      width: 16px;
-    }
-
-    .my-container: {
-      overflow: hidden;
-      background: #5C97FF;
-      position: relative;
-    }
-
-    .my-container:before {
-      content: ' ';
-      display: block;
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      opacity: 0.1;
-      background-repeat: no-repeat;
-      background-position: 50% 0;
-      -ms-background-size: cover;
-      -o-background-size: cover;
-      -moz-background-size: cover;
-      -webkit-background-size: cover;
-      background-size: cover;
-    }
-  
-    .my-container-spring: {}
-
-    .my-container-spring:before {
-      background-image: url( '/assets/img/season/spring.jpg' );
-    }
-  
-    .my-container-summer: {}
-
-    .my-container-summer:before {
-      background-image: url( '/assets/img/season/summer.jpg' );
-    }
-
-    .my-container-fall: {}
-
-    .my-container-fall:before {
-      background-image: url( '/assets/img/season/fall.jpg' );
-    }
-
-    .my-container-winter: {}
-
-    .my-container-winter:before {
-      background-image: url( '/assets/img/season/winter.jpg' );
-    }
-  `]
+  styleUrls: ['./meal-calendar.component.css']
 })
 export class MealCalendarComponent implements OnInit {
 
@@ -100,9 +31,9 @@ export class MealCalendarComponent implements OnInit {
   @ViewChild('modalAlreadyScheduled') modalAlreadyScheduled: ElementRef;
 
   mealToDrop: Meal = undefined;
-  whenToDrop: Date = undefined;
+  whenToDrop: Moment = undefined;
 
-  viewDate: Date = new Date();
+  viewDate: Moment = moment();
   view = 'month';
   activeDayIsOpen = false;
 
@@ -142,9 +73,9 @@ export class MealCalendarComponent implements OnInit {
   ngOnInit() {
     this.mealSvc.query().subscribe();
 
-    const today = new Date();
+    const today = moment();
 
-    this.state.adjustMenuTime(moment(today).startOf('month').toDate(), moment(today).endOf('month').toDate());
+    this.state.adjustMenuTime(today.startOf('month').toDate(), today.endOf('month').toDate());
     this.state.mealEvents$.subscribe((events) => {
       this.eventList = events;
       this.refresh.next();
@@ -155,20 +86,20 @@ export class MealCalendarComponent implements OnInit {
 
   gotoDate(when?: string, unit?: moment.unitOfTime.DurationConstructor) {
 
-    this.viewDate = (when === undefined) ? new Date() : ((when === 'previous') ? moment(this.viewDate).subtract(1, unit) : moment(this.viewDate).add(1, unit)).toDate();
-    this.state.adjustMenuTime(moment(this.viewDate).startOf('month').toDate(), moment(this.viewDate).endOf('month').toDate());
+    this.viewDate = (when === undefined) ? moment() : ((when === 'previous') ? moment(this.viewDate).subtract(1, unit) : moment(this.viewDate).add(1, unit));
+    this.state.adjustMenuTime(this.viewDate.startOf('month').toDate(), this.viewDate.endOf('month').toDate());
   }
 
   differentYear() {
-    return !moment(this.viewDate).isSame(new Date(), 'year');
+    return !this.viewDate.isSame(moment(), 'year');
   }
 
 
   createMealEvent(meal: Meal, start?: Date): MealEvent {
     const mealEvent: MealEvent = {
       id: UUID.UUID(),
-      startDate: moment((start) ? new Date(start) : new Date()).toDate(),
-      endDate: moment((start) ? new Date(start) : new Date()).toDate(),
+      startDate: moment((start) ? moment(start) : new Date()).toDate(),
+      endDate: moment((start) ? moment(start) : new Date()).toDate(),
       recurrence: undefined,
       meal: meal
     };
@@ -225,7 +156,7 @@ export class MealCalendarComponent implements OnInit {
   replaceMeal() {
     if (this.mealToDrop && this.whenToDrop) {
       this.eventList.filter(e => moment(e.start).diff(this.whenToDrop, 'days') === 0 && e.meta.meal.type === this.mealToDrop.type).forEach(event => this.removeEvent(event));
-      this.dropMeal(this.mealToDrop, this.whenToDrop);
+      this.dropMeal(this.mealToDrop, this.whenToDrop.toDate());
       this.mealToDrop = undefined;
       this.whenToDrop = undefined;
     }
@@ -238,29 +169,29 @@ export class MealCalendarComponent implements OnInit {
 
   dropMeal(meal: Meal, when: Date) {
     const mealEvent: CalendarEvent<MealEvent> = {
-      start: moment(new Date(when)).toDate(),
-      end: moment(new Date(when)).toDate(),
-      meta: this.createMealEvent(meal, moment(new Date(when)).toDate()),
+      start: moment(when).toDate(),
+      end: moment(when).toDate(),
+      meta: this.createMealEvent(meal, moment(when).toDate()),
       title: meal.description,
       color: {primary: 'red', secondary: 'yellow'}
     }
     console.log(`dropped meal on ${mealEvent.start}`);
-    this.viewDate = moment(new Date(when)).toDate();
+    this.viewDate = moment(when);
     this.activeDayIsOpen = true;
     this.state.scheduleMealEvent(mealEvent.meta);
   }
 
   mealDropped(meal: Meal, when?: Date) {
 
-    const _when = moment(new Date(when) || new Date(this.viewDate)).toDate();
+    const _when: Moment = (moment(when) || moment(this.viewDate));
 
-    if (this.mealTypeAlreadyPlanned(meal, _when)) {
+    if (this.mealTypeAlreadyPlanned(meal, _when.toDate())) {
       this.mealToDrop = meal;
       this.whenToDrop = _when;
       this.showDialog()
     }
     else {
-      this.dropMeal(meal, _when);
+      this.dropMeal(meal, _when.toDate());
     }
 
 

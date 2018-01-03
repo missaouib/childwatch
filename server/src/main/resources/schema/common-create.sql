@@ -2068,8 +2068,8 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	create table if not exists meal_event(
 		id 				varchar( 36 ) NOT NULL,
 		meal_id 		varchar(36),
-   		start_date      TIMESTAMP WITH TIME ZONE NOT NULL,
-   		end_date        TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT DATE '12/31/3000',
+   		start_date      date NOT NULL,
+   		end_date        date NOT NULL DEFAULT DATE '12/31/3000',
    		recurrence  	varchar (36) DEFAULT 'NONE' CHECK (recurrence IN ('NONE', 'DAILY', 'WEEKLY', 'BIWEEKLY' ) ),
     	updated_by_user_id	varchar(36),
     	updated_date  TIMESTAMP WITH TIME ZONE,   		
@@ -2078,7 +2078,7 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	
 	create table if not exists meal_production_record(
 		id 				varchar( 36 ) NOT NULL,
-        meal_date		TIMESTAMP WITH TIME ZONE NOT NULL,
+        meal_date		date NOT NULL,
     	meal_type 		varchar(36) NOT NULL CHECK ( meal_type IN ( 'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' ) ) NOT NULL,
         locked			boolean NOT NULL DEFAULT false,
         lock_date		TIMESTAMP WITH TIME ZONE,

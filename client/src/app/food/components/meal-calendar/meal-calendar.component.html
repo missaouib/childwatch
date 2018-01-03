@@ -56,13 +56,7 @@
 		<!-- CALENDAR -->
 		<div class="col-sm-9 col-xs-12">
 		
-			<div class="hidden-xs" 
-				[class.my-container]="showBackground"
-				[class.my-container-spring]="showBackground && isSpring()"
-				[class.my-container-summer]="showBackground && isSummer()"
-				[class.my-container-fall]="showBackground && isFall()"
-				[class.my-container-winter]="showBackground && isWinter()"				
-				>
+			<div class="hidden-xs">
 		
 			<!-- MONTH VIEW - shown only on non-cell phone size -->
 					<span class="pull-left btn-group" style="z-index: 10;" role="group">
@@ -73,7 +67,7 @@
 					<!--  <a class="pull-right" target="_blank" [attr.href]="'/menu?tenant='+user?.tenant.id"><i class="fa fa-print"></i> Print Menu...</a> -->
 					<a class="pull-right" (click)="printMenu()"><i class="fa fa-print"></i> Print Menu...</a>
 					<h3 class="text-center text-primary">
-						{{ viewDate | date:'MMMM yyyy' }} 
+						{{ viewDate.toDate() | date:'MMMM yyyy' }} 
 					</h3>
 <!--  					<span class="pull-right checkbox" style="z-index: 10;">
 						<label><input [(ngModel)]="showWeekends" type="checkbox" (change)="flipWeekend($event)"> Show Weekends</label>
@@ -85,7 +79,7 @@
 			<div class="hidden-xs" style="z-index: 10;">
 				<mwl-calendar-month-view					
 					(beforeViewRender)="beforeMonthViewRender($event)"
-				    [viewDate]="viewDate"
+				    [viewDate]="viewDate.toDate()"
 				    [events]="eventList"
 				    [activeDayIsOpen]="false"
 				    [refresh]="refresh"
@@ -103,7 +97,7 @@
 					(schedule)="mealDropped($event)"
 					(edit)="editMeal($event)" 
 					(remove)="removeEvent($event)"
-					[day]="viewDate"
+					[day]="viewDate.toDate()"
 					(previousDay)="gotoDate('previous','day')"
 					(nextDay)="gotoDate('next','day')"
 					(today)="gotoDate()"></cw-meal-day>

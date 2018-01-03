@@ -65,7 +65,7 @@ public class MealProductionRecord extends AuditedUser {
 			
 	@Column(name="meal_date")
 	@Getter
-	@Temporal( TemporalType.TIMESTAMP )
+	@Temporal( TemporalType.DATE )
 	Date mealDate;
 	
 	@Enumerated(EnumType.STRING)

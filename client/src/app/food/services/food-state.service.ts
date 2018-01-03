@@ -37,6 +37,7 @@ export class FoodStateService {
   }
 
   adjustMenuTime(start: Date, end: Date) {
+    console.log(`Adjusting menu time to ${start} - ${end}`);
     this.store.dispatch(new FoodActions.MenuTimeAdjustedAction({start: start, end: end}));
   }
 

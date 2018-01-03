@@ -7,6 +7,7 @@ import {MealProductionRecord} from '../model/meal-production-record';
 import {MealRulesViolation} from '../model/mealrulesviolation';
 import {CalendarEvent} from 'angular-calendar';
 import {UUID} from 'angular2-uuid';
+import * as moment from 'moment';
 
 export interface FoodState {
   foodItems: FoodItem[];
@@ -135,7 +136,7 @@ function setMealEventsReceived(state: FoodState, action: FoodActions.MealEventsR
 
   const events = mealEvents.map((mealEvent) => ({
     title: mealEvent.meal.description,
-    start: new Date(mealEvent.startDate),
+    start: moment(mealEvent.startDate).toDate(),
     meta: mealEvent,
     color: {primary: 'black', secondary: 'black'}
   }));

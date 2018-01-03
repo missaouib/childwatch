@@ -1,7 +1,11 @@
 node_modules
-.settings
+.settings/
 .project
 npm-debug.log
-.idea
 e2e
-
+.gitignore
+.tern-project
+Dockerfile
+karma.conf.js
+package-lock.json
+protractor.conf.js

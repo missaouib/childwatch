@@ -46,6 +46,7 @@ export class MealEventService {
       end: moment(end).format('MM/DD/YYYY')
     };
 
+    console.log(`search between ${params.start} - ${params.end}`);
     return this.http.get<Response>(MealEventService.URL + '/search/between', {params: params, headers: headers})
       .map(({_embedded: {mealEvent}}) =>
         this.store.dispatch(new FoodActions.MealEventsReceivedAction(mealEvent)));

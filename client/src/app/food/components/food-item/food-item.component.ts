@@ -27,10 +27,23 @@ export class FoodItemComponent implements OnInit {
   foodItemForm: FormGroup;
   favorite = false;
 
+  /**
+   * Constructor for the FoodItemComponent
+   * 
+   * @param formBuilder
+   * @param state
+   * 
+   * @constructor
+   */
   constructor(private formBuilder: FormBuilder, private state: FoodStateService) {
     this.FoodItemUtils = new FoodItemUtils();
   }
 
+  /**
+   * Initializer for the component
+   * 
+   * @onInit
+   */
   ngOnInit() {
     if (!this.mealFoodItem) {
       this.state.foodItems$.subscribe(foodItems => this.FoodItems = foodItems);
@@ -52,6 +65,9 @@ export class FoodItemComponent implements OnInit {
 
   }
 
+  /**
+   * 
+   */
   extractMealFoodItem(): MealFoodItem {
     const mealFoodItem: MealFoodItem = Object.assign({}, this.mealFoodItem);
 
