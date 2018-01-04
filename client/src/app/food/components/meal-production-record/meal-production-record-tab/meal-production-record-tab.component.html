@@ -34,7 +34,7 @@
 		<div class="panel">
 			<div *ngIf="!mealProductionRecord?.productionFoodItems || mealProductionRecord?.productionFoodItems.length == 0"><strong>No items for {{MealType.toDisplay(mealProductionRecord?.type)}}</strong></div>
 			<form novalidate [formGroup]="foodItemsForm">
-				<div class="row form-group" *ngFor="let pfi of mealProductionRecord?.productionFoodItems; let i = index;" formGroupName="{{pfi.foodItem.id}}">
+				<div class="row form-group" *ngFor="let pfi of sortedProductionFoodItems(); let i = index;" formGroupName="{{pfi.foodItem.id}}">
 					<span class="col-xs-1"> 
 						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MILK'" src="/assets/img/food/flaticon/milk.svg" />
 						<img class="small-img" *ngIf="FoodItemUtils.category(pfi.foodItem) === 'MEAT'" src="/assets/img/food/flaticon/meat.svg" />

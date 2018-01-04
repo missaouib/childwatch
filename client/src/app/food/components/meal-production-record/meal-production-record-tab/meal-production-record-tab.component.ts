@@ -128,4 +128,26 @@ export class MealProductionRecordTabComponent implements OnInit {
     }
   }
 
+  sortedProductionFoodItems(): MealProductionFoodItem[] {
+    return (this.mealProductionRecord && this.mealProductionRecord.productionFoodItems) ?
+      this.mealProductionRecord.productionFoodItems.concat().sort(this.compareFoodItems) : [];
+  }
+
+  /**
+   * Compare 2 meal production food items based on 'sort order'
+   *  
+   * @param a {MealProductionFoodItem}
+   * @param b {MealProductionFoodItem}
+   * 
+   * @return -1; 0; 1
+   */
+  compareFoodItems(a: MealProductionFoodItem, b: MealProductionFoodItem): number {
+    const utils = new FoodItemUtils();
+    var catA = utils.category(a.foodItem);
+    var catB = utils.category(b.foodItem);
+    const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
+    let val = categories.indexOf(catA) - categories.indexOf(catB);
+    return val === 0 ? a.foodItem.description.localeCompare(b.foodItem.description) : val;
+  }
+
 }

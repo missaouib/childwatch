@@ -76,6 +76,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   meals: Meal[] = [];
 
+  /**
+   * @constructor
+   */
   constructor(
     private formBuilder: FormBuilder,
     private activeRoute: ActivatedRoute,
@@ -91,6 +94,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.foodSvc.meals$.subscribe((meals) => this.meals = meals);
   }
 
+  /**
+   * @onInit
+   */
   ngOnInit() {
     this.userSvc.user$.subscribe(user => {
       this.AGEGROUPS = user.tenant.ageGroups;
@@ -103,14 +109,25 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   }
 
+  /**
+   * Validator for a unique meal name
+   */
   validateMealNameUnique(control: AbstractControl) {
-    return this.meals.find(meal => meal.description === control.value) ? {mealunique: true} : null;
+    return this.meals.filter(meal => meal.id != this.meal.id).find(meal => meal.description === control.value) ? {mealunique: true} : null;
   }
 
+  /**
+   * Flag to show/hide the food list
+   */
   showFoodList() {
     return this.mealForm ? !this.mealForm.invalid : false;
   }
 
+  /**
+   * Determine the meal's CACFP status
+   * 
+   * @return {string} 
+   */
   mealCacfpStatus(): string {
     if (!this.mealForm || !this.mealForm.valid || this.mealForm.dirty || this.dirtyFoodItems)
       return 'UNKNOWN';
@@ -120,6 +137,12 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     return (this.rulesViolations.filter(v => v.severity === 'FAIL' && this.AGEGROUPS.includes(v.ageGroup)).length > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
   }
 
+  /**
+   * Determine the age group's CACFP status
+   * 
+   * @param ageGroup {string}
+   * @return {string}
+   */
   ageGroupCacfpStatus(ageGroup: string) {
     const foundItems = this.mealFoodItems.filter(fi => fi.ageGroup === ageGroup).length;
     const foundViolations = this.rulesViolations.filter(rv => rv.ageGroup === ageGroup && rv.severity === 'FAIL').length;
@@ -127,12 +150,23 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       (foundViolations > 0) ? 'NONCOMPLIANT' : 'COMPLIANT';
   }
 
+  /**
+   * Determine if the window can be closed 
+   * Required to support transitions outside of the angular realm (app -> something else)
+   * 
+   * @returns {Observable<boolean> | boolean}
+   */
   @HostListener('window:beforeunload')
   canDeactivate(): Observable<boolean> | boolean {
     return !this.mealForm.dirty && !this.dirtyFoodItems && !this.emptyShow;
   }
 
 
+  /**
+   * Callback when a meal food item is changed
+   * 
+   * @param {MealFoodItem} meal food item changed
+   */
   changed(mealFoodItem: MealFoodItem) {
     const copy = this.mealFoodItems.filter(mfi => mfi.id !== mealFoodItem.id);
 
@@ -142,6 +176,11 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.dirtyFoodItems = true;
   }
 
+  /**
+   * Callback when a meal food item is deleted
+   * 
+   * @param {id} id of the meal food item removed
+   */
   deleted(id: string) {
     console.log('deleting ' + id);
     this.deletedList.push(id);
@@ -150,6 +189,12 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.dirtyFoodItems = true;
   }
 
+  /**
+   * Determines the 'best' category for a food item based on its tags
+   * 
+   * @param foodItem {FoodItem}
+   * @returns {string}
+   */
   static category(foodItem: FoodItem): string {
     if (this.tagContainsAll(foodItem, ['MILK']))
       return 'MILK';
@@ -186,13 +231,27 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
 
+  /**
+   * Compare 2 meal food items for 'sort order'
+   * 
+   * @param a {MealFoodItem} food item #1
+   * @param b {MealFoodItem} food item #2
+   * @returns -1; 0 ; 1
+   */
   compareMealFoodItems(a: MealFoodItem, b: MealFoodItem): number {
     var catA = MealComponent.category(a.foodItem);
     var catB = MealComponent.category(b.foodItem);
     const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
-    return categories.indexOf(catA) - categories.indexOf(catB);
+    let val = categories.indexOf(catA) - categories.indexOf(catB);
+    return val === 0 ? a.foodItem.description.localeCompare(b.foodItem.description) : val;
   }
 
+  /**
+   * Fetches the list of meal food items for the age group in sorted order
+   * 
+   * @param ageGroup {string}
+   * @returns 
+   */
   mealFoodItemsFor(ageGroup: string) {
     return this.mealFoodItems.filter(mfi => mfi.ageGroup === ageGroup).sort(this.compareMealFoodItems);
   }
@@ -203,7 +262,6 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     if (this.canDeactivate() || this.mealForm.get('description').value === undefined || this.mealForm.get('type').value === undefined) {
       this.toastr.info('There are no changes to be saved', 'Save');
       return;
-
     }
     const meal: Meal = {
       id: this.meal.id,

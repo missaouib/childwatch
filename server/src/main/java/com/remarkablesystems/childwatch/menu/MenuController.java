@@ -171,7 +171,9 @@ public class MenuController {
 			hm.put(mealType.toString(), new HashMap<String, Meal>());
 
 		events.stream().forEach(event -> {
-			LocalDateTime start = LocalDateTime.ofInstant(event.getStartDate().toInstant(), ZoneId.systemDefault());
+			java.util.Date startDate = new Date(event.getStartDate().getTime());
+			
+			LocalDateTime start = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
 			logger.info("putting meal of type " + event.getMeal().getType().toString() + " to "
 					+ start.getDayOfWeek().toString());
 			hm.get(event.getMeal().getType().toString()).put(start.getDayOfWeek().toString(), event.getMeal());

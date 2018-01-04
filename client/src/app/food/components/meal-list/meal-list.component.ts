@@ -53,7 +53,9 @@ export class MealListComponent implements OnInit {
   pagedMeals() {
     const start = (this.currentPage - 1) * 10;
     this.totalItems = (this.filter !== 'ALL') ? this.PagedMeals.length : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).length;
-    return (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).slice(start, start + 10);
+    let retValue = (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).slice(start, start + 10);
+
+    return retValue.concat().sort((a, b) => a.description.localeCompare(b.description));
   }
 
   limit(text: string) {

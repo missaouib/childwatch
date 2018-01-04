@@ -68,9 +68,15 @@ public enum UnitOfMeasure {
 	static DoubleFunction<Double> CUPS_GALLONS = (value) -> value / 16;
 	static DoubleFunction<Double> GALLONS_TABLESPOONS = (value) -> value * 256;
 	static DoubleFunction<Double> TABLESPOONS_GALLONS = (value) -> value / 256;
+	static DoubleFunction<Double> GALLONS_LBS = (value) -> value * 8.3;
+	static DoubleFunction<Double> LBS_GALLONS = (value) -> value / 8.3;
+	
 	
 	static DoubleFunction<Double> CUPS_TABLESPOONS = (value) -> value * 16;
 	static DoubleFunction<Double> TABLESPOONS_CUPS = (value) -> value / 16;
+	static DoubleFunction<Double> LBS_TABLESPOONS = (value) -> value * 32;
+	static DoubleFunction<Double> TABLESPOONS_LBS = (value) -> value / 32;
+
 	
 	static DoubleFunction<Double> CUPS_LBS = (value) -> value / 2;
 	static DoubleFunction<Double> LBS_CUPS = (value) -> value * 2;
