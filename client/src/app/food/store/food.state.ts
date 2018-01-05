@@ -88,6 +88,8 @@ export function reducer(state: FoodState = INITIAL, action: FoodActions.ACTIONS)
       return setMealProductionRecordLocked(state, action as FoodActions.MealProductionRecordLockedAction);
     case FoodActions.MEALPRODUCTIONFOODITEM_UPDATED:
       return setMealProductionFoodItemUpdate(state, action as FoodActions.MealProductionFoodItemUpdatedAction);
+    case FoodActions.MEALPRODUCTIONRECORD_NOTES_UPDATED:
+      return setMealProductionRecordNotesUpdated(state, action as FoodActions.MealProductionRecordNotesUpdatedAction);
 
   }
   return state;
@@ -134,20 +136,53 @@ function setMealsReceived(state: FoodState, action: FoodActions.MealsReceivedAct
  */
 function setMealEventsReceived(state: FoodState, action: FoodActions.MealEventsReceivedAction): FoodState {
 
-  const mealEvents: MealEvent[] = action.payload;
+  let mealEvents: MealEvent[] = action.payload;
+  let recurrences: MealEvent[] = [];
+  mealEvents.forEach(event => recurrences = recurrences.concat(createRecurrences(event)));
 
-  const events = mealEvents.map((mealEvent) => ({
-    title: mealEvent.meal.description,
-    start: moment(mealEvent.startDate).toDate(),
-    meta: mealEvent,
-    color: {primary: 'black', secondary: 'black'}
-  }));
+  mealEvents = mealEvents.concat(recurrences);
+
+  const events = mealEvents.map((mealEvent) => {
+    return {
+      title: mealEvent.meal.description,
+      start: moment(mealEvent.startDate).toDate(),
+      meta: mealEvent,
+      color: {primary: 'black', secondary: 'black'}
+    };
+  });
+
+
 
   return {
     ...state,
     mealEvents: mealEvents,
     events: events
   };
+}
+
+
+function createRecurrences(event: MealEvent): MealEvent[] {
+
+  let recurrences: MealEvent[] = [];
+  let add = (event.recurrence === 'WEEKLY') ? 7 :
+    (event.recurrence === 'BIWEEKLY') ? 14 : 1;
+  let start = moment(new Date(event.startDate)).add(add, 'day');
+  let end = moment(new Date(event.startDate)).add(1, 'month').startOf('month');
+  console.log(`Recurrence = ${event.recurrence}; start=${start.toISOString()}; end=${end.toISOString()}; diff=${start.diff(end, 'days')}`);
+
+  if (event.recurrence !== 'NONE') {
+    while (start.diff(end, 'days') < 0) {
+      console.log(`adding event for ${start.toISOString()}; diff=${start.diff(end, 'days')}`);
+      start.add((event.recurrence === 'WEEKLY') ? 7 : 1, 'day');
+      recurrences.push({
+        ...event,
+        startDate: start.toDate(),
+        endDate: start.toDate(),
+        masterEvent: event
+      });
+    }
+  }
+  return recurrences;
 }
 
 
@@ -439,5 +474,24 @@ function setMealProductionFoodItemUpdate(state, action: FoodActions.MealProducti
     activeMPR: copyActiveMpr,
     mealProductionRecords: mprs
   };
+}
+
+function setMealProductionRecordNotesUpdated(state, action: FoodActions.MealProductionRecordNotesUpdatedAction): FoodState {
+  let {id, notes} = action.payload;
+
+  const copyActiveMpr = (state.activeMPR.id == id) ? {...state.activeMPR, notes: notes} : {...state.activeMPR};
+
+  const mpr = state.mealProductionRecords.find(mpr => mpr.id === id);
+
+  let mprs = state.mealProductionRecords.filter(mpr => mpr.id != id);
+  if (mpr) mprs.push({...mpr, notes: notes});
+
+  return {
+    ...state,
+    activeMPR: copyActiveMpr,
+    mealProductionRecords: mprs
+  };
+
+
 }
 

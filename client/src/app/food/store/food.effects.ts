@@ -111,12 +111,14 @@ export class FoodEffects {
   }
 
   private onMealEventScheduled(mealEvent: MealEvent) {
-    this.mealEventSvc.save(mealEvent).first().subscribe();
+    if (!mealEvent.masterEvent)
+      this.mealEventSvc.save(mealEvent).first().subscribe();
     return Observable.of({type: 'NOOP-MEALEVENTSAVED', payload: mealEvent});
   }
 
   private onMealEventRemoved(mealEvent: MealEvent) {
-    this.mealEventSvc.delete(mealEvent).first().subscribe();
+    if (!mealEvent.masterEvent)
+      this.mealEventSvc.delete(mealEvent).first().subscribe();
     return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: mealEvent});
   }
 

@@ -9,7 +9,7 @@
 	<div class="col-xs-5" >
 		<form novalidate [formGroup]="attendanceForm">
 			<h3 class="text-primary">Attendance <small>{{mealProductionRecord?.type}} Planned/Actuals</small></h3>
-			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of AgeGroup._NONINFANTS; let idx = index;">
+			<div class="row  form-group" formGroupName="{{name}}" *ngFor="let name of supportedAgeGroups; let idx = index;">
 				<span class="col-xs-3"> 
 					<label *ngIf="idx==0">Age</label>
 					<p class="form-control-static text-primary">{{AgeGroup._toDisplay(name)}}</p>
@@ -60,6 +60,8 @@
 						<label *ngIf="i==0">Prepared</label>
 						<p *ngIf="mealProductionRecord?.locked" class="form-control-static">{{pfi.prepared || 0}}</p> 
 						<input *ngIf="!mealProductionRecord?.locked" class="form-control" type="text" formControlName="prepared" />
+						<span *ngIf="!enough(pfi) && mealProductionRecord?.locked" class="text-danger">Not enough</span>
+						<span *ngIf="!enough(pfi) && !mealProductionRecord?.locked" class="text-warning">May not have enough</span>
 					</span> 
 					<span class="col-xs-3"> 
 						<label *ngIf="i==0">Units</label>
@@ -79,11 +81,13 @@
 	
 	<!-- Notes -->
 	<div class="row">
-		<div class="form-group col-xs-12">
-			<h3 class="text-primary">{{MealType.toDisplay(mealProductionRecord?.type)}} Notes/Substitutions</h3>
-			<p *ngIf="mealProductionRecord?.locked">{{mealProductionRecord?.notes}}</p>
-			<textarea *ngIf="!mealProductionRecord?.locked" class="form-control col-xs-12" rows="4" ></textarea>
-		</div>
+		<form novalidate [formGroup]="commentsForm">
+			<div class="form-group col-xs-12">
+				<h3 class="text-primary">{{MealType.toDisplay(mealProductionRecord?.type)}} Notes/Substitutions</h3>
+				<p *ngIf="mealProductionRecord?.locked">{{mealProductionRecord?.notes}}</p>
+				<textarea *ngIf="!mealProductionRecord?.locked" class="form-control col-xs-12" rows="4" formControlName="notes"></textarea>
+			</div>
+		</form>
 	</div>
 
 </div>

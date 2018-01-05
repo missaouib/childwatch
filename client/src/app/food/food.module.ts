@@ -38,7 +38,7 @@ import {FoodItemListComponent} from './components/food-item-list/food-item-list.
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {MealListComponent} from './components/meal-list/meal-list.component';
 import {MealDayComponent} from './components/meal-day/meal-day.component';
-import {MenuPrintDialogComponent} from './components/meal-calendar/menu-print-dialog.component';
+import {MenuPrintDialogComponent} from './components/meal-calendar/menu-print-dialog/menu-print-dialog.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {MealProductionRecordComponent} from './components/meal-production-record/meal-production-record.component';
 import {MealProductionRecordService} from './services/meal-production-record.service';
@@ -47,6 +47,7 @@ import {MealProductionRecordTabComponent} from './components/meal-production-rec
 import {FoodItemEditListComponent} from './components/food-item-edit-list/food-item-edit-list.component';
 import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item.component';
 import {TagInputModule} from 'ngx-chips';
+import {RecurrenceDialogComponent} from './components/meal-calendar/recurrence-dialog/recurrence-dialog.component';
 
 
 const routes: Routes = [
@@ -80,10 +81,10 @@ const routes: Routes = [
   ],
   declarations: [
     MealCalendarComponent,
-    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent, MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent
+    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent, MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent, RecurrenceDialogComponent
   ],
   providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, UserService, MealProductionRecordService],
-  entryComponents: [MenuPrintDialogComponent]
+  entryComponents: [MenuPrintDialogComponent, RecurrenceDialogComponent]
 })
 export class FoodModule {
 

@@ -9,7 +9,8 @@ import {CalendarEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {FoodStateService} from '../../services/food-state.service';
 import {MealEventService} from '../../services/meal-event.service';
 import {MealService} from '../../services/meal.service';
-import {MenuPrintDialogComponent} from './menu-print-dialog.component';
+import {MenuPrintDialogComponent} from './menu-print-dialog/menu-print-dialog.component';
+import {RecurrenceDialogComponent} from "./recurrence-dialog/recurrence-dialog.component";
 import * as moment from 'moment';
 import {Moment} from 'moment';
 import {Router} from '@angular/router';
@@ -79,7 +80,6 @@ export class MealCalendarComponent implements OnInit {
     this.state.mealEvents$.subscribe((events) => {
       this.eventList = events;
       this.refresh.next();
-      console.log(events);
     });
 
   }
@@ -94,7 +94,6 @@ export class MealCalendarComponent implements OnInit {
     return !this.viewDate.isSame(moment(), 'year');
   }
 
-
   createMealEvent(meal: Meal, start?: Date): MealEvent {
     const mealEvent: MealEvent = {
       id: UUID.UUID(),
@@ -106,13 +105,9 @@ export class MealCalendarComponent implements OnInit {
     return mealEvent;
   }
 
-  compare(a: Meal, b: Meal) {
-    const MEALS = ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER'];
-    return MEALS.indexOf(a.type) - MEALS.indexOf(b.type);
-  }
-
   compareEvnt(a: CalendarEvent<MealEvent>, b: CalendarEvent<MealEvent>) {
-    return this.compare(a.meta.meal, b.meta.meal);
+    const MEALS = ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER'];
+    return MEALS.indexOf(a.meta.meal.type) - MEALS.indexOf(b.meta.meal.type);
   }
 
 
@@ -143,7 +138,9 @@ export class MealCalendarComponent implements OnInit {
   }
 
 
-
+  /**
+   * determine if the date is after the CW2 start date (01-OCT-2017)
+   */
   afterStart(date: Date) {
     return moment(date).diff(moment('01/10/2017', 'DD/MM/YYYY'), 'days') >= 0;
   }
@@ -220,4 +217,14 @@ export class MealCalendarComponent implements OnInit {
     this.modalRef.content.user = this.user;
   }
 
+
+  sortEvents(events: CalendarEvent<MealEvent>[]) {
+    return events.concat().sort(this.compareEvnt);
+  }
+
+
+  recurrence(mealEvent: MealEvent) {
+    this.modalRef = this.modalSvc.show(RecurrenceDialogComponent, {ignoreBackdropClick: true});
+    this.modalRef.content.event = mealEvent;
+  }
 }

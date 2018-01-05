@@ -3,7 +3,7 @@
   <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
     <span class="cal-day-number"><strong>{{ day.date | calendarDate:'monthViewDayNumber' }}</strong></span>
   </div>
-  <div class="call-events" *ngFor="let event of day.events" >
+  <div class="call-events" *ngFor="let event of sortEvents(day.events)" >
   	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant">
 				<img *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 				<img  *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
@@ -13,6 +13,7 @@
 				<img *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
   		<span tooltip="{{event.meta.meal.description}}"><strong>{{ limit( event.meta.meal.description, 10 )}}</strong></span>
   		<div class="pull-right">
+  			<a><i class="text-primary fa fa-refresh" (click)="recurrence(event.meta)"></i></a>
   			<a><i class="text-danger fa fa-close" (click)="removeEvent(event)"></i></a>
   		</div>
   	</div>
@@ -27,7 +28,7 @@
 	  <div class="modal-body">
 	    There is already a {{mealToDrop?.type}} planned for this day.  Do you want to replace it or cancel? <br/><br/>
 	    <hr/>
-	    <div class="text-center"><button class="btn btn-default" (click)="replaceMeal()">Replace</button> <button class="btn" (click)="modalRef.hide(); mealToDrop=undefined; whenToDropp=undefined;">Cancel</button></div>
+	    <div class="text-center"><button class="btn btn-default" (click)="replaceMeal()">Replace</button> <button class="btn" (click)="modalRef.hide(); mealToDrop=undefined; whenToDrop=undefined;">Cancel</button></div>
 	  </div>
 </ng-template>
 
@@ -42,6 +43,8 @@
 	    <div class="text-center"><button class="btn btn-default" (click)="modalRef.hide()">Ok</button></div>
 	  </div>
 </ng-template>
+
+
 
 
 <div class="container-fluid">

@@ -87,6 +87,15 @@ export class MealProductionRecordService {
       .map(() => this.store.dispatch(new FoodActions.MealProductionRecordLockedAction({mprId: mpr.id, locked: locked})));
   }
 
+  updateMPRNotes(id: string, notes: string) {
+    const headers = {
+      'X-CHILDWATCH-TENANT': (this.user) ? this.user.tenant.id : null,
+      'X-CHILDWATCH-USER': (this.user) ? this.user.id : null
+    };
+    return this.http.patch(MealProductionRecordService.URL + '/' + id, {id: id, notes: notes}, {headers: headers})
+      .map(() => this.store.dispatch(new FoodActions.MealProductionRecordNotesUpdatedAction({id: id, notes: notes})));
+  }
+
   /**
    * Update the attendance record for an MPR
    * 

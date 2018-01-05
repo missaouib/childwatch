@@ -113,7 +113,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
    * Validator for a unique meal name
    */
   validateMealNameUnique(control: AbstractControl) {
-    return this.meals.filter(meal => meal.id != this.meal.id).find(meal => meal.description === control.value) ? {mealunique: true} : null;
+    return this.meals
+      .filter(meal => meal.id != this.meal.id)
+      .find(meal => meal.description.toUpperCase() === (control.value ? control.value.toUpperCase() : undefined)) ? {mealunique: true} : null;
   }
 
   /**

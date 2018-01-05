@@ -6,4 +6,5 @@ export interface MealEvent {
   startDate: Date;
   endDate: Date;
   recurrence: string;
+  masterEvent?: MealEvent;
 }

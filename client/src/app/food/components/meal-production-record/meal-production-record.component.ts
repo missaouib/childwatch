@@ -52,6 +52,7 @@ export class MealProductionRecordComponent implements OnInit {
       console.log('Setting active tab to ' + this.records[0].type);
       this.tabChanged(this.records[0].type);
     }
+
   }
 
   /**
@@ -91,10 +92,15 @@ export class MealProductionRecordComponent implements OnInit {
 
   }
 
+  notesChanged(notes: string) {
+    console.log(`notes changed to ${notes}`);
+    this.mprSvc.updateMPRNotes(this.activeMpr.id, notes).subscribe();
+  }
+
   /**
    * Callback when a tab changes
    * 
-   * @param type food type assocaited with the tab
+   * @param type food type associated with the tab
    */
   tabChanged(type: string) {
     this.activeTab = type;
@@ -108,6 +114,10 @@ export class MealProductionRecordComponent implements OnInit {
    */
   setMprLock(isLocked: boolean) {
     this.mprSvc.lockMPR(this.mprFor(this.activeTab), isLocked).subscribe();
+  }
+
+  supportedAges(): string[] {
+    return this.user.tenant.ageGroups.filter(ageGroup => !ageGroup.endsWith('MO'));
   }
 
 }

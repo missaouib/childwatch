@@ -1,4 +1,4 @@
-import {User} from '../../../user/config.state';
+import {User} from '../../../../user/config.state';
 import {Component, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import * as moment from 'moment';

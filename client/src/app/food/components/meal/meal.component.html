@@ -48,7 +48,7 @@
 		</span>				
 	</div>
 	<div class="row">
-		<alert [type]="'warning'" *ngIf="!this.mealForm.valid">
+		<alert [type]="'warning'" *ngIf="!this.mealForm?.valid">
 			<h4 class="alert-heading"><i class="fa fa-exclamation-circle"></i> MEAL PLAN NAME/TYPE</h4>
 			You must have a unique meal plan name and type before you can add food items.  Please set the name and type above
 		</alert>	

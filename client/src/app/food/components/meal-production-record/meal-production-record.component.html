@@ -33,7 +33,9 @@
 				<cw-meal-production-record-tab
 					[mealProductionRecord]="mprFor(type)" 
 					(attendanceChanged)="attendanceChanged($event)"
-					(foodItemChanged)="foodItemChanged($event)">
+					(foodItemChanged)="foodItemChanged($event)"
+					(notesChanged)="notesChanged($event)"
+					[supportedAgeGroups]="supportedAges()">
 				</cw-meal-production-record-tab>
 			</tab> 
 		</tabset>

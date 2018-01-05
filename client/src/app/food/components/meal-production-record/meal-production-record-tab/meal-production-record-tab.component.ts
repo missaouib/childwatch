@@ -13,6 +13,7 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 export class MealProductionRecordTabComponent implements OnInit {
   attendanceForm: FormGroup;
   foodItemsForm: FormGroup;
+  commentsForm: FormGroup;
   FoodItemUtils: FoodItemUtils;
   AgeGroup: AgeGroup;
   MealType: MealType;
@@ -24,15 +25,19 @@ export class MealProductionRecordTabComponent implements OnInit {
     this._mpr = mpr;
     this.buildAttendanceForm();
     this.buildFoodItemsForm();
+    this.buildCommentsForm();
   }
 
   get mealProductionRecord() {
     return this._mpr;
   }
 
+  @Input() supportedAgeGroups: string[] = [];
+
   /** Outputs */
   @Output() attendanceChanged: EventEmitter<MealAttendanceRecord> = new EventEmitter();
   @Output() foodItemChanged: EventEmitter<MealProductionFoodItem> = new EventEmitter();
+  @Output() notesChanged: EventEmitter<string> = new EventEmitter();
 
   /**
    * @constructor
@@ -91,6 +96,10 @@ export class MealProductionRecordTabComponent implements OnInit {
     this.foodItemChanged.emit(copy);
   }
 
+  changedNotes() {
+    this.notesChanged.emit(this.commentsForm.value.notes);
+  }
+
   /**
    * construct the attendanceForm object
    */
@@ -128,6 +137,22 @@ export class MealProductionRecordTabComponent implements OnInit {
     }
   }
 
+  /**
+   * construct the commentsForm object
+   */
+  private buildCommentsForm() {
+    this.commentsForm = this.formBuilder.group({
+      notes: [(this.mealProductionRecord) ? this.mealProductionRecord.notes : undefined]
+    });
+    this.commentsForm.controls["notes"].valueChanges.debounceTime(1000).subscribe(() => this.changedNotes());
+  }
+
+  /**
+   * Generate the production food items list in sorted order - to maintain order
+   * even when the store changes
+   * 
+   * @returns {MealProductionFoodItem[]}
+   */
   sortedProductionFoodItems(): MealProductionFoodItem[] {
     return (this.mealProductionRecord && this.mealProductionRecord.productionFoodItems) ?
       this.mealProductionRecord.productionFoodItems.concat().sort(this.compareFoodItems) : [];
@@ -145,9 +170,21 @@ export class MealProductionRecordTabComponent implements OnInit {
     const utils = new FoodItemUtils();
     var catA = utils.category(a.foodItem);
     var catB = utils.category(b.foodItem);
-    const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
+    const categories = utils.tagOrder();
     let val = categories.indexOf(catA) - categories.indexOf(catB);
     return val === 0 ? a.foodItem.description.localeCompare(b.foodItem.description) : val;
   }
 
+  /**
+   * Determine if enough of an item has been prepared
+   * 
+   * @param item {MealProductionItem} 
+   * @return {boolean} 
+   */
+  enough(item: MealProductionFoodItem): boolean {
+    const required = this.foodItemsForm.controls[item.foodItem.id].value.required;
+    const prepared = this.foodItemsForm.controls[item.foodItem.id].value.prepared;
+
+    return prepared >= required;
+  }
 }
