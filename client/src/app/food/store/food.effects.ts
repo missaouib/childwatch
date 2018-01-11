@@ -11,6 +11,7 @@ import {Injectable} from '@angular/core';
 import {Effect, Actions} from '@ngrx/effects';
 import {Observable} from 'rxjs/Observable';
 import '../../rxjs-imports';
+import {FoodItem} from "../model/food-item";
 import {Meal} from '../model/meal';
 import {MealEvent} from '../model/meal-event';
 import {MealFoodItem} from '../model/meal-food-item';
@@ -23,7 +24,7 @@ import {MealProductionRecordService} from "../services/meal-production-record.se
 @Injectable()
 export class FoodEffects {
 
-  @Effect({dispatch: false}) adjustedMenuTime = this.actions$.ofType(FoodActions.MENU_TIME_ADJUSTED)
+  @Effect({dispatch: false}) _onMenuTimeAdjusted = this.actions$.ofType(FoodActions.MENU_TIME_ADJUSTED)
     .map((action: FoodActions.MenuTimeAdjustedAction) => action.payload)
     .do(payload => this.mealEventSvc.queryBetween(payload.start, payload.end).subscribe());
 
@@ -31,15 +32,9 @@ export class FoodEffects {
     .map((action: FoodActions.SaveMealAction) => action.payload)
     .switchMap((payload: Meal) => Observable.of(this.onSaveMeal(payload)));
 
-
   @Effect() _onLoadMealFoodItemsForMeal = this.actions$.ofType(FoodActions.LOAD_MEALFOODITEMS_FOR_MEAL)
     .map((action: FoodActions.LoadMealFoodItemsForMealAction) => action.payload)
     .switchMap((payload: Meal) => this.onLoadMealFoodItemsForMeal(payload));
-
-
-  @Effect() _onMealFoodItemReceived = this.actions$.ofType(FoodActions.MEALFOODITEMS_RECEIVED)
-    .map((action: FoodActions.MealFoodItemsReceivedAction) => action.payload)
-    .switchMap((payload: MealFoodItem[]) => this.onMealFoodItemsReceived(payload));
 
   @Effect() _onSaveMealFoodItem = this.actions$.ofType(FoodActions.SAVE_MEALFOODITEM)
     .map((action: FoodActions.SaveMealFoodItemAction) => action.payload)
@@ -48,7 +43,6 @@ export class FoodEffects {
   @Effect() _onDeleteMealFoodItem = this.actions$.ofType(FoodActions.DELETE_MEALFOODITEM)
     .map((action: FoodActions.DeleteMealFoodItemAction) => action.payload)
     .switchMap((payload: MealFoodItem) => this.onDeleteMealFoodItem(payload));
-
 
   @Effect() _onMealEventScheduled = this.actions$.ofType(FoodActions.MEALEVENT_SCHEDULED)
     .map((action: FoodActions.MealEventScheduledAction) => action.payload)
@@ -60,11 +54,11 @@ export class FoodEffects {
 
   @Effect({dispatch: false}) _onMealProductionRecordLocked = this.actions$.ofType(FoodActions.MEALPRODUCTIONRECORD_LOCKED)
     .map((action: FoodActions.MealProductionRecordLockedAction) => action.payload)
-    .do(payload => this.onMealProductionRecordLocked(payload));
+    .do(payload => this.mprSvc.refreshMpr(payload.mprId));
 
   @Effect({dispatch: false}) _onMealProductionFoodItemUpdated = this.actions$.ofType(FoodActions.MEALPRODUCTIONFOODITEM_UPDATED)
     .map((action: FoodActions.MealProductionFoodItemUpdatedAction) => action.payload)
-    .do(payload => this.onMealProductionFoodItemUpdated(payload));
+    .do(payload => this.mprSvc.refreshMpr(payload.mpr.id));
 
   /**
    * Constructor for the FoodEffectsService
@@ -80,13 +74,12 @@ export class FoodEffects {
     private mealEventSvc: MealEventService,
     private mealSvc: MealService,
     private mprSvc: MealProductionRecordService
-  ) {
-  }
+  ) {}
 
   private onSaveMeal(meal: Meal) {
     if (meal.id) {
       if (meal.description && meal.type) {
-        this.mealSvc.save(meal).subscribe();
+        this.mealSvc.update(meal).subscribe();
       }
       return new FoodActions.LoadMealFoodItemsForMealAction(meal);
     } else {Observable.of({type: 'NOOP-MEALNOTREADYTOSAVE', payload: meal});}
@@ -95,10 +88,6 @@ export class FoodEffects {
   private onLoadMealFoodItemsForMeal(meal: Meal) {
     this.mealSvc.queryMealFoodItemsFor(meal).subscribe();
     return Observable.of({type: 'NOOP-ONLOADMEALFOODITEMS', payload: meal});
-  }
-
-  private onMealFoodItemsReceived(mealFoodItems: MealFoodItem[]) {
-    return Observable.of({type: 'NOOP-ONMEALFOODITEMSLOADED', payload: mealFoodItems});
   }
 
   private onSaveMealFoodItem(mealFoodItem: MealFoodItem) {
@@ -111,8 +100,13 @@ export class FoodEffects {
   }
 
   private onMealEventScheduled(mealEvent: MealEvent) {
-    if (!mealEvent.masterEvent)
-      this.mealEventSvc.save(mealEvent).first().subscribe();
+    if (!mealEvent.masterEvent) {
+      console.log('Saving the meal event');
+      this.mealEventSvc.update(mealEvent).subscribe();
+    }
+    else {
+      console.log(`masterEvent = ${mealEvent.masterEvent}, not saving!`);
+    }
     return Observable.of({type: 'NOOP-MEALEVENTSAVED', payload: mealEvent});
   }
 
@@ -120,14 +114,6 @@ export class FoodEffects {
     if (!mealEvent.masterEvent)
       this.mealEventSvc.delete(mealEvent).first().subscribe();
     return Observable.of({type: 'NOOP-MEALEVENTREMOVED', payload: mealEvent});
-  }
-
-  private onMealProductionRecordLocked(payload: {mprId: string, locked: boolean;}) {
-    this.mprSvc.refreshMpr(payload.mprId)
-  }
-
-  private onMealProductionFoodItemUpdated(payload: MealProductionFoodItem) {
-    this.mprSvc.refreshMpr(payload.mpr.id);
   }
 
 }

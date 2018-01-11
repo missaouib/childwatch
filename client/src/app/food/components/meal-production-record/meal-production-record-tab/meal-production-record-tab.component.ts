@@ -113,7 +113,7 @@ export class MealProductionRecordTabComponent implements OnInit {
           projected: [mar.projected, Validators.required],
           actual: [mar.actual, Validators.required]
         }));
-        this.attendanceForm.controls[mar.ageGroup].valueChanges.debounceTime(500).subscribe(() => this.changedAttendance(mar));
+        this.attendanceForm.controls[mar.ageGroup].valueChanges.debounceTime(2000).subscribe(() => this.changedAttendance(mar));
       });
     }
   }
@@ -124,15 +124,13 @@ export class MealProductionRecordTabComponent implements OnInit {
   private buildFoodItemsForm() {
     this.foodItemsForm = this.formBuilder.group({});
     if (this.mealProductionRecord && this.mealProductionRecord.productionFoodItems) {
-      //console.log(`There are ${this.mealProductionRecord.productionFoodItems.length} productionFoodItems for ${this.mealProductionRecord.type}`);
       this.mealProductionRecord.productionFoodItems.forEach(mpfi => {
-        //console.log(`creating component ${mpfi.foodItem.id} calc=${mpfi.calcRequired}; required=${mpfi.required}`);
         this.foodItemsForm.addControl(mpfi.foodItem.id, this.formBuilder.group({
           required: [mpfi.calcRequired, Validators.required],
           prepared: [mpfi.prepared, Validators.required],
           uom: [mpfi.uom, Validators.required]
         }))
-        this.foodItemsForm.controls[mpfi.foodItem.id].valueChanges.debounceTime(500).subscribe(() => this.changedFoodItem(mpfi));
+        this.foodItemsForm.controls[mpfi.foodItem.id].valueChanges.debounceTime(2000).subscribe(() => this.changedFoodItem(mpfi));
       });
     }
   }
@@ -144,7 +142,7 @@ export class MealProductionRecordTabComponent implements OnInit {
     this.commentsForm = this.formBuilder.group({
       notes: [(this.mealProductionRecord) ? this.mealProductionRecord.notes : undefined]
     });
-    this.commentsForm.controls["notes"].valueChanges.debounceTime(1000).subscribe(() => this.changedNotes());
+    this.commentsForm.controls["notes"].valueChanges.debounceTime(2000).subscribe(() => this.changedNotes());
   }
 
   /**

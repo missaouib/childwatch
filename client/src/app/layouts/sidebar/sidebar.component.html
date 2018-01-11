@@ -18,11 +18,11 @@
 	<hr />
 	<ul style="position: relative; left: -30px; list-style: none;">
 		<li style="margin: 0 0 30px 0;" *ngFor="let menuitem of ROUTES" [style.color]="user.secondary">
-			<h4 *ngIf="!menuitem.disabled && (!menuitem.restrict || user.isAdmin)"><i  ngClass="{{menuitem.icon}}"></i> <strong [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong></h4>
-              	<div *ngIf="!menuitem.disabled && menuitem.type === 'sub' && (!menuitem.restrict || user.isAdmin)">
+			<h4 *ngIf="canShow(menuitem)"><i  ngClass="{{menuitem.icon}}"></i> <strong [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong></h4>
+              	<div *ngIf="canShow(menuitem) && menuitem.type === 'sub'">
    	           	<ul style="list-style: none;">
                        <li *ngFor="let childitem of menuitem.children">
-                           <h5 *ngIf="!childitem.disabled && (!childitem.restrict || user.isAdmin)">
+                           <h5 *ngIf="canShow(childitem)">
                            		<a [routerLink]="[childitem.path]"  routerLinkActive="true"><span [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{childitem.title}}</span></a>
                            </h5>
                        </li>

@@ -20,6 +20,7 @@ export class MealListComponent implements OnInit {
   @Output() edit: EventEmitter<Meal> = new EventEmitter<Meal>();
   @Output() add: EventEmitter<any> = new EventEmitter();
   @Output() delete: EventEmitter<Meal> = new EventEmitter<Meal>();
+  @Output() recurrence: EventEmitter<Meal> = new EventEmitter<Meal>();
 
   showNoncompliant: false;
 
@@ -73,4 +74,9 @@ export class MealListComponent implements OnInit {
   deleteMeal(meal: Meal) {
     this.delete.emit(meal);
   }
+
+  setupRecurrence(meal: Meal) {
+    this.recurrence.emit(meal);
+  }
+
 }

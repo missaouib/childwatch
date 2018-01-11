@@ -9,10 +9,8 @@ import {Component, OnInit, ViewEncapsulation, Output, EventEmitter, Input} from 
 })
 export class NavbarComponent implements OnInit {
 
-  _sidebarOpen = true;
-
   @Input() user: User;
-  @Output() toggleSidebar: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
   constructor() {}
 
@@ -20,8 +18,7 @@ export class NavbarComponent implements OnInit {
   }
 
   _toggleSidebar() {
-    this._sidebarOpen = !this._sidebarOpen;
-    this.toggleSidebar.emit(this._sidebarOpen);
+    this.toggleSidebar.emit();
   }
 
 

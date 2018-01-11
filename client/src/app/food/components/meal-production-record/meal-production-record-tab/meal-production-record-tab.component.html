@@ -65,12 +65,14 @@
 					</span> 
 					<span class="col-xs-3"> 
 						<label *ngIf="i==0">Units</label>
-						<p *ngIf="mealProductionRecord?.locked" class="form-control-static">{{pfi.uom}}</p> 
-						<select *ngIf="!mealProductionRecord?.locked" class="form-control" formControlName="uom">
+						<p *ngIf="mealProductionRecord?.locked && !FoodItemUtils.isCN(pfi.foodItem)" class="form-control-static">{{pfi.uom}}</p>
+						<p *ngIf="FoodItemUtils.isCN(pfi.foodItem)" class="form-control-static">SERVING(S)</p> 
+						<select *ngIf="!mealProductionRecord?.locked && !FoodItemUtils.isCN(pfi.foodItem)" class="form-control" formControlName="uom">
 							<option value="OUNCES">OUNCES</option>
 							<option value="CUPS">CUPS</option>
 							<option value="LBS">LBS</option>
 							<option value="GALLONS">GALLONS</option>
+							<option value="TABLESPOONS">TABLESPOONS</option>
 							<option value="TABLESPOONS">TABLESPOONS</option>
 						</select>
 					</span>

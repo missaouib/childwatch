@@ -10,7 +10,7 @@
 
 <div class="row">
 	<table class="table table-condensed" >
-		<tr *ngFor="let event of todaysEvents()" dnd-draggable [dragEnabled]="false" [dragData]="meal" >
+		<tr *ngFor="let event of todaysEvents()" dnd-draggable [dragEnabled]="false" [dragData]="event.meta.meal" >
 			<td class="col-xs-1" [ngSwitch]="event.meta.meal.type">
 				<img class="small-img" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />

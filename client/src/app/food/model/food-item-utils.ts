@@ -8,7 +8,7 @@ export class FoodItemUtils {
   public tagstring(foodItem: FoodItem): string {
     if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return "";
 
-    return foodItem.tags.map(tag => tag.value).filter(tag => !tag.startsWith('AGE_') && tag !== 'CNITEM').join();
+    return foodItem.tags.map(tag => tag.value).filter(tag => tag && !tag.startsWith('AGE_') && tag !== 'CNITEM').join();
   }
 
   public agetagstring(foodItem: FoodItem): string {

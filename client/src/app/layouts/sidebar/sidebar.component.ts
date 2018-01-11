@@ -1,20 +1,17 @@
 import {User} from '../../user/config.state';
 import {Component, OnInit, Input} from '@angular/core';
+import {Subject} from "rxjs/Subject";
 
 export interface ChildRouteInfo {
   path: string;
   title: string;
-  restrict?: boolean;
   disabled?: boolean;
+  requireRole?: string[];
 }
 
-export interface RouteInfo {
-  path: string;
-  title: string;
+export interface RouteInfo extends ChildRouteInfo {
   type: string;
   icon: string;
-  restrict?: boolean;
-  disabled?: boolean;
   children?: ChildRouteInfo[];
 }
 
@@ -26,9 +23,12 @@ export interface RouteInfo {
 })
 export class SidebarComponent implements OnInit {
 
+  _user: User = undefined;
 
   @Input() user: User;
 
+
+  refresh: Subject<any> = new Subject();
 
   ROUTES: RouteInfo[] = [
     {path: '/dashboard', title: 'Dashboard', type: 'link', icon: 'fa fa-2x fa-dashboard', disabled: true},
@@ -36,13 +36,12 @@ export class SidebarComponent implements OnInit {
       path: '/meals', title: 'Meals', type: 'sub', icon: 'fa fa-2x fa-cutlery',
       children: [
         {path: '', title: 'Planning Calendar'},
-        {path: '/meals/mpr', title: 'Meal Production Record', disabled: false},
-        {path: '/meals/meal-builder', title: 'Meal Builder', disabled: true},
+        {path: '/meals/mpr', title: 'Meal Production Record', disabled: false, requireRole: ['ADMIN-CW']},
       ]
     },
     {path: '/billing', title: 'Billing', type: 'link', icon: 'fa fa-2x fa-money', disabled: true},
     {
-      path: '/admin', title: 'Administration', type: 'sub', icon: 'fa fa-2x fa-cogs', disabled: false,
+      path: '/admin', title: 'Administration', type: 'sub', icon: 'fa fa-2x fa-cogs', disabled: false, requireRole: ['ADMIN-CW'],
       children: [
         {path: '/meals/food-items', title: 'Food Items'}
       ]
@@ -52,5 +51,14 @@ export class SidebarComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  hasRequiredRole(required: string[]): boolean {
+    if (!required || required.length === 0) {return true;}
+    else return required.find(role => this.user.authorities.find(authority => authority === role) !== undefined) !== undefined;
+  }
+
+  canShow(route: ChildRouteInfo): boolean {
+    return this.hasRequiredRole(route.requireRole) && !route.disabled;
+  }
 
 }

@@ -77,9 +77,17 @@ create table if not exists common.cw_tenant (
 
 create table if not exists common.cw_authority (
 	user_id varchar(36) NOT NULL,
-	authority varchar(128) NOT NULL CHECK ( authority IN ('ADMIN', 'TENANT_MANAGE', 'FOOD_ITEM_ADMIN', 'SCHEDULE_MANAGE', 'SCHEDULE_VIEW' ) ),
+	authority varchar(128) NOT NULL,
 	unique (user_id, authority )
 );
+
+create table if not exists common.cw_authorization (
+	authority varchar(128) not null,
+	description varchar(128),
+	primary key (authority)
+);
+
+
 
 commit;
 
@@ -193,8 +201,8 @@ INSERT INTO common.food_item (id, description, short_description, serving_unit, 
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('cb58fe7a-c380-4583-8ac1-c408e75bca23', 'MEAT-Beef Sticks, Breaded', 'MEAT-Beef Sticks, Breaded', 'OUNCES', 'UNITS', 1, NULL, 2, 'c54376be-7075-47b8-ae13-54e216f7ad0e', NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('cd4a56d7-6060-4f9a-b534-38cba245d38e', 'GRAIN-Beef Sticks, Breaded', 'GRAIN-Beef Sticks, Breaded', 'OUNCES', 'UNITS', 1, NULL, 1.25, 'c54376be-7075-47b8-ae13-54e216f7ad0e', NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('3dd3a480-f780-4da6-accf-340cbcb4e35b', 'Whole Grain Breaded Pollock Fillet', 'Whole Grain Breaded Pollock Fillet', 'OUNCES', 'UNITS', 1, 'Fillet', 3.6, NULL, NULL);
-INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('d0c44877-cddc-4834-9a48-328f76e00c4b', 'MEAT-Whole Grain Breaded Pollock Fillet', 'MEAT-Whole Grain Breaded Pollock Fillet', 'OUNCES', 'UNITS', 1, NULL, 2, 'd0c44877-cddc-4834-9a48-328f76e00c4b', NULL);
-INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('8bf0c91c-accc-467c-b7a6-9bb650b9ec39', 'GRAIN-Whole Grain Breaded Pollock Fillet', 'GRAIN-Whole Grain Breaded Pollock Fillet', 'OUNCES', 'UNITS', 1, NULL, 1, 'd0c44877-cddc-4834-9a48-328f76e00c4b', NULL);
+INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('d0c44877-cddc-4834-9a48-328f76e00c4b', 'MEAT-Whole Grain Breaded Pollock Fillet', 'MEAT-Whole Grain Breaded Pollock Fillet', 'OUNCES', 'UNITS', 1, NULL, 2, '3dd3a480-f780-4da6-accf-340cbcb4e35b', NULL);
+INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('8bf0c91c-accc-467c-b7a6-9bb650b9ec39', 'GRAIN-Whole Grain Breaded Pollock Fillet', 'GRAIN-Whole Grain Breaded Pollock Fillet', 'OUNCES', 'UNITS', 1, NULL, 1, '3dd3a480-f780-4da6-accf-340cbcb4e35b', NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('d43fc6fc-da31-4177-959e-353c120738a3', 'French Toast Sticks, Whole Grain', 'French Toast Sticks, Whole Grain', 'OUNCES', 'UNITS', 1, 'Sticks', 2.65, NULL, NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('5b9bc133-d0f3-4d01-be6d-9ca0282dd12f', 'MEAT-French Toast Sticks, Whole Grain', 'MEAT-French Toast Sticks, Whole Grain', 'OUNCES', 'UNITS', 1, NULL, 1, 'd43fc6fc-da31-4177-959e-353c120738a3', NULL);
 INSERT INTO common.food_item (id, description, short_description, serving_unit, purchase_unit, serving_quantity, serving_type, portion_size, parent_id, notes) VALUES ('39ea6475-7215-4ff2-8481-45dbfe1069b1', 'GRAIN-French Toast Sticks, Whole Grain', 'GRAIN-French Toast Sticks, Whole Grain', 'OUNCES', 'UNITS', 1, NULL, 1, 'd43fc6fc-da31-4177-959e-353c120738a3', NULL);
@@ -2018,6 +2026,7 @@ alter table common.food_item_tag owner to "cw-db";
 alter table common.cw_user owner to "cw-db";
 alter table common.cw_tenant owner to "cw-db";
 alter table common.cw_authority owner to "cw-db";
+alter table common.cw_authorization owner to "cw-db";
 
 alter table common.food_item add constraint FK_food_item_parent_id foreign key (parent_id) references common.food_item;
 
@@ -2033,7 +2042,8 @@ alter table common.food_item add constraint FK_food_item__update_user_id foreign
 alter table common.food_item_tag add constraint FK_food_item_tag__update_user_id foreign key (updated_by_user_id) references common.cw_user;
 alter table common.food_item add constraint FK_food_item__update_tenant_id foreign key (updated_by_tenant_id) references common.cw_tenant;
 
-    
+alter table common.cw_authority add constraint FK_authority foreign key (authority) references common.cw_authorization;    
+
 COMMIT;
 
 CREATE OR REPLACE FUNCTION common.create_tenant()
@@ -2119,6 +2129,7 @@ EXECUTE FORMAT('SET search_path TO %I;', NEW.id);
 	EXECUTE FORMAT('create or replace view cw_user as SELECT * FROM common.cw_user WHERE tenant_id = %L WITH CASCADED CHECK OPTION;', NEW.id);
 	EXECUTE FORMAT('create or replace view cw_tenant as SELECT * FROM common.cw_tenant WHERE id  = %L WITH CASCADED CHECK OPTION;', NEW.id);
 	create or replace view cw_authority as SELECT * FROM common.cw_authority WHERE user_id in (select id from cw_user) WITH CASCADED CHECK OPTION;
+	create or replace view cw_authorization as SELECT * FROM common.cw_authorization WITH CASCADED CHECK OPTION;
 
 
 

@@ -7,7 +7,9 @@
 			<span *ngIf="false" class="label label-danger"><i class="fa fa-lock"></i> Locked</span>
 		</div>
 		<div class="pull-right" *ngIf="activeMpr?.productionFoodItems.length > 0">
-			<a type="button" class="btn btn-primary" target="_blank" [attr.href]="'/mpr?tenant='+user?.tenant.id+'&mpr='+activeMpr?.id" *ngIf="activeMpr?.locked" class="btn btn-primary"><i class="fa fa-file-pdf-o"></i> Download</a>
+			<a type="button" class="btn btn-primary" target="_blank" [attr.href]="'/mpr?tenant='+user?.tenant.id+'&mpr='+activeMpr?.id">
+				<i class="fa fa-file-pdf-o"></i> {{(activeMpr?.locked)? 'Download' : 'Review'}}
+			</a>
 			<button *ngIf="!activeMpr?.locked" class="btn btn-info" (click)="setMprLock(true)"><i class="fa fa-lock"></i> Lock</button>
 			<button *ngIf="activeMpr?.locked" class="btn btn-info" (click)="setMprLock(false)"><i class="fa fa-unlock"></i> Unlock</button>
 		</div>

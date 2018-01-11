@@ -1,8 +1,8 @@
 import {UserService} from '../../../user/user.service';
 import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
-import {Meal} from '../../model/meal';
-import {MealFoodItem} from '../../model/meal-food-item';
+import {Meal, buildMeal} from '../../model/meal';
+import {MealFoodItem, compareMealFoodItems} from '../../model/meal-food-item';
 import {MealRulesViolation} from '../../model/mealrulesviolation';
 import {FoodStateService} from "../../services/food-state.service";
 import {Component, OnInit, HostListener} from '@angular/core';
@@ -45,7 +45,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   saving = false;
 
-  meal: Meal = this.createNewMeal();
+  meal: Meal = buildMeal();
 
   mealFoodItems: MealFoodItem[] = [];
 
@@ -191,62 +191,10 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.dirtyFoodItems = true;
   }
 
-  /**
-   * Determines the 'best' category for a food item based on its tags
-   * 
-   * @param foodItem {FoodItem}
-   * @returns {string}
-   */
-  static category(foodItem: FoodItem): string {
-    if (this.tagContainsAll(foodItem, ['MILK']))
-      return 'MILK';
-    else if (this.tagContainsAll(foodItem, ['VEGETABLE']))
-      return 'VEGETABLE';
-    else if (this.tagContainsAll(foodItem, ['FRUIT']))
-      return 'FRUIT';
-    else if (this.tagContainsAny(foodItem, ['MEAT', 'MEATALT']))
-      return 'MEAT';
-    else if (this.tagContainsAll(foodItem, ['GRAIN']))
-      return 'GRAIN';
-    else if (this.tagContainsAll(foodItem, ['CNITEM']))
-      return 'CNITEM';
-    else return 'OTHER';
-  }
-
-  static tagContainsAny(foodItem: FoodItem, items: string[]) {
-    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return false;
-
-    const arr = foodItem.tags.map(tag => tag.value);
-    return items.some(v => arr.indexOf(v) >= 0);
-  }
-
-  static tagContainsAll(foodItem: FoodItem, items: string[]) {
-
-    if (!foodItem || !foodItem.tags || foodItem.tags.length === 0) return false;
-
-    const arr = foodItem.tags.map(tag => tag.value);
-    for (var i = 0; i < items.length; i++) {
-      if (arr.indexOf(items[i]) === -1)
-        return false;
-    }
-    return true;
-  }
-
-
-  /**
-   * Compare 2 meal food items for 'sort order'
-   * 
-   * @param a {MealFoodItem} food item #1
-   * @param b {MealFoodItem} food item #2
-   * @returns -1; 0 ; 1
-   */
   compareMealFoodItems(a: MealFoodItem, b: MealFoodItem): number {
-    var catA = MealComponent.category(a.foodItem);
-    var catB = MealComponent.category(b.foodItem);
-    const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
-    let val = categories.indexOf(catA) - categories.indexOf(catB);
-    return val === 0 ? a.foodItem.description.localeCompare(b.foodItem.description) : val;
+    return compareMealFoodItems(a, b);
   }
+
 
   /**
    * Fetches the list of meal food items for the age group in sorted order
@@ -270,7 +218,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       description: this.mealForm.get('description').value,
       type: this.mealForm.get('type').value
     };
-    this.mealSvc.save(meal).first().subscribe(() => {
+    this.mealSvc.update(meal).first().subscribe(() => {
       this.mealForm.markAsPristine();
       if (this.mealFoodItems.length === 0) {
         this.toastr.success('Meal ' + meal.description + ' has been saved', 'Save');
@@ -281,7 +229,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       var join: Array<Observable<Response>> = new Array<Observable<Response>>();
 
       join = join.concat(
-        this.mealFoodItems.map(mfi => this.mealSvc.saveMealFoodItem(mfi)),
+        this.mealFoodItems.map(mfi => this.mealSvc.updateMealFoodItem(mfi)),
         this.deletedList.map(del => this.mealSvc.deleteMealFoodItem(del))
       );
 
@@ -309,20 +257,10 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.dirtyFoodItems = true;
   }
 
-  createNewMeal() {
-    const meal: Meal = {
-      id: UUID.UUID(),
-      description: undefined,
-      type: undefined,
-      mealFoodItems: []
-    };
-    return meal;
-  }
-
   loadMeal(mealId: string) {
     if (mealId) {
       this.mealSvc.fetch(mealId).subscribe((meal: Meal) => {
-        this.meal = (meal) ? meal : this.createNewMeal();
+        this.meal = (meal) ? meal : buildMeal();
         this.mealForm.patchValue({description: this.meal.description, type: this.meal.type});
         this.editing = (meal === undefined);
         if (meal) {
@@ -331,7 +269,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
         }
       });
     } else {
-      this.meal = this.createNewMeal();
+      this.meal = buildMeal();
       this.editing = true;
     }
     this.deletedList = [];

@@ -1,7 +1,7 @@
 import {UserService} from '../../../user/user.service';
 import {User} from '../../../user/config.state';
 import {Meal} from '../../model/meal';
-import {MealEvent} from '../../model/meal-event';
+import {MealEvent, compareEvent, buildMealEvent} from '../../model/meal-event';
 import {Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, ElementRef, ViewContainerRef} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {CalendarEvent, CalendarMonthViewDay} from 'angular-calendar';
@@ -10,7 +10,7 @@ import {FoodStateService} from '../../services/food-state.service';
 import {MealEventService} from '../../services/meal-event.service';
 import {MealService} from '../../services/meal.service';
 import {MenuPrintDialogComponent} from './menu-print-dialog/menu-print-dialog.component';
-import {RecurrenceDialogComponent} from "./recurrence-dialog/recurrence-dialog.component";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import * as moment from 'moment';
 import {Moment} from 'moment';
 import {Router} from '@angular/router';
@@ -28,15 +28,13 @@ import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 })
 export class MealCalendarComponent implements OnInit {
 
-  @ViewChild('modalTemplate') modal: ElementRef;
-  @ViewChild('modalAlreadyScheduled') modalAlreadyScheduled: ElementRef;
+  @ViewChild('replaceMealDialog') replaceMealDialog: ElementRef;
+  @ViewChild('recurrenceDialog') recurrenceDialog: ElementRef;
 
   mealToDrop: Meal = undefined;
   whenToDrop: Moment = undefined;
 
-  viewDate: Moment = moment();
-  view = 'month';
-  activeDayIsOpen = false;
+  currentDate: Moment = moment();
 
   showHideWeekends = [0, 6];
   _showWeekends = false;
@@ -47,184 +45,174 @@ export class MealCalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  filter = 'ALL';
-
-  _opened = false;
-
   selectedDaysMeals: Meal[] = [];
 
   modalRef: BsModalRef;
 
   user: User;
 
+  recurrenceForm: FormGroup;
+  recurrenceMax: Date;
+  recurrenceMin: Date;
+  recurrenceFrom: any = [];
+  recurrenceMeal: Meal;
+
   constructor(
-    private state: FoodStateService,
-    private mealSvc: MealService,
-    private mealEventSvc: MealEventService,
-    private userSvc: UserService,
-    private router: Router,
-    public toastr: ToastsManager,
-    vcr: ViewContainerRef,
-    private modalSvc: BsModalService
+    private FoodStateSvc: FoodStateService,
+    private MealSvc: MealService,
+    private UserSvc: UserService,
+    private RouterSvc: Router,
+    private ToastrSvc: ToastsManager,
+    private viewContainerRef: ViewContainerRef,
+    private ModalSvc: BsModalService,
+    private formBuilder: FormBuilder
   ) {
-    this.toastr.setRootViewContainerRef(vcr);
-    this.userSvc.user$.subscribe(user => {this.user = user; this.showHideWeekends = this.user.weekendsShowing ? [] : [0, 6]});
+    this.ToastrSvc.setRootViewContainerRef(viewContainerRef);
+    this.UserSvc.user$.subscribe(user => {this.user = user; this.showHideWeekends = user.weekendsShowing ? [] : [0, 6]});
   }
 
   ngOnInit() {
-    this.mealSvc.query().subscribe();
-
-    const today = moment();
-
-    this.state.adjustMenuTime(today.startOf('month').toDate(), today.endOf('month').toDate());
-    this.state.mealEvents$.subscribe((events) => {
-      this.eventList = events;
-      this.refresh.next();
-    });
+    this.MealSvc.query().subscribe();
+    this.gotoDate();
+    this.FoodStateSvc.mealEvents$.subscribe((events) => {this.eventList = events; this.refresh.next();});
 
   }
 
   gotoDate(when?: string, unit?: moment.unitOfTime.DurationConstructor) {
+    this.currentDate = (when === undefined) ? moment() : ((when === 'previous') ? moment(this.currentDate).subtract(1, unit) : moment(this.currentDate).add(1, unit));
 
-    this.viewDate = (when === undefined) ? moment() : ((when === 'previous') ? moment(this.viewDate).subtract(1, unit) : moment(this.viewDate).add(1, unit));
-    this.state.adjustMenuTime(this.viewDate.startOf('month').toDate(), this.viewDate.endOf('month').toDate());
-  }
+    let start = this.currentDate.clone().startOf('month').add(-7, 'days').toDate();
+    let end = this.currentDate.clone().endOf('month').add(7, 'days').toDate();
 
-  differentYear() {
-    return !this.viewDate.isSame(moment(), 'year');
-  }
-
-  createMealEvent(meal: Meal, start?: Date): MealEvent {
-    const mealEvent: MealEvent = {
-      id: UUID.UUID(),
-      startDate: moment((start) ? moment(start) : new Date()).toDate(),
-      endDate: moment((start) ? moment(start) : new Date()).toDate(),
-      recurrence: undefined,
-      meal: meal
-    };
-    return mealEvent;
-  }
-
-  compareEvnt(a: CalendarEvent<MealEvent>, b: CalendarEvent<MealEvent>) {
-    const MEALS = ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER'];
-    return MEALS.indexOf(a.meta.meal.type) - MEALS.indexOf(b.meta.meal.type);
+    this.FoodStateSvc.adjustMenuTime(start, end);
   }
 
 
   editMeal(meal: Meal) {
-    this.router.navigate(['./meals/meal-builder'], {queryParams: {id: meal.id}});
+    this.RouterSvc.navigate(['./meals/meal-builder'], {queryParams: {id: meal.id}});
   }
 
   addMeal() {
-    this.router.navigate(['./meals/meal-builder']);
+    this.RouterSvc.navigate(['./meals/meal-builder']);
   }
 
-  deleteMeal(meal: Meal) {
-    this.mealEventSvc.queryForMeal(meal).subscribe((events: MealEvent[]) => {
-      if (events.length > 0) {
-        this.modalRef = this.modalSvc.show(this.modalAlreadyScheduled, {ignoreBackdropClick: true});
-      }
-      else {
-        this.state.inactivateMeal(meal);
-        this.toastr.success('Meal ' + meal.description + ' has been inactivated.  It is still valid for past schedules, but no longer editable or available for future schedules', 'Inactivate Meal')
-      }
-    });
-  }
 
-  removeEvent(event: CalendarEvent<MealEvent>) {
+  unscheduleEvent(event: CalendarEvent<MealEvent>) {
     console.log('removing event ', event.meta.meal.id);
-    // this.eventList = this.eventList.filter(e => e.meta.id !== event.meta.id);
-    this.state.removeEvent(event);
+    this.FoodStateSvc.removeEvent(event);
   }
 
 
-  /**
-   * determine if the date is after the CW2 start date (01-OCT-2017)
-   */
-  afterStart(date: Date) {
-    return moment(date).diff(moment('01/10/2017', 'DD/MM/YYYY'), 'days') >= 0;
-  }
 
-  showDialog() {
-    this.modalRef = this.modalSvc.show(this.modal, {ignoreBackdropClick: true});
+  showReplaceMealDialog(meal: Meal, when: Moment) {
+    this.mealToDrop = meal;
+    this.whenToDrop = when;
+
+    this.modalRef = this.ModalSvc.show(this.replaceMealDialog, {ignoreBackdropClick: true});
   }
 
 
   replaceMeal() {
     if (this.mealToDrop && this.whenToDrop) {
-      this.eventList.filter(e => moment(e.start).diff(this.whenToDrop, 'days') === 0 && e.meta.meal.type === this.mealToDrop.type).forEach(event => this.removeEvent(event));
+      this.eventList.filter(e => moment(e.start).diff(this.whenToDrop, 'days') === 0 && e.meta.meal.type === this.mealToDrop.type).forEach(event => this.unscheduleEvent(event));
       this.dropMeal(this.mealToDrop, this.whenToDrop.toDate());
-      this.mealToDrop = undefined;
-      this.whenToDrop = undefined;
     }
     this.modalRef.hide();
   }
 
-  mealTypeAlreadyPlanned(meal: Meal, when: Date) {
+  isMealTypeAlreadyPlanned(meal: Meal, when: Moment) {
     return this.eventList.filter(e => moment(e.start).diff(when, 'days') === 0 && e.meta.meal.type === meal.type).length > 0;
   }
 
   dropMeal(meal: Meal, when: Date) {
-    const mealEvent: CalendarEvent<MealEvent> = {
-      start: moment(when).toDate(),
-      end: moment(when).toDate(),
-      meta: this.createMealEvent(meal, moment(when).toDate()),
-      title: meal.description,
-      color: {primary: 'red', secondary: 'yellow'}
-    }
-    console.log(`dropped meal on ${mealEvent.start}`);
-    this.viewDate = moment(when);
-    this.activeDayIsOpen = true;
-    this.state.scheduleMealEvent(mealEvent.meta);
+    //this.currentDate = moment(when).clone();
+    this.FoodStateSvc.scheduleMealEvent(buildMealEvent(meal, when));
+    this.mealToDrop = undefined;
+    this.whenToDrop = undefined;
   }
 
   mealDropped(meal: Meal, when?: Date) {
 
-    const _when: Moment = (moment(when) || moment(this.viewDate));
+    const _when: Moment = (when) ? moment(when) : this.currentDate.clone();
 
-    if (this.mealTypeAlreadyPlanned(meal, _when.toDate())) {
-      this.mealToDrop = meal;
-      this.whenToDrop = _when;
-      this.showDialog()
-    }
-    else {
+    if (this.isMealTypeAlreadyPlanned(meal, _when))
+      this.showReplaceMealDialog(meal, _when);
+    else
       this.dropMeal(meal, _when.toDate());
-    }
-
-
   }
 
-
-  limit(text: string, len?: number) {
-    const _len = len || 25;
-    return text.slice(0, _len) + (text.length > _len ? "..." : "");
-  }
-
-  dayClicked(event: any) {
-    console.log(event);
-    this.viewDate = event.day.date;
-  }
 
   beforeMonthViewRender({body}: {body: CalendarMonthViewDay[]}): void {
-    body.forEach(day => {
-      if (day.isWeekend) day.cssClass = 'weekend-cell';
-    });
+    body.forEach(day => {if (day.isWeekend) day.cssClass = 'weekend-cell';});
   }
 
-  printMenu() {
-    this.modalRef = this.modalSvc.show(MenuPrintDialogComponent);
+  showPrintMenuDialog() {
+    this.modalRef = this.ModalSvc.show(MenuPrintDialogComponent);
     this.modalRef.content.title = 'Print Menu';
     this.modalRef.content.user = this.user;
   }
 
 
   sortEvents(events: CalendarEvent<MealEvent>[]) {
-    return events.concat().sort(this.compareEvnt);
+    return events.concat().sort(compareEvent);
   }
 
-
-  recurrence(mealEvent: MealEvent) {
-    this.modalRef = this.modalSvc.show(RecurrenceDialogComponent, {ignoreBackdropClick: true});
-    this.modalRef.content.event = mealEvent;
+  matchDay(date: Moment) {
+    if (this.recurrenceForm.value.recurrenceType === 'DAILY') {
+      return date.day() === 0 && this.recurrenceForm.value.rSun ||
+        date.day() === 1 && this.recurrenceForm.value.rMon ||
+        date.day() === 2 && this.recurrenceForm.value.rTue ||
+        date.day() === 3 && this.recurrenceForm.value.rWed ||
+        date.day() === 4 && this.recurrenceForm.value.rThu ||
+        date.day() === 5 && this.recurrenceForm.value.rFri ||
+        date.day() === 6 && this.recurrenceForm.value.rSat;
+    }
+    else
+      return true;
   }
+
+  createRecurrences() {
+
+    let start: Date = this.recurrenceFrom[0];
+    let end: Date = this.recurrenceFrom[1];
+    let type = this.recurrenceForm.value.recurrenceType;
+    let frequency = this.recurrenceForm.value.recurrenceFrequency;
+
+
+    if (type !== 'NONE') {
+      for (let current = moment(start); current.diff(end, 'hours', true) <= 0; current.add((type === 'WEEKLY') ? frequency : 1, (type === 'DAILY') ? 'day' : 'week')) {
+        console.log(`trying to drop on ${current.toISOString()}; diff=${current.diff(end, 'hours', true)}`);
+        if (this.user.weekendsShowing || (current.day() > 0 && current.day() < 6)) {
+          if (!this.isMealTypeAlreadyPlanned(this.recurrenceMeal, current) && this.matchDay(current)) {
+            this.dropMeal(this.recurrenceMeal, current.toDate());
+          }
+        }
+      }
+    }
+
+  }
+
+  showRecurrenceDialog(meal: Meal) {
+    var current = this.currentDate.clone();
+    var endOfMonth = current.clone().endOf('month');
+    this.recurrenceMeal = meal;
+    this.recurrenceMin = current.clone().startOf('month').toDate();
+    this.recurrenceMax = current.clone().add(1, 'year').toDate();
+
+    this.recurrenceFrom = [current.toDate(), endOfMonth.toDate()];
+    this.recurrenceForm = this.formBuilder.group({
+      recurrenceType: ['NONE', Validators.required],
+      recurrenceFrequency: [1, Validators.required],
+      rSun: [true],
+      rMon: [true],
+      rTue: [true],
+      rWed: [true],
+      rThu: [true],
+      rFri: [true],
+      rSat: [true],
+    });
+
+    this.modalRef = this.ModalSvc.show(this.recurrenceDialog, {ignoreBackdropClick: true});
+  }
+
 }

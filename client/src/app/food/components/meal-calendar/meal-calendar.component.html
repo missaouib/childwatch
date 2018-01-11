@@ -1,50 +1,3 @@
-<ng-template #customCellTemplate let-day="day" >
-<div style="z-index: 10;" dnd-droppable (onDropSuccess)="mealDropped( $event.dragData, day.date )" >
-  <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
-    <span class="cal-day-number"><strong>{{ day.date | calendarDate:'monthViewDayNumber' }}</strong></span>
-  </div>
-  <div class="call-events" *ngFor="let event of sortEvents(day.events)" >
-  	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant">
-				<img *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
-				<img  *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
-				<img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
-				<img *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
-				<img *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
-				<img *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
-  		<span tooltip="{{event.meta.meal.description}}"><strong>{{ limit( event.meta.meal.description, 10 )}}</strong></span>
-  		<div class="pull-right">
-  			<a><i class="text-primary fa fa-refresh" (click)="recurrence(event.meta)"></i></a>
-  			<a><i class="text-danger fa fa-close" (click)="removeEvent(event)"></i></a>
-  		</div>
-  	</div>
-  </div>
-</div>
-</ng-template>
-
-<ng-template #modalTemplate>
-	  <div class="modal-header">
-	    <h4 class="modal-title pull-left">Meal type already planned</h4>
-	  </div>
-	  <div class="modal-body">
-	    There is already a {{mealToDrop?.type}} planned for this day.  Do you want to replace it or cancel? <br/><br/>
-	    <hr/>
-	    <div class="text-center"><button class="btn btn-default" (click)="replaceMeal()">Replace</button> <button class="btn" (click)="modalRef.hide(); mealToDrop=undefined; whenToDrop=undefined;">Cancel</button></div>
-	  </div>
-</ng-template>
-
-
-<ng-template #modalAlreadyScheduled>
-	  <div class="modal-header">
-	    <h4 class="modal-title pull-left">Meal already planned</h4>
-	  </div>
-	  <div class="modal-body">
-	    You cannot delete a meal that is planned in the future.  Please unschedule the meal before deleting. <br/><br/>
-	    <hr/>
-	    <div class="text-center"><button class="btn btn-default" (click)="modalRef.hide()">Ok</button></div>
-	  </div>
-</ng-template>
-
-
 
 
 <div class="container-fluid">
@@ -53,7 +6,7 @@
 	
 		<!-- MENU -->
 		<div class="col-sm-3 hidden-xs">
-			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()" (delete)="deleteMeal($event)"></cw-meal-list>
+			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()" (recurrence)="showRecurrenceDialog($event)"></cw-meal-list>
 		</div>
 		
 		<!-- CALENDAR -->
@@ -68,25 +21,19 @@
 						<button type="button" class="btn" (click)="gotoDate('next','month')"><i class="fa fa-chevron-right"></i></button>
 					</span>
 					<!--  <a class="pull-right" target="_blank" [attr.href]="'/menu?tenant='+user?.tenant.id"><i class="fa fa-print"></i> Print Menu...</a> -->
-					<a class="pull-right" (click)="printMenu()"><i class="fa fa-print"></i> Print Menu...</a>
+					<a class="pull-right" (click)="showPrintMenuDialog()"><i class="fa fa-print"></i> Print Menu...</a>
 					<h3 class="text-center text-primary">
-						{{ viewDate.toDate() | date:'MMMM yyyy' }} 
+						{{ currentDate.toDate() | date:'MMMM yyyy' }} 
 					</h3>
-<!--  					<span class="pull-right checkbox" style="z-index: 10;">
-						<label><input [(ngModel)]="showWeekends" type="checkbox" (change)="flipWeekend($event)"> Show Weekends</label>
-						<label><input [(ngModel)]="showBackground" type="checkbox"> Show Background</label>
-					</span>
--->					
 			</div>
 			<br />
 			<div class="hidden-xs" style="z-index: 10;">
 				<mwl-calendar-month-view					
 					(beforeViewRender)="beforeMonthViewRender($event)"
-				    [viewDate]="viewDate.toDate()"
+				    [viewDate]="currentDate.toDate()"
 				    [events]="eventList"
-				    [activeDayIsOpen]="false"
 				    [refresh]="refresh"
-				    (dayClicked)="dayClicked($event)"
+				    [activeDayIsOpen]="false"
 					[cellTemplate]="customCellTemplate"
 					[excludeDays]="showHideWeekends">
 				</mwl-calendar-month-view>
@@ -99,17 +46,87 @@
 					(add)="addMeal()" 
 					(schedule)="mealDropped($event)"
 					(edit)="editMeal($event)" 
-					(remove)="removeEvent($event)"
-					[day]="viewDate.toDate()"
+					(remove)="unscheduleEvent($event)"
+					[day]="currentDate.toDate()"
 					(previousDay)="gotoDate('previous','day')"
 					(nextDay)="gotoDate('next','day')"
 					(today)="gotoDate()"></cw-meal-day>
 			</div>
-
 		</div>
-
-	
 	</div>
-	
-
 </div>  		 	
+
+
+<ng-template #customCellTemplate let-day="day" >
+	<div style="z-index: 10;" dnd-droppable (onDropSuccess)="mealDropped( $event.dragData, day.date )" >
+	  <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
+	    <span class="cal-day-number"><strong>{{ day.date | date: 'dd'  }}</strong></span>
+	  </div>
+	  <div class="call-events" *ngFor="let event of sortEvents(day.events)" >
+	  	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant">
+					<img *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
+					<img  *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
+					<img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
+					<img *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
+					<img *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
+					<img *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
+	  		<span tooltip="{{event.meta.meal.description}}"><strong>{{ event.meta.meal.description.slice(0, 10) + (event.meta.meal.description.length > 10 ? "..." : "")}}</strong></span>
+	  		<div class="pull-right">
+	  			<a><i class="text-danger fa fa-close" (click)="unscheduleEvent(event)"></i></a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</ng-template>
+
+<ng-template #replaceMealDialog>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Meal type already planned</h4>
+  </div>
+  <div class="modal-body">
+    There is already a {{mealToDrop?.type}} planned for this day.  Do you want to replace it or cancel? <br/><br/>
+    <hr/>
+    <div class="text-center">
+    	<button class="btn btn-default" (click)="replaceMeal()">Replace</button> 
+    	<button class="btn" (click)="modalRef.hide(); mealToDrop=undefined; whenToDrop=undefined;">Cancel</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #recurrenceDialog>
+	<div class="modal-header">
+		<h4 class="modal-title pull-left">Recurrence for {{recurrenceMeal?.description}}</h4>
+	</div>
+	<div class="modal-body">
+		<form class="form row" novalidate [formGroup]="recurrenceForm">		
+			<div class="col-xs-4">
+				<div class="radio"><label><input type="radio" value="NONE" formControlName="recurrenceType">NONE</label></div>
+				<div class="radio"><label><input type="radio" value="DAILY" formControlName="recurrenceType">DAILY</label></div>
+				<div class="radio"><label><input type="radio" value="WEEKLY" formControlName="recurrenceType">WEEKLY</label></div>
+			</div>
+			<div class="col-xs-8" *ngIf="recurrenceForm.value.recurrenceType !== 'NONE'">
+				<label *ngIf="recurrenceForm.value.recurrenceType === 'WEEKLY'">Every <span><input class="form-control-inline" size="2" type="text" formControlName="recurrenceFrequency"/></span> Week(s)</label>
+				<div *ngIf="recurrenceForm.value.recurrenceType === 'DAILY'" class="form-group row">
+					<div *ngIf="user.weekendsShowing" class="col-xs-4"><label><input type="checkbox" formControlName="rSun"> Sun</label></div>
+					<div class="col-xs-4"><label><input type="checkbox" formControlName="rMon"> Mon</label></div>
+					<div class="col-xs-4"><label><input type="checkbox" formControlName="rTue"> Tue</label></div>
+					<div class="col-xs-4"><label><input type="checkbox" formControlName="rWed"> Wed</label></div>
+					<div class="col-xs-4"><label><input type="checkbox" formControlName="rThu"> Thu</label></div>
+					<div class="col-xs-4"><label><input type="checkbox" formControlName="rFri"> Fri</label></div>
+					<div *ngIf="user.weekendsShowing" class="col-xs-4"><label><input type="checkbox" formControlName="rSat"> Sat</label></div>
+				</div>
+				<div class="form-group">			
+					<label>From <input type="text" class="form-control" [minDate]="recurrenceMin" [maxDate]="recurrenceMax" bsDaterangepicker [(bsValue)]="recurrenceFrom"></label>
+				</div>	
+				<p class="text-warning">Warning:  If a meal of this type is already scheduled on the same date it will skip that occurrence</p>				
+			</div>
+		</form>
+			
+	    <hr/>
+	    <div class="text-center">
+	    	<button class="btn" (click)="modalRef.hide()">Cancel</button>
+	    	<button class="btn btn-default" (click)="createRecurrences(); modalRef.hide()">OK</button>
+	    </div>
+	</div>
+</ng-template>

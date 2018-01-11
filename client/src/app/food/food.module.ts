@@ -45,9 +45,8 @@ import {MealProductionRecordService} from './services/meal-production-record.ser
 import {CollapseModule} from 'ngx-bootstrap/collapse';
 import {MealProductionRecordTabComponent} from './components/meal-production-record/meal-production-record-tab/meal-production-record-tab.component';
 import {FoodItemEditListComponent} from './components/food-item-edit-list/food-item-edit-list.component';
-import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item.component';
+import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item/editable-food-item.component';
 import {TagInputModule} from 'ngx-chips';
-import {RecurrenceDialogComponent} from './components/meal-calendar/recurrence-dialog/recurrence-dialog.component';
 
 
 const routes: Routes = [
@@ -80,11 +79,12 @@ const routes: Routes = [
     TagInputModule,
   ],
   declarations: [
-    MealCalendarComponent,
-    FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent, MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent, MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent, RecurrenceDialogComponent
+    MealCalendarComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent,
+    MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent,
+    MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent
   ],
   providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, UserService, MealProductionRecordService],
-  entryComponents: [MenuPrintDialogComponent, RecurrenceDialogComponent]
+  entryComponents: [MenuPrintDialogComponent]
 })
 export class FoodModule {
 

@@ -23,19 +23,16 @@ export class FoodItemComponent implements OnInit {
   @Output() selectedItem: EventEmitter<FoodItem> = new EventEmitter<FoodItem>();
 
   FoodItemUtils: FoodItemUtils;
-  FoodItems: any[] = [];
+  FoodItems: FoodItem[] = [];
   foodItemForm: FormGroup;
-  favorite = false;
 
   /**
    * Constructor for the FoodItemComponent
-   * 
-   * @param formBuilder
-   * @param state
-   * 
    * @constructor
    */
-  constructor(private formBuilder: FormBuilder, private state: FoodStateService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private FoodStateSvc: FoodStateService) {
     this.FoodItemUtils = new FoodItemUtils();
   }
 
@@ -46,7 +43,7 @@ export class FoodItemComponent implements OnInit {
    */
   ngOnInit() {
     if (!this.mealFoodItem) {
-      this.state.foodItems$.subscribe(foodItems => this.FoodItems = foodItems);
+      this.FoodStateSvc.foodItems$.subscribe(foodItems => this.FoodItems = foodItems);
     }
 
     this.foodItemForm = this.formBuilder.group({
@@ -66,7 +63,9 @@ export class FoodItemComponent implements OnInit {
   }
 
   /**
+   * Extract a meal foodItem from the form 
    * 
+   * @returns {MealFoodItem}
    */
   extractMealFoodItem(): MealFoodItem {
     const mealFoodItem: MealFoodItem = Object.assign({}, this.mealFoodItem);
@@ -78,64 +77,30 @@ export class FoodItemComponent implements OnInit {
     return mealFoodItem;
   }
 
+  /**
+   * Callback for deleting a food item
+   */
   deleteFoodItem() {
     this.deleted.emit(this.mealFoodItem.id);
   }
 
+  /**
+   * Callback for selecting a food item
+   */
   selectItem(foodItem: FoodItem) {
     this.selectedItem.emit(foodItem);
     this.foodItemForm.reset();
   }
 
-
+  /**
+   * Determine if the fooditem in the form matches the expected unit value
+   * 
+   * @returns {boolean}
+   */
   noUnitMatch(): boolean {
     const foodItem = this.foodItemForm.get('foodItem').value;
 
     return foodItem && foodItem.servingUom !== this.foodItemForm.get('unit').value;
   }
 
-  category(item: FoodItem): string {
-    return this.FoodItemUtils.category(item);
-  }
-
-  isInfant(item: FoodItem): boolean {
-    return this.FoodItemUtils.isInfant(item);
-  }
-
-  isMilk(item: FoodItem): boolean {
-    return this.FoodItemUtils.hasTag(item, 'MILK');
-  }
-
-
-  isMeat(item: FoodItem): boolean {
-    return this.FoodItemUtils.hasTag(item, 'MEAT') || this.FoodItemUtils.hasTag(item, 'MEATALT');
-  }
-
-  isVegetable(item: FoodItem): boolean {
-    return this.FoodItemUtils.hasTag(item, 'VEGETABLE');
-  }
-
-  isFruit(item: FoodItem): boolean {
-    return this.FoodItemUtils.hasTag(item, 'FRUIT');
-  }
-
-  isGrain(item: FoodItem): boolean {
-    return this.FoodItemUtils.hasTag(item, 'GRAIN');
-  }
-
-  isOther(item: FoodItem): boolean {
-    return this.category(item) === 'OTHER';
-  }
-
-  isCN(item: FoodItem): boolean {
-    return this.FoodItemUtils.isCN(item);
-  }
-
-  tagstring(item: FoodItem): string {
-    return this.FoodItemUtils.tagstring(item);
-  }
-
-  cnItemString(foodItem: FoodItem): string {
-    return this.FoodItemUtils.cnItemString(foodItem);
-  }
 }

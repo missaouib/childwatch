@@ -1,0 +1,75 @@
+<div>
+	<h3 class="text-primary">
+	<span class="col-xs-1" *ngIf="foodItem" [ngSwitch]="FoodItemUtils.category(foodItem)">
+				<img *ngSwitchCase="'CNITEM'" class="small-img" src="/assets/img/food/cn.svg" />
+				<img class="small-img" *ngSwitchCase="'MILK'" src="/assets/img/food/flaticon/milk.svg" />
+				<img class="small-img" *ngSwitchCase="'MEAT'" src="/assets/img/food/flaticon/meat.svg" />
+				<img class="small-img" *ngSwitchCase="'VEGETABLE'" src="/assets/img/food/flaticon/vegetable.svg" />
+				<img class="small-img" *ngSwitchCase="'FRUIT'" src="/assets/img/food/flaticon/fruit.svg" />
+				<img class="small-img" *ngSwitchCase="'GRAIN'" src="/assets/img/food/flaticon/grain.svg" />
+				<img class="small-img" *ngSwitchDefault src="/assets/img/food/flaticon/other.svg" />			
+		</span>
+	{{foodItem?.description}}</h3>
+	
+	<button class="btn btn-primary pull-right" (click)="update()">Save</button>
+</div>
+
+<br /><br />
+
+<form class="row" *ngIf="foodItem" novalidate [formGroup]="foodItemForm">
+	<div class="form-group">
+		<label for="description">Description</label>
+		<input *ngIf="editable" class="form-control" formControlName="description" id="description"/>
+		<p *ngIf="!editable" class="form-control-static">{{foodItem?.description}}</p>
+	</div>
+	<div class="form-group">
+		<label for="shortDescription">Short Description</label>
+		<input *ngIf="editable" class="form-control" formControlName="shortDescription" id="shortDescription"/>
+		<p *ngIf="!editable" class="form-control-static">{{foodItem?.shortDescription}}</p>
+	</div>
+	<div class="form-group">
+		<label for="purchaseUom">Purchase Units</label>
+		<p *ngIf="!editable" class="form-control-static">{{foodItem?.purchaseUom}}</p>		 
+		<select *ngIf="editable" id="purchaseUom" class="form-control" formControlName="purchaseUom">
+			<option value="OUNCES">OUNCES</option>
+			<option value="CUPS">CUPS</option>
+			<option value="LBS">LBS</option>
+			<option value="GALLONS">GALLONS</option>
+			<option value="TABLESPOONS">TABLESPOONS</option>
+		</select>			
+	</div>
+	<div class="form-group">
+		<label for="servingUom">Serving Units</label> 
+		<p *ngIf="!editable" class="form-control-static">{{foodItem?.servingUom}}</p>
+		<select *ngIf="editable" class="form-control" id="servingUom" formControlName="servingUom">
+			<option value="OUNCES">OUNCES</option>
+			<option value="CUPS">CUPS</option>
+			<option value="LBS">LBS</option>
+			<option value="GALLONS">GALLONS</option>
+			<option value="TABLESPOONS">TABLESPOONS</option>
+		</select>			
+	</div>
+	<div class="form-group">
+		<label>Appropriate for Ages</label>
+		<div>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age05mo"> 0-5 MO</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age611mo"> 6-11 MO</label>
+		</div>
+		<div>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age1yr"> 1 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age2yr"> 2 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age35yr"> 3-5 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age612yr"> 6-12 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="age1318yr"> 13-18 YR</label>
+			<label><input type="checkbox" [class.disabled]="!editable" formControlName="ageAdult"> ADULT</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label>Tags</label>
+		<p *ngIf="!editable" class="form-control-static">{{FoodItemUtils.tagstring( foodItem )}}</p>
+		<tag-input formControlName="tags" [identifyBy]="'value'" [displayBy]="'value'" [onlyFromAutocomplete]="true">
+			<tag-input-dropdown [autocompleteItems]="FoodItemUtils.allTags()" [showDropdownIfEmpty]="true" [identifyBy]="'value'" [displayBy]="'value'"></tag-input-dropdown>
+		</tag-input>
+	</div>
+</form>
+

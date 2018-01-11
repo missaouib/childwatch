@@ -95,6 +95,7 @@ public class MprPrinterController {
 	@RequestMapping("/mpr")
 	ResponseEntity<byte[]> generateMPR(@RequestParam(value = "mpr", required = true) String mprId){
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		
 
 		MealProductionRecord mpr = repo.findOne(mprId);
 		context.clearVariables();
@@ -112,6 +113,8 @@ public class MprPrinterController {
 		
 		context.setVariable("TOTAL_ACTUAL", actualTotal);
 		context.setVariable("TOTAL_PROJECTED", projectedTotal);
+		
+		context.setVariable("draft", mpr.isLocked()? "" : "DRAFT" );
 
 		String inputHtml = renderTemplate(MPR_TEMPLATE);
 

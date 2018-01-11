@@ -8,7 +8,7 @@ import {DOCUMENT} from '@angular/platform-browser';
   templateUrl: './page-layout.component.html',
 })
 export class PageLayoutComponent implements OnInit {
-  _opened = true;
+  _opened = false;
   user: User;
 
 
@@ -17,15 +17,18 @@ export class PageLayoutComponent implements OnInit {
     @Inject(DOCUMENT) private document: any,
     private userSvc: UserService
   ) {
-    this.userSvc.user$.subscribe(user => this.user = user);
+    this.userSvc.user$.subscribe(user => {
+      this.user = user;
+      this._opened = user && user.authorities.find(authority => authority.toUpperCase() === 'ADMIN-CW') !== undefined;
+    });
 
     this.setTheme();
   }
 
   ngOnInit() {}
 
-  toggleSidebar(state: boolean) {
-    this._opened = state;
+  toggleSidebar() {
+    this._opened = !this._opened;;
   }
 
   setTheme() {
