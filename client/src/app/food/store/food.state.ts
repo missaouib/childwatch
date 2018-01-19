@@ -136,11 +136,9 @@ function setMealsReceived(state: FoodState, action: FoodActions.MealsReceivedAct
  */
 function setMealEventsReceived(state: FoodState, action: FoodActions.MealEventsReceivedAction): FoodState {
 
-  let mealEvents: MealEvent[] = action.payload;
-  let recurrences: MealEvent[] = [];
-  mealEvents.forEach(event => recurrences = recurrences.concat(createRecurrences(event)));
+  console.log(`received ${action.payload.length} meal events`);
 
-  mealEvents = mealEvents.concat(recurrences);
+  let mealEvents: MealEvent[] = action.payload;
 
   const events = mealEvents.map((mealEvent) => {
     return {
@@ -158,31 +156,6 @@ function setMealEventsReceived(state: FoodState, action: FoodActions.MealEventsR
     mealEvents: mealEvents,
     events: events
   };
-}
-
-
-function createRecurrences(event: MealEvent): MealEvent[] {
-
-  let recurrences: MealEvent[] = [];
-  let add = (event.recurrence === 'WEEKLY') ? 7 :
-    (event.recurrence === 'BIWEEKLY') ? 14 : 1;
-  let start = moment(new Date(event.startDate)).add(add, 'day');
-  let end = moment(new Date(event.startDate)).add(1, 'month').startOf('month');
-  console.log(`Recurrence = ${event.recurrence}; start=${start.toISOString()}; end=${end.toISOString()}; diff=${start.diff(end, 'days')}`);
-
-  if (event.recurrence !== 'NONE') {
-    while (start.diff(end, 'days') < 0) {
-      console.log(`adding event for ${start.toISOString()}; diff=${start.diff(end, 'days')}`);
-      start.add((event.recurrence === 'WEEKLY') ? 7 : 1, 'day');
-      recurrences.push({
-        ...event,
-        startDate: start.toDate(),
-        endDate: start.toDate(),
-        masterEvent: event
-      });
-    }
-  }
-  return recurrences;
 }
 
 

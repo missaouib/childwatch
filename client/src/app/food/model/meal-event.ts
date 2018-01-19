@@ -2,6 +2,7 @@ import {Meal} from './meal';
 import {CalendarEvent} from "angular-calendar";
 import * as moment from 'moment';
 import {UUID} from 'angular2-uuid';
+import {MealType} from './meal-type';
 
 
 export interface MealEvent {
@@ -14,8 +15,8 @@ export interface MealEvent {
 }
 
 export function compareEvent(a: CalendarEvent<MealEvent>, b: CalendarEvent<MealEvent>): number {
-  const MEALS = ['BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'DINNER'];
-  return MEALS.indexOf(a.meta.meal.type) - MEALS.indexOf(b.meta.meal.type);
+  const MEALS = new MealType().ALL;
+  return Math.sign(MEALS.indexOf(a.meta.meal.type) - MEALS.indexOf(b.meta.meal.type));
 }
 
 export function buildMealEvent(meal: Meal, start?: Date): MealEvent {

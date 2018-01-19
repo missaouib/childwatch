@@ -59,8 +59,8 @@
 
 <ng-template #customCellTemplate let-day="day" >
 	<div style="z-index: 10;" dnd-droppable (onDropSuccess)="mealDropped( $event.dragData, day.date )" >
-	  <div class="cal-cell-top" (mouseenter)="showAdd = day.date" (mouseleave)="showAdd = undefined">
-	    <span class="cal-day-number"><strong>{{ day.date | date: 'dd'  }}</strong></span>
+	  <div class="cal-cell-top">
+	    <span class="cal-day-number"><strong>{{ day.date | date: 'dd'  }} </strong></span>
 	  </div>
 	  <div class="call-events" *ngFor="let event of sortEvents(day.events)" >
 	  	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant">
@@ -129,4 +129,34 @@
 	    	<button class="btn btn-default" (click)="createRecurrences(); modalRef.hide()">OK</button>
 	    </div>
 	</div>
+</ng-template>
+
+<ng-template #printMenuDialog>
+ <div class="modal-header">
+      <h4 class="modal-title pull-left">PDF Print Menu</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+		<div class="row">
+		  <div class="col-xs-12 col-12 col-md-4 form-group">
+		    <label>Select week start:</label>
+		    <input class="form-control" bsDatepicker [(ngModel)]="printMenu_date" (onHidden)="roundDate()">
+		  </div>
+		  <div class="checkbox">
+  			<label><input type="checkbox" [(ngModel)]="printMenu_showInfant"> Show Infant Food Items</label>
+		  </div>
+		</div>
+    </div>    
+    <div class="modal-footer">
+    	<a type="button" 
+    	   class="btn btn-primary" 
+    	   target="_blank" 
+    	   [attr.href]="'/menu?tenant='+ user.tenant.id +'&start='+ getDateValue().format('YYYY-MM-DD') +'&showInfant='+printMenu_showInfant+'&showWeekends='+user.weekendsShowing" 
+    	   (click)="modalRef.hide()">
+    	   <i class="fa fa-file-pdf-o"></i> Download
+    	</a>
+       <a type="button" class="btn btn-default" (click)="modalRef.hide()">Cancel</a>
+    </div>
 </ng-template>

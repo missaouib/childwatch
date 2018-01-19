@@ -48,6 +48,8 @@ import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 import com.remarkablesystems.childwatch.domain.food.MealType;
 import com.remarkablesystems.childwatch.domain.food.repository.MealEventRepository;
 import com.remarkablesystems.childwatch.domain.food.repository.MealFoodItemRepository;
+import com.remarkablesystems.childwatch.users.Tenant;
+import com.remarkablesystems.childwatch.users.TenantRepository;
 
 @RestController
 public class MenuController {
@@ -56,17 +58,20 @@ public class MenuController {
 
 	public static final String URL_MAPPING = "/menu";
 
-	public static final String MENU_TEMPLATE = "template";
+	public static final String MENU_TEMPLATE = "menu-template";
 	public static final String SUFFIX = ".html";
 	public static final String TEMPLATE_MODE = "HTML";
 
-	public static final String DEFAULT_RESOURCE = "/template.html";
+	public static final String DEFAULT_RESOURCE = "/menu-template.html";
 
 	@Autowired
 	MealEventRepository mealEventRepo;
 
 	@Autowired
 	MealFoodItemRepository mealFoodItemRepo;
+	
+	@Autowired
+	TenantRepository tenantRepo;
 
 	static Context context = new Context();
 
@@ -219,13 +224,17 @@ public class MenuController {
 	 */
 	@RequestMapping(URL_MAPPING)
 	ResponseEntity<byte[]> generateMenu(@RequestParam(value = "start", required = true) String startDate,
-			@RequestParam(value = "showInfant", required = false) Boolean showInfant) {
+			@RequestParam(value = "showInfant", required = false) Boolean showInfant,
+			@RequestParam(value ="showWeekends", required = false) Boolean showWeekends,
+			@RequestParam( value="tenant", required = true) String tenantId ) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-		if (showInfant == null)
-			showInfant = false;
+		
+		Tenant tenant = tenantRepo.findOne(tenantId);
+			
+		if( showWeekends == null ) showWeekends = false;
+		if (showInfant == null) showInfant = false;
 		LocalDate start = LocalDate.parse(startDate);
-		LocalDate end = start.plusDays(5);
+		LocalDate end = start.plusDays( (showWeekends)? 7: 5 );
 		
 		Date begin = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date ending = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -240,6 +249,9 @@ public class MenuController {
 		context.setVariable("forDate", start.getMonth() + " " + start.getDayOfMonth() + " - "
 				+ ((start.getMonthValue() == end.getMonthValue()) ? "" : end.getMonth()) + " " + (end.getDayOfMonth()-1));
 		context.setVariable("showInfant", showInfant);
+		
+		context.setVariable("MEAL_TYPES", buildMealTypes(tenant) );
+		context.setVariable("MEAL_DAYS", buildMealDays(showWeekends) );
 		buildContext(events, showInfant);
 
 		String inputHtml = renderTemplate(MENU_TEMPLATE);
@@ -255,5 +267,23 @@ public class MenuController {
 				HttpStatus.OK);
 		return response;
 
+	}
+	
+	Object[] buildMealTypes(Tenant tenant ){
+		
+		ArrayList<String> mealTypes = new ArrayList<String>();
+		if( tenant != null && tenant.isSupportingBreakfast() ) mealTypes.add("BREAKFAST");
+		if( tenant != null && tenant.isSupportingAMSnack() ) mealTypes.add("AM_SNACK");
+		if( tenant != null && tenant.isSupportingLunch() ) mealTypes.add("LUNCH");
+		if( tenant != null && tenant.isSupportingPMSnack() ) mealTypes.add("PM_SNACK");
+		if( tenant != null && tenant.isSupportingSupper() ) mealTypes.add("SUPPER");
+		if( tenant != null && tenant.isSupportingEVSnack() ) mealTypes.add("EV_SNACK");
+		return mealTypes.toArray();
+	}
+	
+	String[] buildMealDays(Boolean showWeekends) {
+		return ( showWeekends != null && showWeekends.booleanValue() )? 
+				new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" } :
+				new String[] { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY" };	
 	}
 }

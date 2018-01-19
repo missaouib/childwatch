@@ -27,12 +27,12 @@
 				<div class="form-group col-xs-2">
 					<label for="type">Type</label>
 					<select #type class="form-control" formControlName="type" >
-						<option value="BREAKFAST">Breakfast</option>
-						<option value="AM_SNACK">AM Snack</option>
-						<option value="LUNCH">Lunch</option>
-						<option value="PM_SNACK">PM Snack</option>
-						<option value="SUPPER">Supper</option>
-						<option value="EV_SNACK">Evening Snack</option>
+						<option *ngIf="user?.tenant.mealTypes.includes('BREAKFAST')" value="BREAKFAST">Breakfast</option>
+						<option *ngIf="user?.tenant.mealTypes.includes('AM_SNACK')" value="AM_SNACK">AM Snack</option>
+						<option *ngIf="user?.tenant.mealTypes.includes('LUNCH')" value="LUNCH">Lunch</option>
+						<option *ngIf="user?.tenant.mealTypes.includes('PM_SNACK')" value="PM_SNACK">PM Snack</option>
+						<option *ngIf="user?.tenant.mealTypes.includes('SUPPER')" value="SUPPER">Supper</option>
+						<option *ngIf="user?.tenant.mealTypes.includes('EV_SNACK')" value="EV_SNACK">Evening Snack</option>
 					</select>
 					<small class="text-danger" *ngIf="mealForm.get('type').hasError('required')">Meal type is required</small>
 				</div>	
@@ -92,8 +92,6 @@
 			<h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> CACFP Compliance Info</h4>	
 			<ul><li *ngFor="let violation of rulesViolationsForCurrentAgeGroup('INFO')" >{{violation.message}}</li></ul>		
 		</alert>	
-
-
 	</div>
 	
 	<div class="hidden-xs row">

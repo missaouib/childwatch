@@ -1,3 +1,4 @@
+import {User} from "../../../user/config.state";
 import {UserService} from '../../../user/user.service';
 import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
@@ -76,6 +77,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   meals: Meal[] = [];
 
+  user: User;
+
   /**
    * @constructor
    */
@@ -99,6 +102,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
    */
   ngOnInit() {
     this.userSvc.user$.subscribe(user => {
+      this.user = user;
       this.AGEGROUPS = user.tenant.ageGroups;
       if (this.AGEGROUPS.length > 0) this.activeTab = this.AGEGROUPS[0];
     });

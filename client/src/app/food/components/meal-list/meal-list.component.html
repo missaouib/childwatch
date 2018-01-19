@@ -10,12 +10,12 @@
 				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL</a></li>
 				<li class="divider dropdown-divider"></li>
 				
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'BREAKFAST' )">Breakfast</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'AM_SNACK' )">AM Snack</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'LUNCH' )">Lunch</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'PM_SNACK' )">PM Snack</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'SUPPER' )">Supper</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'EV_SNACK' )">Evening Snack</a></li>
+				<li *ngIf="user?.tenant.mealTypes.includes('BREAKFAST')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'BREAKFAST' )">Breakfast</a></li>
+				<li *ngIf="user?.tenant.mealTypes.includes('AM_SNACK')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'AM_SNACK' )">AM Snack</a></li>
+				<li *ngIf="user?.tenant.mealTypes.includes('LUNCH')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'LUNCH' )">Lunch</a></li>
+				<li *ngIf="user?.tenant.mealTypes.includes('PM_SNACK')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'PM_SNACK' )">PM Snack</a></li>
+				<li *ngIf="user?.tenant.mealTypes.includes('SUPPER')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'SUPPER' )">Supper</a></li>
+				<li *ngIf="user?.tenant.mealTypes.includes('EV_SNACK')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'EV_SNACK' )">Evening Snack</a></li>
 				<li class="divider dropdown-divider"></li>
 				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );">{{showNoncompliant? 'Hide' : 'Show' }} Noncompliant</a></li>
 			</ul>

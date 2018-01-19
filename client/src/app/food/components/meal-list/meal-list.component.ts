@@ -1,3 +1,5 @@
+import {User} from "../../../user/config.state";
+import {UserService} from "../../../user/user.service";
 import {Meal} from '../../model/meal';
 import {FoodStateService} from '../../services/food-state.service';
 import {Component, OnInit, EventEmitter, Output} from '@angular/core';
@@ -23,11 +25,14 @@ export class MealListComponent implements OnInit {
   @Output() recurrence: EventEmitter<Meal> = new EventEmitter<Meal>();
 
   showNoncompliant: false;
+  user: User;
 
-  constructor(private state: FoodStateService) {}
+  constructor(private state: FoodStateService,
+    private userSvc: UserService) {}
 
   ngOnInit() {
-    this.state.meals$.share().subscribe(meals => this.Meals = meals.filter(meal => !meal.inactive));
+    this.state.meals$.subscribe(meals => this.Meals = meals.filter(meal => !meal.inactive).sort((a, b) => a.description.toUpperCase().localeCompare(b.description.toUpperCase())));
+    this.userSvc.user$.subscribe(user => this.user = user);
   }
 
   filterMeals(filter: string) {
@@ -54,9 +59,7 @@ export class MealListComponent implements OnInit {
   pagedMeals() {
     const start = (this.currentPage - 1) * 10;
     this.totalItems = (this.filter !== 'ALL') ? this.PagedMeals.length : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).length;
-    let retValue = (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).slice(start, start + 10);
-
-    return retValue.concat().sort((a, b) => a.description.localeCompare(b.description));
+    return (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).slice(start, start + 10);
   }
 
   limit(text: string) {

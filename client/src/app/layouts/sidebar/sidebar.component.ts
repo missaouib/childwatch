@@ -61,4 +61,8 @@ export class SidebarComponent implements OnInit {
     return this.hasRequiredRole(route.requireRole) && !route.disabled;
   }
 
+  isAdminCW(): boolean {
+    return this.user && this.user.authorities.find(authority => authority === 'ADMIN-CW') != undefined;
+  }
+
 }

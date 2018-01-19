@@ -26,7 +26,7 @@ export class FoodEffects {
 
   @Effect({dispatch: false}) _onMenuTimeAdjusted = this.actions$.ofType(FoodActions.MENU_TIME_ADJUSTED)
     .map((action: FoodActions.MenuTimeAdjustedAction) => action.payload)
-    .do(payload => this.mealEventSvc.queryBetween(payload.start, payload.end).subscribe());
+    .do(payload => this.mealEventSvc.query().subscribe());
 
   @Effect() _onSaveMeal = this.actions$.ofType(FoodActions.SAVE_MEAL)
     .map((action: FoodActions.SaveMealAction) => action.payload)

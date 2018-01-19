@@ -1,3 +1,4 @@
 /application.properties
 /application-aws.properties
 /static/
+/application-testprod.properties

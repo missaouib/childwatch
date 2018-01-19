@@ -16,13 +16,15 @@
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
 				<img class="small-img" *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
 				<img class="small-img" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
-				<img class="small-img" *ngSwitchCase="'DINNER'" src="/assets/img/food/turkey.svg" />
+				<img class="small-img" *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
+				<img class="small-img" *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />				
 			</td>
 			<td class="col-xs-10">
 				<strong class="text-primary">
 					<span>{{limit( event.meta.meal.description )}}</span>
 				</strong><br />
-				<span><em>{{event.meta.meal.type}}</em></span>
+				<span><em>{{event.meta.meal.type}}</em></span><br />
+				<span><em>{{event.start}} {{event.meta.startDate}}</em></span>
 			</td>
 			<td class="col-xs-1">
 				<i (click)="editMeal(event.meta.meal)" class="text-primary fa fa-pencil"></i>
@@ -43,7 +45,8 @@
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
 				<img class="small-img" *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />
 				<img class="small-img" *ngSwitchCase="'PM_SNACK'" src="/assets/img/meal/post-meridiem.svg" />
-				<img class="small-img" *ngSwitchCase="'DINNER'" src="/assets/img/food/turkey.svg" />
+				<img class="small-img" *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
+				<img class="small-img" *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />				
     		{{meal.description}}
     	</a></li>
   </ul>

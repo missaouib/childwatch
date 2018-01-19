@@ -7554,9 +7554,9 @@ td > ul > li {
 		<tbody>
 			<tr>
 				<th width="160" scope="col"></th>
-				<th width="245"  scope="col" th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }" th:text="${day}">DAY</th>
+				<th width="245"  scope="col" th:each="day : ${ MEAL_DAYS }" th:text="${day}">DAY</th>
 			</tr>
-			<tr th:each="type : ${ {'BREAKFAST', 'AM_SNACK', 'LUNCH', 'PM_SNACK', 'SUPPER', 'EV_SNACK' } }">
+			<tr th:each="type : ${ MEAL_TYPES }">
 				<th scope="row" th:switch="${type}">
 					<img th:case="'BREAKFAST'" class="sm-img" src="breakfast.png" />
 					<img th:case="'AM_SNACK'" class="sm-img" src="ante-meridiem.png" />
@@ -7566,7 +7566,7 @@ td > ul > li {
 					<img th:case="'EV_SNACK'" class="sm-img" src="night.png" />
 					<span th:text="${type}">TYPE</span>
 				</th>
-				<td th:each="day : ${ {'MONDAY', 'TUESDAY','WEDNESDAY', 'THURSDAY', 'FRIDAY' } }">
+				<td th:each="day : ${ MEAL_DAYS }">
 					<span th:if="${meals.get(type).containsKey(day)}" >
 						<strong th:text="${ meals.get(type).get(day).getDescription() }">MEAL NAME</strong>
 						<ul style="margin:0px" th:with="mealId = ${ meals.get(type).get(day).getId() }">

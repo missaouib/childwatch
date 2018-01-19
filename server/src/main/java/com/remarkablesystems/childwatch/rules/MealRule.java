@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static com.remarkablesystems.childwatch.rules.MealPredicate.*;
 import static com.remarkablesystems.childwatch.rules.InfantRule.*;
 
@@ -14,8 +17,11 @@ import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.Meal;
 import com.remarkablesystems.childwatch.domain.food.MealFoodItem;
 import com.remarkablesystems.childwatch.domain.food.UnitOfMeasure;
+import com.remarkablesystems.childwatch.menu.MenuController;
 
 public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
+	
+	static Logger logger = LoggerFactory.getLogger(MealRule.class.getName());
 	
 	static Predicate<MealFoodItem> isGrainItem = hasTag( "GRAIN" ).and( hasTag( "BAKED" ).negate() );
 	
@@ -32,8 +38,18 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 
 	static BiPredicate<Meal,List<MealFoodItem>> isAge6_18 = isAgeGroup( AgeGroup.AGE_6_12YR ).or( isAgeGroup(AgeGroup.AGE_13_18YR ) );
 	
+	
+	
 	static Predicate<MealFoodItem> isForAgeGroup( AgeGroup ageGroup ){ 
-		return ( ageGroup != AgeGroup.AGE_0_5MO )? hasTag( ageGroup.toString() ).or( hasTag( "AGE_GT_6MO" ) ).or(hasNoAgeTags) : hasTag( ageGroup.toString() );
+		if( ageGroup == AgeGroup.AGE_0_5MO ) {
+			return hasTag( ageGroup.toString() );
+		}
+		else if( ageGroup == AgeGroup.AGE_6_11MO || ageGroup == AgeGroup.AGE_1YR ) {
+			return hasTag( ageGroup.toString() ).or( hasTag( "AGE_GT_6MO") ).or(hasNoAgeTags);
+		}
+		else{
+			return hasTag( ageGroup.toString() ).or( hasTag( "AGE_GT_6MO") ).or(hasTag("AGE_GT_2YR")).or(hasNoAgeTags);
+		}
 	}
 	
 	
@@ -81,6 +97,8 @@ public class MealRule extends Rule<Meal,List<MealFoodItem>,MealRuleViolation>{
 		MealRuleViolation violation = super.evaluate(meal,mealFoodItems);
 		if( violation != null && mealFoodItems.size() > 0 )
 			violation.ageGroup = mealFoodItems.get(0).getAgeGroup();
+		
+		if( violation != null ) logger.info( this.toString() + " violation" );
 		return violation;
 	}
 	

@@ -34,12 +34,23 @@ export class MealEventService {
     });
   }
 
+  query() {
+    const params = {
+      projection: 'mealEventFull',
+      orderBy: 'startDate'
+    };
+    return this.http.get<Response>(MealEventService.URL, {params: params, headers: this.HEADERS})
+      .map(({_embedded: {mealEvent}}) =>
+        this.store.dispatch(new FoodActions.MealEventsReceivedAction(mealEvent)));
+  }
+
   /**
    * Query for menu items between two dates (inclusive)
    */
   queryBetween(start: Date, end: Date) {
     const params = {
       projection: 'mealEventFull',
+      orderBy: 'startDate',
       start: moment(start).format('MM/DD/YYYY'),
       end: moment(end).format('MM/DD/YYYY')
     };

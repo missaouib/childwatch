@@ -35,7 +35,7 @@ export class MealDayComponent implements OnInit {
   }
 
   todaysEvents() {
-    return this.Events.filter(event => moment(event.start).diff(this.day, 'day') === 0);
+    return this.Events.filter(event => moment(event.start).isSame(this.day, 'day'));
   }
 
   limit(text: string, len?: number) {

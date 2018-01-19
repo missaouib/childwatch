@@ -32,13 +32,12 @@ import {SidebarModule} from 'ng-sidebar';
 import {ModalModule} from 'ngx-bootstrap/modal';
 import {FoodItemComponent} from './components/food-item/food-item.component';
 import {MealComponent} from './components/meal/meal.component';
-import {MealPatternHelpComponent} from './components/meal-pattern-help/meal-pattern-help.component';
+import {MealPatternHelpComponent} from './components/meal/meal-pattern-help/meal-pattern-help.component';
 import {FoodItemListComponent} from './components/food-item-list/food-item-list.component';
 
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {MealListComponent} from './components/meal-list/meal-list.component';
 import {MealDayComponent} from './components/meal-day/meal-day.component';
-import {MenuPrintDialogComponent} from './components/meal-calendar/menu-print-dialog/menu-print-dialog.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {MealProductionRecordComponent} from './components/meal-production-record/meal-production-record.component';
 import {MealProductionRecordService} from './services/meal-production-record.service';
@@ -80,11 +79,10 @@ const routes: Routes = [
   ],
   declarations: [
     MealCalendarComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent,
-    MealListComponent, MealDayComponent, MenuPrintDialogComponent, MealProductionRecordComponent,
+    MealListComponent, MealDayComponent, MealProductionRecordComponent,
     MealProductionRecordTabComponent, FoodItemEditListComponent, EditableFoodItemComponent
   ],
-  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, UserService, MealProductionRecordService],
-  entryComponents: [MenuPrintDialogComponent]
+  providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, UserService, MealProductionRecordService]
 })
 export class FoodModule {
 
