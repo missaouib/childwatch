@@ -17,7 +17,8 @@
 				<li *ngIf="user?.tenant.mealTypes.includes('SUPPER')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'SUPPER' )">Supper</a></li>
 				<li *ngIf="user?.tenant.mealTypes.includes('EV_SNACK')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'EV_SNACK' )">Evening Snack</a></li>
 				<li class="divider dropdown-divider"></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );">{{showNoncompliant? 'Hide' : 'Show' }} Noncompliant</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );">{{showNoncompliant? 'Hide' : 'Show' }} Non-compliant</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="showInactive = !showInactive; filterMeals( filter );">{{showInactive? 'Hide' : 'Show' }} Inactive</a></li>
 			</ul>
 		</span>
 	</div>		
@@ -26,7 +27,7 @@
 
 <div class="row">
 	<table class="table table-condensed" >
-		<tr *ngFor="let meal of pagedMeals()" dnd-draggable [dragEnabled]="meal.compliant" [dragData]="meal" [class.danger]="meal.compliant === false">
+		<tr *ngFor="let meal of pagedMeals()" dnd-draggable [dragEnabled]="meal.compliant && !meal.inactive" [dragData]="meal" [class.danger]="!meal.compliant" [class.warning]="meal.inactive">
 			<td class="col=sm-1" [ngSwitch]="meal.type">
 				<img class="small-img" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
@@ -44,9 +45,9 @@
 			</td>
 			<td class="col-sm-2">
 				<span>
-					<i (click)="setupRecurrence(meal)" class="text-success fa fa-refresh"></i>
-					<i (click)="editMeal(meal)" class="text-primary fa fa-pencil"></i>
-					<!-- <i (click)="deleteMeal(meal)"class="text-danger fa fa-close"></i> -->
+					<i *ngIf="!meal.inactive" (click)="setupRecurrence(meal)" class="text-success fa fa-refresh"></i>
+					<i *ngIf="!meal.inactive"(click)="editMeal(meal)" class="text-primary fa fa-pencil"></i>
+					<i tooltip="{{(meal.inactive)? 'Activate Meal' : 'Inactivate Meal'}}" (click)="toggleActivateMeal(meal)" class="fa" [class.text-danger]="!meal.inactive" [class.fa-close]="!meal.inactive" [class.text-success]="meal.inactive" [class.fa-plus]="meal.inactive"></i>
 				</span>
 			</td>
 		</tr>				

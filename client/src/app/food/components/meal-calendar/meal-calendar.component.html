@@ -6,7 +6,7 @@
 	
 		<!-- MENU -->
 		<div class="col-sm-3 hidden-xs">
-			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()" (recurrence)="showRecurrenceDialog($event)"></cw-meal-list>
+			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()" (recurrence)="showRecurrenceDialog($event)" (activate)="activateMeal($event)"></cw-meal-list>
 		</div>
 		
 		<!-- CALENDAR -->
@@ -63,7 +63,7 @@
 	    <span class="cal-day-number"><strong>{{ day.date | date: 'dd'  }} </strong></span>
 	  </div>
 	  <div class="call-events" *ngFor="let event of sortEvents(day.events)" >
-	  	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant">
+	  	<div class="chip" [ngSwitch]="event.meta.meal.type" [class.bg-danger]="!event.meta.meal.compliant" [class.bg-warning]="event.meta.meal.inactive">
 					<img *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 					<img  *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
 					<img *ngSwitchCase="'LUNCH'" src="/assets/img/meal/lunch.svg" />

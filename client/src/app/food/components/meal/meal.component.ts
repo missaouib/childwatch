@@ -107,7 +107,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
       if (this.AGEGROUPS.length > 0) this.activeTab = this.AGEGROUPS[0];
     });
     this.mealForm = this.formBuilder.group({
-      description: [this.meal.description, [Validators.required, this.validateMealNameUnique.bind(this)]],
+      description: [this.meal.description, [Validators.required, this.validateMealNameUnique.bind(this), Validators.maxLength(100)]],
       type: [this.meal.type, Validators.required]
     });
 

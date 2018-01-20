@@ -118,6 +118,11 @@ export class MealCalendarComponent implements OnInit {
     this.RouterSvc.navigate(['./meals/meal-builder']);
   }
 
+  activateMeal(meal: Meal) {
+    console.log(`Updating meal ${meal.description} to ${meal.inactive}`);
+    this.MealSvc.update(meal).subscribe(() => this.ngOnInit());
+  }
+
   /**
    * Unschedule an event from the calendar
    * 

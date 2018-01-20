@@ -2,10 +2,5 @@ node_modules
 .settings/
 .project
 npm-debug.log
-e2e
-.gitignore
 .tern-project
 Dockerfile
-karma.conf.js
-package-lock.json
-protractor.conf.js

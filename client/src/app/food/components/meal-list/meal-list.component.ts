@@ -3,6 +3,7 @@ import {UserService} from "../../../user/user.service";
 import {Meal} from '../../model/meal';
 import {FoodStateService} from '../../services/food-state.service';
 import {Component, OnInit, EventEmitter, Output} from '@angular/core';
+import {Subject} from "rxjs/Subject";
 
 @Component({
   selector: 'cw-meal-list',
@@ -15,33 +16,50 @@ export class MealListComponent implements OnInit {
   search: string = undefined;
   currentPage = 1;
   totalItems = 0;
+  _meals: Meal[] = [];
 
-  Meals: Meal[] = [];
+  set Meals(meals: Meal[]) {
+    this._meals = meals;
+    let meal = this._meals.find(m => m.id === 'ecacb2ca-4fe3-4a9f-7ca1-8ba3c4574b05');
+    if (meal) console.log(`meal ${meal.description} === ${meal.inactive}`);
+    console.log('Meals updated');
+    this.refresh.next();
+    if (this.search) this.searchList();
+    else this.filterMeals(this.filter);
+  };
+  get Meals(): Meal[] {return this._meals;}
   PagedMeals: Meal[] = [];
 
   @Output() edit: EventEmitter<Meal> = new EventEmitter<Meal>();
   @Output() add: EventEmitter<any> = new EventEmitter();
-  @Output() delete: EventEmitter<Meal> = new EventEmitter<Meal>();
+  @Output() activate: EventEmitter<Meal> = new EventEmitter<Meal>();
   @Output() recurrence: EventEmitter<Meal> = new EventEmitter<Meal>();
 
   showNoncompliant: false;
+  showInactive: false;
   user: User;
+
+  refresh: Subject<any> = new Subject();
 
   constructor(private state: FoodStateService,
     private userSvc: UserService) {}
 
   ngOnInit() {
-    this.state.meals$.subscribe(meals => this.Meals = meals.filter(meal => !meal.inactive).sort((a, b) => a.description.toUpperCase().localeCompare(b.description.toUpperCase())));
+    this.state.meals$.subscribe(meals => this.Meals = meals.concat().sort((a, b) => a.description.toUpperCase().localeCompare(b.description.toUpperCase())));
     this.userSvc.user$.subscribe(user => this.user = user);
+  }
+
+  filterNonCompliantAndInactive(meals: Meal[]): Meal[] {
+    return meals.filter(m => this.showNoncompliant ? true : m.compliant).filter(m => this.showInactive ? true : !m.inactive);
   }
 
   filterMeals(filter: string) {
 
     this.filter = filter;
     this.search = undefined;
-    var filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.Meals.filter(m => this.showNoncompliant ? true : m.compliant) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).filter(meal => meal.type === filter);
-    if (!this.showNoncompliant)
-      filteredList = filteredList.filter(meal => meal.compliant);
+    var filteredList = (filter === 'ALL' || filter === 'CUSTOM') ? this.filterNonCompliantAndInactive(this.Meals) : this.filterNonCompliantAndInactive(this.Meals).filter(meal => meal.type === filter);
+    /*if (!this.showNoncompliant)
+      filteredList = filteredList.filter(meal => meal.compliant);*/
     this.currentPage = 1;
     this.totalItems = filteredList.length;
     this.PagedMeals = filteredList;
@@ -50,7 +68,7 @@ export class MealListComponent implements OnInit {
   searchList() {
     this.currentPage = 1;
     this.filter = this.search && this.search.length > 0 ? 'CUSTOM' : 'ALL';
-    const filteredList = this.search ? this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).filter(meal => meal.description.toLowerCase().includes(this.search.toLowerCase())) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant);
+    const filteredList = this.search ? this.filterNonCompliantAndInactive(this.Meals).filter(meal => meal.description.toLowerCase().includes(this.search.toLowerCase())) : this.filterNonCompliantAndInactive(this.Meals);
     console.log('search = ' + this.search);
     this.totalItems = filteredList.length;
     this.PagedMeals = filteredList;
@@ -58,8 +76,8 @@ export class MealListComponent implements OnInit {
 
   pagedMeals() {
     const start = (this.currentPage - 1) * 10;
-    this.totalItems = (this.filter !== 'ALL') ? this.PagedMeals.length : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).length;
-    return (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.Meals.filter(m => this.showNoncompliant ? true : m.compliant).slice(start, start + 10);
+    this.totalItems = (this.filter !== 'ALL') ? this.PagedMeals.length : this.filterNonCompliantAndInactive(this.Meals).length;
+    return (this.filter !== 'ALL') ? this.PagedMeals.slice(start, start + 10) : this.filterNonCompliantAndInactive(this.Meals).slice(start, start + 10);
   }
 
   limit(text: string) {
@@ -74,8 +92,10 @@ export class MealListComponent implements OnInit {
     this.add.emit();
   }
 
-  deleteMeal(meal: Meal) {
-    this.delete.emit(meal);
+  toggleActivateMeal(meal: Meal) {
+    var copyMeal = {...meal};
+    copyMeal.inactive = !copyMeal.inactive;
+    this.activate.emit(copyMeal);
   }
 
   setupRecurrence(meal: Meal) {

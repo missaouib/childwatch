@@ -9,6 +9,7 @@ export interface Meal {
   mealFoodItems?: MealFoodItem[];
   inactive?: boolean;
   compliant?: boolean;
+  updatedDate?: Date;
 };
 
 export function buildMeal(): Meal {

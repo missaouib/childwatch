@@ -28,7 +28,9 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
 apply plugin: 'io.franzbecker.gradle-lombok'
 
+
 version = 'latest'
+
 sourceCompatibility = 1.8
 
 
@@ -73,7 +75,7 @@ task buildDocker(type: Docker) {
     rename {'app.jar'}
   }
   entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-Dspring.profiles.active=prod', '-jar', '/app.jar'])
-  // exposePort(8080)
+  exposePort(8080)
 }
 
 buildDocker.dependsOn(assemble)

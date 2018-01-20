@@ -72,8 +72,10 @@ export class MealService {
   update(meal: Meal): Observable<any> {
     var postMeal = {...meal};
     delete postMeal.compliant;
+    delete postMeal.updatedDate;
 
-    return this.http.post<Meal>(this.URL, postMeal, {headers: this.HEADERS});
+    return this.http.post<Meal>(this.URL, postMeal, {headers: this.HEADERS})
+      .map(() => this.store.dispatch(new FoodActions.MealSavedAction(meal)));
   }
 
   /**

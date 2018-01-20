@@ -73,7 +73,7 @@ public class MenuController {
 	@Autowired
 	TenantRepository tenantRepo;
 
-	static Context context = new Context();
+	Context context = new Context();
 
 	public static class UriResolver implements FSUriResolver {
 		/**
@@ -172,8 +172,10 @@ public class MenuController {
 
 		HashMap<String, List<FoodItem>> meals = new HashMap<String, List<FoodItem>>();
 
-		for (MealType mealType : MealType.values())
+		for (MealType mealType : MealType.values()) {
 			hm.put(mealType.toString(), new HashMap<String, Meal>());
+			logger.info( "adding meal type " + mealType.toString() );
+		}
 
 		events.stream().forEach(event -> {
 			java.util.Date startDate = new Date(event.getStartDate().getTime());
@@ -182,7 +184,10 @@ public class MenuController {
 			logger.info("putting meal of type " + event.getMeal().getType().toString() + " to "
 					+ start.getDayOfWeek().toString());
 			hm.get(event.getMeal().getType().toString()).put(start.getDayOfWeek().toString(), event.getMeal());
+			logger.info( "got meal type " + event.getMeal().getType().toString() );
+			logger.info( "added " + start.getDayOfWeek().toString()  + " meal " + event.getMeal().getId() );
 			List<FoodItem> foodItems = buildMealFoodItems(event.getMeal(), showInfant);
+			logger.info( "contains key = " + hm.get(event.getMeal().getType().toString()).containsKey("THURSDAY") );
 			meals.put(event.getMeal().getId(), foodItems);
 		});
 		context.setVariable("meals", hm);
@@ -245,7 +250,6 @@ public class MenuController {
 		logger.info("Found " + events.size() + " events between " + start.format(DateTimeFormatter.ISO_DATE) + " and "
 				+ end.format(DateTimeFormatter.ISO_DATE));
 
-		context.clearVariables();
 		context.setVariable("forDate", start.getMonth() + " " + start.getDayOfMonth() + " - "
 				+ ((start.getMonthValue() == end.getMonthValue()) ? "" : end.getMonth()) + " " + (end.getDayOfMonth()-1));
 		context.setVariable("showInfant", showInfant);
