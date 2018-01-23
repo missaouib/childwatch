@@ -9,6 +9,7 @@ export interface MealFoodItem {
   unit?: string;
   meal: Meal;
   foodItem: FoodItem;
+  hasErrors?: boolean;
 };
 
 /**

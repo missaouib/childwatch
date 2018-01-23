@@ -59,4 +59,8 @@ export class MealDayComponent implements OnInit {
     this.schedule.emit(meal);
   }
 
+  SortedMeals(): Meal[] {
+    return this.Meals.concat().sort((a, b) => a.description.toUpperCase().localeCompare(b.description.toUpperCase()))
+  }
+
 }

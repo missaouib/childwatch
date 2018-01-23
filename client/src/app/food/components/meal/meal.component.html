@@ -17,7 +17,7 @@
 	</h3>
 		<form *ngIf="editing" novalidate [formGroup]="mealForm">
 			<div>
-				<div class="form-group col-xs-4">
+				<div class="form-group col-sm-4 col-xs-10">
 					<label for="name">Name</label>
 					<input #name class="form-control" placeholder="Meal Name" formControlName="description" /> 
 					<small class="text-danger" *ngIf="mealForm.get('description').hasError('required')">Meal name is required</small>
@@ -25,7 +25,7 @@
 					<small class="text-danger" *ngIf="mealForm.get('description').hasError('maxlength')">Meal name must be less than 100 characters</small>				
 				</div>		
 
-				<div class="form-group col-xs-2" *ngIf='meal.updatedDate === undefined'>
+				<div class="form-group col-sm-2 col-xs-10" *ngIf='meal.updatedDate === undefined'>
 					<label for="type">Type</label>
 					<select #type class="form-control" formControlName="type" >
 						<option *ngIf="user?.tenant.mealTypes.includes('BREAKFAST')" value="BREAKFAST">Breakfast</option>
@@ -37,7 +37,7 @@
 					</select>
 					<small class="text-danger" *ngIf="mealForm.get('type').hasError('required')">Meal type is required</small>
 				</div>	
-				<div class="form-group col-xs-2" *ngIf='meal.updatedDate !== undefined'>
+				<div class="form-group col-sm-2 col-xs-10" *ngIf='meal.updatedDate !== undefined'>
 					<label for="type">Type</label>
 					<p #type class="form-control-static">{{mealForm.get('type').value }}</p>
 				</div>
@@ -48,7 +48,7 @@
 					class="btn btn-lg" 
 					(click)="save()"
 					[class.btn-primary]="!canDeactivate() && mealForm.get('description').value && mealForm.get('type').value"
-					[class.disabled]="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined || mealForm.get('description').hasError('mealunique') || mealForm.get('description').hasError('maxlength') || emptyShow">
+					[class.disabled]="canDeactivate() || mealForm.get('description').value === undefined || mealForm.get('type').value === undefined || mealForm.get('description').hasError('mealunique') || mealForm.get('description').hasError('maxlength') || emptyShow || foodHasErrors()">
 					<i class="fa fa-save"></i> Save</button>
 		</span>				
 	</div>
@@ -121,7 +121,8 @@
 					 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( ageGroup )"
 		 					[mealFoodItem]="mealFoodItem" 
 		 					(changed)="changed($event)" 
-		 					(deleted)="deleted($event)"></cw-food-item>	
+		 					(deleted)="deleted($event)"
+		 					(errors)="hasErrors($event.id, $event.errors)"></cw-food-item>	
 		 					
 				 		<p class="panel-body">
 				 			<strong *ngIf="showFoodList()">Drag items from the food list and drop here to create a meal <span *ngIf="!emptyShow">or click <a (click)="emptyShow=true">here</a> to search all items to add</span></strong>
@@ -169,13 +170,70 @@
 				 		   [class.text-danger]="ageGroupCacfpStatus(activeTab)==='NONCOMPLIANT'"
 				 		   [class.text-info]="ageGroupCacfpStatus(activeTab)==='UNKNOWN'"></i>
 				<ul *dropdownMenu class="dropdown-menu">
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_0_5MO'">0 - 5 MO</a></li>
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_6_11MO'">6 - 11 MO</a></li>
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_1YR'">1 YR</a></li>
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_2YR'">2 YR</a></li>
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_3_5YR'">3 - 5 YR</a></li>
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_6_12YR'">6 - 12 YR</a></li>
-					<li ><a class="dropdown-item" (click)="activeTab = 'AGE_13_18YR'">13 - 18 YR</a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_0_5MO')"><a class="dropdown-item" (click)="activeTab = 'AGE_0_5MO'">
+						0 - 5 MO <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_0_5MO')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_0_5MO')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_0_5MO')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_0_5MO')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_0_5MO')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_0_5MO')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_6_11MO')"><a class="dropdown-item" (click)="activeTab = 'AGE_6_11MO'">
+						6 - 11 MO <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_6_11MO')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_6_11MO')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_6_11MO')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_6_11MO')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_6_11MO')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_6_11MO')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_1YR')"><a class="dropdown-item" (click)="activeTab = 'AGE_1YR'">
+						1 YR <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_1YR')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_1YR')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_1YR')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_1YR')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_1YR')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_1YR')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_2YR')"><a class="dropdown-item" (click)="activeTab = 'AGE_2YR'">
+						2 YR <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_2YR')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_2YR')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_2YR')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_2YR')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_2YR')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_2YR')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_3_5YR')"><a class="dropdown-item" (click)="activeTab = 'AGE_3_5YR'">
+						3 - 5 YR <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_3_5YR')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_3_5YR')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_3_5YR')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_3_5YR')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_3_5YR')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_3_5YR')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_6_12YR')"><a class="dropdown-item" (click)="activeTab = 'AGE_6_12YR'">
+						6 - 12 YR <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_6_12YR')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_6_12YR')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_6_12YR')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_6_12YR')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_6_12YR')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_6_12YR')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_13_18YR')"><a class="dropdown-item" (click)="activeTab = 'AGE_13_18YR'">
+						13 - 18 YR <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_13_18YR')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_13_18YR')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_13_18YR')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_13_18YR')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_13_18YR')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_13_18YR')==='UNKNOWN'"></i></a></li>
+					<li *ngIf="AGEGROUPS.includes('AGE_ADULT')"><a class="dropdown-item" (click)="activeTab = 'AGE_ADULT'">
+						ADULT  <i class="fa"
+				 		   [class.fa-check]="ageGroupCacfpStatus('AGE_ADULT')==='COMPLIANT'"
+				 		   [class.fa-close]="ageGroupCacfpStatus('AGE_ADULT')==='NONCOMPLIANT'"
+				 		   [class.fa-question-circle]="ageGroupCacfpStatus('AGE_ADULT')==='UNKNOWN'"
+				 		   [class.text-success]="ageGroupCacfpStatus('AGE_ADULT')==='COMPLIANT'"
+				 		   [class.text-danger]="ageGroupCacfpStatus('AGE_ADULT')==='NONCOMPLIANT'"
+				 		   [class.text-info]="ageGroupCacfpStatus('AGE_ADULT')==='UNKNOWN'"></i></a></li>
 				</ul>
 			</span>	
 			<hr />
@@ -184,7 +242,8 @@
 			 	<cw-food-item *ngFor="let mealFoodItem of mealFoodItemsFor( activeTab ).sort( compareMealFoodItems )"
 	   	 					  [mealFoodItem]="mealFoodItem" 
 		 					  (changed)="changed($event)" 
-		 					  (deleted)="deleted($event)"></cw-food-item>	
+		 					  (deleted)="deleted($event)" 
+		 					  (errors)="hasErrors($event.id, $event.errors)"></cw-food-item>	
 		 					  
 		 		<cw-food-item (selectedItem)="droppedFoodItem($event)"></cw-food-item>
 			</div>	 					

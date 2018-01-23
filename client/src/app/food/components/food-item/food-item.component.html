@@ -1,5 +1,7 @@
 <div class="panel">
-	<form novalidate [formGroup]="foodItemForm" class="row">
+
+
+	<form novalidate [formGroup]="foodItemForm" class="row panel-body">
 			<span class="col-xs-1">
 					<img *ngIf="FoodItemUtils.isCN(mealFoodItem?.foodItem)" class="small-img" src="/assets/img/food/cn.svg" />
 					<img class="small-img" *ngIf="FoodItemUtils.isMilk(mealFoodItem?.foodItem)" src="/assets/img/food/flaticon/milk.svg" />
@@ -28,23 +30,28 @@
 					   />
 			</span>
 
-	    
-			<span *ngIf="mealFoodItem" class="col-xs-6">
+
+			<span *ngIf="mealFoodItem" class="col-sm-6 col-xs-10">
 				<strong class="form-control-static text-primary">{{mealFoodItem?.foodItem.description}}</strong>
 				<p><em>{{FoodItemUtils.tagstring(mealFoodItem?.foodItem)}}</em></p>
 				<p *ngIf="FoodItemUtils.isCN(mealFoodItem?.foodItem)"><strong>{{FoodItemUtils.cnItemString(mealFoodItem?.foodItem)}}</strong></p>
 			</span>
-			<span *ngIf="mealFoodItem" class="col-xs-2 "> 
+			
+			<span class="col-xs-1 visible-xs" *ngIf="mealFoodItem" >
+				<i class="text-danger fa fa-close" (click)="deleteFoodItem()"></i>
+			</span>						
+			
+			<span *ngIf="mealFoodItem" class="col-sm-2 col-xs-5"> 
 				<label>Quantity</label> 
 				<input class="form-control" formControlName="quantity" value="0">
 				<span *ngIf="foodItemForm.get('quantity').hasError('required')" class="text-danger">Quantity is required</span>
 				<span *ngIf="foodItemForm.get('quantity').hasError('pattern')" class="text-danger">Must be a number</span>
 			</span> 
-			<span *ngIf="mealFoodItem && FoodItemUtils.isCN(mealFoodItem?.foodItem)" class="col-xs-2">
+			<span *ngIf="mealFoodItem && FoodItemUtils.isCN(mealFoodItem?.foodItem)" class="col-sm-2 col-xs-5">
 				<label>Units</label>
 				<p class="form-control-static">SERVINGS</p>
 			</span>
-			<span *ngIf="mealFoodItem && !FoodItemUtils.isCN(mealFoodItem?.foodItem)" class="col-xs-2"> 
+			<span *ngIf="mealFoodItem && !FoodItemUtils.isCN(mealFoodItem?.foodItem)" class="col-sm-2 col-xs-5"> 
 				<label>Units</label> 
 				<select class="form-control" formControlName="unit">
 					<option value="OUNCES">OUNCES</option>
@@ -55,10 +62,11 @@
 				</select>
 				<span *ngIf="mealFoodItem && noUnitMatch()" class="text-warning">Typically served in {{foodItemForm.get('foodItem').value.servingUom}}</span>
 			</span> 
-			<span class="col-xs-1" *ngIf="mealFoodItem" >
+			<span class="col-sm-1 hidden-xs" *ngIf="mealFoodItem" >
 				<i class="text-danger pull-right fa fa-close" (click)="deleteFoodItem()"></i>
 			</span>
 	</form>	
+	<hr class="visible-xs" />
 </div>
 
 <ng-template #foodItemTemplate let-item="item" let-index="index">

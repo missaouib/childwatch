@@ -40,7 +40,9 @@
 
 			</div>			
 			<!-- DAY VIEW - only on cell phone size -->
-			<div class="row visible-xs">
+			<div class="row visible-xs" style="z-index: 10;">
+				<a class="pull-right" (click)="showPrintMenuDialog()"><i class="fa fa-print"></i> Print Menu...</a>
+			
 				<cw-meal-day 
 					class="col-xs-10 col-xs-offset-1"
 					(add)="addMeal()" 

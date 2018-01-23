@@ -268,7 +268,10 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
         this.mealForm.patchValue({description: this.meal.description, type: this.meal.type});
         this.editing = (meal === undefined);
         if (meal) {
-          this.mealSvc.queryMealFoodItemsFor(meal).subscribe(mealItems => this.mealFoodItems = mealItems);
+          this.mealSvc.queryMealFoodItemsFor(meal).subscribe(mealItems => {
+            this.mealFoodItems = mealItems;
+            this.mealFoodItems.forEach((mfi) => mfi.hasErrors = false);
+          });
           this.mealSvc.validate(meal).subscribe(violations => this.rulesViolations = violations);
         }
       });
@@ -282,6 +285,17 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   rulesViolationsForCurrentAgeGroup(severity: string) {
     return this.rulesViolations.filter((v) => v.ageGroup === this.activeTab && v.severity === severity);
+  }
+
+  foodHasErrors(): boolean {
+    return this.mealFoodItems.find(mfi => mfi.hasErrors) !== undefined;
+  }
+
+  hasErrors(id: string, errors: boolean) {
+    console.log(`Event received that ${id} hasErrors = ${errors}`);
+    let mfi: MealFoodItem = this.mealFoodItems.find(mfi => mfi.id === id);
+    if (mfi)
+      mfi.hasErrors = errors;
   }
 
   droppedFoodItem(foodItem: FoodItem) {

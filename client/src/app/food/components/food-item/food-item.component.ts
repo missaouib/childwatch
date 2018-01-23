@@ -21,6 +21,7 @@ export class FoodItemComponent implements OnInit {
   @Output() deleted: EventEmitter<string> = new EventEmitter<string>();
   @Output() changed: EventEmitter<MealFoodItem> = new EventEmitter<MealFoodItem>();
   @Output() selectedItem: EventEmitter<FoodItem> = new EventEmitter<FoodItem>();
+  @Output() errors: EventEmitter<{id: string, errors: boolean}> = new EventEmitter<{id: string, errors: boolean}>();
 
   FoodItemUtils: FoodItemUtils;
   FoodItems: FoodItem[] = [];
@@ -49,7 +50,7 @@ export class FoodItemComponent implements OnInit {
     this.foodItemForm = this.formBuilder.group({
       foodItem: [this.mealFoodItem ? this.mealFoodItem.foodItem : undefined, Validators.required],
       description: [undefined],
-      quantity: [this.mealFoodItem ? this.mealFoodItem.quantity.toString() : undefined, Validators.required],
+      quantity: [this.mealFoodItem ? this.mealFoodItem.quantity.toString() : undefined, [Validators.required, Validators.pattern('^\\d+(\\.\\d+)?$')]],
       unit: [this.mealFoodItem ? (this.mealFoodItem.unit || this.mealFoodItem.foodItem.servingUom) : undefined, Validators.required]
     });
 
@@ -58,6 +59,7 @@ export class FoodItemComponent implements OnInit {
       if (this.foodItemForm.valid) {
         this.changed.emit(this.extractMealFoodItem());
       }
+      this.errors.emit({id: this.mealFoodItem.id, errors: !this.foodItemForm.valid});
     });
 
   }

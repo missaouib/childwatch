@@ -24,11 +24,9 @@
 					<span>{{limit( event.meta.meal.description )}}</span>
 				</strong><br />
 				<span><em>{{event.meta.meal.type}}</em></span><br />
-				<span><em>{{event.start}} {{event.meta.startDate}}</em></span>
 			</td>
 			<td class="col-xs-1">
 				<i (click)="editMeal(event.meta.meal)" class="text-primary fa fa-pencil"></i>
-				<i class="text-warning fa fa-star-o"></i>
 				<i class="text-danger fa fa-close" (click)="removeMealEvent(event)"></i>
 			</td>
 		</tr>				
@@ -39,7 +37,10 @@
     Add Meal <span class="caret"></span>
   </button>
   <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li role="menuitem" *ngFor="let meal of Meals">
+  	<li role="menuitem">
+  		<a class="dropdown-item" (click)="addMeal()"><img class="small-img" src="/assets/img/food/other.svg"/> New meal...</a>
+  	</li>
+    <li role="menuitem" *ngFor="let meal of SortedMeals()">
     	<a class="dropdown-item" (click)="scheduleMeal( meal )" [ngSwitch]="meal.type">
 				<img class="small-img" *ngSwitchCase="'BREAKFAST'" src="/assets/img/meal/breakfast.svg" />
 				<img class="small-img" *ngSwitchCase="'AM_SNACK'" src="/assets/img/meal/ante-meridiem.svg" />
