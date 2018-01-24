@@ -11,8 +11,8 @@
 	</h3>	
 	<h3 *ngIf="!editing"  >
 		<span (click)="editing = !editing" >
-			<span tooltip="Click to edit" placement="bottom">{{mealForm.get('description').value}}</span> 
-			<small tooltip="Click to edit" placement="bottom">{{mealForm.get('type').value }}</small>
+			<span tooltip="Click to edit" placement="bottom">{{mealForm.get('description').value | uppercase }}</span> 
+			<small tooltip="Click to edit" placement="bottom">{{ MEALTYPE.toDisplay(mealForm.get('type').value) | uppercase }}</small>
 		</span>
 	</h3>
 		<form *ngIf="editing" novalidate [formGroup]="mealForm">

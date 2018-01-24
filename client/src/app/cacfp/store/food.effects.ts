@@ -10,7 +10,7 @@ import {MealService} from '../services/meal.service';
 import {Injectable} from '@angular/core';
 import {Effect, Actions} from '@ngrx/effects';
 import {Observable} from 'rxjs/Observable';
-import '../../rxjs-imports';
+import '../../../common/rxjs-imports';
 import {FoodItem} from "../model/food-item";
 import {Meal} from '../model/meal';
 import {MealEvent} from '../model/meal-event';

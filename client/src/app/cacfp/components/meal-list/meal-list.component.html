@@ -1,13 +1,14 @@
+<div class="container-fluid">
 <div class="row">
-	<h3 class="text-primary">Meals <small *ngIf="showNoncompliant">(SHOWING NONCOMPLIANT)</small></h3>	
+	<h3 class="text-primary">Meals <small *ngIf="filter !== 'ALL' || showNoncompliant || showInactive"> {{ MEALTYPE.toDisplay(filter)?.toUpperCase() }} <span *ngIf="showNoncompliant"> +NON-COMPLIANT</span><span *ngIf="showInactive"> +INACTIVE</span></small></h3>	
 	<div class="pull-right">
 		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
-		<a (click)="addMeal()"><span><i class="fa fa-plus"></i> Add...</span></a>
+		<a class="btn btn-xs btn-success" (click)="addMeal()"><span><i class="fa fa-plus"></i></span></a>
 		<span dropdown container="body">
-			<a dropdownToggle (click)="false"><i class="fa fa-filter"></i> Filter<span *ngIf="filter !== 'ALL'">: <strong>{{filter}}</strong></span></a>
+			<a class="btn btn-xs btn-default" dropdownToggle (click)="false"><i class="fa fa-filter"></i></a>
 			<ul *dropdownMenu class="dropdown-menu">
-				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL TYPES</a></li>
 				<li class="divider dropdown-divider"></li>
 				
 				<li *ngIf="user?.tenant.mealTypes.includes('BREAKFAST')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'BREAKFAST' )">Breakfast</a></li>
@@ -17,8 +18,8 @@
 				<li *ngIf="user?.tenant.mealTypes.includes('SUPPER')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'SUPPER' )">Supper</a></li>
 				<li *ngIf="user?.tenant.mealTypes.includes('EV_SNACK')" role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'EV_SNACK' )">Evening Snack</a></li>
 				<li class="divider dropdown-divider"></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );">{{showNoncompliant? 'Hide' : 'Show' }} Non-compliant</a></li>
-				<li role="menuitem"><a class="dropdown-item" (click)="showInactive = !showInactive; filterMeals( filter );">{{showInactive? 'Hide' : 'Show' }} Inactive</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="showNoncompliant = !showNoncompliant; filterMeals( filter );"> <i class="fa fa-check text-success" *ngIf="showNoncompliant"></i> Non-compliant</a></li>
+				<li role="menuitem"><a class="dropdown-item" (click)="showInactive = !showInactive; filterMeals( filter );"><i class="fa fa-check text-success" *ngIf="showInactive"></i> Inactive</a></li>
 			</ul>
 		</span>
 	</div>		
@@ -36,18 +37,18 @@
 				<img class="small-img" *ngSwitchCase="'SUPPER'" src="/assets/img/food/turkey.svg" />
 				<img class="small-img" *ngSwitchCase="'EV_SNACK'" src="/assets/img/meal/night.svg" />
 			</td>
-			<td class="col-sm-9">
+			<td class="col-sm-8">
 				<strong class="text-primary">
-					<span class="hidden-sm hidden-md">{{meal.description}}</span>
+					<span class="hidden-sm hidden-md">{{meal.description | uppercase }}</span>
 					<span class="hidden-lg">{{limit( meal.description )}}</span>
 				</strong><br />
-				<span class="hidden-sm hidden-xs"><em>{{meal.type}}</em></span>
+				<span class="hidded-md hidden-sm hidden-xs"><em>{{MEALTYPE.toDisplay(meal.type)?.toUpperCase()}}</em></span>
 			</td>
-			<td class="col-sm-2">
-				<span>
-					<i *ngIf="!meal.inactive" (click)="setupRecurrence(meal)" class="text-success fa fa-refresh"></i>
-					<i *ngIf="!meal.inactive"(click)="editMeal(meal)" class="text-primary fa fa-pencil"></i>
-					<i tooltip="{{(meal.inactive)? 'Activate Meal' : 'Inactivate Meal'}}" (click)="toggleActivateMeal(meal)" class="fa" [class.text-danger]="!meal.inactive" [class.fa-close]="!meal.inactive" [class.text-success]="meal.inactive" [class.fa-plus]="meal.inactive"></i>
+			<td class="col-sm-3">
+				<span class="btn-group" role="group">
+					<a class="btn btn-xs" *ngIf="!meal.inactive" (click)="setupRecurrence(meal)"><i class="text-success fa fa-refresh"></i></a>
+					<a class="btn btn-xs" *ngIf="!meal.inactive"(click)="editMeal(meal)"><i class="text-primary fa fa-pencil"></i></a>
+					<a class="btn btn-xs" tooltip="{{(meal.inactive)? 'Activate Meal' : 'Inactivate Meal'}}" (click)="toggleActivateMeal(meal)" ><i class="fa" [class.text-danger]="!meal.inactive" [class.fa-close]="!meal.inactive" [class.text-success]="meal.inactive" [class.fa-plus]="meal.inactive"></i></a>
 				</span>
 			</td>
 		</tr>				
@@ -68,4 +69,5 @@
 				lastText="&raquo;"></pagination>
 	</span>
 
+</div>
 </div>

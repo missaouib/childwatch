@@ -12,6 +12,8 @@ export class NavbarComponent implements OnInit {
   @Input() user: User;
   @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
+  now: Date = new Date();
+
   constructor() {}
 
   ngOnInit() {

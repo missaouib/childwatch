@@ -29,7 +29,7 @@ export class LoginScreenComponent implements OnInit {
 
     this.authSvc.login(this.username, this.password)
       .subscribe(
-      () => this.router.navigate(['/meals']),
+      (user) => this.router.navigate([user.authorities.includes('ADMIN-CW') ? '' : '/meals']),
       () => this.errors = true
       );
 

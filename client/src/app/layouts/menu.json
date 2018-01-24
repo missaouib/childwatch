@@ -1,0 +1,37 @@
+{
+	"menu": [
+    	{
+    		"path": "/childcare", 
+    		"title": "Dashboard", 
+    		"type": "link", 
+    		"icon": "fa fa-2x fa-dashboard", 
+    		"requireRole": ["ADMIN-CW"]
+    	},
+    	{
+      		"path": "/meals", 
+      		"title": "CACFP", 
+      		"type": "sub", 
+      		"icon": "fa fa-2x fa-cutlery",
+      		"children": [
+        		{
+        			"path": "/meals", 
+        			"title": "Meal Scheduling"
+        		},
+        		{
+        			"path": "/meals/meal-builder", 
+        			"title": "Meal Builder"
+        		},
+        		{
+        			"path": "/meals/mpr", 
+        			"title": "Meal Production Record",
+        			"requireRole": ["ADMIN-CW"]
+        		},
+        		{
+        			"path": "/meals/food-items", 
+        			"title": "Maintain Food Items",
+        			"requireRole": ["ADMIN-CW"]
+        		}        		
+     		]
+    	}
+  	]
+}

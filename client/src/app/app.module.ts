@@ -8,16 +8,16 @@ import {StoreModule} from '@ngrx/store';
 
 import * as AppRouting from './app.routes';
 import {AppComponent} from './app.component';
-import {ChildDetailComponent} from './child/child-detail/child-detail.component';
+import {ChildDetailComponent} from './childcare/components/child-detail/child-detail.component';
 import {UserService} from './user/user.service';
 import {UserModule} from './user/user.module';
 
-import './rxjs-imports.ts';
+import '../common/rxjs-imports.ts';
 
 import {AuthLayoutComponent} from './layouts/auth-layout/auth-layout.component';
 
 import {CollapseModule} from 'ngx-bootstrap/collapse';
-import {RoomDetailsComponent} from './rooms/room-details/room-details.component';
+import {RoomDetailsComponent} from './childcare/components/room-details/room-details.component';
 
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {ToastOptions} from 'ng2-toastr';
@@ -34,15 +34,15 @@ import {SettingsComponent} from './user/settings/settings.component';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {EffectsModule} from '@ngrx/effects';
-import {FoodEffects} from './food/store/food.effects';
+import {FoodEffects} from './cacfp/store/food.effects';
 
 import {reducers, metaReducers} from './app.state';
-import {PendingChangesGuard} from "./food/components/meal/pending-changes-guard";
-import {FoodItemService} from "./food/services/food-item.service";
-import {FoodStateService} from "./food/services/food-state.service";
-import {MealEventService} from "./food/services/meal-event.service";
-import {MealProductionRecordService} from "./food/services/meal-production-record.service";
-import {MealService} from "./food/services/meal.service";
+import {PendingChangesGuard} from "./cacfp/components/meal/pending-changes-guard";
+import {FoodItemService} from "./cacfp/services/food-item.service";
+import {FoodStateService} from "./cacfp/services/food-state.service";
+import {MealEventService} from "./cacfp/services/meal-event.service";
+import {MealProductionRecordService} from "./cacfp/services/meal-production-record.service";
+import {MealService} from "./cacfp/services/meal.service";
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 
 

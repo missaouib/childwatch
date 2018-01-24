@@ -17,8 +17,11 @@
 	<p class="text-center text-uppercase"><small>{{user.tenant?.name}}</small></p>
 	<hr />
 	<ul style="position: relative; left: -30px; list-style: none;">
-		<li style="margin: 0 0 30px 0;" *ngFor="let menuitem of ROUTES" [style.color]="user.secondary">
-			<h4 *ngIf="canShow(menuitem)"><i  ngClass="{{menuitem.icon}}"></i> <strong [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong></h4>
+		<li style="margin: 0 0 30px 0;" *ngFor="let menuitem of MENU" [style.color]="user.secondary">
+			<h4 *ngIf="canShow(menuitem)"><i  ngClass="{{menuitem.icon}}"></i>
+				<a *ngIf="menuitem.type === 'link'" [routerLink]="[menuitem.path]"  routerLinkActive="true"><strong [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong></a>
+				<strong *ngIf="menuitem.type === 'sub'" [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong>
+			</h4>
               	<div *ngIf="canShow(menuitem) && menuitem.type === 'sub'">
    	           	<ul style="list-style: none;">
                        <li *ngFor="let childitem of menuitem.children">
@@ -32,7 +35,7 @@
 	</ul>
 </div>
 <div style="position: fixed; bottom: 0; margin: 0 0 30px 0;">
-<hr style="width: 280px" />
+<hr *ngIf="isAdminCW()" style="width: 280px" />
 <ul style="position: relative; left: -30px; list-style: none;">
 		<li *ngIf="isAdminCW()"><h4><a [routerLink]="'/settings'"><i class="fa fa-cog" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Settings</a></h4></li>
 	</ul>

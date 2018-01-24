@@ -8,7 +8,7 @@ import {DOCUMENT} from '@angular/platform-browser';
   templateUrl: './page-layout.component.html',
 })
 export class PageLayoutComponent implements OnInit {
-  _opened = false;
+  _opened = true;
   user: User;
 
 
@@ -19,7 +19,6 @@ export class PageLayoutComponent implements OnInit {
   ) {
     this.userSvc.user$.subscribe(user => {
       this.user = user;
-      this._opened = user && user.authorities.find(authority => authority.toUpperCase() === 'ADMIN-CW') !== undefined;
     });
 
     this.setTheme();

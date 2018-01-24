@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Effect, Actions} from "@ngrx/effects";
 import * as UserActions from './user.actions';
-import '../rxjs-imports';
+import '../../common/rxjs-imports';
 import {UserService} from "./user.service";
 import {ConfigState} from "./config.state";
 

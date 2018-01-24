@@ -5,11 +5,12 @@ import {UserService} from './user/user.service';
 import {Routes} from '@angular/router';
 
 export const AppRoutes: Routes = [
-  {path: '', redirectTo: 'meals', canActivate: [UserService], pathMatch: 'full'},
+  {path: '', redirectTo: 'childcare', canActivate: [UserService], pathMatch: 'full'},
   {
     path: '', component: PageLayoutComponent, canActivate: [UserService],
     children: [
-      {path: 'meals', loadChildren: './food/food.module#FoodModule', canActivate: [UserService]},
+      {path: 'childcare', loadChildren: './childcare/childcare.module#ChildcareModule', canActivate: [UserService]},
+      {path: 'meals', loadChildren: './cacfp/cacfp.module#CACFPModule', canActivate: [UserService]},
       {path: 'settings', component: SettingsComponent}
     ]
   },

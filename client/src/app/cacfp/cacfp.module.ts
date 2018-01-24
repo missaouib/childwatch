@@ -45,6 +45,7 @@ import {CollapseModule} from 'ngx-bootstrap/collapse';
 import {MealProductionRecordTabComponent} from './components/meal-production-record/meal-production-record-tab/meal-production-record-tab.component';
 import {FoodItemEditListComponent} from './components/food-item-edit-list/food-item-edit-list.component';
 import {EditableFoodItemComponent} from './components/food-item-edit-list/editable-food-item/editable-food-item.component';
+import {SplitPaneModule} from "ng2-split-pane/lib/ng2-split-pane";
 import {TagInputModule} from 'ngx-chips';
 
 
@@ -76,6 +77,7 @@ const routes: Routes = [
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
     TagInputModule,
+    SplitPaneModule
   ],
   declarations: [
     MealCalendarComponent, FoodItemComponent, MealComponent, MealPatternHelpComponent, FoodItemListComponent,
@@ -84,7 +86,7 @@ const routes: Routes = [
   ],
   providers: [FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, UserService, MealProductionRecordService]
 })
-export class FoodModule {
+export class CACFPModule {
 
   constructor() {}
 }

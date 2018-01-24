@@ -11,9 +11,25 @@
   text-shadow: 2px 2px #000000;
 }
 
+.date {
+  font-size: 24px;
+}
+
 .sm-img {
   min-height: 40px;
   height: 40px;
   min-width: 40px;
   width: 40px;    
   }
+
+  .navbar-collapse {
+    float: left;
+    width: 100%;
+    clear: both;
+}
+
+@media (min-width: 768px) {
+    .navbar-right {
+        margin-top: -50px;
+    }
+}

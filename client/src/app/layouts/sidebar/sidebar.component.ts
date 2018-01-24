@@ -1,20 +1,8 @@
 import {User} from '../../user/config.state';
+import {MenuItem, ChildMenuItem} from "../menu-item";
 import {Component, OnInit, Input} from '@angular/core';
 import {Subject} from "rxjs/Subject";
-
-export interface ChildRouteInfo {
-  path: string;
-  title: string;
-  disabled?: boolean;
-  requireRole?: string[];
-}
-
-export interface RouteInfo extends ChildRouteInfo {
-  type: string;
-  icon: string;
-  children?: ChildRouteInfo[];
-}
-
+import * as MENU_INFO from '../menu.json';
 
 @Component({
   selector: 'cw-sidebar',
@@ -30,23 +18,7 @@ export class SidebarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  ROUTES: RouteInfo[] = [
-    {path: '/dashboard', title: 'Dashboard', type: 'link', icon: 'fa fa-2x fa-dashboard', disabled: true},
-    {
-      path: '/meals', title: 'Meals', type: 'sub', icon: 'fa fa-2x fa-cutlery',
-      children: [
-        {path: '', title: 'Planning Calendar'},
-        {path: '/meals/mpr', title: 'Meal Production Record', disabled: false, requireRole: ['ADMIN-CW']},
-      ]
-    },
-    {path: '/billing', title: 'Billing', type: 'link', icon: 'fa fa-2x fa-money', disabled: true},
-    {
-      path: '/admin', title: 'Administration', type: 'sub', icon: 'fa fa-2x fa-cogs', disabled: false, requireRole: ['ADMIN-CW'],
-      children: [
-        {path: '/meals/food-items', title: 'Food Items'}
-      ]
-    }
-  ];
+  MENU: MenuItem[] = (<any>MENU_INFO).menu;
 
   constructor() {}
 
@@ -57,7 +29,7 @@ export class SidebarComponent implements OnInit {
     else return required.find(role => this.user.authorities.find(authority => authority === role) !== undefined) !== undefined;
   }
 
-  canShow(route: ChildRouteInfo): boolean {
+  canShow(route: ChildMenuItem): boolean {
     return this.hasRequiredRole(route.requireRole) && !route.disabled;
   }
 

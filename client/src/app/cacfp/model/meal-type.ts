@@ -8,6 +8,7 @@ export class MealType {
       case 'PM_SNACK': return 'PM Snack';
       case 'SUPPER': return 'Supper';
       case 'EV_SNACK': return 'Evening Snack';
+      case 'CUSTOM': return 'CUSTOM';
       default: return undefined;
     }
   }

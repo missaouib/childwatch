@@ -4,6 +4,7 @@ import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
 import {Meal, buildMeal} from '../../model/meal';
 import {MealFoodItem, compareMealFoodItems} from '../../model/meal-food-item';
+import {MealType} from "../../model/meal-type";
 import {MealRulesViolation} from '../../model/mealrulesviolation';
 import {FoodStateService} from "../../services/food-state.service";
 import {Component, OnInit, HostListener} from '@angular/core';
@@ -79,6 +80,8 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
 
   user: User;
 
+  MEALTYPE: MealType;
+
   /**
    * @constructor
    */
@@ -95,6 +98,9 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.toastr.setRootViewContainerRef(vcr);
     this.activeRoute.queryParams.subscribe((params: any) => this.loadMeal(params['id']));
     this.foodSvc.meals$.subscribe((meals) => this.meals = meals);
+    this.MEALTYPE = new MealType();
+    
+
   }
 
   /**

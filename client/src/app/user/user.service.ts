@@ -141,6 +141,7 @@ export class UserService implements CanActivate {
         user.tenant.ageGroups = this.buildAgeGroups(user);
         user.tenant.mealTypes = this.buildMealTypes(user);
         this.store.dispatch(new UserLoginAction(user));
+        return user;
       });
   }
 

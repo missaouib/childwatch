@@ -4,6 +4,7 @@ import {Meal} from '../../model/meal';
 import {FoodStateService} from '../../services/food-state.service';
 import {Component, OnInit, EventEmitter, Output} from '@angular/core';
 import {Subject} from "rxjs/Subject";
+import {MealType} from '../../model/meal-type';
 
 @Component({
   selector: 'cw-meal-list',
@@ -17,6 +18,7 @@ export class MealListComponent implements OnInit {
   currentPage = 1;
   totalItems = 0;
   _meals: Meal[] = [];
+  MEALTYPE: MealType;
 
   set Meals(meals: Meal[]) {
     this._meals = meals;
@@ -42,7 +44,9 @@ export class MealListComponent implements OnInit {
   refresh: Subject<any> = new Subject();
 
   constructor(private state: FoodStateService,
-    private userSvc: UserService) {}
+    private userSvc: UserService) {
+    this.MEALTYPE = new MealType();
+  }
 
   ngOnInit() {
     this.state.meals$.subscribe(meals => this.Meals = meals.concat().sort((a, b) => a.description.toUpperCase().localeCompare(b.description.toUpperCase())));
