@@ -23,7 +23,6 @@ export class EditableFoodItemComponent implements OnInit {
 
   @Input()
   set foodItem(foodItem: FoodItem) {
-    console.log('setting food item ', foodItem);
     this._foodItem = foodItem;
     this.tags = foodItem ? foodItem.tags.map((tag) => tag.value).filter(tag => tag && !tag.startsWith('AGE_')) : [];
     if (foodItem) {
@@ -42,6 +41,7 @@ export class EditableFoodItemComponent implements OnInit {
         ageAdult: this.FoodItemUtils.isAppropriateForAgeGroup(foodItem, 'AGE_ADULT'),
         tags: foodItem ? foodItem.tags.map((tag) => tag.value).filter(tag => tag && !tag.startsWith('AGE_')) : []
       });
+
     }
   }
 
@@ -71,7 +71,7 @@ export class EditableFoodItemComponent implements OnInit {
 
     });
 
-    userSvc.user$.subscribe((user: User) => this.editable = user.authorities.includes('ADMIN'));
+    userSvc.user$.subscribe((user: User) => this.editable = user.authorities.includes('ADMIN-CW'));
   }
 
   update() {

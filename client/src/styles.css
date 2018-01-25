@@ -8,10 +8,17 @@
 
 @import 'ng2-dnd/bundles/style.css';
 
+@import url('https://fonts.googleapis.com/css?family=Ubuntu|Quicksand|Roboto|Raleway');
+
 body {
-  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-family: Quicksand, Roboto, "Helvetica Neue",sans-serif;
 }
 
+/*
+body {
+  font-family: 'Quicksand', sans-serif !important;
+}
+*/
 .scroll-y {
   overflow-y: auto;
 }
