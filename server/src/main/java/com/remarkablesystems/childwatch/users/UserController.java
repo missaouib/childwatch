@@ -27,6 +27,7 @@ public class UserController {
 	
 	static final String NO_LOGIN_PASSWORD = "===no-login-from-this-account==";
 	
+	
 	static final int allowableDiff = 10000; // 10 seconds 
 
 	static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -108,38 +109,15 @@ public class UserController {
 		return new Login( username, password );
 	}
 	
-	
-	User handleUserToken( String token ) {
-		String userId = decodeToken( token );
-		User user = null;
 		
-		if( userId != null  ) {
-			try {
-				userFetcher.byUserId = true;
-				userFetcher.setUserId(userId);
-				ExecutorService es = Executors.newSingleThreadExecutor();
-	            Future<User> utrFuture = es.submit(userFetcher);
-	            user = utrFuture.get();				
-				if( user != null ) {
-					TenantContext.setCurrentTenant(user.tenant.id);
-				}
-			}
-			catch( Exception e ) {
-				e.printStackTrace();
-			}
-		}
-		
-		return user;
-		
-	}
-	
 	User handleLogin( String token ) {
 		Login login = decode( token );
 		User user = null;
 		
 		if( login != null && !login.password.equals( NO_LOGIN_PASSWORD ) ) {
 			try {
-				userFetcher.setUsernamePassword(login.username, login.password);
+				userFetcher.setUsername(login.username);
+				userFetcher.setPassword(login.password);
 				ExecutorService es = Executors.newSingleThreadExecutor();
 	            Future<User> utrFuture = es.submit(userFetcher);
 	            user = utrFuture.get();				
@@ -159,6 +137,16 @@ public class UserController {
 		return user;
 	}
 	
+	String convertNull( String str ) {
+		return ( str == null || "null".equalsIgnoreCase(str) )? null : str; 
+	}
+	
+	/**
+	 * Handler for preauthorization requests
+	 * 
+	 * @param token
+	 * @return
+	 */
 	User handlePreauth( String token ) {
 		
 		byte[] decodedBytes = Base64.getUrlDecoder().decode(token);
@@ -166,11 +154,22 @@ public class UserController {
 
 		String[] splitToken = decodedString.split(":");
 		
-		if( splitToken.length != 2 )
+		if( splitToken.length != 9 )
 			return null;
 		
-		String tenantId = splitToken[0];
-		long timestamp =  Long.parseLong( splitToken[1] );
+		String accountId = convertNull(splitToken[0]);
+		String userId = convertNull(splitToken[1]);
+		boolean adminUser = !"false".equalsIgnoreCase( convertNull(splitToken[2]) );
+		String[] ageGroups = ( convertNull(splitToken[3]) != null )? splitToken[3].split(",") : new String[0] ;
+		String[] mealTypes = ( convertNull(splitToken[4]) != null )? splitToken[4].split(",") : new String[0];
+		String theme = convertNull(splitToken[5]);
+		String accountName = convertNull(splitToken[6]);
+		String userName = convertNull(splitToken[7]);
+		
+		
+		logger.info( "accountId = {}; userId = {}; adminUser = {}; ageGroups= {}; theme= {}", accountId, userId, adminUser, ageGroups, theme );
+		
+		long timestamp =  Long.parseLong( convertNull(splitToken[8]) );
 		long dif = Math.abs(timestamp -  new Date().getTime()); 
 		
 		
@@ -181,22 +180,32 @@ public class UserController {
 		
 		User user = null;
 		try {
-			tenantFetcher.setTenant(tenantId);
+			tenantFetcher.setAccountID(accountId);
+			tenantFetcher.setUserID(userId);
+			tenantFetcher.setAdminUser(adminUser);
+			tenantFetcher.setAgeGroups(ageGroups);
+			tenantFetcher.setMealTypes(mealTypes);
+			tenantFetcher.setTheme(theme);
+			tenantFetcher.setAccountName(accountName);
+			tenantFetcher.setName(userName);
+			
 			ExecutorService es = Executors.newSingleThreadExecutor();
-	        Future<Tenant> utrFuture = es.submit(tenantFetcher);
-	        Tenant tenant = utrFuture.get();									
-					
-			if( tenant != null ) {
-				user = new User();
-				user.fullName = "Admin User";
-				user.password = NO_LOGIN_PASSWORD;
-				user.id = token;
-				user.avatar = "boy-1.svg";
-				user.username = "no-login";
-				user.authorities.add( "ADMIN" );	
-				user.tenant = tenant;
-				//TODO : Log 
-			}	
+	        Future<Tenant> tenantFuture = es.submit(tenantFetcher);
+	        
+	        // get or create a tenant
+	        @SuppressWarnings("unused") Tenant tenant = tenantFuture.get();	
+	        
+	        
+			
+	        userFetcher.byUserId = true;
+	        userFetcher.setUserID(userId != null && userId.length() > 0 ? userId : accountId );
+	        Future<User> userFuture = es.submit(userFetcher);
+	        user = userFuture.get();	  
+	        if( user != null ) {
+				TenantContext.setCurrentTenant(user.tenant.id);
+				logger.info("User id:{} logged in", user.id );
+			}
+	        
 		}
 		catch( Exception e ) {
 			e.printStackTrace();
@@ -209,13 +218,11 @@ public class UserController {
 	@GetMapping( "/user" )
 	public ResponseEntity<?> login( 
 			@RequestParam(value="token", required=false) String loginToken, 
-			@RequestParam(value="tenant",required=false) String tenantToken,
-			@RequestParam(value="user", required=false) String userToken ) {
-
+			@RequestParam(value="preauth", required=false ) String preauthToken ) {
 		
-		User user = StringUtils.isEmpty(userToken)? null : handleUserToken( userToken );
+		User user = null;
 		if( loginToken != null ) user = handleLogin( loginToken ); 
-		else if( tenantToken != null ) user = handlePreauth( tenantToken );
+		else if( preauthToken != null ) user = handlePreauth( preauthToken );
 		
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}

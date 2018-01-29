@@ -6,6 +6,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {RouterModule, Routes} from "@angular/router";
 import {EffectsModule} from "@ngrx/effects";
+import { UserListComponent } from './user-list/user-list.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginScreenComponent}
@@ -18,7 +19,7 @@ const routes: Routes = [
     FormsModule,
     EffectsModule.forFeature([UserEffects]),
   ],
-  declarations: [LoginScreenComponent],
+  declarations: [LoginScreenComponent, UserListComponent],
   providers: [UserService]
 })
 export class UserModule {}

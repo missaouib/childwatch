@@ -19,16 +19,21 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.remarkablesystems.childwatch.domain.food.FoodItemTag;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 
 @Entity
 @Table(name="cw_user")
-@ToString()
-@EqualsAndHashCode()
+@Data
+@Builder
+@AllArgsConstructor @NoArgsConstructor
 public class User {
 	
 	@Id 
@@ -46,47 +51,47 @@ public class User {
 	
 	@Column(name="avatar")
 	@Getter @Setter
-	String avatar;
+	@Builder.Default String avatar = "boy.svg";
 	
 	@Column(name="password")
 	@Getter @Setter
-	String password;
-
+	@Builder.Default String password = "***===NOLOGIN";
+	
+	@Column(name="active")
+	@Getter @Setter
+	@Builder.Default boolean active = true;
 	
 	@Column(name="weekendsShowing")
 	@Getter @Setter
-	boolean weekendsShowing;
+	@Builder.Default boolean weekendsShowing = false;
 
 	@ElementCollection( fetch=FetchType.EAGER )
 	@CollectionTable( name="cw_authority", joinColumns=@JoinColumn( name="user_id", nullable=false ) )
 	@Column( name="authority", nullable=false )
 	@Getter
-	Set<String> authorities = new HashSet<String>();
+	@Builder.Default Set<String> authorities = new HashSet<String>();
 	
 	@Column(name="dark")
 	@Getter @Setter
-	boolean dark;
+	@Builder.Default boolean dark = false;
 	
 	@Column(name="primary_color")
 	@Getter @Setter
-	String primary;
+	@Builder.Default String primary = "#F8F5F0";
 	
 	@Column(name="secondary_color")
 	@Getter @Setter
-	String secondary;
+	@Builder.Default String secondary = "#FFB300";
 	
 	@Column(name="theme")
 	@Getter @Setter
-	String theme;
-
+	@Builder.Default String theme = "readable";
 	
 	@ManyToOne
 	@JoinColumn(name="tenant_id")
 	@Getter @Setter
 	Tenant tenant;
 	
-
-	public User() {}
 
 	public void addAuthority( String authority ) {
 		this.authorities.add(authority);

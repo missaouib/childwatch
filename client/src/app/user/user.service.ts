@@ -12,11 +12,23 @@ import {CookieService} from 'ngx-cookie-service';
 import * as ConfigActions from './user.actions';
 
 
+export interface PreauthToken {
+  accountID: string;
+  userID: string;
+  adminUser: boolean;
+  ageGroups: string[];
+  mealTypes: string[];
+  theme: string;
+  accountName: string;
+  userName: string;
+};
+
 
 @Injectable()
 export class UserService implements CanActivate {
 
   authUser: User = undefined;
+
 
   constructor(
     private store: Store<AppState>,
@@ -63,30 +75,44 @@ export class UserService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    if (route.queryParams.tenant) {
-      return this.preauth(route.queryParams.tenant, route.queryParams.user);
+
+    let preAuth: PreauthToken = {
+      accountID: route.queryParams.accountID || this.cookieSvc.get('accountID') || null,
+      userID: route.queryParams.userID || this.cookieSvc.get('userID') || null,
+      adminUser: route.queryParams.adminUser || this.cookieSvc.get('adminUser') || null,
+      ageGroups: route.queryParams.ageGroups || this.cookieSvc.get('ageGroups').split(',') || null,
+      mealTypes: route.queryParams.mealTypes || this.cookieSvc.get('mealTypes').split(',') || null,
+      theme: route.queryParams.theme || this.cookieSvc.get('theme') || null,
+      accountName: route.queryParams.accountName || this.cookieSvc.get('accountName') || null,
+      userName: route.queryParams.userName || this.cookieSvc.get('userName') || null
     }
-    else if (this.cookieSvc.get('childwatch-tenant')) {
-      return this.preauth(this.cookieSvc.get('childwatch-tenant'), this.cookieSvc.get('childwatch-user'));
-    }
-    else
-      return this.hasUser();
+
+
+    return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
   }
 
-  preauth(tenant: string, user: string): Observable<boolean> {
+  /**
+   * Build the preauthorization request
+   * 
+   * @param tenant
+   * @param user
+   * 
+   * @returns {Observable<boolean>}
+   */
+  preauth(preauthToken: PreauthToken): Observable<boolean> {
 
-    if (!tenant) return Observable.of(false);
+    if (!preauthToken || !preauthToken.accountID) return Observable.of(false);
 
     let params = {
-      'tenant': btoa(`${tenant}:${Date.now()}`)
+      'preauth': btoa(`${preauthToken.accountID}:${preauthToken.userID}:${preauthToken.adminUser}:${preauthToken.ageGroups}:${preauthToken.mealTypes}:${preauthToken.theme}:${preauthToken.accountName}:${preauthToken.userName}:${Date.now()}`)
     };
 
-
-    if (user) params['user'] = btoa(`${tenant}:${Date.now()}`);
-
     return this.http.get<User>('/user', {params: params})
-      .map((user: User) => this.store.dispatch(new UserLoginAction(user)))
-      .map(() => true)
+      .map((user: User) => {
+        user.tenant.ageGroups = this.buildAgeGroups(user);
+        user.tenant.mealTypes = this.buildMealTypes(user);
+        this.store.dispatch(new UserLoginAction(user));
+      }).map(() => true)
       .catch(() => Observable.of(false));
   }
 

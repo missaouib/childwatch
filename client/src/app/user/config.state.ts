@@ -80,6 +80,8 @@ function setUserLogin(state: ConfigState, action: ConfigActions.UserLoginAction)
 
   //user.tenant.ageGroups = buildAgeGroups(user);
 
+  console.log(`user logged in user=${user.fullName} tenant=${user.tenant.name}`);
+
   return {
     ...state,
     user: user

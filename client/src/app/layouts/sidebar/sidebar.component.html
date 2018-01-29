@@ -1,44 +1,57 @@
-  	<div class="fill" style="width: 300px" 
-   	     [class.bg-dark]="user.dark"
-   	     [class.text-white]="user.dark"
-   	     [class.bg-light]="!user.dark"
-   	     [class.text-black]="!user.dark"
-		 [style.background-color]="user.primary">
-<div class="cover navbar"
-	 [class.navbar-default]="!user.dark"
-	 [class.navbar-inverse]="user.dark"
-     [style.background-color]="user.secondary">			
-	<div class="navbar-brand text-center" style="height: 70px">
-		<img class="img-circle img-thumbnail" src='/assets/avatar/{{user.avatar}}' width="80" height="80" style="position: relative; bottom: -35px; left: 100px; z-index: 10" />
+<div class="fill" style="width: 250px" [class.bg-dark]="user.dark" [class.text-white]="user.dark" [class.bg-light]="!user.dark" [class.text-black]="!user.dark" [style.background-color]="user.primary">
+
+	<div class="cover navbar" [class.navbar-default]="!user.dark" [class.navbar-inverse]="user.dark" [style.background-color]="user.secondary">			
+		<div class="navbar-brand text-center" style="height: 70px">
+			<img class="img-circle img-thumbnail" src='/assets/avatar/{{user.avatar}}' width="80" height="80" style="position: relative; bottom: -35px; left: 75px; z-index: 10" />
+		</div>
 	</div>
-</div>
-<div style="margin-top: 50px" >
-	<p class="text-center text-uppercase">{{user.fullName}}</p>
-	<p class="text-center text-uppercase"><small>{{user.tenant?.name}}</small></p>
-	<hr />
-	<ul style="position: relative; left: -30px; list-style: none;">
-		<li style="margin: 0 0 30px 0;" *ngFor="let menuitem of MENU" [style.color]="user.secondary">
-			<h4 *ngIf="canShow(menuitem)"><i  ngClass="{{menuitem.icon}}"></i>
-				<a *ngIf="menuitem.type === 'link'" [routerLink]="[menuitem.path]"  routerLinkActive="true"><strong [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong></a>
-				<strong *ngIf="menuitem.type === 'sub'" [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong>
-			</h4>
-              	<div *ngIf="canShow(menuitem) && menuitem.type === 'sub'">
-   	           	<ul style="list-style: none;">
-                       <li *ngFor="let childitem of menuitem.children">
-                           <h5 *ngIf="canShow(childitem)">
-                           		<a [routerLink]="[childitem.path]"  routerLinkActive="true"><span [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{childitem.title}}</span></a>
-                           </h5>
-                       </li>
-                   </ul>
-			</div>
-		</li>
-	</ul>
-</div>
-<div style="position: fixed; bottom: 0; margin: 0 0 30px 0;">
-<hr *ngIf="isAdminCW()" style="width: 280px" />
-<ul style="position: relative; left: -30px; list-style: none;">
-		<li *ngIf="isAdminCW()"><h4><a [routerLink]="'/settings'"><i class="fa fa-cog" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Settings</a></h4></li>
-	</ul>
+
+	<div style="margin-top: 50px" >
+		<p class="text-center">{{user.fullName | uppercase }}</p>
+		<p class="text-center"><small>{{user.tenant?.name | uppercase }}</small></p>		
+		<hr />
 	</div>
+		
+	<div>
+		<!-- Menu -->
+		<ul style="position: relative; left: -30px; list-style: none;">
+			<li style="margin: 0 0 30px 0;" *ngFor="let menuitem of MENU" [style.color]="user.secondary">
+				<h4 *ngIf="canShow(menuitem)"><i  ngClass="{{menuitem.icon}}"></i>
+					<a *ngIf="menuitem.type === 'link'" [routerLink]="[menuitem.path]"  routerLinkActive="true"><strong [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong></a>
+					<strong *ngIf="menuitem.type === 'sub'" [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{menuitem.title}}</strong>
+				</h4>
+	    
+	    		<!-- Sub menus -->
+	            <div *ngIf="canShow(menuitem) && menuitem.type === 'sub'">
+	   	        	<ul style="list-style: none;">
+	                	<li *ngFor="let childitem of menuitem.children">
+	                    	<h5 *ngIf="canShow(childitem)">
+	                        	<a [routerLink]="[childitem.path]"  routerLinkActive="true"><span [class.text-white]="user.dark" [class.text-primary]="!user.dark">{{childitem.title}}</span></a>
+	                        </h5>
+	                    </li>
+	            	</ul>
+				</div>
+		
+			</li>
+		</ul>
+	</div>
+
+	<!-- Lower menu -->
+	<div style="position: fixed; bottom: 0; margin: 0 0 30px 0;">
+		<hr *ngIf="isAdminCW()" style="width: 230px" />
+			<ul style="position: relative; left: -30px; list-style: none;">
+				<li *ngIf="isAdminCW()">
+					<h5><a [routerLink]="'/settings'">
+						<i class="fa fa-cog" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Settings
+					</a></h5>
+				</li> 	
+				<li *ngIf="isAdminCW()">
+					<h5><a [routerLink]="'/login'" [queryParams]="{logout:'true'}">
+						<i class="fa fa-sign-out" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Sign out
+					</a></h5>
+				</li> 	
+			</ul>
+	</div>
+	
 </div>
 

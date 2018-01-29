@@ -10,6 +10,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 export class LoginScreenComponent implements OnInit {
 
   errors = false;
+  logout = false;
 
   username: string;
   password: string;
@@ -22,7 +23,13 @@ export class LoginScreenComponent implements OnInit {
 
 
   ngOnInit() {
-    this.activeRoute.queryParams.subscribe((params: Params) => this.errors = params['error'] !== undefined);
+    this.activeRoute.queryParams
+      .subscribe((params: Params) => {
+        this.errors = params['error'] !== undefined;
+        this.logout = params['logout'] !== undefined;
+
+        if (this.logout) this.authSvc.logout();
+      });
   }
 
   login() {

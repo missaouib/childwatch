@@ -17,7 +17,7 @@ public class UserFetcher extends UnboundTenantTask<User>{
 
     @Override
     protected User callInternal() {
-        User user = (byUserId) ? userRepo.findOne(this.userId) : userRepo.findByUsernameAndPassword(this.username,this.password);
+        User user = (byUserId) ? userRepo.findOne(this.userID) : userRepo.findByUsernameAndPassword(this.username,this.password);
         return user;
     }
 	

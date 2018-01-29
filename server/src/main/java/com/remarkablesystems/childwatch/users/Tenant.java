@@ -12,15 +12,20 @@ import javax.persistence.Transient;
 import com.remarkablesystems.childwatch.domain.food.AgeGroup;
 import com.remarkablesystems.childwatch.domain.food.MealType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@ToString()
-@EqualsAndHashCode()
 @Table(name="cw_tenant")
+@Builder
+@AllArgsConstructor
+@Data @NoArgsConstructor
 public class Tenant {
 
 	@Id
@@ -33,72 +38,65 @@ public class Tenant {
 	
 	@Column(name="active")
 	@Getter @Setter
-	boolean active;
+	@Builder.Default boolean active = true;
 	
 	@Column(name="supports_AGE_0_5MO")
 	@Getter @Setter
-	boolean supportingAge0_5MO;
+	@Builder.Default boolean supportingAge0_5MO = true;
 
 	@Column(name="supports_AGE_6_11MO")
 	@Getter @Setter
-	boolean supportingAge6_11MO;
+	@Builder.Default boolean supportingAge6_11MO = true;
 	
 	@Column(name="supports_AGE_1YR")
 	@Getter @Setter
-	boolean supportingAge1YR;
+	@Builder.Default boolean supportingAge1YR = true;
 
 	@Column(name="supports_AGE_2YR")
 	@Getter @Setter
-	boolean supportingAge2YR;
+	@Builder.Default boolean supportingAge2YR = true;
 
 	@Column(name="supports_AGE_3_5YR")
 	@Getter @Setter
-	boolean supportingAge3_5YR;
+	@Builder.Default boolean supportingAge3_5YR = true;
 
 	@Column(name="supports_AGE_6_12YR")
 	@Getter @Setter
-	boolean supportingAge6_12YR;
+	@Builder.Default boolean supportingAge6_12YR = true;
 
 	@Column(name="supports_AGE_13_18YR")
 	@Getter @Setter
-	boolean supportingAge13_18YR;
+	@Builder.Default boolean supportingAge13_18YR = true;
 	
 	@Column(name="supports_AGE_ADULT")
 	@Getter @Setter
-	boolean supportingAgeAdult;
+	@Builder.Default boolean supportingAgeAdult = true;
 
 	
 	@Column(name="supports_BREAKFAST")
 	@Getter @Setter
-	boolean supportingBreakfast;
+	@Builder.Default boolean supportingBreakfast = true;
 
 	@Column(name="supports_AM_SNACK")
 	@Getter @Setter
-	boolean supportingAMSnack;
+	@Builder.Default boolean supportingAMSnack = true;
 
 	@Column(name="supports_LUNCH")
 	@Getter @Setter
-	boolean supportingLunch;
+	@Builder.Default boolean supportingLunch = true;
 
 	@Column(name="supports_PM_SNACK")
 	@Getter @Setter
-	boolean supportingPMSnack;
+	@Builder.Default boolean supportingPMSnack = true;
 
 	@Column(name="supports_SUPPER")
 	@Getter @Setter
-	boolean supportingSupper;
+	@Builder.Default boolean supportingSupper = true;
 
 	@Column(name="supports_EV_SNACK")
 	@Getter @Setter
-	boolean supportingEVSnack;
-	
-	public Tenant() {}
-	
-	public Tenant( String id, String name ) {
-		this.id = id;
-		this.name = name;
-		this.active = true;
-	}
+	@Builder.Default boolean supportingEVSnack = true;
+		
 	
 	@Transient
 	public Set<AgeGroup> supportedAgeGroups(){

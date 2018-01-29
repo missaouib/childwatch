@@ -8,6 +8,7 @@
                     <div class="card-header">
                         <h4>Login</h4>
                         <p *ngIf="errors" class="alert alert-danger" >There was an error in logging in.  Please try again.</p>
+                        <p *ngIf="!errors && logout" class="alert alert-info">You have been logged out of the system.  Have a great day!</p>
                     </div>
                     <div class="card-content">
                         <div class="form-group">
@@ -21,15 +22,12 @@
                     </div>
                     <div class="card-footer text-center">
                         <button (click)="login()" class="btn btn-primary"
-                        [class.active]="username && password" 
-                        [class.disabled]="!username || !password">Log in</button>
-                        <div class="forgot">
-                            <a href="#" >Forgot your password?</a>
-                        </div>
+                        [class.disabled]="!username || !password || username.length === 0 || password.length === 0">Log in</button>
+                        <div class="forgot"><a href="#" >Forgot your password?</a></div>
                     </div>
                 </div>
         </div>
-        <button type="submit" style="display:none">hidden submit</button>
+        <button type="submit" style="display:none" [class.disabled]="!username || !password || username.length === 0 || password.length === 0">hidden submit</button>
     </div>
     </form>
 </div>

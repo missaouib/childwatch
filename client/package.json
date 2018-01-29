@@ -59,7 +59,7 @@
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "^2.8.3",
     "@types/node": "^8.5.2",
-    "angular-ide": "^0.9.38",
+    "angular-ide": "^0.9.39",
     "codelyzer": "~4.0.2",
     "jasmine-core": "^2.8.0",
     "jasmine-spec-reporter": "~4.2.1",

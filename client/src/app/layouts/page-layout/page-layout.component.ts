@@ -8,7 +8,7 @@ import {DOCUMENT} from '@angular/platform-browser';
   templateUrl: './page-layout.component.html',
 })
 export class PageLayoutComponent implements OnInit {
-  _opened = true;
+  _opened = false;
   user: User;
 
 
@@ -19,9 +19,11 @@ export class PageLayoutComponent implements OnInit {
   ) {
     this.userSvc.user$.subscribe(user => {
       this.user = user;
+      if (this.user.authorities.includes('ADMIN-CW')) this._opened = true;
+      this.setTheme();
     });
 
-    this.setTheme();
+    //this.setTheme();
   }
 
   ngOnInit() {}
@@ -31,7 +33,15 @@ export class PageLayoutComponent implements OnInit {
   }
 
   setTheme() {
-    this.document.getElementById('theme').setAttribute('href', './assets/bootswatch/' + this.user.theme + '/bootstrap.min.css');
+    var theme = this.user && this.user.theme ? this.user.theme : 'readable';
+    console.log(`theme = ${theme}`);
+    if (!theme) theme = 'readable';
+
+    var href = `./assets/bootswatch/${theme}/bootstrap.min.css`;
+
+    console.log(`setting href to ${href}`);
+
+    this.document.getElementById('theme').setAttribute('href', href);
   }
 
 }

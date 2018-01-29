@@ -8,6 +8,19 @@
     		"requireRole": ["ADMIN-CW"]
     	},
     	{
+    		"path": "/admin",
+    		"title": "Admin",
+    		"type": "sub",
+    		"icon": "fa fa-2x fa-cog",
+    		"requireRole": ["ADMIN-CW"],
+    		"children": [
+    			{
+    				"path": "/users",
+    				"title": "Users"
+    			}
+    		]
+    	},
+    	{
       		"path": "/meals", 
       		"title": "CACFP", 
       		"type": "sub", 
