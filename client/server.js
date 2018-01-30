@@ -16,8 +16,10 @@ var httpsPort = process.env.HTTPS_PORT || 443;
 var cwServer = process.env.CW_SERVER || 'localhost';
 var cwServerPort = process.env.CW_SERVER_PORT || '8080';
 
+var disableHttps = cwServer === 'localhost' || process.env.HTTPS_PORT === undefined || process.env.ENABLE_HTTPS === undefined || process.env.ENABLE_HTTPS === true;
+
 // if the server is localhost - dont start the https server - just use http
-if( cwServer !== 'localhost' ){
+if( !disableHttps ){
     var key = fs.readFileSync('./encrypt/online.childwatch.com.server.key');
     var cert = fs.readFileSync( './encrypt/online.childwatch.com.crt' );
 
@@ -42,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 
 // proxy our api calls to the childwatch server
-proxyConfig[0].context.forEach( ctx => app.use( ctx, proxy({target: `http://${cwServer}:${cwServerPort}`, changeOrigin: true})) )
+proxyConfig[0].context.forEach( ctx => app.use( ctx, proxy({target: `${(disableHttps)?'http':'https'}://${cwServer}:${cwServerPort}`, changeOrigin: true})) )
 
 
 
@@ -55,16 +57,16 @@ app.get('*', (req, res) => {
 /**
  * Create HTTP/HTTPS servers.
  */
-const https_server = (cwServer !== 'localhost')? https.createServer(options,app) : undefined;
+const https_server = (!disableHttps)? https.createServer(options,app) : undefined;
 const http_server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-if( cwServer !== 'localhost' ) { 
-    https_server.listen(httpsPort, () => console.log(`CW2 client https started`));
-    http_server.listen(httpPort, () => console.log(`CW2 client http started => redirecting to https site`));
+if( !disableHttps ) { 
+    https_server.listen(httpsPort, () => console.log(`CW2 client https started on port ${httpsPort}`));
+    http_server.listen(httpPort, () => console.log(`CW2 client http started on port ${httpPort} => redirecting to https site`));
 }
 else{
-    http_server.listen(httpPort, () => console.log(`CW2 client http started`));
+    http_server.listen(httpPort, () => console.log(`CW2 client http started on port ${httpPort}`));
 }

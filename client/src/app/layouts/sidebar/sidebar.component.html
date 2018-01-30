@@ -40,12 +40,12 @@
 	<div style="position: fixed; bottom: 0; margin: 0 0 30px 0;">
 		<hr *ngIf="isAdminCW()" style="width: 230px" />
 			<ul style="position: relative; left: -30px; list-style: none;">
-				<li *ngIf="isAdminCW()">
+				<li >
 					<h5><a [routerLink]="'/settings'">
 						<i class="fa fa-cog" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Settings
 					</a></h5>
 				</li> 	
-				<li *ngIf="isAdminCW()">
+				<li >
 					<h5><a [routerLink]="'/login'" [queryParams]="{logout:'true'}">
 						<i class="fa fa-sign-out" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Sign out
 					</a></h5>

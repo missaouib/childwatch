@@ -6,7 +6,7 @@ import {UserService} from './user/user.service';
 import {Routes} from '@angular/router';
 
 export const AppRoutes: Routes = [
-  {path: '', redirectTo: 'meals', canActivate: [UserService], pathMatch: 'full'},
+  {path: '', redirectTo: 'childcare', canActivate: [UserService], pathMatch: 'full'},
   {
     path: '', component: PageLayoutComponent, canActivate: [UserService],
     children: [

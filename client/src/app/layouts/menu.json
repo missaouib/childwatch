@@ -4,15 +4,13 @@
     		"path": "/childcare", 
     		"title": "Dashboard", 
     		"type": "link", 
-    		"icon": "fa fa-2x fa-dashboard", 
-    		"requireRole": ["ADMIN-CW"]
+    		"icon": "fa fa-2x fa-dashboard"
     	},
     	{
     		"path": "/admin",
     		"title": "Admin",
     		"type": "sub",
     		"icon": "fa fa-2x fa-cog",
-    		"requireRole": ["ADMIN-CW"],
     		"children": [
     			{
     				"path": "/users",
@@ -25,6 +23,8 @@
       		"title": "CACFP", 
       		"type": "sub", 
       		"icon": "fa fa-2x fa-cutlery",
+      		"disabled": true,
+      		"requiredRole": ["CACFP"],
       		"children": [
         		{
         			"path": "/meals", 

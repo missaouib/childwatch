@@ -87,8 +87,9 @@ export class UserService implements CanActivate {
       userName: route.queryParams.userName || this.cookieSvc.get('userName') || null
     }
 
+    return this.hasUser();
 
-    return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
+    // return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
   }
 
   /**
