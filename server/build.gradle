@@ -29,7 +29,7 @@ apply plugin: 'docker'
 apply plugin: 'io.franzbecker.gradle-lombok'
 
 
-version = 'latest'
+version = '2.0.0-REL-CACFP'
 
 sourceCompatibility = 1.8
 

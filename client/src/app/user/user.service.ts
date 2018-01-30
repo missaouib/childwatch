@@ -29,6 +29,8 @@ export class UserService implements CanActivate {
 
   authUser: User = undefined;
 
+  bootswatchThemes = ['cerulean', 'cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'lumen', 'paper', 'readable', 'sandstone', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
+
 
   constructor(
     private store: Store<AppState>,
@@ -74,19 +76,28 @@ export class UserService implements CanActivate {
     return true;
   }
 
+  decode(encoded: string): string {
+    return (encoded && encoded.length > 0) ? decodeURIComponent(encoded).replace(/\s/g, '').toUpperCase() : undefined;
+  }
+
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
 
+    var adminUserStr = this.decode(this.cookieSvc.get('adminUser'));
+    var ageGroupsStr = this.decode(this.cookieSvc.get('ageGroups'));
+    var mealTypesStr = this.decode(this.cookieSvc.get('mealTypes'));
+
     let preAuth: PreauthToken = {
-      accountID: route.queryParams.accountID || this.cookieSvc.get('accountID') || null,
-      userID: route.queryParams.userID || this.cookieSvc.get('userID') || null,
-      adminUser: route.queryParams.adminUser || this.cookieSvc.get('adminUser') || null,
-      ageGroups: route.queryParams.ageGroups || this.cookieSvc.get('ageGroups').split(',') || null,
-      mealTypes: route.queryParams.mealTypes || this.cookieSvc.get('mealTypes').split(',') || null,
-      theme: route.queryParams.theme || this.cookieSvc.get('theme') || null,
-      accountName: route.queryParams.accountName || this.cookieSvc.get('accountName') || null,
-      userName: route.queryParams.userName || this.cookieSvc.get('userName') || null
+      accountID: this.cookieSvc.get('accountID') || null,
+      userID: this.cookieSvc.get('userID') || null,
+      adminUser: adminUserStr && adminUserStr.toLowerCase() === 'false' ? false : true,
+      ageGroups: ageGroupsStr ? ageGroupsStr.split(',') : null,
+      mealTypes: mealTypesStr ? mealTypesStr.split(',') : null,
+      theme: this.cookieSvc.get('theme') ? this.cookieSvc.get('theme').toLowerCase() : null,
+      accountName: this.cookieSvc.get('accountName') || null,
+      userName: this.cookieSvc.get('userName') || null
     }
 
+    if (preAuth.theme && !this.bootswatchThemes.includes(preAuth.theme)) preAuth.theme = 'readable';
 
     return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
   }
