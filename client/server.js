@@ -10,6 +10,9 @@ const proxyConfig = require('./proxy.conf');
 
 const app = express();
 
+var httpPort = process.env.HTTP_PORT || 80;
+var httpsPort = process.env.HTTPS_PORT || 443;
+
 var cwServer = process.env.CW_SERVER || 'localhost';
 var cwServerPort = process.env.CW_SERVER_PORT || '8080';
 
@@ -29,7 +32,7 @@ if( cwServer !== 'localhost' ){
         if (req.secure) {
             next();
         } else {
-            res.redirect('https://' + req.headers.host + req.url);
+            res.redirect(`https://${req.headers.host}${req.url}`);
         }
     });
 }
@@ -59,9 +62,9 @@ const http_server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 if( cwServer !== 'localhost' ) { 
-    https_server.listen(443, () => console.log(`CW2 client https started`));
-    http_server.listen(80, () => console.log(`CW2 client http started => redirecting to https site`));
+    https_server.listen(httpsPort, () => console.log(`CW2 client https started`));
+    http_server.listen(httpPort, () => console.log(`CW2 client http started => redirecting to https site`));
 }
 else{
-    http_server.listen(80, () => console.log(`CW2 client http started`));
+    http_server.listen(httpPort, () => console.log(`CW2 client http started`));
 }
