@@ -23,7 +23,6 @@
       		"title": "CACFP", 
       		"type": "sub", 
       		"icon": "fa fa-2x fa-cutlery",
-      		"disabled": true,
       		"requiredRole": ["CACFP"],
       		"children": [
         		{
@@ -36,13 +35,11 @@
         		},
         		{
         			"path": "/meals/mpr", 
-        			"title": "Meal Production Record",
-        			"requireRole": ["ADMIN-CW"]
+        			"title": "Meal Production Record"
         		},
         		{
         			"path": "/meals/food-items", 
-        			"title": "Maintain Food Items",
-        			"requireRole": ["ADMIN-CW"]
+        			"title": "Maintain Food Items"
         		}        		
      		]
     	}
