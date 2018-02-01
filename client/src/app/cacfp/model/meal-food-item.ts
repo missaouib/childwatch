@@ -23,7 +23,7 @@ export function compareMealFoodItems(a: MealFoodItem, b: MealFoodItem): number {
   const Utils: FoodItemUtils = new FoodItemUtils();
   var catA = Utils.category(a.foodItem);
   var catB = Utils.category(b.foodItem);
-  const categories = ['MILK', 'MEAT', 'VEGETABLES', 'FRUIT', 'OTHER'];
-  let val = categories.indexOf(catA) - categories.indexOf(catB);
+  const categories = ['MILK', 'CNITEM', 'MEAT', 'VEGETABLE', 'FRUIT', 'GRAIN', 'OTHER'];
+  var val = categories.indexOf(catA) - categories.indexOf(catB);
   return val === 0 ? a.foodItem.description.localeCompare(b.foodItem.description) : val;
 }

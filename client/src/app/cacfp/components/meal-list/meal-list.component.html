@@ -2,11 +2,11 @@
 <div class="row">
 	<h3 class="text-primary">Meals <small *ngIf="filter !== 'ALL' || showNoncompliant || showInactive"> {{ MEALTYPE.toDisplay(filter)?.toUpperCase() }} <span *ngIf="showNoncompliant"> +NON-COMPLIANT</span><span *ngIf="showInactive"> +INACTIVE</span></small></h3>	
 	<div class="pull-right">
-		<input class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
+		<input tooltip="Search for meals" class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
-		<a class="btn btn-xs btn-success" (click)="addMeal()"><span><i class="fa fa-plus"></i></span></a>
+		<a tooltip="Add new meal" class="btn btn-xs btn-success" (click)="addMeal()"><span><i class="fa fa-plus"></i></span></a>
 		<span dropdown container="body">
-			<a class="btn btn-xs btn-default" dropdownToggle (click)="false"><i class="fa fa-filter"></i></a>
+			<a tooltip="Filter meal list" class="btn btn-xs btn-default" dropdownToggle (click)="false"><i class="fa fa-filter"></i></a>
 			<ul *dropdownMenu class="dropdown-menu">
 				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL TYPES</a></li>
 				<li class="divider dropdown-divider"></li>
@@ -46,8 +46,8 @@
 			</td>
 			<td class="col-sm-3">
 				<span class="btn-group" role="group">
-					<a class="btn btn-xs" *ngIf="!meal.inactive" (click)="setupRecurrence(meal)"><i class="text-success fa fa-refresh"></i></a>
-					<a class="btn btn-xs" *ngIf="!meal.inactive"(click)="editMeal(meal)"><i class="text-primary fa fa-pencil"></i></a>
+					<a class="btn btn-xs" tooltip="Schedule meal cycle" *ngIf="!meal.inactive && meal.compliant" (click)="setupRecurrence(meal)"><i class="text-success fa fa-refresh"></i></a>
+					<a class="btn btn-xs" tooltip="Edit meal" *ngIf="!meal.inactive"(click)="editMeal(meal)"><i class="text-primary fa fa-pencil"></i></a>
 					<a class="btn btn-xs" tooltip="{{(meal.inactive)? 'Activate Meal' : 'Inactivate Meal'}}" (click)="toggleActivateMeal(meal)" ><i class="fa" [class.text-danger]="!meal.inactive" [class.fa-close]="!meal.inactive" [class.text-success]="meal.inactive" [class.fa-plus]="meal.inactive"></i></a>
 				</span>
 			</td>

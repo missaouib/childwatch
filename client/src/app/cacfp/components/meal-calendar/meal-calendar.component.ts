@@ -82,7 +82,7 @@ export class MealCalendarComponent implements OnInit {
    * @onInit
    */
   ngOnInit() {
-    this.MealSvc.query().subscribe();
+    this.MealSvc.query().subscribe(() => this.refresh.next() );
     this.gotoDate();
     this.FoodStateSvc.mealEvents$.subscribe((events) => {this.eventList = events; this.refresh.next();});
 

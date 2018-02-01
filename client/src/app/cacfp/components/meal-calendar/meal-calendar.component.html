@@ -1,12 +1,10 @@
-
-
 <div class="container-fluid">
 
 	<div class="row vdivide">
 	
 		<!-- MENU -->
 		<div class="col-sm-3 hidden-xs">
-			<cw-meal-list (edit)="editMeal($event)" (add)="addMeal()" (recurrence)="showRecurrenceDialog($event)" (activate)="activateMeal($event)"></cw-meal-list>
+			<cw-meal-list autofocus (edit)="editMeal($event)" (add)="addMeal()" (recurrence)="showRecurrenceDialog($event)" (activate)="activateMeal($event)"></cw-meal-list>
 		</div>
 		
 		<!-- CALENDAR -->
@@ -20,7 +18,7 @@
 						<button type="button" class="btn btn-default" tooltip="Goto Current Month" (click)="gotoDate()">Today</button>
 						<button type="button" class="btn btn-default" tooltip="Goto Next Month" (click)="gotoDate('next','month')"><i class="fa fa-chevron-right"></i></button>
 					</span>
-					<a class="pull-right btn btn-primary" (click)="showPrintMenuDialog()"><i class="fa fa-print"></i></a>
+					<a tooltip="Print Menu" class="pull-right btn btn-primary" (click)="showPrintMenuDialog()"><i class="fa fa-print"></i></a>
 					<h3 class="text-primary">
 						{{ currentDate.toDate() | date:'MMMM yyyy' | uppercase }} 
 					</h3>

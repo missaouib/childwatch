@@ -38,7 +38,7 @@ export class UserService implements CanActivate {
     private router: Router,
     private cookieSvc: CookieService
   ) {
-    this.store.select(s => s.config.user).subscribe((user: User) => this.authUser = user);
+    this.store.select(s => s.config.user).subscribe((user: User) => {this.authUser = user; console.log(`Setting authorized user to ${(user) ? user.id : '???'}`);});
   }
 
 
@@ -68,9 +68,11 @@ export class UserService implements CanActivate {
   }
 
 
-  hasUser() {
+  hasUser(redirect: boolean) {
     if (!this.authUser) {
-      this.router.navigate(['/login']);
+      (redirect) ?
+        window.location.href = 'http://www.childwatch.com' :
+        this.router.navigate(['/login']);
       return false;
     }
     return true;
@@ -97,9 +99,16 @@ export class UserService implements CanActivate {
       userName: this.cookieSvc.get('userName') || null
     }
 
+    var redirect = route.queryParams['login'] == undefined;
+
+    console.log(`preAuthorization attempt accountId = ${preAuth.accountID}; userId = ${preAuth.userID}; accountName = ${preAuth.accountName}; userName: ${preAuth.userName} `);
+
     if (preAuth.theme && !this.bootswatchThemes.includes(preAuth.theme)) preAuth.theme = 'readable';
 
-    return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
+    this.cookieSvc.delete('accountID');
+
+    return this.authUser ? true :
+      ((preAuth.accountID) ? this.preauth(preAuth) : this.hasUser(redirect));
   }
 
   /**

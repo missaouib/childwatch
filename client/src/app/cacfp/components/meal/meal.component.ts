@@ -3,7 +3,7 @@ import {UserService} from '../../../user/user.service';
 import {FoodItem} from '../../model/food-item';
 import {FoodItemUtils} from '../../model/food-item-utils';
 import {Meal, buildMeal} from '../../model/meal';
-import {MealFoodItem, compareMealFoodItems} from '../../model/meal-food-item';
+import {MealFoodItem} from '../../model/meal-food-item';
 import {MealType} from "../../model/meal-type";
 import {MealRulesViolation} from '../../model/mealrulesviolation';
 import {FoodStateService} from "../../services/food-state.service";
@@ -99,7 +99,7 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
     this.activeRoute.queryParams.subscribe((params: any) => this.loadMeal(params['id']));
     this.foodSvc.meals$.subscribe((meals) => this.meals = meals);
     this.MEALTYPE = new MealType();
-    
+
 
   }
 
@@ -202,7 +202,15 @@ export class MealComponent implements OnInit, ComponentCanDeactivate {
   }
 
   compareMealFoodItems(a: MealFoodItem, b: MealFoodItem): number {
-    return compareMealFoodItems(a, b);
+    const Utils: FoodItemUtils = new FoodItemUtils();
+    var catA = Utils.category(a.foodItem);
+    var catB = Utils.category(b.foodItem);
+    const categories = ['MILK', 'CNITEM', 'MEAT', 'VEGETABLE', 'FRUIT', 'GRAIN', 'OTHER'];
+
+    var val: number = categories.indexOf(catA) - categories.indexOf(catB);
+    if (val < 0) val = -1; else if (val > 0) val = 1;
+    //console.log(`comparing ${a.foodItem.description} to ${b.foodItem.description} cata = ${catA}, catb=${catB} val=${val}`);
+    return val === 0 ? a.foodItem.description.localeCompare(b.foodItem.description) : val;
   }
 
 

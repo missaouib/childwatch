@@ -15,6 +15,7 @@
 			</span>					
 			<span *ngIf="!mealFoodItem" class="col-xs-11">
 				<strong class="form-control-static text-primary">Add food item</strong>
+				<strong class="text-warning">Note: You must press 'ENTER' or 'TAB' to select the item from the list once highlighted</strong>
 				<input class="form-control" 
 					   (blur)="selectItem()"
 					   formControlName="description" 
@@ -22,11 +23,12 @@
 					   [typeahead]="FoodItems"
 					   typeaheadOptionField="description"
 					   [typeaheadItemTemplate]="foodItemTemplate"
-					   (typeaheadOnSelect)="selectItem( $event.item )"
-					   (typeaheadOnBlur)="selectItem( $event.item )"					   
+					   (typeaheadOnSelect)="selectItem( $event )"
+					   (typeaheadOnBlur)="selectItem( $event )"	
+					   (typeaheadOnResults)="gotResults( $event )"
 					   typeaheadSingleWords="false"
 					   typeaheadOptionsLimit="7"
-         			   typeaheadMinLength="0" 
+					   typeaheadMinLength="0"
 					   />
 			</span>
 
@@ -63,7 +65,7 @@
 				<span *ngIf="mealFoodItem && noUnitMatch()" class="text-warning">Typically served in {{foodItemForm.get('foodItem').value.servingUom}}</span>
 			</span> 
 			<span class="col-sm-1 hidden-xs" *ngIf="mealFoodItem" >
-				<i class="text-danger pull-right fa fa-close" (click)="deleteFoodItem()"></i>
+				<i class="text-danger pull-right fa fa-trash" (click)="deleteFoodItem()"></i>
 			</span>
 	</form>	
 	<hr class="visible-xs" />
