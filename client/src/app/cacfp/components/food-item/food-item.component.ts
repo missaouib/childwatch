@@ -59,7 +59,8 @@ export class FoodItemComponent implements OnInit {
       if (this.foodItemForm.valid) {
         this.changed.emit(this.extractMealFoodItem());
       }
-      this.errors.emit({id: this.mealFoodItem.id, errors: !this.foodItemForm.valid});
+      if (this.mealFoodItem && this.foodItemForm)
+        this.errors.emit({id: this.mealFoodItem.id, errors: !this.foodItemForm.valid});
     });
 
   }
@@ -89,10 +90,26 @@ export class FoodItemComponent implements OnInit {
   /**
    * Callback for selecting a food item
    */
-  selectItem(foodItem: FoodItem) {
-    this.selectedItem.emit(foodItem);
-    this.foodItemForm.reset();
+  selectItem(event: any) {
+
+    if (event) {
+      var foodItem = event.item;
+
+      //console.log( event );
+
+      console.log(`selected food item = ${foodItem ? foodItem.description : '???'}`);
+
+      if (foodItem) {
+        this.selectedItem.emit(foodItem);
+        this.foodItemForm.reset();
+      }
+    }
   }
+
+  gotResults(event: any) {
+    console.log(event);
+  }
+
 
   /**
    * Determine if the fooditem in the form matches the expected unit value

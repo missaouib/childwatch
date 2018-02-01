@@ -29,6 +29,8 @@ export class UserService implements CanActivate {
 
   authUser: User = undefined;
 
+  bootswatchThemes = ['cerulean', 'cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'lumen', 'paper', 'readable', 'sandstone', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
+
 
   constructor(
     private store: Store<AppState>,
@@ -36,7 +38,7 @@ export class UserService implements CanActivate {
     private router: Router,
     private cookieSvc: CookieService
   ) {
-    this.store.select(s => s.config.user).subscribe((user: User) => this.authUser = user);
+    this.store.select(s => s.config.user).subscribe((user: User) => {this.authUser = user; console.log(`Setting authorized user to ${(user) ? user.id : '???'}`);});
   }
 
 
@@ -74,7 +76,15 @@ export class UserService implements CanActivate {
     return true;
   }
 
+  decode(encoded: string): string {
+    return (encoded && encoded.length > 0) ? decodeURIComponent(encoded).replace(/\s/g, '').toUpperCase() : undefined;
+  }
+
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+
+    var adminUserStr = this.decode(this.cookieSvc.get('adminUser'));
+    var ageGroupsStr = this.decode(this.cookieSvc.get('ageGroups'));
+    var mealTypesStr = this.decode(this.cookieSvc.get('mealTypes'));
 
     let preAuth: PreauthToken = {
       accountID: route.queryParams.accountID || this.cookieSvc.get('accountID') || null,
@@ -87,9 +97,7 @@ export class UserService implements CanActivate {
       userName: route.queryParams.userName || this.cookieSvc.get('userName') || null
     }
 
-    return this.hasUser();
-
-    // return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
+    return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
   }
 
   /**

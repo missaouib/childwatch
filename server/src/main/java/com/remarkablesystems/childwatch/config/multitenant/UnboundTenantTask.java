@@ -18,7 +18,22 @@ public abstract class UnboundTenantTask<T> implements Callable<T> {
     @Setter protected String theme;
     @Setter protected String accountName;
     @Setter protected String name;
+    @Setter protected boolean recreateUser = false;
             
+    
+    public void clear() {
+    	username = null;
+    	password = null;
+    	accountID = null;
+    	userID = null;
+    	adminUser = false;
+    	ageGroups = null;
+    	mealTypes = null;
+    	theme = null;
+    	accountName = null;
+    	name = null;
+    	recreateUser = false;
+    }
 
     @Override
     public T call() throws Exception {

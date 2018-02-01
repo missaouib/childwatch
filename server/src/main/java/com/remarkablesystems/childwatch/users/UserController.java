@@ -188,6 +188,7 @@ public class UserController {
 			tenantFetcher.setTheme(theme);
 			tenantFetcher.setAccountName(accountName);
 			tenantFetcher.setName(userName);
+			tenantFetcher.setRecreateUser(true);
 			
 			ExecutorService es = Executors.newSingleThreadExecutor();
 	        Future<Tenant> tenantFuture = es.submit(tenantFetcher);

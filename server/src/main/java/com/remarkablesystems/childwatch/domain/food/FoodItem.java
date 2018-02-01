@@ -127,6 +127,7 @@ public class FoodItem extends AuditedTenantUser implements Serializable{
 		if( item.hasTag("VEGETABLE") ) return "VEGETABLE";
 		if( item.hasTag("FRUIT") ) return "FRUIT";
 		if( item.hasTag("GRAIN") ) return "GRAIN";
+		if( item.hasTag("CNITEM") ) return "CNITEM";
 		return "OTHER";
 	}
 	
@@ -137,8 +138,11 @@ public class FoodItem extends AuditedTenantUser implements Serializable{
 	
 	@Transient
 	public static Comparator<FoodItem> byFoodItemCategory = ( item1, item2 ) -> {
-		List<String> tags = Arrays.asList( "MILK", "MEAT", "VEGETABLE", "FRUIT", "GRAIN", "OTHER" );		
-		return tags.indexOf( bestTagValue(item1) ) - tags.indexOf( bestTagValue(item2) );
+		List<String> tags = Arrays.asList( "MILK", "CNITEM", "MEAT", "VEGETABLE", "FRUIT", "GRAIN", "OTHER" );		
+		int val = tags.indexOf( bestTagValue(item1) ) - tags.indexOf( bestTagValue(item2) );
+		if( val < 0 ) val = -1;
+		if( val > 0 ) val = 1;
+		return val == 0 && item1 != null && item1.description != null && item2 != null ? item1.description.compareToIgnoreCase(item2.description ) : val;
 	};
 	
 }
