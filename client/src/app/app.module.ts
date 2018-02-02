@@ -83,7 +83,7 @@ export class CustomOption extends ToastOptions {
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
     EffectsModule.forRoot([FoodEffects]),
-    UserIdleModule.forRoot({idle: 600, timeout: 120, ping: 120}),
+    UserIdleModule.forRoot({idle: 3600, timeout: 120, ping: 120}),
     AlertModule.forRoot()
   ],
   bootstrap: [AppComponent],
