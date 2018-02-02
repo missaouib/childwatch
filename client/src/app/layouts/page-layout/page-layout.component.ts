@@ -2,6 +2,7 @@ import {UserService} from '../../user/user.service';
 import {User} from '../../user/config.state';
 import {Component, OnInit, Inject} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
+import {UserIdleService} from 'angular-user-idle';
 
 @Component({
   selector: 'basic-layout',
@@ -12,16 +13,25 @@ export class PageLayoutComponent implements OnInit {
   user: User;
 
 
+  count: number;
+  timesUp: boolean = false;
 
   constructor(
     @Inject(DOCUMENT) private document: any,
-    private userSvc: UserService
+    private userSvc: UserService,
+    private userIdle: UserIdleService
   ) {
     this.userSvc.user$.subscribe(user => {
       this.user = user;
       if (this.user.authorities.includes('ADMIN-CW')) this._opened = true;
       this.setTheme();
     });
+
+    this.userIdle.startWatching();
+
+    this.userIdle.onTimerStart().subscribe(count => {this.count = count; this.timesUp = true;});
+
+    this.userIdle.onTimeout().subscribe(() => window.location.href = 'http://www.childwatch.com');
 
     //this.setTheme();
   }
@@ -42,6 +52,12 @@ export class PageLayoutComponent implements OnInit {
     console.log(`setting href to ${href}`);
 
     this.document.getElementById('theme').setAttribute('href', href);
+  }
+
+  stopAndReset() {
+    this.timesUp = false;
+    this.userIdle.stopTimer();
+    this.userIdle.resetTimer();
   }
 
 }

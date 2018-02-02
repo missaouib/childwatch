@@ -1,4 +1,12 @@
 
+<alert [type]="'danger'" *ngIf="timesUp">
+	<h4 class="alert-heading"><i class="fa fa-stopwatch"></i> ACTIVITY TIMEOUT</h4>
+	<p>
+		You have been inactive for at least 10min; click <a (click)="stopAndReset();timesUp=false;" class="btn alert-link">here</a> to continue or you will be logged out in <strong >{{ count>120? 0 : 120 - count}}</strong> seconds
+	</p>		
+</alert>
+
+
 <ng-sidebar-container style="height: 100vh">
       <ng-sidebar [(opened)]="_opened" mode="push" >
 		<cw-sidebar [user]="user"></cw-sidebar>
