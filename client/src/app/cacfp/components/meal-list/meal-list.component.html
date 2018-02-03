@@ -5,8 +5,8 @@
 		<input tooltip="Search for meals" class="search" type="text" [(ngModel)]="search"  (input)="searchList()" placeholder="Search..."/>
 		<i *ngIf="search" (click)="search=undefined;searchList()" class="text-danger fa fa-close"></i>
 		<a tooltip="Add new meal" class="btn btn-xs btn-success" (click)="addMeal()"><span><i class="fa fa-plus"></i></span></a>
-		<span dropdown container="body">
-			<a tooltip="Filter meal list" class="btn btn-xs btn-default" dropdownToggle (click)="false"><i class="fa fa-filter"></i></a>
+		<span dropdown container="body" tooltip="Filter meals list">
+			<a class="btn btn-xs btn-default" dropdownToggle (click)="false"><i class="fa fa-filter"></i></a>
 			<ul *dropdownMenu class="dropdown-menu">
 				<li role="menuitem"><a class="dropdown-item" (click)="filterMeals( 'ALL' )">SHOW ALL TYPES</a></li>
 				<li class="divider dropdown-divider"></li>

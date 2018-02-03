@@ -154,7 +154,7 @@ public class UserController {
 
 		String[] splitToken = decodedString.split(":");
 		
-		if( splitToken.length != 9 )
+		if( splitToken.length != 10 )
 			return null;
 		
 		String accountId = convertNull(splitToken[0]);
@@ -165,11 +165,12 @@ public class UserController {
 		String theme = convertNull(splitToken[5]);
 		String accountName = convertNull(splitToken[6]);
 		String userName = convertNull(splitToken[7]);
+		boolean showWeekends = "true".equalsIgnoreCase(convertNull(splitToken[8]));
 		
 		
 		logger.info( "accountId = {}; userId = {}; adminUser = {}; ageGroups= {}; theme= {}", accountId, userId, adminUser, ageGroups, theme );
 		
-		long timestamp =  Long.parseLong( convertNull(splitToken[8]) );
+		long timestamp =  Long.parseLong( convertNull(splitToken[9]) );
 		long dif = Math.abs(timestamp -  new Date().getTime()); 
 		
 		
@@ -189,6 +190,7 @@ public class UserController {
 			tenantFetcher.setAccountName(accountName);
 			tenantFetcher.setName(userName);
 			tenantFetcher.setRecreateUser(true);
+			tenantFetcher.setShowWeekends(showWeekends);
 			
 			ExecutorService es = Executors.newSingleThreadExecutor();
 	        Future<Tenant> tenantFuture = es.submit(tenantFetcher);

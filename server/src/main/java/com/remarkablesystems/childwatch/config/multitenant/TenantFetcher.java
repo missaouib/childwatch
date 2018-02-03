@@ -84,6 +84,7 @@ public class TenantFetcher extends UnboundTenantTask<Tenant>{
 	        			.username( userID )
 	        			.fullName( name != null && name.length() > 0 ? name : "USER" )
 	        			.theme( theme != null && theme.length() > 0 ? theme : "readable" )
+	        			.weekendsShowing(showWeekends)
 	        			.tenant(tenant)
 	        			.build();
 	        	if( this.adminUser ) user.addAuthority("ADMIN");
@@ -95,6 +96,7 @@ public class TenantFetcher extends UnboundTenantTask<Tenant>{
 
 	        	user.setFullName( name != null && name.length() > 0 ? name : "USER" );
 	        	user.setTheme( theme != null && theme.length() > 0 ? theme : "readable" );
+	        	user.setWeekendsShowing(showWeekends);
 		        user.setTenant(tenant);
 	        	user = userRepo.save(user);
 	        }

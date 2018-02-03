@@ -21,6 +21,7 @@ export interface PreauthToken {
   theme: string;
   accountName: string;
   userName: string;
+  showWeekends: boolean;
 };
 
 
@@ -85,22 +86,30 @@ export class UserService implements CanActivate {
     var adminUserStr = this.decode(this.cookieSvc.get('adminUser'));
     var ageGroupsStr = this.decode(this.cookieSvc.get('ageGroups'));
     var mealTypesStr = this.decode(this.cookieSvc.get('mealTypes'));
+    var showWeekendsStr = this.decode(this.cookieSvc.get('showWeekends'));
 
     let preAuth: PreauthToken = {
-      accountID: route.queryParams.accountID || this.cookieSvc.get('accountID') || null,
-      userID: route.queryParams.userID || this.cookieSvc.get('userID') || null,
-      adminUser: route.queryParams.adminUser || this.cookieSvc.get('adminUser') || null,
-      ageGroups: route.queryParams.ageGroups || this.cookieSvc.get('ageGroups').split(',') || null,
-      mealTypes: route.queryParams.mealTypes || this.cookieSvc.get('mealTypes').split(',') || null,
-      theme: route.queryParams.theme || this.cookieSvc.get('theme') || null,
-      accountName: route.queryParams.accountName || this.cookieSvc.get('accountName') || null,
-      userName: route.queryParams.userName || this.cookieSvc.get('userName') || null
+      accountID: this.cookieSvc.get('accountID') || null,
+      userID: this.cookieSvc.get('userID') || null,
+      adminUser: adminUserStr && adminUserStr.toLowerCase() === 'false' ? false : true,
+      ageGroups: ageGroupsStr ? ageGroupsStr.split(',') : null,
+      mealTypes: mealTypesStr ? mealTypesStr.split(',') : null,
+      theme: this.cookieSvc.get('theme') ? this.cookieSvc.get('theme').toLowerCase() : null,
+      accountName: this.cookieSvc.get('accountName') || null,
+      userName: this.cookieSvc.get('userName') || null,
+      showWeekends: showWeekendsStr && showWeekendsStr.toLowerCase() === 'true' ? true : false
     }
 
+    var redirect = route.queryParams['login'] == undefined;
 
+    console.log(`preAuthorization attempt accountId = ${preAuth.accountID}; userId = ${preAuth.userID}; accountName = ${preAuth.accountName}; userName: ${preAuth.userName} `);
 
-    return this.hasUser();
-    //return (preAuth.accountID) ? this.preauth(preAuth) : this.hasUser();
+    if (preAuth.theme && !this.bootswatchThemes.includes(preAuth.theme)) preAuth.theme = 'readable';
+
+    this.cookieSvc.delete('accountID');
+
+    return this.authUser ? true :
+      ((preAuth.accountID) ? this.preauth(preAuth) : this.hasUser());
   }
 
   /**
@@ -116,7 +125,7 @@ export class UserService implements CanActivate {
     if (!preauthToken || !preauthToken.accountID) return Observable.of(false);
 
     let params = {
-      'preauth': btoa(`${preauthToken.accountID}:${preauthToken.userID}:${preauthToken.adminUser}:${preauthToken.ageGroups}:${preauthToken.mealTypes}:${preauthToken.theme}:${preauthToken.accountName}:${preauthToken.userName}:${Date.now()}`)
+      'preauth': btoa(`${preauthToken.accountID}:${preauthToken.userID}:${preauthToken.adminUser}:${preauthToken.ageGroups}:${preauthToken.mealTypes}:${preauthToken.theme}:${preauthToken.accountName}:${preauthToken.userName}:${preauthToken.showWeekends}:${Date.now()}`)
     };
 
     return this.http.get<User>('/user', {params: params})
