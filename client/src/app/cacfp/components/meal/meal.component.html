@@ -68,6 +68,10 @@
 			[class.label-info]="mealCacfpStatus() === 'UNKNOWN' || mealCacfpStatus() === 'UNKNOWN / NO ITEMS'"
 			[class.label-success]="mealCacfpStatus() === 'COMPLIANT'"
 			[class.label-danger]="mealCacfpStatus() === 'NONCOMPLIANT'">{{mealCacfpStatus()}}</span>
+			
+			<div *ngIf="meal.scheduled && mealCacfpStatus() === 'NONCOMPLIANT'" class="text-danger"><strong>This meal is previously scheduled - scheduled instances will now all be non-compliant</strong></div>
+			<div *ngIf="meal.scheduled && mealCacfpStatus() !== 'NONCOMPLIANT'" class="text-warning"><strong>This meal is previously scheduled - edits will change all scheduled instances</strong></div>
+
 	</div>
 
 	<hr />

@@ -10,6 +10,7 @@ export interface Meal {
   inactive?: boolean;
   compliant?: boolean;
   updatedDate?: Date;
+  scheduled?: boolean;
 };
 
 export function buildMeal(): Meal {

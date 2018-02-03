@@ -19,6 +19,7 @@ public abstract class UnboundTenantTask<T> implements Callable<T> {
     @Setter protected String accountName;
     @Setter protected String name;
     @Setter protected boolean recreateUser = false;
+    @Setter protected boolean showWeekends = false;
             
     
     public void clear() {
@@ -33,6 +34,7 @@ public abstract class UnboundTenantTask<T> implements Callable<T> {
     	accountName = null;
     	name = null;
     	recreateUser = false;
+    	showWeekends = false;
     }
 
     @Override

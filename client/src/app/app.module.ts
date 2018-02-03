@@ -42,6 +42,8 @@ import {MealEventService} from "./cacfp/services/meal-event.service";
 import {MealProductionRecordService} from "./cacfp/services/meal-production-record.service";
 import {MealService} from "./cacfp/services/meal.service";
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
+import {UserIdleModule} from 'angular-user-idle';
+import {AlertModule} from 'ngx-bootstrap/alert';
 
 
 export class CustomOption extends ToastOptions {
@@ -76,7 +78,9 @@ export class CustomOption extends ToastOptions {
     CarouselModule.forRoot(),
     AccordionModule.forRoot(),
     TypeaheadModule.forRoot(),
-    EffectsModule.forRoot([FoodEffects])
+    EffectsModule.forRoot([FoodEffects]),
+    UserIdleModule.forRoot({idle: 3600, timeout: 120, ping: 120}),
+    AlertModule.forRoot()
   ],
   bootstrap: [AppComponent],
   providers: [{provide: ToastOptions, useClass: CustomOption}, UserService, CookieService, FoodItemService, MealService, FoodStateService, MealEventService, PendingChangesGuard, MealProductionRecordService]

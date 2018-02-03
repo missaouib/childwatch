@@ -19,4 +19,7 @@ public interface MealFull {
 	
 	@Value( "#{target.isCompliant()}")
 	boolean isCompliant();
+	
+	@Value( "#{target.isScheduled()}")
+	boolean isScheduled();
 }

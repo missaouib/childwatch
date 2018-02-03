@@ -7568,8 +7568,9 @@ td > ul > li {
 				</th>
 				<td th:each="day : ${ MEAL_DAYS }">
 					<span th:if="${meals.get(type).containsKey(day)}" >
-						<strong th:text="${ meals.get(type).get(day).getDescription() }">MEAL NAME</strong>
-						<ul style="margin:0px" th:with="mealId = ${ meals.get(type).get(day).getId() }">
+						<strong th:text="${ meals.get(type).get(day).getDescription() }">MEAL NAME </strong>
+						<strong class="text-danger" th:if="${ !meals.get(type).get(day).isCompliant()}"> *NONCOMPLIANT*</strong>
+						<ul th:if="${ meals.get(type).get(day).isCompliant()}" style="margin:0px" th:with="mealId = ${ meals.get(type).get(day).getId() }">
 							<li style="margin:-5px;" th:each="item : ${foodItems[mealId]}" th:text="${item.getShortDescription()}">ITEM</li>
 						</ul>
 					</span>

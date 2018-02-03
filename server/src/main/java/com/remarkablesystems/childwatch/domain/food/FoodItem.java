@@ -24,6 +24,9 @@ import com.remarkablesystems.childwatch.domain.AuditedTenantUser;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -32,14 +35,15 @@ import lombok.ToString;
 @Table(name="food_item")
 @ToString(callSuper=true)
 @EqualsAndHashCode(callSuper=true)
+@NoArgsConstructor @RequiredArgsConstructor
 public class FoodItem extends AuditedTenantUser implements Serializable{
 
 	private static final long serialVersionUID = 3576833611221593267L;
 
-	@Id @Getter
+	@Id @Getter @NonNull
 	private String id;
 
-	@Getter @Setter
+	@Getter @Setter @NonNull
 	private String description;
 
 	@Column(name="short_description")
@@ -84,18 +88,16 @@ public class FoodItem extends AuditedTenantUser implements Serializable{
 
 	@ElementCollection
 	@CollectionTable( name="food_item_tag", joinColumns=@JoinColumn( name="food_item_id" ) )
-	@Getter
-	private Set<FoodItemTag> tags;
+	@Getter @NonNull
+	private Set<FoodItemTag> tags = new HashSet<FoodItemTag>();
 	
-	public FoodItem() {}
 	
 	public FoodItem( String id, String description, List<String> tags ) {
 		this.id = id;
 		this.description = description;
 		this.shortDescription = description;
 		if( tags != null )
-			tags.stream().forEach( tag -> this.addTag( tag ) );
-		
+			tags.stream().forEach( tag -> this.addTag( tag ) );		
 	}
 		
 	public void clearTags() {

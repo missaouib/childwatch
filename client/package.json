@@ -30,6 +30,7 @@
     "@ngrx/router-store": "^4.1.1",
     "@ngrx/store": "^4.1.1",
     "angular-calendar": "^0.22.3",
+    "angular-user-idle": "^1.0.4",
     "angular2-uuid": "^1.1.1",
     "body-parser": "^1.18.2",
     "bootstrap": "^3.3.7",
