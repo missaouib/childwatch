@@ -1,0 +1,169 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">          
+        	<div class="col-md-12">
+                <div class="card ">
+                    <div class="card-content">
+						<div class="row">
+							<div class="col-xs-6">
+  	                		<div>
+  	                			<h2>Kim Green</h2>
+  	                		</div>
+  	                		</div>
+                    	</div>
+                    	<div class="row">
+                            <div class="col-xs-1">
+                                <div class="icon-big icon-warning text-left">
+                                    <img class="img-circle img-no-padding" height="128" width="128" src="/assets/baby7.jpg" />
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                               	<p class="text-left">Birthday:  August 5, 2013</p>
+  	                			<p class="text-left">Age:  4</p>                            
+                            </div>
+                            <div class="col-xs-7">
+                            	<h3>Connections</h3>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr *ngFor="let connection of connections">
+                                                <td class="col-xs-2">
+		                                            <img height="32" width="32" [src]="'/assets/'+connection.image" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                </td>
+                                                <td class="text-right col-xs-4">
+                                                    <a href="/child-detail">{{connection.name}}</a>
+                                                </td>
+                                                <td class="text-right col-xs-3">
+                                                	{{connection.role}}
+                                                </td>
+                                                <td class="text-right col-xs-3">
+                                                    {{connection.contact}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>                               
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                        	<div class="col-xs-4">
+                        		<h3>Current Location</h3>
+                        		<p>Butterfly Room</p>
+                        		<p><em>Until 5:00 pm</em></p>
+                        		<button class="btn btn-warning btn-simple"><i class="ti-calendar"> View Schedule</i></button>
+                        	</div>
+                        	<div class="col-xs-4">
+                        		<h3>Allergies</h3>
+                        		<table class="table">
+                        			<tbody>
+                        				<tr>
+                        					<td class="col-xs-1"><i class="fa fa-2x fa-exclamation-circle text-danger"></i></td>
+                        					<td class="text-left">Bee stings</td>
+                        				</tr>
+                        				<tr>
+                        					<td><i class="fa fa-2x fa-exclamation-triangle text-warning"></i></td>
+                        					<td class="text-left">Peanuts</td>
+                        				</tr>
+
+                        			</tbody>                        		
+                        		</table>
+                        	</div>
+                        	<div class="col-xs-4">
+                        		<h3>Notes</h3>
+                        <div class="table-full-width">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Sign contract for "What are conference organizers afraid of?"</td>
+                                        <td class="td-actions text-right">
+                                            <div class="table-icons">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="ti-pencil-alt"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="ti-close"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
+                                        <td class="td-actions text-right">
+                                            <div class="table-icons">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="ti-pencil-alt"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="ti-close"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit</td>
+                                        <td class="td-actions text-right">
+                                            <div class="table-icons">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="ti-pencil-alt"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="ti-close"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Create 4 Invisible User Experiences you Never Knew About</td>
+                                        <td class="td-actions text-right">
+                                            <div class="table-icons">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="ti-pencil-alt"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="ti-close"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Read "Following makes Medium better"</td>
+                                        <td class="td-actions text-right">
+                                            <div class="icons-table">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="ti-pencil-alt"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="ti-close"></i>
+                                                </button>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Unfollow 5 enemies from twitter</td>
+                                        <td class="td-actions text-right">
+                                            <div class="table-icons">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-info btn-simple btn-xs">
+                                                    <i class="ti-pencil-alt"></i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                    <i class="ti-close"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                        		
+                        	</div>
+
+                        </div>
+                                    
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>

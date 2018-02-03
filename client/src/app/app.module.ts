@@ -8,6 +8,7 @@ import {StoreModule} from '@ngrx/store';
 
 import * as AppRouting from './app.routes';
 import {AppComponent} from './app.component';
+import {ChildDetailComponent} from './childcare/components/child-detail/child-detail.component';
 import {UserService} from './user/user.service';
 import {UserModule} from './user/user.module';
 
@@ -16,6 +17,7 @@ import '../common/rxjs-imports.ts';
 import {AuthLayoutComponent} from './layouts/auth-layout/auth-layout.component';
 
 import {CollapseModule} from 'ngx-bootstrap/collapse';
+import {RoomDetailsComponent} from './childcare/components/room-details/room-details.component';
 
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {ToastOptions} from 'ng2-toastr';
@@ -28,6 +30,7 @@ import {SidebarComponent} from './layouts/sidebar/sidebar.component';
 import {RouterModule} from '@angular/router';
 import {SidebarModule} from 'ng-sidebar';
 import {CookieService} from 'ngx-cookie-service';
+import {SettingsComponent} from './user/settings/settings.component';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {EffectsModule} from '@ngrx/effects';
@@ -57,9 +60,12 @@ export class CustomOption extends ToastOptions {
   declarations: [
     AppComponent,
     AuthLayoutComponent,
+    RoomDetailsComponent,
+    ChildDetailComponent,
     PageLayoutComponent,
     NavbarComponent,
     SidebarComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
