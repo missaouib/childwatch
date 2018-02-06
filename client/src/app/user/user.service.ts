@@ -21,6 +21,7 @@ export interface PreauthToken {
   theme: string;
   accountName: string;
   userName: string;
+  showWeekends: boolean;
 };
 
 

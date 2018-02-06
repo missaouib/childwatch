@@ -9,7 +9,7 @@ import {UserIdleService} from 'angular-user-idle';
   templateUrl: './page-layout.component.html',
 })
 export class PageLayoutComponent implements OnInit {
-  _opened = false;
+  _opened = true;
   user: User;
 
 
@@ -48,8 +48,6 @@ export class PageLayoutComponent implements OnInit {
     if (!theme) theme = 'readable';
 
     var href = `./assets/bootswatch/${theme}/bootstrap.min.css`;
-
-    console.log(`setting href to ${href}`);
 
     this.document.getElementById('theme').setAttribute('href', href);
   }

@@ -29,7 +29,7 @@ export class SidebarComponent implements OnInit {
     else return required.find(role => this.user.authorities.find(authority => authority === role) !== undefined) !== undefined;
   }
 
-  canShow(route: ChildMenuItem): boolean {
+  canShow(route: MenuItem): boolean {
     return this.hasRequiredRole(route.requireRole) && !route.disabled;
   }
 

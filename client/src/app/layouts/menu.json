@@ -1,20 +1,20 @@
 {
 	"menu": [
     	{
-    		"path": "/childcare", 
+    		"path": "", 
     		"title": "Dashboard", 
     		"type": "link", 
     		"icon": "fa fa-2x fa-dashboard"
     	},
     	{
-    		"path": "/admin",
-    		"title": "Admin",
+    		"path": "/entity",
+    		"title": "Entity Data",
     		"type": "sub",
-    		"icon": "fa fa-2x fa-cog",
+    		"icon": "fa fa-2x fa-users",
     		"children": [
     			{
-    				"path": "/users",
-    				"title": "Users"
+    				"path": "/entity",
+    				"title": "Entity Search"
     			}
     		]
     	},
@@ -23,7 +23,7 @@
       		"title": "CACFP", 
       		"type": "sub", 
       		"icon": "fa fa-2x fa-cutlery",
-      		"requiredRole": ["CACFP"],
+      		"requireRole": ["CACFP"],
       		"children": [
         		{
         			"path": "/meals", 

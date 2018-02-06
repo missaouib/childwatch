@@ -1,5 +1,5 @@
 import {UserService} from '../user/user.service';
-import {DashboardComponent} from "./components/dashboard/dashboard.component";
+import {DashboardComponent} from "../dashboard/components/dashboard/dashboard.component";
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Routes, RouterModule} from '@angular/router';
@@ -29,7 +29,6 @@ import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {CollapseModule} from 'ngx-bootstrap/collapse';
 import {TagInputModule} from 'ngx-chips';
-import {ParticipantViewComponent} from './components/participant-view/participant-view.component';
 
 
 const routes: Routes = [
@@ -58,10 +57,10 @@ const routes: Routes = [
     TagInputModule,
   ],
   declarations: [
-    DashboardComponent, ParticipantViewComponent],
+    DashboardComponent,],
   providers: [UserService]
 })
-export class ChildcareModule {
+export class DashboardModule {
 
   constructor() {}
 }

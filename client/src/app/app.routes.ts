@@ -6,11 +6,12 @@ import {UserService} from './user/user.service';
 import {Routes} from '@angular/router';
 
 export const AppRoutes: Routes = [
-  {path: '', redirectTo: 'childcare', canActivate: [UserService], pathMatch: 'full'},
+  {path: '', redirectTo: 'dashboard', canActivate: [UserService], pathMatch: 'full'},
   {
     path: '', component: PageLayoutComponent, canActivate: [UserService],
     children: [
-      {path: 'childcare', loadChildren: './childcare/childcare.module#ChildcareModule', canActivate: [UserService]},
+      {path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [UserService]},
+      {path: 'entity', loadChildren: './entity/entity.module#EntityModule', canActivate: [UserService]},
       {path: 'meals', loadChildren: './cacfp/cacfp.module#CACFPModule', canActivate: [UserService]},
       {path: 'settings', component: SettingsComponent},
       {path: 'users', component: UserListComponent}

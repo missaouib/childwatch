@@ -49,13 +49,15 @@
     "ngx-bootstrap": "^2.0.2",
     "ngx-chips": "^1.6.2",
     "ngx-cookie-service": "^1.0.9",
+    "npm": "^5.6.0",
     "rxjs": "^5.5.6",
     "uuid": "^3.1.0",
     "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
-    "@angular/cli": "^1.5.0",
+    "@angular-devkit/core": "^0.2.0",
+    "@angular/cli": "1.6.3",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "^2.8.3",

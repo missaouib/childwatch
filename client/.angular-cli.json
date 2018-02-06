@@ -19,7 +19,11 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "cw",
       "styles": [
-        "styles.css"
+      	"../node_modules/angular-calendar/css/angular-calendar.css",
+      	"../node_modules/ng2-toastr/bundles/ng2-toastr.min.css",
+      	"../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+      	"../node_modules/ng2-dnd/bundles/style.css",      	
+        "styles.css"        
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
