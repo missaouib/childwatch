@@ -1,13 +1,11 @@
 <h5 class="text-primary">Alerts</h5>
-<ul>
+<ul style="list-style: none;">
 	<li><i class="text-danger fa fa-ambulance"></i> Peanut Allergy</li>
 	<li><i class="text-danger fa fa-ambulance"></i> Plastics Allergy</li>
 	<li><i class="text-danger fa fa-cutlery"></i> Restricted Diet</li>	
 </ul>
 
 <h5 class="text-primary">Family</h5>
-	<ul>
-		<li><cw-entity></cw-entity></li>
-		<li><cw-entity></cw-entity></li>
-		<li><cw-entity></cw-entity></li>
+	<ul style="list-style: none;" *ngFor="let relationship of entity.related">
+		<li><cw-entity [relationship]="relationship" [direction]="relationship.from.id === entity.id? 'to':'from'"></cw-entity></li>
 	</ul>

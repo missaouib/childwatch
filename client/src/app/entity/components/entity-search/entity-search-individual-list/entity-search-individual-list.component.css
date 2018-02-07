@@ -1,0 +1,10 @@
+.small-img {
+  min-height: 20px;
+  height: 40px;
+  min-width: 20px;
+  width: 40px;
+  border: 2px solid #FFB300;
+    border-radius: 500px;
+    -webkit-border-radius: 500px;
+    -moz-border-radius: 500px;
+}

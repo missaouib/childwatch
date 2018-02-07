@@ -1,6 +1,19 @@
 <cw-entity-detail-header [entity]="entity"></cw-entity-detail-header>
 
 <div class="row">
-	<cw-entity-detail-sidebar style="margin-top: 40px" class="col-sm-2" [entity]="entity"></cw-entity-detail-sidebar>
-	<div class="col-sm-10">Details</div>
+	<cw-entity-detail-sidebar style="margin-top: 130px" class="col-sm-2" [entity]="entity"></cw-entity-detail-sidebar>
+	<div class="col-sm-10">
+		<tabset type="pills" [justified]="true" class="col-sm-11">
+			<tab heading="Personal"><cw-entity-detail-personal [entity]="entity"></cw-entity-detail-personal></tab>
+			<tab heading="CACFP"><cw-entity-detail-cacfp [entity]="entity"></cw-entity-detail-cacfp></tab>
+			<tab heading="Health"><cw-entity-detail-health [entity]="entity"></cw-entity-detail-health></tab>
+			<tab heading="Authorizations"><cw-entity-detail-authorizations [entity]="entity"></cw-entity-detail-authorizations></tab>
+			<tab heading="Attendance"><cw-entity-detail-attendance [entity]="entity"></cw-entity-detail-attendance></tab>
+			<tab heading="Schedule"><cw-entity-detail-schedule [entity]="entity"></cw-entity-detail-schedule></tab>
+			<tab heading="Notes"><cw-entity-detail-notes [entity]="entity"></cw-entity-detail-notes></tab>
+		</tabset>
+		<div>
+			<button class="btn btn-default" disabled><i class="fa fa-save"></i> Save</button>
+		</div>
+	</div>
 </div>

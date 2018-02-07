@@ -1,0 +1,61 @@
+<form >
+  <div class="checkbox">
+    <label><input type="checkbox"> CACFP Participant</label>
+  </div>
+  
+  	<div class="col-sm-6">
+	
+	  	<div class="text-primary h4">Eligibility Date</div>
+	  	<div class="col-sm-11">
+	  		<input type="text"
+	           class="form-control"
+	           [minDate]="minDate"
+	           [maxDate]="maxDate"
+	           #dpEligibility="bsDatepicker"
+	           bsDatepicker [(bsValue)]="bsValue"
+	           [bsConfig]="bsConfig">
+	  	</div>
+	    <div class="col-sm-1">
+	    	<a class="btn btn-primary" (click)="dpEligibility.toggle()"><i class="fa fa-calendar"></i></a>
+	    </div>
+	</div>
+	<div class="col-sm-6">
+	 	<div class="text-primary h4">Enrollment Forms</div>
+	 	<div class="col-sm-10">
+			<select class="form-control" name="states-provinces"> 
+				<option> - Select Enrollment Form - </option>
+				<option>2018 Enrollment Form</option>
+				<option>2017 Enrollment Form</option>
+				<option>2016 Enrollment Form</option>
+		  </select>
+	 	</div>
+	 	<div class="col-sm-1">
+       		<a tooltip="Download blank form"class="btn text-danger"><i class="fa fa-file-pdf-o"></i></a>
+    	</div>
+	 	<div class="col-sm-1">
+	 		<a tooltip="Upload signed form" class="btn text-primary"><i class="fa fa-upload"></i></a>
+	 	</div>
+  	</div>
+  	
+  	<div class="col-sm-12">
+	 	<div class="text-primary h4">Meal Types</div>
+  	
+  		<label class="checkbox-inline"><input type="checkbox" value="">Breakfast</label>
+		<label class="checkbox-inline"><input type="checkbox" value="">AM Snack</label>
+		<label class="checkbox-inline"><input type="checkbox" value="">Lunch</label>
+		<label class="checkbox-inline"><input type="checkbox" value="">PM Snack</label>
+		<label class="checkbox-inline"><input type="checkbox" value="">Supper</label>
+		<label class="checkbox-inline"><input type="checkbox" value="">Evening Snack</label>
+  	</div>
+  	
+  	<div class="col-sm-6">
+  		<div class="text-primary h4">Meal Restrictions</div>
+  		<table class="table table-condensed">
+ 			<tr><td class="col-sm-1"><i class="text-danger fa fa-cutlery"></i></td><td class="col-sm-10"><strong>Vegan</strong><br/><em>Recorded 1/1/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	
+ 			<tr><td class="col-sm-1"><i class="text-danger fa fa-cutlery"></i></td><td class="col-sm-10"><strong>No Dairy</strong><br/><em>Recorded 1/15/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	
+ 			<tr><td class="col-sm-1"><i class="text-danger fa fa-cutlery"></i></td><td class="col-sm-10"><strong>No Nuts</strong><br/><em>Recorded 1/15/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	
+ 		</table>
+  		<button class="btn btn-success"><i class="fa fa-plus-circle"></i> Add</button>
+  	</div>
+  
+</form>

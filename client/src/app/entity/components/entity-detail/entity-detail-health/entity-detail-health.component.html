@@ -1,0 +1,42 @@
+<form>
+  	<div class="col-sm-6">
+  		<div class="text-primary h4">Medical Conditions</div>
+  		<table class="table table-condensed">
+ 			<tr><td class="col-sm-1"><i class="text-warning fa fa-ambulance"></i></td><td class="col-sm-10"><strong>Peanut Allergy</strong><br/><em>Recorded 1/1/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	
+ 			<tr><td class="col-sm-1"><i class="text-warning fa fa-ambulance"></i></td><td class="col-sm-10"><strong>Plastics Allergy</strong><br/><em>Recorded 2/1/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i> <i tooltip="View/Edit Dotor\'s Note" class="text-primary fa fa-user-md"></i></td></tr>
+			<tr><td class="col-sm-1"><i class="text-warning fa fa-ambulance"></i></td><td class="col-sm-10"><strong>Asthma</strong><br/><em>Recorded 1/1/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	 				
+ 		</table>
+  		<button class="btn btn-success"><i class="fa fa-plus-circle"></i> Add</button>
+  	</div>
+
+  	<div class="col-sm-6">
+  		<div class="text-primary h4">Immunizations</div>
+  		<table class="table table-condensed">
+ 			<tr><td class="col-sm-1"><i class="text-warning fa fa-ambulance"></i></td><td class="col-sm-10"><strong>Influenza</strong><br/><em>Inoculated 1/1/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	
+ 			<tr><td class="col-sm-1"><i class="text-danger fa fa-ambulance"></i></td><td class="text-danger col-sm-10"><strong>HepB</strong><br/><em>Inoculated 2/1/2017</em><br/><strong>OVERDUE on 2/1/2018</strong></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i><i class="text-primary fa fa-user-md"></i></td></tr>
+			<tr><td class="col-sm-1"><i class="text-warning fa fa-ambulance"></i></td><td class="col-sm-10"><strong>IPV</strong><br/><em>Inoculated 1/1/2018</em></td><td class="col-sm-1"><i class="text-danger fa fa-close"></i></td></tr>	 				
+ 		</table>
+  		<button class="btn btn-success"><i class="fa fa-plus-circle"></i> Add</button>
+  	</div>
+  	
+  	<div class="col-sm-6">
+	
+	  	<div class="text-primary h4">Last Physical Date</div>
+	  	<div class="col-sm-8">
+	  		<input type="text"
+	           class="form-control"
+	           [minDate]="minDate"
+	           [maxDate]="maxDate"
+	           #dpPhysical="bsDatepicker"
+	           bsDatepicker [(bsValue)]="bsValue"
+	           [bsConfig]="bsConfig">
+	  	</div>
+	    <div class="col-sm-1">
+	    	<a class="btn btn-primary" (click)="dpPhysical.toggle()"><i class="fa fa-calendar"></i></a>
+	    </div>
+	    <div class="col-sm-3 text-danger">
+	    	New physical required; OVERDUE on 2/1/2018
+	    </div>
+	</div>
+  
+</form>

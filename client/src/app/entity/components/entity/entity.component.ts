@@ -1,4 +1,5 @@
 import {Entity} from "../../model/entity";
+import {EntityRelationship} from "../../model/entity-relationship";
 import {Component, OnInit, Input} from '@angular/core';
 
 @Component({
@@ -8,12 +9,21 @@ import {Component, OnInit, Input} from '@angular/core';
 })
 export class EntityComponent implements OnInit {
 
-  @Input() entity: Entity;
-  @Input() relatedEntity: Entity;
+  @Input() relationship: EntityRelationship;
+  @Input() direction: string = "from";
 
   constructor() {}
 
   ngOnInit() {
+  }
+
+  relationshipDisplay() {
+    console.log(`type = ${this.relationship.type}`);
+    if (this.relationship.type === 'PARENT' && this.relationship[this.direction].gender === 'MALE')
+      return 'Father';
+    else if (this.relationship.type === 'PARENT' && this.relationship[this.direction].gender === 'FEMALE')
+      return 'Mother'
+    else return this.relationship.type;
   }
 
 }

@@ -37,6 +37,13 @@ import {EntityService} from "./services/entity.service";
 import { EntityDetailHeaderComponent } from './components/entity-detail/entity-detail-header/entity-detail-header.component';
 import { EntityDetailSidebarComponent } from './components/entity-detail/entity-detail-sidebar/entity-detail-sidebar.component';
 import { EntityComponent } from './components/entity/entity.component';
+import { EntityDetailPersonalComponent } from './components/entity-detail/entity-detail-personal/entity-detail-personal.component';
+import { EntityDetailCacfpComponent } from './components/entity-detail/entity-detail-cacfp/entity-detail-cacfp.component';
+import { EntityDetailHealthComponent } from './components/entity-detail/entity-detail-health/entity-detail-health.component';
+import { EntityDetailAuthorizationsComponent } from './components/entity-detail/entity-detail-authorizations/entity-detail-authorizations.component';
+import { EntityDetailAttendanceComponent } from './components/entity-detail/entity-detail-attendance/entity-detail-attendance.component';
+import { EntityDetailScheduleComponent } from './components/entity-detail/entity-detail-schedule/entity-detail-schedule.component';
+import { EntityDetailNotesComponent } from './components/entity-detail/entity-detail-notes/entity-detail-notes.component';
 
 
 const routes: Routes = [
@@ -72,7 +79,14 @@ const routes: Routes = [
     EntitySearchIndividualListComponent,
     EntityDetailHeaderComponent,
     EntityDetailSidebarComponent,
-    EntityComponent,],
+    EntityComponent,
+    EntityDetailPersonalComponent,
+    EntityDetailCacfpComponent,
+    EntityDetailHealthComponent,
+    EntityDetailAuthorizationsComponent,
+    EntityDetailAttendanceComponent,
+    EntityDetailScheduleComponent,
+    EntityDetailNotesComponent,],
   providers: [UserService, EntityService]
 })
 export class EntityModule {
