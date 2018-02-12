@@ -26,7 +26,18 @@ export class EntityService {
           from: {id: '3', firstName: 'Angelina', lastName: 'Jolie', gender: 'FEMALE'},
           to: {id: '1'},
           type: 'PARENT'
+        },
+        {
+          from: {id: '4', firstName: 'Jack', lastName: 'Nicholson', gender: 'MALE'},
+          to: {id: '1'},
+          type: 'Uncle'
+        },
+        {
+          from: {id: '5', firstName: 'Bella', lastName: 'Thorne', gender: 'FEMALE'},
+          to: {id: '1'},
+          type: 'Au pair'
         }
+
       ]
     }
   ];

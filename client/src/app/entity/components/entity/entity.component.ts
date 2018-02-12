@@ -17,7 +17,7 @@ export class EntityComponent implements OnInit {
   ngOnInit() {
   }
 
-  relationshipDisplay() {
+  public relationshipDisplay() {
     console.log(`type = ${this.relationship.type}`);
     if (this.relationship.type === 'PARENT' && this.relationship[this.direction].gender === 'MALE')
       return 'Father';
@@ -26,4 +26,20 @@ export class EntityComponent implements OnInit {
     else return this.relationship.type;
   }
 
+  public image(): string {
+    switch (this.relationship[this.direction].id) {
+      case '1':
+        return '/assets/img/baby9.jpg';
+      case '2':
+        return '/assets/img/dad.jpg';
+      case '3':
+        return '/assets/img/mom.jpg';
+      case '4':
+        return '/assets/img/uncle.jpg';
+      case '5':
+        return '/assets/img/aupair.jpg';
+      default:
+        return '/assets/face-0.jpg';
+    }
+  }
 }

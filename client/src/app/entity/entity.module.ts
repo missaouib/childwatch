@@ -27,6 +27,8 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 
 import {PaginationModule} from 'ngx-bootstrap/pagination';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {TimepickerModule} from 'ngx-bootstrap/timepicker';
+
 import {CollapseModule} from 'ngx-bootstrap/collapse';
 import {TagInputModule} from 'ngx-chips';
 import {EntitySearchComponent} from './components/entity-search/entity-search.component';
@@ -34,16 +36,16 @@ import {EntityDetailComponent} from './components/entity-detail/entity-detail.co
 import {EntitySearchHeaderComponent} from './components/entity-search/entity-search-header/entity-search-header.component';
 import {EntitySearchIndividualListComponent} from './components/entity-search/entity-search-individual-list/entity-search-individual-list.component';
 import {EntityService} from "./services/entity.service";
-import { EntityDetailHeaderComponent } from './components/entity-detail/entity-detail-header/entity-detail-header.component';
-import { EntityDetailSidebarComponent } from './components/entity-detail/entity-detail-sidebar/entity-detail-sidebar.component';
-import { EntityComponent } from './components/entity/entity.component';
-import { EntityDetailPersonalComponent } from './components/entity-detail/entity-detail-personal/entity-detail-personal.component';
-import { EntityDetailCacfpComponent } from './components/entity-detail/entity-detail-cacfp/entity-detail-cacfp.component';
-import { EntityDetailHealthComponent } from './components/entity-detail/entity-detail-health/entity-detail-health.component';
-import { EntityDetailAuthorizationsComponent } from './components/entity-detail/entity-detail-authorizations/entity-detail-authorizations.component';
-import { EntityDetailAttendanceComponent } from './components/entity-detail/entity-detail-attendance/entity-detail-attendance.component';
-import { EntityDetailScheduleComponent } from './components/entity-detail/entity-detail-schedule/entity-detail-schedule.component';
-import { EntityDetailNotesComponent } from './components/entity-detail/entity-detail-notes/entity-detail-notes.component';
+import {EntityDetailHeaderComponent} from './components/entity-detail/entity-detail-header/entity-detail-header.component';
+import {EntityDetailSidebarComponent} from './components/entity-detail/entity-detail-sidebar/entity-detail-sidebar.component';
+import {EntityComponent} from './components/entity/entity.component';
+import {EntityDetailPersonalComponent} from './components/entity-detail/entity-detail-personal/entity-detail-personal.component';
+import {EntityDetailCacfpComponent} from './components/entity-detail/entity-detail-cacfp/entity-detail-cacfp.component';
+import {EntityDetailHealthComponent} from './components/entity-detail/entity-detail-health/entity-detail-health.component';
+import {EntityDetailAuthorizationsComponent} from './components/entity-detail/entity-detail-authorizations/entity-detail-authorizations.component';
+import {EntityDetailAttendanceComponent} from './components/entity-detail/entity-detail-attendance/entity-detail-attendance.component';
+import {EntityDetailScheduleComponent} from './components/entity-detail/entity-detail-schedule/entity-detail-schedule.component';
+import {EntityDetailNotesComponent} from './components/entity-detail/entity-detail-notes/entity-detail-notes.component';
 
 
 const routes: Routes = [
@@ -71,6 +73,7 @@ const routes: Routes = [
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
     TagInputModule,
+    TimepickerModule.forRoot()
   ],
   declarations: [
     EntitySearchComponent,

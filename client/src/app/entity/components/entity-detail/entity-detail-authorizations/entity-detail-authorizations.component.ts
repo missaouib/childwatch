@@ -9,6 +9,9 @@ import {Component, OnInit, Input} from '@angular/core';
 export class EntityDetailAuthorizationsComponent implements OnInit {
   @Input() entity: Entity;
 
+  showNotes0 = false;
+  showNotes1 = false;
+
   constructor() {}
 
   ngOnInit() {

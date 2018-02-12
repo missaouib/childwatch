@@ -1,3 +1,55 @@
-<p>
-  entity-detail-authorizations works!
-</p>
+<div class="text-primary h4">Authorizations</div>
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th class="col-sm-4"></th>
+			<th class="col-sm-1">From</th>
+			<th class="col-sm-1">To</th>
+			<th class="col-sm-5">Days</th>
+			<th class="col-sm-1">Notes</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><cw-entity [relationship]="entity.related[0]"></cw-entity></td>
+			<td>1/1/2018</td>
+			<td>NO END</td>
+			<td>
+				<label class="checkbox-inline"><input type="checkbox" value="">MON</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">TUE</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">WED</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">THU</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">FRI</label>
+			</td>
+			<td><i tooltip="Toggle notes" class="fa fa-sticky-note text-primary" (click)="showNotes0=!showNotes0"></i></td>		
+		</tr>
+		<tr *ngIf="showNotes0">
+			<td colspan="5">
+				<label for="comment">Notes:</label>
+  				<textarea class="form-control" rows="5" id="comment"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td><cw-entity [relationship]="entity.related[1]"></cw-entity></td>
+			<td>2/1/2018</td>
+			<td>NO END</td>
+			<td>
+				<label class="checkbox-inline"><input type="checkbox" value="">MON</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">TUE</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">WED</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">THU</label>
+				<label class="checkbox-inline"><input type="checkbox" value="">FRI</label>
+			</td>
+			<td><i tooltip="Toggle notes" class="fa fa-sticky-note text-primary"(click)="showNotes1=!showNotes1"></i></td>		
+		</tr>
+		<tr *ngIf="showNotes1">
+			<td colspan="5">
+				<label for="comment">Notes:</label>
+  				<textarea class="form-control" rows="5" id="comment"></textarea>
+			</td>
+		</tr>
+
+	</tbody>
+
+</table>
+<button class="btn btn-success"><i class="fa fa-plus-circle"></i> Add</button>

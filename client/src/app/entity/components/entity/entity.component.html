@@ -1,12 +1,13 @@
 <table class="table table-condensed">
 	<tr>
-		<td class="col-sm-1"><img class="small-img" src='/assets/img/{{relationship[direction].gender === "MALE"? "dad.jpg":"mom.jpg"}}' /></td>
+		<td class="col-sm-1"><img class="small-img" src='{{image()}}' /></td>
 		<td class="col-sm-10">
 			<strong>{{relationship[direction]?.firstName}} {{relationship[direction]?.lastName}}</strong><br />
 			<em>{{relationshipDisplay()}}</em>
 		</td>
 		<td>
 			<i *ngIf="relationship[direction]?.id==='3'" tooltip="Primary Adult" class="fa fa-check-circle-o text-success"></i>
+			<i *ngIf="relationship[direction]?.id==='4'" tooltip="Restraining Order" class="fa fa-exclamation-triangle text-danger"></i>
 		</td>
 	</tr>
 </table>	
