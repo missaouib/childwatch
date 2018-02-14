@@ -32,6 +32,7 @@ export class UserService implements CanActivate {
 
   bootswatchThemes = ['cerulean', 'cosmo', 'cyborg', 'darkly', 'flatly', 'journal', 'lumen', 'paper', 'readable', 'sandstone', 'simplex', 'slate', 'spacelab', 'superhero', 'united', 'yeti'];
 
+  backUrl = undefined;
 
   constructor(
     private store: Store<AppState>,
@@ -101,6 +102,8 @@ export class UserService implements CanActivate {
       userName: this.cookieSvc.get('userName') || null,
       showWeekends: showWeekendsStr && showWeekendsStr.toLowerCase() === 'true' ? true : false
     }
+
+    this.backUrl = this.cookieSvc.get('cwSessionUrl');
 
     var redirect = route.queryParams['login'] == undefined;
 

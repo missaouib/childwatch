@@ -50,6 +50,9 @@
 						<i class="fa fa-sign-out" [class.text-white]="user.dark" [class.text-primary]="!user.dark"></i> Sign out
 					</a></h5>
 				</li> 	
+				<li *ngIf="isAdminCW()">
+					<a href="{{backUrl()}}">Back</a>
+				</li>
 			</ul>
 	</div>
 	

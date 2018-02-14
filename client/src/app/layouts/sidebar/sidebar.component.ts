@@ -1,4 +1,5 @@
 import {User} from '../../user/config.state';
+import {UserService} from "../../user/user.service";
 import {MenuItem, ChildMenuItem} from "../menu-item";
 import {Component, OnInit, Input} from '@angular/core';
 import {Subject} from "rxjs/Subject";
@@ -20,7 +21,7 @@ export class SidebarComponent implements OnInit {
 
   MENU: MenuItem[] = (<any>MENU_INFO).menu;
 
-  constructor() {}
+  constructor(public userSvc: UserService) {}
 
   ngOnInit() {}
 
@@ -37,4 +38,8 @@ export class SidebarComponent implements OnInit {
     return this.user && this.user.authorities.find(authority => authority === 'ADMIN-CW') != undefined;
   }
 
+  backUrl(): string {
+    return this.userSvc.backUrl || 'http://online.childwatch.com';
+  }
 }
+
